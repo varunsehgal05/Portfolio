@@ -24,6 +24,25 @@ function Resume() {
   const [currentScale, setCurrentScale] = useState(1);
   const [coords, setCoords] = useState({ x: 0, y: 0 });
 
+  const handleDownload = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('/Varun_Sehgal_Resume.pdf');
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'Varun_Sehgal_Resume.pdf';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (err) {
+      console.error("Failed to download resume:", err);
+      window.open('/Varun_Sehgal_Resume.pdf', '_blank');
+    }
+  };
+
   // Mouse drag to pan
   const onMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
@@ -146,10 +165,10 @@ function Resume() {
           </a>
         </nav>
         <div className="px-6 mb-4 mt-auto">
-          <a href="/Varun_Sehgal_Resume.pdf" download="Varun_Sehgal_Resume.pdf" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 w-full py-2.5 rounded bg-primary text-on-primary font-label-md text-label-md hover:bg-primary/90 transition-colors shadow-sm">
+          <button onClick={handleDownload} className="flex items-center justify-center gap-2 w-full py-2.5 rounded bg-primary text-on-primary font-label-md text-label-md hover:bg-primary/90 transition-colors shadow-sm">
             <span className="material-symbols-outlined text-[18px]">download</span>
             Download Resume
-          </a>
+          </button>
         </div>
       </aside>
 
