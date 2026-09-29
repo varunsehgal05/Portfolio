@@ -65,7 +65,7 @@ function DesignSystem() {
           </div>
         </aside>
 
-        <main className="flex-1 ml-64 p-8 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-surface-container-lowest via-background to-background min-h-screen">
+        <main className="flex-1 ml-64 p-8 pb-32 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-surface-container-lowest via-background to-background min-h-screen">
 
           <header className="mb-16">
             <h1 className="font-display-lg text-6xl font-bold text-on-surface mb-2">Portfolio Design System</h1>

@@ -182,27 +182,7 @@ function Process() {
           </div>
 
         </div>
-        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 md:ml-32 flex items-center gap-2 p-2 bg-surface-container-high/80 backdrop-blur-3xl border border-white/10 rounded-full shadow-2xl z-50">
-          <button className="p-3 rounded-full hover:bg-surface-variant/50 text-on-surface-variant hover:text-on-surface transition-colors" title="Select">
-            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>near_me</span>
-          </button>
-          <button className="p-3 rounded-full hover:bg-surface-variant/50 text-on-surface-variant hover:text-on-surface transition-colors" title="Hand Tool">
-            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>pan_tool</span>
-          </button>
-          <div className="w-px h-6 bg-white/10 mx-1"></div>
-          <button className="p-3 rounded-full bg-primary/20 text-primary hover:bg-primary/30 transition-colors" title="Sticky Note">
-            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>sticky_note_2</span>
-          </button>
-          <button className="p-3 rounded-full hover:bg-surface-variant/50 text-on-surface-variant hover:text-on-surface transition-colors" title="Shapes">
-            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>category</span>
-          </button>
-          <button className="p-3 rounded-full hover:bg-surface-variant/50 text-on-surface-variant hover:text-on-surface transition-colors" title="Text">
-            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>title</span>
-          </button>
-          <button className="p-3 rounded-full hover:bg-surface-variant/50 text-on-surface-variant hover:text-on-surface transition-colors" title="Connector">
-            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>conversion_path</span>
-          </button>
-        </div>
+
         <ZoomWidget
           scale={currentScale}
           onZoomIn={() => setCurrentScale(s => Math.min(Number((s + 0.1).toFixed(2)), 2))}

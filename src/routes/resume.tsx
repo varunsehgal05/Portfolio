@@ -211,16 +211,6 @@ function Resume() {
         />
       </main>
 
-      {/* Footer */}
-      <footer className="fixed bottom-0 left-0 w-full z-50 h-8 flex justify-between items-center px-4 bg-surface-container-lowest dark:bg-surface-container-lowest border-t border-white/5 flat no shadows">
-        <span className="font-caption text-caption text-on-surface-variant dark:text-on-surface-variant">Varun Sehgal © 2024 • Made with Spectral Chroma</span>
-        <div className="flex gap-4">
-          <a className="font-caption text-caption text-on-surface-variant dark:text-on-surface-variant hover:text-on-surface dark:hover:text-on-surface" href="#">Feedback</a>
-          <a className="font-caption text-caption text-on-surface-variant dark:text-on-surface-variant hover:text-on-surface dark:hover:text-on-surface" href="#">Shortcuts</a>
-          <a className="font-caption text-caption text-on-surface-variant dark:text-on-surface-variant hover:text-on-surface dark:hover:text-on-surface" href="#">System Status</a>
-        </div>
-      </footer>
-
     </div>
   );
 }

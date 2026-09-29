@@ -88,7 +88,7 @@ function PluginsPage() {
             {/* Plugins Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Plugin Card: Autoflow */}
-              <div className="glass-panel p-6 rounded-xl hover-glow group cursor-pointer relative overflow-hidden flex flex-col h-full">
+              <a href="https://www.figma.com/community/plugin/733902567457592893" target="_blank" className="glass-panel p-6 rounded-xl hover-glow group cursor-pointer relative overflow-hidden flex flex-col h-full hover:no-underline text-on-surface">
                 <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button className="text-on-surface-variant hover:text-error transition-colors" title="Uninstall">
                     <span className="material-symbols-outlined">delete</span>
@@ -115,9 +115,9 @@ function PluginsPage() {
                     <span>Run</span>
                   </button>
                 </div>
-              </div>
+              </a>
               {/* Plugin Card: Figmotion */}
-              <div className="glass-panel p-6 rounded-xl hover-glow group cursor-pointer relative overflow-hidden flex flex-col h-full">
+              <a href="https://www.figmotion.app/" target="_blank" className="glass-panel p-6 rounded-xl hover-glow group cursor-pointer relative overflow-hidden flex flex-col h-full hover:no-underline text-on-surface">
                 <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button className="text-on-surface-variant hover:text-error transition-colors" title="Uninstall">
                     <span className="material-symbols-outlined">delete</span>
@@ -144,9 +144,9 @@ function PluginsPage() {
                     <span>Run</span>
                   </button>
                 </div>
-              </div>
+              </a>
               {/* Plugin Card: Unsplash */}
-              <div className="glass-panel p-6 rounded-xl hover-glow group cursor-pointer relative overflow-hidden flex flex-col h-full">
+              <a href="https://unsplash.com/" target="_blank" className="glass-panel p-6 rounded-xl hover-glow group cursor-pointer relative overflow-hidden flex flex-col h-full hover:no-underline text-on-surface">
                 <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button className="text-on-surface-variant hover:text-error transition-colors" title="Uninstall">
                     <span className="material-symbols-outlined">delete</span>
@@ -173,9 +173,9 @@ function PluginsPage() {
                     <span>Run</span>
                   </button>
                 </div>
-              </div>
+              </a>
               {/* Plugin Card: Iconify */}
-              <div className="glass-panel p-6 rounded-xl hover-glow group cursor-pointer relative overflow-hidden flex flex-col h-full">
+              <a href="https://iconify.design/" target="_blank" className="glass-panel p-6 rounded-xl hover-glow group cursor-pointer relative overflow-hidden flex flex-col h-full hover:no-underline text-on-surface">
                 <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button className="text-on-surface-variant hover:text-error transition-colors" title="Uninstall">
                     <span className="material-symbols-outlined">delete</span>
@@ -202,7 +202,7 @@ function PluginsPage() {
                     <span>Run</span>
                   </button>
                 </div>
-              </div>
+              </a>
             </div>
           </div>
         </main>
