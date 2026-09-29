@@ -193,13 +193,9 @@ function Resume() {
             transform: `translate(${dragState.current.translateX}px, ${dragState.current.translateY}px) scale(${currentScale})`,
           }}
         >
-          {/* Canvas Center / Ready Indicator */}
-          <div className="flex flex-col items-center justify-center text-center p-12 pointer-events-none select-none">
-            <div className="w-16 h-16 rounded-2xl bg-white/[0.04] border border-white/10 flex items-center justify-center mb-4 backdrop-blur-md shadow-2xl">
-              <span className="material-symbols-outlined text-[32px] text-primary/70">all_inclusive</span>
-            </div>
-            <p className="font-mono text-[13px] uppercase tracking-widest text-white/60 mb-2 font-medium">Infinite Canvas</p>
-            <p className="font-mono text-[11px] text-white/30 tracking-wide">Pan freely with click & drag or trackpad • Zoom with controls or pinch</p>
+          {/* Resume PDF Viewer */}
+          <div className="w-[850px] h-[1150px] bg-white rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.4)] border border-white/20 flex flex-col overflow-hidden pointer-events-auto" onMouseDown={(e) => e.stopPropagation()}>
+            <iframe src="/Varun_Sehgal_Resume.pdf#toolbar=0&navpanes=0" className="w-full h-full border-none" title="Varun Sehgal Resume" />
           </div>
         </div>
 

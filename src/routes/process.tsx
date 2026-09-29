@@ -182,7 +182,7 @@ function Process() {
           </div>
 
         </div>
-        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 md:ml-32 flex items-center gap-2 p-2 bg-surface-container-high/80 backdrop-blur-3xl border border-white/10 rounded-full shadow-2xl z-50">
+        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 md:ml-32 flex items-center gap-2 p-2 bg-surface-container-high/80 backdrop-blur-3xl border border-white/10 rounded-full shadow-2xl z-50">
           <button className="p-3 rounded-full hover:bg-surface-variant/50 text-on-surface-variant hover:text-on-surface transition-colors" title="Select">
             <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>near_me</span>
           </button>

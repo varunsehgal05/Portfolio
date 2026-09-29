@@ -21,7 +21,7 @@ export function ZoomWidget({
 }: ZoomWidgetProps) {
   return (
     <div
-      className={`absolute ${className} bg-[#1A1A1A] flex flex-col rounded-lg shadow-[0_10px_40px_rgba(0,0,0,0.6)] border border-[#2E2E2E] font-mono select-none w-[110px] overflow-hidden`}
+      className={`fixed ${className} bg-[#1A1A1A] flex flex-col rounded-lg shadow-[0_10px_40px_rgba(0,0,0,0.6)] border border-[#2E2E2E] font-mono select-none w-[110px] overflow-hidden`}
     >
       {/* Coordinates Bar */}
       <div className="px-3 py-1.5 text-center text-[10px] text-[#F2F2F2]/60 border-b border-[#2E2E2E] cursor-default bg-[#0A0A0A]/60 tracking-wider">
