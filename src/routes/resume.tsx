@@ -146,7 +146,7 @@ function Resume() {
           </a>
         </nav>
         <div className="px-6 mb-4 mt-auto">
-          <a href="/Varun_Sehgal_Resume.pdf" download className="flex items-center justify-center gap-2 w-full py-2.5 rounded bg-primary text-on-primary font-label-md text-label-md hover:bg-primary/90 transition-colors shadow-sm">
+          <a href="/Varun_Sehgal_Resume.pdf" download="Varun_Sehgal_Resume.pdf" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 w-full py-2.5 rounded bg-primary text-on-primary font-label-md text-label-md hover:bg-primary/90 transition-colors shadow-sm">
             <span className="material-symbols-outlined text-[18px]">download</span>
             Download Resume
           </a>
