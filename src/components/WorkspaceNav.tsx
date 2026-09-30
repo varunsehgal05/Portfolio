@@ -9,7 +9,6 @@ const primaryLinks = [
 ] as const;
 
 const workspaceLinks = [
-  { to: "/design-system", label: "System", icon: "palette" },
   { to: "/process", label: "Process", icon: "account_tree" },
   { to: "/plugins", label: "Plugins", icon: "extension" },
 ] as const;

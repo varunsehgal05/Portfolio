@@ -58,7 +58,7 @@ function PluginsPage() {
           </div>
         </aside>
         {/* Center Canvas (Plugins Showcase) */}
-        <main className="flex-1 ml-64 mr-72 p-margin-desktop overflow-y-auto relative h-[calc(100vh-4rem)]">
+        <main className="flex-1 ml-64 p-margin-desktop overflow-y-auto relative h-[calc(100vh-4rem)]">
           {/* Canvas Background subtle effect */}
           <div className="absolute inset-0 pointer-events-none opacity-20 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/10 via-background to-background"></div>
           <div className="max-w-4xl mx-auto relative z-10">
@@ -206,36 +206,7 @@ function PluginsPage() {
             </div>
           </div>
         </main>
-        {/* Right SideNavBar (Properties) */}
-        <aside className="fixed right-0 top-16 bottom-0 w-72 z-40 flex flex-col p-4 bg-surface dark:bg-surface-container-low border-l border-outline-variant/10 backdrop-blur-2xl glass-panel h-[calc(100vh-4rem)]">
-          {/* Header */}
-          <div className="mb-6 pb-4 border-b border-outline-variant/10">
-            <h2 className="font-label-md text-label-md font-bold text-primary mb-1">Properties</h2>
-            <p className="font-caption text-caption text-on-surface-variant">Selection context</p>
-          </div>
-          {/* Tabs Navigation */}
-          <div className="flex w-full mb-6 border-b border-outline-variant/20">
-            <button className="flex-1 pb-2 font-label-md text-label-md text-primary font-bold border-b-2 border-primary flex items-center justify-center space-x-1" data-icon="edit">
-              <span className="material-symbols-outlined text-[16px]">edit</span>
-              <span>Design</span>
-            </button>
-            <button className="flex-1 pb-2 font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors flex items-center justify-center space-x-1" data-icon="play_arrow">
-              <span className="material-symbols-outlined text-[16px]">play_arrow</span>
-              <span>Prototype</span>
-            </button>
-            <button className="flex-1 pb-2 font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors flex items-center justify-center space-x-1" data-icon="code">
-              <span className="material-symbols-outlined text-[16px]">code</span>
-              <span>Inspect</span>
-            </button>
-          </div>
-          {/* Empty State for Context Panel */}
-          <div className="flex-1 flex flex-col items-center justify-center text-center p-4">
-            <span className="material-symbols-outlined text-outline text-4xl mb-3">extension</span>
-            <p className="font-body-md text-body-md text-on-surface-variant text-sm">
-              Select a plugin from the canvas to view its specific settings and configuration options here.
-            </p>
-          </div>
-        </aside>
+
       </div>
           
     </div>
