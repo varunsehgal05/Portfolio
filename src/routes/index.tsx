@@ -192,11 +192,8 @@ function Index() {
             <p className="text-caption text-on-surface-variant">V3 Final Render</p>
           </div>
           <nav className="flex-1 flex flex-col gap-2 px-2">
-            <div className="flex items-center gap-3 px-4 py-2 rounded text-primary font-bold border-l-2 border-primary pl-4 bg-surface-variant/20 cursor-default">
-              <span className="material-symbols-outlined">layers</span>
-              Layers
-            </div>
-            <div onClick={() => setShowAssets(!showAssets)} className="flex items-center gap-3 px-4 py-2 rounded text-on-surface-variant pl-4 hover:text-on-surface hover:bg-surface-variant/30 transition-colors cursor-pointer">
+
+            <div onClick={() => setShowAssets(!showAssets)} className={`flex items-center gap-3 px-4 py-2 rounded cursor-pointer transition-colors ${showAssets ? 'text-primary font-bold border-l-2 border-primary pl-4 bg-surface-variant/20' : 'text-on-surface-variant pl-4 hover:text-on-surface hover:bg-surface-variant/30'}`}>
               <span className="material-symbols-outlined">grid_view</span>
               Assets
             </div>
