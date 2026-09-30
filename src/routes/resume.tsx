@@ -146,24 +146,7 @@ function Resume() {
           </div>
           <button className="text-tertiary border border-tertiary/30 rounded px-2 py-1 font-label-md text-label-md text-[10px] hover:bg-tertiary/10 transition-colors">Upgrade</button>
         </div>
-        <nav className="flex-1 px-4 space-y-1">
-          <a className="flex items-center gap-3 px-3 py-2 rounded text-on-surface-variant dark:text-on-surface-variant pl-4 hover:text-primary dark:hover:text-primary transition-all scale-102 active:scale-98 font-label-md text-label-md" href="#">
-            <span className="material-symbols-outlined text-[18px]" data-icon="layers">layers</span>
-            Layers
-          </a>
-          <a className="flex items-center gap-3 px-3 py-2 rounded text-on-surface-variant dark:text-on-surface-variant pl-4 hover:text-primary dark:hover:text-primary transition-all scale-102 active:scale-98 font-label-md text-label-md" href="#">
-            <span className="material-symbols-outlined text-[18px]" data-icon="grid_view">grid_view</span>
-            Assets
-          </a>
-          <a className="flex items-center gap-3 px-3 py-2 rounded text-primary dark:text-primary border-l-2 border-primary pl-4 hover:text-primary dark:hover:text-primary transition-all scale-102 active:scale-98 font-label-md text-label-md bg-white/5" href="#">
-            <span className="material-symbols-outlined text-[18px]" data-icon="description">description</span>
-            Pages
-          </a>
-          <a className="flex items-center gap-3 px-3 py-2 rounded text-on-surface-variant dark:text-on-surface-variant pl-4 hover:text-primary dark:hover:text-primary transition-all scale-102 active:scale-98 font-label-md text-label-md" href="#">
-            <span className="material-symbols-outlined text-[18px]" data-icon="history">history</span>
-            History
-          </a>
-        </nav>
+
         <div className="px-6 mb-4 mt-auto">
           <button onClick={handleDownload} className="flex items-center justify-center gap-2 w-full py-2.5 rounded bg-primary text-on-primary font-label-md text-label-md hover:bg-primary/90 transition-colors shadow-sm">
             <span className="material-symbols-outlined text-[18px]">download</span>
@@ -194,8 +177,8 @@ function Resume() {
           }}
         >
           {/* Resume PDF Viewer */}
-          <div className="w-[850px] h-[1150px] bg-white rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.4)] border border-white/20 flex flex-col overflow-hidden pointer-events-auto" onMouseDown={(e) => e.stopPropagation()}>
-            <iframe src="/Varun_Sehgal_Resume.pdf#toolbar=0&navpanes=0" className="w-full h-full border-none" title="Varun Sehgal Resume" />
+          <div className="w-[850px] h-[1150px] bg-transparent rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.6)] border border-white/10 flex flex-col overflow-hidden pointer-events-auto" onMouseDown={(e) => e.stopPropagation()}>
+            <iframe src="/Varun_Sehgal_Resume.pdf#toolbar=0&navpanes=0&view=FitH" className="w-full h-full border-none" title="Varun Sehgal Resume" />
           </div>
         </div>
 

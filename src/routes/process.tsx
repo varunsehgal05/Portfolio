@@ -36,31 +36,9 @@ function Process() {
   return (
     <div className="bg-background text-on-background min-h-screen overflow-hidden flex font-body-md text-body-md selection:bg-primary/30 selection:text-primary">
 
-      <aside className="hidden md:flex fixed left-0 top-16 h-[calc(100vh-64px)] z-40 flex-col py-6 backdrop-blur-xl border-r border-white/10 bg-surface/80 w-64">
-        <div className="px-6 mb-8 flex flex-col gap-1">
-          <span className="font-label-md text-label-md uppercase tracking-widest text-primary">Project Files</span>
-          <span className="font-caption text-caption text-on-surface-variant">V3 Final Render</span>
-        </div>
-        <div className="flex flex-col gap-2 flex-1">
-          <a className="flex items-center gap-3 py-3 text-primary font-bold border-l-2 border-primary pl-4 font-label-md text-label-md hover:bg-surface-variant/30 active:translate-x-1 transition-transform bg-surface-variant/20" href="#">
-            <span className="material-symbols-outlined">layers</span>
-            Layers
-          </a>
-          <a className="flex items-center gap-3 py-3 text-on-surface-variant pl-4 hover:text-on-surface font-label-md text-label-md hover:bg-surface-variant/30 active:translate-x-1 transition-transform" href="#">
-            <span className="material-symbols-outlined">grid_view</span>
-            Assets
-          </a>
-        </div>
-        <div className="px-6 mt-auto">
-          <button className="w-full py-3 border border-white/10 rounded-lg text-primary hover:bg-primary/10 transition-colors font-label-md text-label-md flex justify-center items-center gap-2">
-            <span className="material-symbols-outlined text-[18px]">add</span>
-            New Layer
-          </button>
-        </div>
-      </aside>
       <main
         ref={mainRef}
-        className={`flex-1 mt-16 md:ml-64 relative overflow-auto figjam-grid w-full h-[calc(100vh-64px)] ${isDown ? "cursor-grabbing" : "cursor-grab"}`}
+        className={`flex-1 mt-16 relative overflow-auto figjam-grid w-full h-[calc(100vh-64px)] ${isDown ? "cursor-grabbing" : "cursor-grab"}`}
         onMouseDown={onMouseDown}
         onMouseLeave={onMouseLeave}
         onMouseUp={onMouseUp}

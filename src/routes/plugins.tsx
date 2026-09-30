@@ -18,47 +18,8 @@ function PluginsPage() {
       
       {/* Main Workspace Layout */}
       <div className="flex flex-1 pt-16 h-screen w-full overflow-hidden relative bg-background">
-        {/* Left SideNavBar (Layers/Assets) */}
-        <aside className="fixed left-0 top-16 bottom-0 w-64 z-40 flex flex-col p-4 bg-surface dark:bg-surface-container-low border-r border-outline-variant/10 backdrop-blur-2xl glass-panel h-[calc(100vh-4rem)]">
-          {/* Header */}
-          <div className="mb-8 flex items-center space-x-3 p-2">
-            <div className="w-10 h-10 rounded-lg bg-surface-variant flex items-center justify-center overflow-hidden border border-outline-variant/20">
-              <img alt="Project Workspace" className="w-full h-full object-cover opacity-80 mix-blend-screen" data-alt="A macro shot of a glowing digital crystal prism reflecting spectral light in a dark void. Highly detailed, cinematic lighting, sleek tech aesthetic. 8k resolution, minimalist composition." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSC-P1S9vqujjobfp9E1KZ5MkXBL29BXV1-M1Ytb3RAvAlvTOKpGFmnJ0P4sT830FyfH459nYfJz9IYy3x0wF_xKcg849N1GrCHumd8J_GRed1i2BOu8hhJU4j0nGaTsdUCmvjcqHYhIWepC1vXThjub4LhaZ2Fy-eMgZUMyE2-mZCtrp2S_XL0_quZ367elOQGjZ0XPMqVf6uPF5oY4CVMWP6NiS3LLbTFHhu9vTg9MNwWxxwBdsG" />
-            </div>
-            <div>
-              <h2 className="font-label-md text-label-md font-bold text-primary">Project Alpha</h2>
-              <p className="font-caption text-caption text-on-surface-variant">Creative Portfolio</p>
-            </div>
-          </div>
-          {/* Tabs Navigation */}
-          <nav className="flex-1 space-y-2 overflow-y-auto">
-            <a className="flex items-center space-x-3 px-3 py-2 font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/10 transition-colors rounded-lg group" data-icon="layers" href="#">
-              <span className="material-symbols-outlined text-[20px] group-hover:text-primary">layers</span>
-              <span>Layers</span>
-            </a>
-            <a className="flex items-center space-x-3 px-3 py-2 font-label-md text-label-md text-primary font-bold bg-primary-container/10 rounded-lg" data-icon="grid_view" href="#">
-              <span className="material-symbols-outlined text-[20px]">grid_view</span>
-              <span>Assets</span>
-            </a>
-            <a className="flex items-center space-x-3 px-3 py-2 font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/10 transition-colors rounded-lg group" data-icon="description" href="#">
-              <span className="material-symbols-outlined text-[20px] group-hover:text-primary">description</span>
-              <span>Pages</span>
-            </a>
-            <a className="flex items-center space-x-3 px-3 py-2 font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/10 transition-colors rounded-lg group" data-icon="history" href="#">
-              <span className="material-symbols-outlined text-[20px] group-hover:text-primary">history</span>
-              <span>History</span>
-            </a>
-          </nav>
-          {/* CTA */}
-          <div className="mt-auto pt-4 border-t border-outline-variant/10">
-            <button className="w-full py-2 flex justify-center items-center space-x-2 bg-surface-variant text-on-surface hover:bg-surface-bright font-label-md text-label-md rounded-lg transition-colors border border-outline-variant/20">
-              <span className="material-symbols-outlined text-[18px]">add</span>
-              <span>New Layer</span>
-            </button>
-          </div>
-        </aside>
         {/* Center Canvas (Plugins Showcase) */}
-        <main className="flex-1 ml-64 p-margin-desktop overflow-y-auto relative h-[calc(100vh-4rem)]">
+        <main className="flex-1 p-margin-desktop overflow-y-auto relative h-[calc(100vh-4rem)]">
           {/* Canvas Background subtle effect */}
           <div className="absolute inset-0 pointer-events-none opacity-20 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/10 via-background to-background"></div>
           <div className="max-w-4xl mx-auto relative z-10">
