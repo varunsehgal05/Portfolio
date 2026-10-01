@@ -30,31 +30,12 @@ function PluginsPage() {
                 Supercharge your creative workflow with installed extensions. These tools seamlessly integrate into your workspace to automate tasks, source assets, and bridge development.
               </p>
             </header>
-            {/* Search/Filter Bar (Simulated) */}
-            <div className="flex items-center justify-between mb-8">
-              <div className="relative w-64">
-                <span className="material-symbols-outlined absolute left-3 top-1/2 transform -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
-                <input className="w-full bg-surface-container-low border border-outline-variant/20 rounded-full py-2 pl-10 pr-4 font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all placeholder:text-outline" placeholder="Search plugins..." type="text" />
-              </div>
-              <div className="flex space-x-2">
-                <button className="px-4 py-1.5 rounded-full bg-primary-container/10 border border-primary/20 text-primary font-label-md text-label-md flex items-center space-x-1">
-                  <span className="material-symbols-outlined text-[16px]">check_circle</span>
-                  <span>Installed</span>
-                </button>
-                <button className="px-4 py-1.5 rounded-full bg-transparent border border-outline-variant/20 text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-colors">
-                  Discover
-                </button>
-              </div>
-            </div>
+
             {/* Plugins Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Plugin Card: Autoflow */}
               <a href="https://www.figma.com/community/plugin/733902567457592893" target="_blank" className="glass-panel p-6 rounded-xl hover-glow group cursor-pointer relative overflow-hidden flex flex-col h-full hover:no-underline text-on-surface">
-                <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button className="text-on-surface-variant hover:text-error transition-colors" title="Uninstall">
-                    <span className="material-symbols-outlined">delete</span>
-                  </button>
-                </div>
+
                 <div className="flex items-start mb-4 space-x-4">
                   <div className="w-12 h-12 rounded-lg bg-[#FF5722]/10 border border-[#FF5722]/20 flex items-center justify-center flex-shrink-0">
                     <span className="material-symbols-outlined text-[#FF5722] text-2xl">route</span>
@@ -71,19 +52,15 @@ function PluginsPage() {
                 </p>
                 <div className="mt-auto flex justify-between items-center">
                   <span className="font-caption text-caption text-outline">v2.1.4</span>
-                  <button className="bg-surface-variant text-on-surface hover:text-background hover:bg-primary font-label-md text-label-md px-4 py-1.5 rounded-full transition-all border border-outline-variant/20 hover:border-transparent flex items-center space-x-1">
+                  <span className="bg-surface-variant text-on-surface hover:text-background hover:bg-primary font-label-md text-label-md px-4 py-1.5 rounded-full transition-all border border-outline-variant/20 hover:border-transparent flex items-center space-x-1">
                     <span className="material-symbols-outlined text-[16px]">play_arrow</span>
                     <span>Run</span>
-                  </button>
+                  </span>
                 </div>
               </a>
               {/* Plugin Card: Figmotion */}
               <a href="https://www.figmotion.app/" target="_blank" className="glass-panel p-6 rounded-xl hover-glow group cursor-pointer relative overflow-hidden flex flex-col h-full hover:no-underline text-on-surface">
-                <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button className="text-on-surface-variant hover:text-error transition-colors" title="Uninstall">
-                    <span className="material-symbols-outlined">delete</span>
-                  </button>
-                </div>
+
                 <div className="flex items-start mb-4 space-x-4">
                   <div className="w-12 h-12 rounded-lg bg-[#6904C5]/10 border border-[#6904C5]/20 flex items-center justify-center flex-shrink-0">
                     <span className="material-symbols-outlined text-[#D0ACFF] text-2xl">animation</span>
@@ -100,19 +77,15 @@ function PluginsPage() {
                 </p>
                 <div className="mt-auto flex justify-between items-center">
                   <span className="font-caption text-caption text-outline">v3.0.1</span>
-                  <button className="bg-surface-variant text-on-surface hover:text-background hover:bg-primary font-label-md text-label-md px-4 py-1.5 rounded-full transition-all border border-outline-variant/20 hover:border-transparent flex items-center space-x-1">
+                  <span className="bg-surface-variant text-on-surface hover:text-background hover:bg-primary font-label-md text-label-md px-4 py-1.5 rounded-full transition-all border border-outline-variant/20 hover:border-transparent flex items-center space-x-1">
                     <span className="material-symbols-outlined text-[16px]">play_arrow</span>
                     <span>Run</span>
-                  </button>
+                  </span>
                 </div>
               </a>
               {/* Plugin Card: Unsplash */}
               <a href="https://unsplash.com/" target="_blank" className="glass-panel p-6 rounded-xl hover-glow group cursor-pointer relative overflow-hidden flex flex-col h-full hover:no-underline text-on-surface">
-                <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button className="text-on-surface-variant hover:text-error transition-colors" title="Uninstall">
-                    <span className="material-symbols-outlined">delete</span>
-                  </button>
-                </div>
+
                 <div className="flex items-start mb-4 space-x-4">
                   <div className="w-12 h-12 rounded-lg bg-surface-bright border border-outline-variant/40 flex items-center justify-center flex-shrink-0 overflow-hidden">
                     <span className="material-symbols-outlined text-on-surface text-2xl">image</span>
@@ -129,19 +102,15 @@ function PluginsPage() {
                 </p>
                 <div className="mt-auto flex justify-between items-center">
                   <span className="font-caption text-caption text-outline">v1.8.0</span>
-                  <button className="bg-surface-variant text-on-surface hover:text-background hover:bg-primary font-label-md text-label-md px-4 py-1.5 rounded-full transition-all border border-outline-variant/20 hover:border-transparent flex items-center space-x-1">
+                  <span className="bg-surface-variant text-on-surface hover:text-background hover:bg-primary font-label-md text-label-md px-4 py-1.5 rounded-full transition-all border border-outline-variant/20 hover:border-transparent flex items-center space-x-1">
                     <span className="material-symbols-outlined text-[16px]">play_arrow</span>
                     <span>Run</span>
-                  </button>
+                  </span>
                 </div>
               </a>
               {/* Plugin Card: Iconify */}
               <a href="https://iconify.design/" target="_blank" className="glass-panel p-6 rounded-xl hover-glow group cursor-pointer relative overflow-hidden flex flex-col h-full hover:no-underline text-on-surface">
-                <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button className="text-on-surface-variant hover:text-error transition-colors" title="Uninstall">
-                    <span className="material-symbols-outlined">delete</span>
-                  </button>
-                </div>
+
                 <div className="flex items-start mb-4 space-x-4">
                   <div className="w-12 h-12 rounded-lg bg-[#009BD3]/10 border border-[#009BD3]/20 flex items-center justify-center flex-shrink-0">
                     <span className="material-symbols-outlined text-tertiary text-2xl">sentiment_satisfied</span>
@@ -158,10 +127,10 @@ function PluginsPage() {
                 </p>
                 <div className="mt-auto flex justify-between items-center">
                   <span className="font-caption text-caption text-outline">v2.4.2</span>
-                  <button className="bg-surface-variant text-on-surface hover:text-background hover:bg-primary font-label-md text-label-md px-4 py-1.5 rounded-full transition-all border border-outline-variant/20 hover:border-transparent flex items-center space-x-1">
+                  <span className="bg-surface-variant text-on-surface hover:text-background hover:bg-primary font-label-md text-label-md px-4 py-1.5 rounded-full transition-all border border-outline-variant/20 hover:border-transparent flex items-center space-x-1">
                     <span className="material-symbols-outlined text-[16px]">play_arrow</span>
                     <span>Run</span>
-                  </button>
+                  </span>
                 </div>
               </a>
             </div>

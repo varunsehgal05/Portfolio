@@ -141,10 +141,9 @@ function Resume() {
       <aside className="fixed top-14 left-0 h-[calc(100vh-56px)] w-64 z-40 flex flex-col py-4 bg-surface-container-low/80 dark:bg-surface-container-low/80 backdrop-blur-xl border-r border-white/5 flat no shadows hidden md:flex">
         <div className="px-6 mb-8 mt-2 flex items-center justify-between">
           <div>
-            <h2 className="font-headline-md text-headline-md text-on-surface">Workspace</h2>
-            <span className="font-caption text-caption text-on-surface-variant">Pro Plan</span>
+            <h2 className="font-headline-md text-headline-md text-on-surface">Resume</h2>
+            <span className="font-caption text-caption text-on-surface-variant">Document Viewer</span>
           </div>
-          <button className="text-tertiary border border-tertiary/30 rounded px-2 py-1 font-label-md text-label-md text-[10px] hover:bg-tertiary/10 transition-colors">Upgrade</button>
         </div>
 
         <div className="px-6 mb-4 mt-auto">
