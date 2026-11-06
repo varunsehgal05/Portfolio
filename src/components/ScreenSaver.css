@@ -1,0 +1,71 @@
+.screensaver {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, #0b0f19 0%, #1a233a 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out;
+}
+
+.screensaver.active {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+}
+
+.screensaver-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.os-name {
+  color: #3b82f6;
+  font-family: monospace, 'Courier New', Courier;
+  font-size: 2rem;
+  letter-spacing: 2px;
+  margin: 0 0 1rem 0;
+  text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+}
+
+.time-display {
+  font-size: 6rem;
+  font-weight: 700;
+  font-family: monospace, 'Courier New', Courier;
+  line-height: 1;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+.date-display {
+  font-size: 1.2rem;
+  color: #94a3b8;
+  margin-bottom: 2rem;
+}
+
+.wake-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  font-size: 0.9rem;
+  color: #94a3b8;
+  transition: all 0.3s ease;
+}
+
+.wake-icon {
+  font-size: 1.1rem;
+}

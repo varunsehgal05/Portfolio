@@ -1,35 +1,77 @@
-# Cozy Creator
+# VarunOS — macOS Web Desktop Portfolio
 
-Build this app using the HTML files referenced below. You can hotlink the images referenced in the HTML. The attached images are screenshots of the desired screens. Here are public links to the html of the screens which you should read and use to build the app:
+An interactive macOS desktop environment showcasing the design systems, case studies, and engineering projects of **Varun Sehgal** (UI/UX Designer | Product Designer).
 
-1. https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sXzAwMDY1ODc5OTU4ZGNmNjgwMmE5YTBhZjdlMWM3NWJhEgsSBxCpycv4vhoYAZIBIwoKcHJvamVjdF9pZBIVQhMyNTE1OTc0NTgxMDA1MDU5MTQ3&filename=&opi=89354086
-2. https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sXzAwMDY1N2IwNzcwNjFhMDEwMDMwM2Y3ZTc0MGExMjQzEgsSBxCpycv4vhoYAZIBIwoKcHJvamVjdF9pZBIVQhMyNTE1OTc0NTgxMDA1MDU5MTQ3&filename=&opi=89354086
-3. https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sXzAwMDY1ODUzYmUyMjUyMDcwN2M0YzlkNzQwMTlkOGVkEgsSBxCpycv4vhoYAZIBIwoKcHJvamVjdF9pZBIVQhMyNTE1OTc0NTgxMDA1MDU5MTQ3&filename=&opi=89354086
-4. https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sXzAwMDY1ODczMjZlOWUyY2EwMDMwM2U0ZmY5MGVlZjEwEgsSBxCpycv4vhoYAZIBIwoKcHJvamVjdF9pZBIVQhMyNTE1OTc0NTgxMDA1MDU5MTQ3&filename=&opi=89354086
-5. https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sXzAwMDY1ODcyYWE5YjE1MGQwOTI1YzQxZWYwMDQ5YTlhEgsSBxCpycv4vhoYAZIBIwoKcHJvamVjdF9pZBIVQhMyNTE1OTc0NTgxMDA1MDU5MTQ3&filename=&opi=89354086
-6. https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sXzAwMDY1ODc5OTViMTFlNjAwNzA5MmNmYmU0M2NmODIyEgsSBxCpycv4vhoYAZIBIwoKcHJvamVjdF9pZBIVQhMyNTE1OTc0NTgxMDA1MDU5MTQ3&filename=&opi=89354086
-7. https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sXzAwMDY1ODUzYTcxMzhiOTEwN2M0ZDNjYTFmMjdmOWRlEgsSBxCpycv4vhoYAZIBIwoKcHJvamVjdF9pZBIVQhMyNTE1OTc0NTgxMDA1MDU5MTQ3&filename=&opi=89354086
-8. https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sXzAwMDY1ODUzYjM4OTYxMDQwNzc5OWFhZDRiMzkwM2M1EgsSBxCpycv4vhoYAZIBIwoKcHJvamVjdF9pZBIVQhMyNTE1OTc0NTgxMDA1MDU5MTQ3&filename=&opi=89354086
-9. https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sXzAwMDY1ODUzYTZhNjk0ZDIwN2M0ZDNjYTFmMjdmOWRlEgsSBxCpycv4vhoYAZIBIwoKcHJvamVjdF9pZBIVQhMyNTE1OTc0NTgxMDA1MDU5MTQ3&filename=&opi=89354086
-10. https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sXzAwMDY1ODUzYTdhYmQyZDQwNDczNmRkNWIyMGY1MTlhEgsSBxCpycv4vhoYAZIBIwoKcHJvamVjdF9pZBIVQhMyNTE1OTc0NTgxMDA1MDU5MTQ3&filename=&opi=89354086
+Live Portfolio: [varunsehgal.runs-on.dev](https://varunsehgal.runs-on.dev)  
+GitHub: [github.com/varunsehgal05/Portfolio](https://github.com/varunsehgal05/Portfolio)  
+LinkedIn: [linkedin.com/in/varunsehgal02](https://www.linkedin.com/in/varunsehgal02)  
+Behance: [behance.net/varunsehgal3](https://www.behance.net/varunsehgal3)  
 
-This project was built with [Lovable](https://lovable.dev).
+---
 
-## Build with Lovable
+## ✨ Features
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/10458351-a8f3-4225-b66a-e04111618b1d).
+- ** macOS Desktop Experience**: Complete with top glass MenuBar, battery/wifi/sound indicators, live clock, and dark-themed canvas.
+- **Glass Dock**: Floating macOS Dock with active indicator dots, hover bounce, and app launching.
+- **Authentic macOS Genie Minimization**: Mathematical 4-point funnel warping that sucks windows directly into their respective Dock icons with cubic-bezier physics, multi-layer drop shadows, and reverse genie expansion on restore.
+- **Center Finder Window**: "VarunOS — Portfolio & Projects" showcasing Featured Works, Experience, Tech Stack, and user badge.
+- **Full-Screen Desktop Apps**: Desktop apps (Figma, VS Code, Resume, Contact) launch maximized in full screen with auto-hiding of the assistant bot behind the active window.
+- **Figma App**: Interactive Figma design file browser showcasing real project prototypes (AI Interview Prep, EventFlow SaaS, Expensify Budget Tracker) with live tabs and links.
+- **VS Code App**: Interactive code editor with sidebar explorer and markdown preview.
+- **ATS Interactive Resume**: Complete professional summary, work experience (UniEvent, Assemble, Knaptix Ventures, Freelance), education (Jaypee University of Engineering and Technology), and direct PDF download.
+- **Contact App**: Retro-futuristic message composer and social cards.
+- **PixelAssistant (Clippy)**: Interactive assistant bot with smart query matching for skills, experience, projects, education, and contact, with an audio toggle (muted by default) and auto-hide behind maximized apps.
+- **Dynamic Wallpapers & ScreenSaver**: Alt + 1/2/3 wallpaper toggles and idle screen saver.
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+---
 
-## Development
+## 🛠️ Tech Stack
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+- **Framework**: React 19, Vite
+- **Window Management**: react-rnd, CSS3 Glassmorphism, 3D Transforms, SVG Funnel Polygon Clip Paths
+- **Icons**: Lucide React
+- **Assistant**: clippyjs
+- **Styling**: Vanilla CSS, Modern Glass UI, Responsive Typography
 
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- npm or bun
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/varunsehgal05/Portfolio.git
+cd Portfolio
+
+# Install dependencies
+npm install
+
+# Start local development server
 npm run dev
 ```
+
+Visit `http://localhost:5173` to experience the desktop portfolio.
+
+### Building for Production
+
+```bash
+npm run build
+```
+
+The production output will be generated in `dist/`.
+
+---
+
+## 👤 About the Author
+
+**Varun Sehgal**  
+UI/UX Designer | Product Designer  
+Gwalior, Madhya Pradesh, India  
+Email: [varun.sehgal02@gmail.com](mailto:varun.sehgal02@gmail.com)  
+Phone: +91 9399361193  

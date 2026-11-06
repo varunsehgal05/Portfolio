@@ -1,0 +1,396 @@
+.app-window {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  transition: box-shadow 0.2s;
+  display: flex;
+}
+
+.app-window.active {
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+
+.app-window.maximized {
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border-radius: 0;
+}
+
+.app-window.minimized {
+  display: none !important;
+}
+
+.app-window.minimizing,
+.app-window.restoring {
+  overflow: visible !important;
+  box-shadow: none !important;
+  pointer-events: none;
+}
+
+.window-inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+}
+
+.app-window.maximized .window-inner {
+  border-radius: 0;
+}
+
+.window-inner.minimizing {
+  transform-origin: 50% 50%;
+  animation: macGenieMinimize 0.46s cubic-bezier(0.2, 0.82, 0.25, 1) forwards;
+  pointer-events: none;
+  will-change: transform, opacity, filter, clip-path;
+}
+
+.window-inner.restoring {
+  transform-origin: 50% 50%;
+  animation: macGenieRestore 0.42s cubic-bezier(0.18, 1, 0.22, 1) forwards;
+  will-change: transform, opacity, filter, clip-path;
+}
+
+@keyframes macGenieMinimize {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1, 1);
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+    filter: drop-shadow(0 20px 50px rgba(0, 0, 0, 0.5));
+  }
+  25% {
+    opacity: 0.98;
+    transform: translate3d(calc(var(--genie-target-x, 0px) * 0.16), calc(var(--genie-target-y, 350px) * 0.16), 0) scale(0.92, 0.88);
+    clip-path: polygon(0% 0%, 100% 0%, 82% 100%, 18% 100%);
+  }
+  50% {
+    opacity: 0.92;
+    transform: translate3d(calc(var(--genie-target-x, 0px) * 0.46), calc(var(--genie-target-y, 350px) * 0.46), 0) scale(0.66, 0.58);
+    clip-path: polygon(4% 0%, 96% 0%, 65% 100%, 35% 100%);
+    filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.35));
+  }
+  75% {
+    opacity: 0.7;
+    transform: translate3d(calc(var(--genie-target-x, 0px) * 0.80), calc(var(--genie-target-y, 350px) * 0.80), 0) scale(0.34, 0.26);
+    clip-path: polygon(14% 0%, 86% 0%, 56% 100%, 44% 100%);
+  }
+  92% {
+    opacity: 0.3;
+    transform: translate3d(calc(var(--genie-target-x, 0px) * 0.96), calc(var(--genie-target-y, 350px) * 0.96), 0) scale(0.12, 0.08);
+    clip-path: polygon(32% 0%, 68% 0%, 52% 100%, 48% 100%);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--genie-target-x, 0px), var(--genie-target-y, 350px), 0) scale(0.01, 0.01);
+    clip-path: polygon(48% 0%, 52% 0%, 50% 100%, 50% 100%);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  }
+}
+
+@keyframes macGenieRestore {
+  0% {
+    opacity: 0;
+    transform: translate3d(var(--genie-target-x, 0px), var(--genie-target-y, 350px), 0) scale(0.01, 0.01);
+    clip-path: polygon(48% 0%, 52% 0%, 50% 100%, 50% 100%);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  }
+  20% {
+    opacity: 0.6;
+    transform: translate3d(calc(var(--genie-target-x, 0px) * 0.82), calc(var(--genie-target-y, 350px) * 0.82), 0) scale(0.30, 0.24);
+    clip-path: polygon(18% 0%, 82% 0%, 56% 100%, 44% 100%);
+  }
+  50% {
+    opacity: 0.88;
+    transform: translate3d(calc(var(--genie-target-x, 0px) * 0.44), calc(var(--genie-target-y, 350px) * 0.44), 0) scale(0.68, 0.62);
+    clip-path: polygon(5% 0%, 95% 0%, 72% 100%, 28% 100%);
+    filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.35));
+  }
+  80% {
+    opacity: 0.98;
+    transform: translate3d(calc(var(--genie-target-x, 0px) * 0.12), calc(var(--genie-target-y, 350px) * 0.12), 0) scale(0.94, 0.92);
+    clip-path: polygon(1% 0%, 99% 0%, 88% 100%, 12% 100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1, 1);
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+    filter: drop-shadow(0 20px 50px rgba(0, 0, 0, 0.5));
+  }
+}
+
+.window-inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.window-titlebar {
+  height: 38px;
+  background: rgba(22, 22, 26, 0.95);
+  backdrop-filter: blur(20px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+  cursor: default;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  user-select: none;
+}
+
+/* macOS Traffic Lights */
+.mac-traffic-lights {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding-left: 14px;
+}
+
+.mac-btn {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  position: relative;
+  transition: all 0.15s ease;
+}
+
+.mac-btn.close {
+  background: #ff5f56;
+  border: 0.5px solid rgba(0, 0, 0, 0.2);
+}
+
+.mac-btn.minimize {
+  background: #ffbd2e;
+  border: 0.5px solid rgba(0, 0, 0, 0.2);
+}
+
+.mac-btn.maximize {
+  background: #27c93f;
+  border: 0.5px solid rgba(0, 0, 0, 0.2);
+}
+
+.mac-symbol {
+  font-size: 8px;
+  font-weight: 800;
+  color: rgba(0, 0, 0, 0.65);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  line-height: 1;
+}
+
+.mac-traffic-lights:hover .mac-symbol {
+  opacity: 1;
+}
+
+.mac-btn:active {
+  filter: brightness(0.85);
+}
+
+.titlebar-folder-icon {
+  color: #38bdf8;
+  margin-right: 6px;
+}
+
+.window-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #d4d4d8;
+  pointer-events: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.titlebar-view-toggles {
+  padding-right: 14px;
+}
+
+.view-toggle-group {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 2px;
+  gap: 2px;
+}
+
+.view-toggle-btn {
+  width: 22px;
+  height: 20px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  color: #71717a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.view-toggle-btn:hover {
+  color: #ffffff;
+}
+
+.view-toggle-btn.active {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.window-content {
+  flex: 1;
+  background: rgba(20, 20, 20, 0.6);
+  overflow: auto;
+  position: relative;
+}
+
+.window-content.no-padding {
+  padding: 0;
+  overflow: hidden;
+}
+
+.window-content-inner {
+  padding: 20px;
+  height: 100%;
+  color: #fff;
+}
+
+/* App specific styles */
+.action-button {
+  display: inline-block;
+  padding: 8px 16px;
+  background: #007aff;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-top: 16px;
+  transition: background 0.2s;
+}
+
+.action-button:hover {
+  background: #0062cc;
+}
+
+.figma-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.project-list {
+  margin: 24px 0;
+  width: 100%;
+  max-width: 400px;
+}
+
+.project-item {
+  padding: 12px;
+  background: rgba(255,255,255,0.05);
+  margin-bottom: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.project-item:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.vscode-content {
+  padding: 0;
+  display: flex;
+}
+
+.vscode-content .sidebar {
+  width: 200px;
+  background: rgba(0,0,0,0.2);
+  padding: 10px;
+  border-right: 1px solid rgba(255,255,255,0.1);
+}
+
+.vscode-content .sidebar h3 {
+  font-size: 11px;
+  color: #888;
+  margin-bottom: 10px;
+}
+
+.vscode-content .sidebar ul {
+  list-style: none;
+  font-size: 13px;
+  color: #ccc;
+}
+
+.vscode-content .sidebar li {
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.vscode-content .sidebar li:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.vscode-content .sidebar li.active-file {
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+}
+
+.vscode-content .editor {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.vscode-content .editor-tab {
+  padding: 8px 16px;
+  background: rgba(255,255,255,0.05);
+  font-size: 13px;
+  display: inline-block;
+  border-bottom: 1px solid #007aff;
+}
+
+.vscode-content .editor-code {
+  padding: 20px;
+  font-family: monospace;
+}
+
+.resume-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.resume-preview {
+  background: #fff;
+  color: #000;
+  padding: 40px;
+  border-radius: 4px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.trash-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+}

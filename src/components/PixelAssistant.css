@@ -1,0 +1,459 @@
+.pixel-clippy {
+  position: fixed !important;
+  right: 28px !important;
+  bottom: 24px !important;
+  left: auto !important;
+  top: auto !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.45));
+  z-index: 120 !important;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, visibility 0.25s ease;
+}
+
+/* Hide the assistant bot and its balloons when an app is in full screen */
+body.has-fullscreen-window .clippy,
+body.has-fullscreen-window .pixel-clippy,
+body.has-fullscreen-window .clippy-balloon,
+body.has-fullscreen-window .clippy-dialog-container {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+
+.pixel-clippy:hover {
+  transform: translateY(-4px) scale(1.05);
+}
+
+.pixel-clippy:active {
+  transform: scale(0.96);
+}
+
+.clippy-balloon {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
+  z-index: 100000 !important;
+}
+
+/* =========================================
+   Clippy Interactive Chat Dialog
+   ========================================= */
+.clippy-dialog-container {
+  position: fixed;
+  right: 165px;
+  bottom: 24px;
+  width: 380px;
+  max-width: calc(100vw - 190px);
+  max-height: calc(100vh - 120px);
+  background: rgba(22, 27, 34, 0.95);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 14px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  z-index: 99998;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: clippyDialogPop 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  color: #e6edf3;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+@keyframes clippyDialogPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.92) translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Dialog Header */
+.clippy-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  user-select: none;
+}
+
+.clippy-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.clippy-sound-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #d1d5db;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.clippy-sound-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.clippy-sound-toggle-btn.muted {
+  color: #f87171;
+  border-color: rgba(248, 113, 113, 0.35);
+  background: rgba(239, 68, 68, 0.12);
+}
+
+.clippy-sound-toggle-btn.muted:hover {
+  background: rgba(239, 68, 68, 0.22);
+  color: #fca5a5;
+}
+
+.clippy-sound-toggle-btn.unmuted {
+  color: #34d399;
+  border-color: rgba(52, 211, 153, 0.35);
+  background: rgba(16, 185, 129, 0.12);
+}
+
+.clippy-sound-toggle-btn.unmuted:hover {
+  background: rgba(16, 185, 129, 0.22);
+  color: #6ee7b7;
+}
+
+/* Floating Quick Sound Option directly above Clippy */
+.clippy-quick-sound-pill {
+  position: fixed;
+  right: 28px;
+  bottom: 125px;
+  background: rgba(22, 27, 34, 0.92);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+  color: #e5e7eb;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.18s ease;
+  user-select: none;
+}
+
+.clippy-quick-sound-pill:hover {
+  transform: translateY(-2px);
+  background: rgba(30, 36, 46, 0.98);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+}
+
+.clippy-quick-sound-pill.muted {
+  border-color: rgba(248, 113, 113, 0.4);
+}
+
+.clippy-quick-sound-pill.unmuted {
+  border-color: rgba(52, 211, 153, 0.4);
+}
+
+.clippy-dialog-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #f0f6fc;
+  letter-spacing: -0.2px;
+}
+
+.clippy-dialog-badge {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 7px;
+  background: rgba(56, 189, 248, 0.18);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 12px;
+}
+
+.clippy-close-btn {
+  background: none;
+  border: none;
+  color: #8b949e;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.clippy-close-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+/* Suggestion Chips */
+.clippy-chips-scroll {
+  display: flex;
+  gap: 6px;
+  padding: 10px 12px;
+  overflow-x: auto;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.25);
+  scrollbar-width: thin;
+}
+
+.clippy-chip {
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #c9d1d9;
+  font-size: 11.5px;
+  font-weight: 500;
+  padding: 5px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.clippy-chip:hover {
+  background: rgba(56, 189, 248, 0.22);
+  border-color: rgba(56, 189, 248, 0.45);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+/* Dialog Body */
+.clippy-dialog-body {
+  padding: 12px 14px;
+  max-height: 310px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.clippy-welcome-msg {
+  font-size: 13px;
+  line-height: 1.45;
+  color: #8b949e;
+}
+
+.clippy-welcome-msg strong {
+  color: #f0f6fc;
+}
+
+/* Messages */
+.clippy-qa-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: clippyFadeIn 0.2s ease;
+}
+
+@keyframes clippyFadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.clippy-user-query {
+  align-self: flex-end;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 12.5px;
+  padding: 6px 12px;
+  border-radius: 14px 14px 2px 14px;
+  max-width: 85%;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.clippy-ans-box {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.clippy-ans-header {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #58a6ff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.clippy-ans-text {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #e6edf3;
+  white-space: pre-line;
+}
+
+/* Path Recommendation Box */
+.clippy-path-card {
+  background: rgba(13, 17, 23, 0.85);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-radius: 8px;
+  padding: 9px 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.clippy-path-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #38bdf8;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.clippy-path-val {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 11px;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 4px 7px;
+  border-radius: 4px;
+  color: #a5d6ff;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  word-break: break-all;
+}
+
+/* Actions in Answer */
+.clippy-actions-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.clippy-action-btn {
+  background: #238636;
+  color: #ffffff;
+  border: none;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.18s ease;
+  text-decoration: none;
+}
+
+.clippy-action-btn:hover {
+  background: #2ea043;
+  transform: translateY(-1px);
+}
+
+.clippy-action-btn.secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: #f0f6fc;
+}
+
+.clippy-action-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* Dialog Input Area */
+.clippy-input-bar {
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  background: rgba(0, 0, 0, 0.25);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  gap: 8px;
+}
+
+.clippy-text-input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12.5px;
+  color: #ffffff;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.clippy-text-input:focus {
+  border-color: #38bdf8;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.clippy-text-input::placeholder {
+  color: #8b949e;
+}
+
+.clippy-send-btn {
+  background: #38bdf8;
+  color: #0b1120;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.clippy-send-btn:hover:not(:disabled) {
+  background: #7dd3fc;
+  transform: scale(1.05);
+}
+
+.clippy-send-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+@media (max-width: 640px) {
+  .pixel-clippy {
+    right: 16px !important;
+    bottom: 20px !important;
+  }
+  .clippy-dialog-container {
+    right: 16px;
+    bottom: 120px;
+    width: calc(100vw - 32px);
+    max-width: calc(100vw - 32px);
+  }
+}
+
