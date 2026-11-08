@@ -7,7 +7,7 @@ import PixelAssistant from './PixelAssistant';
 import { portfolioApps, desktopIconIds } from '../config/apps';
 import './Desktop.css';
 
-const Desktop = ({ isIdle }) => {
+const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm }) => {
   const [openWindows, setOpenWindows] = useState(['finder']);
   const [minimizedWindows, setMinimizedWindows] = useState([]);
   const [activeWindow, setActiveWindow] = useState('finder');
@@ -105,7 +105,7 @@ const Desktop = ({ isIdle }) => {
 
   return (
     <div className="desktop">
-      <MenuBar />
+      <MenuBar userName={userName} onReplaySwarm={onReplaySwarm} />
       
       <div className="desktop-content">
         {/* Left Column Desktop Icons */}
@@ -131,6 +131,7 @@ const Desktop = ({ isIdle }) => {
             <Window 
               key={appId}
               app={app}
+              userName={userName}
               isActive={activeWindow === appId}
               isMinimized={minimizedWindows.includes(appId)}
               isMaximized={maximizedWindows.includes(appId)}

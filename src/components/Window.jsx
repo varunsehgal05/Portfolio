@@ -9,15 +9,16 @@ import FinderApp from './FinderApp';
 
 const Window = ({ 
   app, 
+  userName,
   isActive, 
   isMinimized, 
   isMaximized: controlledMaximized,
-  onClose, 
-  onMinimize, 
+  onClose,
+  onMinimize,
   onToggleMaximize,
-  onFocus, 
-  onOpenApp, 
-  defaultMaximized = (app.id !== 'finder') 
+  onFocus,
+  onOpenApp,
+  defaultMaximized = (app.id !== 'finder')
 }) => {
   const [localMaximized, setLocalMaximized] = useState(defaultMaximized);
   const isMaximized = controlledMaximized !== undefined ? controlledMaximized : localMaximized;
@@ -123,7 +124,7 @@ const Window = ({
       case 'finder':
         return <FinderApp onOpenApp={onOpenApp} />;
       case 'figma':
-        return <FigmaApp isInteracting={isInteracting} />;
+        return <FigmaApp isInteracting={isInteracting} userName={userName} />;
       case 'vscode':
         return (
           <div className="window-content-inner vscode-content">

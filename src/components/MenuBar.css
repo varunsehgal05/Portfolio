@@ -9,9 +9,11 @@
   z-index: 999;
   background: rgba(15, 15, 18, 0.75);
   backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
   user-select: none;
+  position: relative;
 }
 
 .menu-left, .menu-right {
@@ -27,6 +29,14 @@
   color: #ffffff;
   cursor: pointer;
   margin-right: 2px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: background-color 0.15s ease;
+}
+
+.menu-apple-logo:hover,
+.menu-apple-logo.active {
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .menu-item {
@@ -48,6 +58,65 @@
   font-weight: 700;
   color: #ffffff;
   margin-right: 4px;
+}
+
+/* User presence pill in MenuBar */
+.menu-user-presence {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  background: rgba(26, 188, 254, 0.12);
+  border: 1px solid rgba(26, 188, 254, 0.28);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.menu-user-presence:hover {
+  background: rgba(26, 188, 254, 0.22);
+  border-color: rgba(26, 188, 254, 0.45);
+}
+
+.presence-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #10b981;
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
+}
+
+.presence-icon {
+  color: #38bdf8;
+}
+
+.presence-name {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #e0f2fe;
+}
+
+/* Menu Swarm Replay button */
+.menu-swarm-replay-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(168, 85, 247, 0.14);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  color: #d8b4fe;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.menu-swarm-replay-btn:hover {
+  background: rgba(168, 85, 247, 0.25);
+  color: #f3e8ff;
+  border-color: rgba(168, 85, 247, 0.5);
+  box-shadow: 0 0 8px rgba(168, 85, 247, 0.3);
 }
 
 .menu-sound-icon {
@@ -72,4 +141,105 @@
   color: #f4f4f5;
   font-size: 12px;
   letter-spacing: -0.1px;
+}
+
+/* Apple Dropdown Menu */
+.apple-dropdown-menu {
+  position: absolute;
+  top: 30px;
+  left: 12px;
+  width: 220px;
+  background: rgba(28, 28, 35, 0.94);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 6px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+  animation: dropdownIn 0.15s ease-out;
+}
+
+@keyframes dropdownIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.apple-dropdown-header {
+  padding: 6px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.apple-dropdown-brand {
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.apple-dropdown-user {
+  font-size: 11px;
+  color: #a1a1aa;
+}
+
+.apple-dropdown-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 4px 6px;
+}
+
+.apple-dropdown-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 5px;
+  background: transparent;
+  border: none;
+  color: #e4e4e7;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.12s ease;
+}
+
+.apple-dropdown-item:hover {
+  background: #3b82f6;
+  color: #ffffff;
+}
+
+.apple-dropdown-item.primary-action:hover {
+  background: #8b5cf6;
+}
+
+.dropdown-icon {
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+.sparkle-icon {
+  color: #c084fc;
+}
+
+.apple-dropdown-item:hover .sparkle-icon {
+  color: #ffffff;
+}
+
+.dropdown-shortcut {
+  margin-left: auto;
+  font-size: 10px;
+  color: #71717a;
+}
+
+.apple-dropdown-item:hover .dropdown-shortcut {
+  color: rgba(255, 255, 255, 0.7);
 }
