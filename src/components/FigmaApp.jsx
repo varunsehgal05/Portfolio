@@ -244,6 +244,171 @@ const HACKATHONS = [
   }
 ];
 
+const TIMELINE_ACTIVITY = [
+  {
+    id: 'act-unievent',
+    type: 'experience',
+    category: 'Product Design',
+    date: 'Oct 2024 — Present',
+    icon: 'edit',
+    highlight: 'Varun S.',
+    titleRest: 'led Product Design at UniEvent (EventFlow)',
+    desc: 'Leading product design for campus event ticketing platform. Architected 4-step booking flow optimization, slashing transaction drop-off by 30% across 50+ modular components.',
+    quote: 'Spearheaded end-to-end design system with 50+ tokens, responsive checkout patterns, and real-time seat reservation micro-interactions.',
+    location: 'Remote',
+    link: 'https://www.linkedin.com/in/varunsehgal02',
+    actionLabel: 'View on LinkedIn'
+  },
+  {
+    id: 'act-hackethor',
+    type: 'hackathons',
+    category: 'Hackathon Win',
+    date: 'Apr 2025',
+    icon: 'emoji_events',
+    highlight: 'HAckeThor Winner',
+    titleRest: 'awarded 1st Place by Unstop',
+    desc: 'Awarded 1st place in national competitive hackathon demonstrating rapid UX prototyping, interactive user testing, and AI tool integration under high pressure.',
+    award: '🏆 1st Place Winner',
+    credentialId: 'd883bbf5-5d9f-43e9-a417-21a4f009f4ff',
+    link: 'https://unstop.com/competitions/hackethor',
+    actionLabel: 'Verify Credential'
+  },
+  {
+    id: 'act-assemble',
+    type: 'experience',
+    category: 'Operations & UX',
+    date: 'Jul 2024 — Sep 2024',
+    icon: 'terminal',
+    highlight: 'Assemble',
+    titleRest: 'appointed Assistant Head of Operations / UI/UX Intern',
+    desc: 'Designed collaborative creator workspace tools and interaction prototypes in Figma. Coordinated platform operations and stream workflows for multi-team esports competitions.',
+    location: 'Remote',
+    link: 'https://www.linkedin.com/in/varunsehgal02',
+    actionLabel: 'View on LinkedIn'
+  },
+  {
+    id: 'act-udemy-ux',
+    type: 'certifications',
+    category: 'Certification',
+    date: 'Jan 2025',
+    icon: 'workspace_premium',
+    highlight: 'Udemy',
+    titleRest: 'issued Complete UI/UX Masterclass Credential',
+    desc: 'Comprehensive training covering user research, mental models, WCAG AA accessibility, wireframing, and modern web application architecture.',
+    credentialId: 'UC-uiux-varun-sehgal',
+    link: 'https://www.udemy.com',
+    actionLabel: 'Verify Certificate'
+  },
+  {
+    id: 'act-codesrijan',
+    type: 'hackathons',
+    category: 'Leadership',
+    date: 'Apr 2026',
+    icon: 'groups',
+    highlight: 'CodeSrijan Hackathon',
+    titleRest: 'directed by Varun as Lead Designer & Co-Organizer',
+    desc: 'Directed visual identity, participant portals, and 72-hour live evaluation leaderboard system for 200+ hackathon participants.',
+    award: '⚡ Organizing Lead & Identity Designer',
+    credentialId: 'codesrijan-lead-2026',
+    link: 'https://github.com/varunsehgal05',
+    actionLabel: 'View Repository'
+  },
+  {
+    id: 'act-code-conquerors',
+    type: 'hackathons',
+    category: 'Hackathon Award',
+    date: 'Apr 2025',
+    icon: 'military_tech',
+    highlight: 'Code Conquerors',
+    titleRest: 'awarded 2nd Runner-up (JUET ACM & CSI)',
+    desc: 'Led frontend engineering and design for Team Pixel_Codes in a 12-hour offline hackathon (150+ devs), delivering an AI quiz generator with Next.js and Ollama local LLM APIs.',
+    award: '🥈 2nd Runner-up (Team Pixel_Codes)',
+    credentialId: 'team-pixel-codes-2025',
+    link: 'https://github.com/varunsehgal05',
+    actionLabel: 'View Project'
+  },
+  {
+    id: 'act-knaptix',
+    type: 'experience',
+    category: 'Internship',
+    date: 'Jan 2024 — Jun 2024',
+    icon: 'layers',
+    highlight: 'Knaptix Ventures',
+    titleRest: 'engaged Varun as UI/UX Designer Intern',
+    desc: 'Engineered high-fidelity wireframes and design system components for 5+ B2B client applications and web dashboards, boosting customer satisfaction scores by 40%.',
+    location: 'Remote',
+    link: 'https://www.linkedin.com/in/varunsehgal02',
+    actionLabel: 'View on LinkedIn'
+  },
+  {
+    id: 'act-imagine',
+    type: 'hackathons',
+    category: 'Hackathon Finalist',
+    date: 'Dec 2024',
+    icon: 'star',
+    highlight: 'Imagine Hackathon',
+    titleRest: 'selected as National Finalist on Unstop',
+    desc: 'Selected among top national finalists for creative digital workflows, collaborative interface development, and user-centric problem solving.',
+    award: '🎖️ National Finalist',
+    credentialId: 'imgn-finalist-2024',
+    link: 'https://unstop.com/competitions/imagine-hackathon',
+    actionLabel: 'Verify Finalist'
+  },
+  {
+    id: 'act-udemy-figma',
+    type: 'certifications',
+    category: 'Certification',
+    date: 'Jan 2025',
+    icon: 'palette',
+    highlight: 'Udemy',
+    titleRest: 'certified UI/UX Design with Figma',
+    desc: 'Mastery of advanced Figma design tokens, nested component variants, auto-layout algorithms, and interactive prototype pipelines.',
+    credentialId: 'UC-figma-varun-sehgal',
+    link: 'https://www.udemy.com',
+    actionLabel: 'Verify Certificate'
+  },
+  {
+    id: 'act-ios-ux',
+    type: 'certifications',
+    category: 'Mobile UX',
+    date: 'Jun 2024',
+    icon: 'phone_iphone',
+    highlight: 'Infosys Springboard',
+    titleRest: 'awarded UI and UX for iOS Credential',
+    desc: 'Apple Human Interface Guidelines, fluid gestures, dynamic island layouts, and iOS mobile typography standards.',
+    credentialId: 'INFY-IOS-UX-2024',
+    link: 'https://infyspringboard.onwingspan.com',
+    actionLabel: 'Verify Credential'
+  },
+  {
+    id: 'act-freelance',
+    type: 'experience',
+    category: 'Feedback',
+    date: 'Jan 2024 — Present',
+    icon: 'rate_review',
+    highlight: 'Client Partners',
+    titleRest: 'reviewed Freelance UI/UX Collaborations',
+    quote: 'Delivered brand identities, mobile interfaces, and conversion-focused SaaS landing pages for 10+ tech startups with a 95% client retention rate.',
+    desc: 'Executed end-to-end design sprint cycles, user research, wireframing, and design-to-code handoffs using React and Tailwind CSS.',
+    location: 'Remote',
+    link: 'https://www.linkedin.com/in/varunsehgal02',
+    actionLabel: 'View Profile'
+  },
+  {
+    id: 'act-python',
+    type: 'certifications',
+    category: 'Programming',
+    date: 'Jun 2024',
+    icon: 'code',
+    highlight: 'HackerRank',
+    titleRest: 'certified Python (Basic) Skills',
+    desc: 'Certified in core algorithmic problem solving, data structures, and automation scripting logic.',
+    credentialId: 'HR-PYTHON-VARUN',
+    link: 'https://www.hackerrank.com/certificates',
+    actionLabel: 'Verify Skill'
+  }
+];
+
 const PLUGINS = [
   { name: 'Autoflow', category: 'Diagramming', desc: 'Automate user flows and connector lines between artboards with 1 click.', link: 'https://www.figma.com/community/plugin/733902567457592893', icon: 'alt_route' },
   { name: 'Stark', category: 'Accessibility', desc: 'Contrast checker, color blindness simulator, and WCAG AA audit suite.', link: 'https://www.figma.com/community/plugin/732603254453395948', icon: 'visibility' },
@@ -276,6 +441,10 @@ const FigmaApp = ({ isInteracting, userName, onOpenApp }) => {
 
   // About variant state
   const [aboutVariant, setAboutVariant] = useState('Product Designer');
+
+  // Experience Activity timeline state
+  const [activityFilter, setActiveFilter] = useState('All');
+  const [experienceViewMode, setExperienceViewMode] = useState('zigzag'); // 'zigzag' | 'split'
 
   // Right sidebar properties panel state
   const [rightSidebarOpen, setRightSidebarOpen] = useState(true);
@@ -510,6 +679,14 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
       p.desc.toLowerCase().includes(projectSearch.toLowerCase()) ||
       p.tags.some(t => t.toLowerCase().includes(projectSearch.toLowerCase()));
     return matchesCat && matchesSearch;
+  });
+
+  const filteredActivity = TIMELINE_ACTIVITY.filter(item => {
+    if (activityFilter === 'All') return true;
+    if (activityFilter === 'Experience') return item.type === 'experience';
+    if (activityFilter === 'Hackathons') return item.type === 'hackathons';
+    if (activityFilter === 'Certifications') return item.type === 'certifications';
+    return true;
   });
 
   return (
@@ -1033,126 +1210,264 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
           )}
 
           {/* =========================================================================
-              VIEW 3: EXPERIENCE (Career Nodes, Hackathons & Official Certifications)
+              VIEW 3: EXPERIENCE (Recent Activity, Zigzag Timeline & Credentials)
               ========================================================================= */}
           {activeTab === 'experience' && (
             <div className="lovable-static-view">
               <div className="view-content-wrapper">
                 <header className="view-page-header">
-                  <h1 className="view-page-title">Experience, Hackathons & Certifications</h1>
-                  <p className="view-page-desc">Professional journey, leadership roles, hackathon wins, and validated technical credentials.</p>
-                </header>
-
-                <div className="experience-columns-grid">
-                  {/* Timeline Column */}
-                  <div className="timeline-section">
-                    <h2 className="sub-section-title">Career Timeline & Internships</h2>
-                    <div className="timeline-flow">
-                      {TIMELINE.map((item, index) => (
-                        <div key={index} className="timeline-flow-node">
-                          <div className="flow-dot-col">
-                            <span className="flow-dot"></span>
-                            {index < TIMELINE.length - 1 && <span className="flow-stem"></span>}
-                          </div>
-                          <div className="flow-content-card">
-                            <span className="flow-period">{item.period}</span>
-                            <h3 className="flow-role">{item.role}</h3>
-                            <div className="timeline-meta-row">
-                              <a 
-                                href={item.link} 
-                                target="_blank" 
-                                rel="noreferrer" 
-                                className="timeline-company-link"
-                              >
-                                {item.company}
-                                <span className="material-symbols-outlined text-[13px]">open_in_new</span>
-                              </a>
-                              {item.location && <span className="timeline-location-pill">{item.location}</span>}
-                            </div>
-                            <p className="flow-desc">{item.desc}</p>
-                          </div>
-                        </div>
-                      ))}
+                  <div className="activity-header-top">
+                    <div>
+                      <h1 className="view-page-title">Recent Activity</h1>
+                      <p className="view-page-desc">Tracking changes across Varun_Sehgal_Portfolio.fig</p>
                     </div>
 
-                    {/* Hackathons Section */}
-                    <div className="hackathons-section">
-                      <h2 className="sub-section-title">Hackathon Wins & Leadership</h2>
+                    {/* Filter and View Controls */}
+                    <div className="activity-controls-row">
+                      <div className="activity-filter-pills">
+                        {['All', 'Experience', 'Hackathons', 'Certifications'].map(filter => (
+                          <button
+                            key={filter}
+                            type="button"
+                            className={`activity-filter-btn ${activityFilter === filter ? 'active' : ''}`}
+                            onClick={() => setActiveFilter(filter)}
+                          >
+                            {filter}
+                          </button>
+                        ))}
+                      </div>
+
+                      <div className="activity-view-switcher">
+                        <button
+                          type="button"
+                          className={`view-switch-btn ${experienceViewMode === 'zigzag' ? 'active' : ''}`}
+                          onClick={() => setExperienceViewMode('zigzag')}
+                          title="Alternating Timeline View"
+                        >
+                          <span className="material-symbols-outlined text-[15px]">timeline</span>
+                          <span>Timeline</span>
+                        </button>
+                        <button
+                          type="button"
+                          className={`view-switch-btn ${experienceViewMode === 'split' ? 'active' : ''}`}
+                          onClick={() => setExperienceViewMode('split')}
+                          title="Split Column View"
+                        >
+                          <span className="material-symbols-outlined text-[15px]">view_column</span>
+                          <span>Columns</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </header>
+
+                {/* Alternating Zigzag Timeline (Matching Recent Activity Mockup) */}
+                {experienceViewMode === 'zigzag' ? (
+                  <div className="zigzag-timeline-wrapper">
+                    <div className="zigzag-timeline-container">
+                      <div className="zigzag-center-line"></div>
+
+                      {filteredActivity.map((item, index) => {
+                        const isRight = index % 2 === 0;
+                        return (
+                          <div 
+                            key={item.id} 
+                            className={`zigzag-timeline-row ${isRight ? 'align-right' : 'align-left'}`}
+                          >
+                            {/* Center Node Icon pinned on spine */}
+                            <div className="zigzag-node-icon" title={item.category}>
+                              <span className="material-symbols-outlined text-[17px]">{item.icon}</span>
+                            </div>
+
+                            {/* Alternating Card */}
+                            <div className="zigzag-card">
+                              <div className="zigzag-card-header">
+                                <span className="zigzag-card-date">{item.date}</span>
+                                <span className="zigzag-card-badge">{item.category}</span>
+                              </div>
+
+                              <div className="zigzag-card-title-row">
+                                <h3 className="zigzag-card-title">
+                                  <span className="zigzag-highlight-name">{item.highlight}</span> {item.titleRest}
+                                </h3>
+                              </div>
+
+                              {item.quote && (
+                                <blockquote className="zigzag-card-quote">
+                                  "{item.quote}"
+                                </blockquote>
+                              )}
+
+                              {item.desc && (
+                                <p className="zigzag-card-desc">{item.desc}</p>
+                              )}
+
+                              <div className="zigzag-card-footer">
+                                <div className="zigzag-badges-row">
+                                  {item.award && (
+                                    <span className="hackathon-award-badge">{item.award}</span>
+                                  )}
+                                  {item.credentialId && (
+                                    <span className="cert-id-badge">ID: {item.credentialId}</span>
+                                  )}
+                                  {item.location && (
+                                    <span className="timeline-location-pill">{item.location}</span>
+                                  )}
+                                </div>
+
+                                {item.link && (
+                                  <div className="zigzag-actions-row">
+                                    <a 
+                                      href={item.link} 
+                                      target="_blank" 
+                                      rel="noreferrer" 
+                                      className="cert-action-btn primary"
+                                      title="Open link in browser"
+                                    >
+                                      <span>{item.actionLabel || 'Verify'}</span>
+                                      <span className="material-symbols-outlined text-[13px]">open_in_new</span>
+                                    </a>
+                                    <button 
+                                      type="button"
+                                      className="cert-action-btn secondary"
+                                      onClick={() => handleCopyLink(item.link, `${item.highlight} link`)}
+                                      title="Copy link to clipboard"
+                                    >
+                                      <span className="material-symbols-outlined text-[13px]">content_copy</span>
+                                      <span>Copy</span>
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Footer matching user screenshot */}
+                    <div className="activity-timeline-footer">
+                      <span className="footer-brand">Spectral Chroma</span>
+                      <div className="activity-footer-links">
+                        <span onClick={() => onOpenApp ? onOpenApp('contact') : null}>Feedback</span>
+                        <span>Shortcuts</span>
+                        <span>System Status</span>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  /* Alternate Split Columns View */
+                  <div className="experience-columns-grid">
+                    {/* Timeline Column */}
+                    <div className="timeline-section">
+                      <h2 className="sub-section-title">Career Timeline & Internships</h2>
                       <div className="timeline-flow">
-                        {HACKATHONS.map((hack, index) => (
-                          <div key={hack.id} className="timeline-flow-node">
+                        {TIMELINE.map((item, index) => (
+                          <div key={index} className="timeline-flow-node">
                             <div className="flow-dot-col">
-                              <span className="flow-dot" style={{ background: '#f59e0b' }}></span>
-                              {index < HACKATHONS.length - 1 && <span className="flow-stem"></span>}
+                              <span className="flow-dot"></span>
+                              {index < TIMELINE.length - 1 && <span className="flow-stem"></span>}
                             </div>
                             <div className="flow-content-card">
-                              <span className="flow-period">{hack.date}</span>
-                              <div className="hackathon-award-badge">
-                                <span>{hack.award}</span>
-                              </div>
-                              <h3 className="flow-role">{hack.title}</h3>
+                              <span className="flow-period">{item.period}</span>
+                              <h3 className="flow-role">{item.role}</h3>
                               <div className="timeline-meta-row">
                                 <a 
-                                  href={hack.link} 
+                                  href={item.link} 
                                   target="_blank" 
                                   rel="noreferrer" 
                                   className="timeline-company-link"
                                 >
-                                  {hack.issuer}
+                                  {item.company}
                                   <span className="material-symbols-outlined text-[13px]">open_in_new</span>
                                 </a>
+                                {item.location && <span className="timeline-location-pill">{item.location}</span>}
                               </div>
-                              <p className="flow-desc">{hack.desc}</p>
+                              <p className="flow-desc">{item.desc}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Hackathons Section */}
+                      <div className="hackathons-section">
+                        <h2 className="sub-section-title">Hackathon Wins & Leadership</h2>
+                        <div className="timeline-flow">
+                          {HACKATHONS.map((hack, index) => (
+                            <div key={hack.id} className="timeline-flow-node">
+                              <div className="flow-dot-col">
+                                <span className="flow-dot" style={{ background: '#f59e0b' }}></span>
+                                {index < HACKATHONS.length - 1 && <span className="flow-stem"></span>}
+                              </div>
+                              <div className="flow-content-card">
+                                <span className="flow-period">{hack.date}</span>
+                                <div className="hackathon-award-badge">
+                                  <span>{hack.award}</span>
+                                </div>
+                                <h3 className="flow-role">{hack.title}</h3>
+                                <div className="timeline-meta-row">
+                                  <a 
+                                    href={hack.link} 
+                                    target="_blank" 
+                                    rel="noreferrer" 
+                                    className="timeline-company-link"
+                                  >
+                                    {hack.issuer}
+                                    <span className="material-symbols-outlined text-[13px]">open_in_new</span>
+                                  </a>
+                                </div>
+                                <p className="flow-desc">{hack.desc}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Certifications Column */}
+                    <div className="certs-section">
+                      <h2 className="sub-section-title">Verified Certifications</h2>
+                      <div className="certs-flow-grid">
+                        {CERTIFICATIONS.map(cert => (
+                          <div key={cert.id} className="cert-flow-card">
+                            <div className="cert-card-top">
+                              <span className="material-symbols-outlined text-[#ffb5a1] text-[20px]">verified</span>
+                              <span className="cert-date">{cert.date}</span>
+                            </div>
+                            <h3 className="cert-title">{cert.title}</h3>
+                            <span className="cert-issuer">Issued by {cert.issuer}</span>
+                            {cert.credentialId && (
+                              <span className="cert-id-badge">ID: {cert.credentialId}</span>
+                            )}
+                            <p className="cert-desc">{cert.desc}</p>
+                            
+                            <div className="cert-actions-row">
+                              <a 
+                                href={cert.link} 
+                                target="_blank" 
+                                rel="noreferrer" 
+                                className="cert-action-btn primary"
+                                title="Open verified credential in browser"
+                              >
+                                <span>Verify Credential</span>
+                                <span className="material-symbols-outlined text-[13px]">open_in_new</span>
+                              </a>
+                              <button 
+                                type="button"
+                                className="cert-action-btn secondary"
+                                onClick={() => handleCopyLink(cert.link, `${cert.title} link`)}
+                                title="Copy certificate verification link"
+                              >
+                                <span className="material-symbols-outlined text-[13px]">content_copy</span>
+                                <span>Copy Link</span>
+                              </button>
                             </div>
                           </div>
                         ))}
                       </div>
                     </div>
                   </div>
-
-                  {/* Certifications Column */}
-                  <div className="certs-section">
-                    <h2 className="sub-section-title">Verified Certifications</h2>
-                    <div className="certs-flow-grid">
-                      {CERTIFICATIONS.map(cert => (
-                        <div key={cert.id} className="cert-flow-card">
-                          <div className="cert-card-top">
-                            <span className="material-symbols-outlined text-[#ffb5a1] text-[20px]">verified</span>
-                            <span className="cert-date">{cert.date}</span>
-                          </div>
-                          <h3 className="cert-title">{cert.title}</h3>
-                          <span className="cert-issuer">Issued by {cert.issuer}</span>
-                          {cert.credentialId && (
-                            <span className="cert-id-badge">ID: {cert.credentialId}</span>
-                          )}
-                          <p className="cert-desc">{cert.desc}</p>
-                          
-                          <div className="cert-actions-row">
-                            <a 
-                              href={cert.link} 
-                              target="_blank" 
-                              rel="noreferrer" 
-                              className="cert-action-btn primary"
-                              title="Open verified credential in browser"
-                            >
-                              <span>Verify Credential</span>
-                              <span className="material-symbols-outlined text-[13px]">open_in_new</span>
-                            </a>
-                            <button 
-                              type="button"
-                              className="cert-action-btn secondary"
-                              onClick={() => handleCopyLink(cert.link, `${cert.title} link`)}
-                              title="Copy certificate verification link"
-                            >
-                              <span className="material-symbols-outlined text-[13px]">content_copy</span>
-                              <span>Copy Link</span>
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                )}
               </div>
             </div>
           )}
