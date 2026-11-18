@@ -409,14 +409,192 @@ const TIMELINE_ACTIVITY = [
   }
 ];
 
-const PLUGINS = [
-  { name: 'Autoflow', category: 'Diagramming', desc: 'Automate user flows and connector lines between artboards with 1 click.', link: 'https://www.figma.com/community/plugin/733902567457592893', icon: 'alt_route' },
-  { name: 'Stark', category: 'Accessibility', desc: 'Contrast checker, color blindness simulator, and WCAG AA audit suite.', link: 'https://www.figma.com/community/plugin/732603254453395948', icon: 'visibility' },
-  { name: 'Content Reel', category: 'Content', desc: 'Pull real names, text avatars, and dummy data into components instantly.', link: 'https://www.figma.com/community/plugin/731627003475729986', icon: 'dataset' },
-  { name: 'Unsplash', category: 'Media', desc: 'Insert royalty-free high-res photography directly into shapes and layers.', link: 'https://www.figma.com/community/plugin/738454987945972471', icon: 'image' },
-  { name: 'Iconify', category: 'Icons', desc: 'Access 100,000+ vector icons directly inside the canvas.', link: 'https://www.figma.com/community/plugin/735098326275342410', icon: 'interests' },
-  { name: 'Similayer', category: 'Productivity', desc: 'Select layers with similar fill, stroke, text style, or auto-layout settings.', link: 'https://www.figma.com/community/plugin/736952773253018895', icon: 'filter_none' }
+const COMMUNITY_PLUGINS = [
+  {
+    id: 'magician',
+    name: 'Figma Magician (AI)',
+    author: 'Diagram / Figma',
+    category: 'AI & Automation',
+    desc: 'Generate custom vector icons, UI micro-copy, and magic palette shifts directly inside the canvas powered by multimodal AI.',
+    installs: '145k',
+    rating: '4.9',
+    badge: 'AI Powered',
+    bannerGradient: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+    icon: 'auto_awesome',
+    link: 'https://www.figma.com/community/plugin/1151890004522028995',
+    tags: ['AI Copy', 'Vector Icons', 'Generative']
+  },
+  {
+    id: 'autoflow',
+    name: 'Autoflow',
+    author: 'Yousef El-Dardiry',
+    category: 'Diagramming',
+    desc: 'Automate user flows and smart bezier connector lines between artboards with 1 click. Zero manual path drawing.',
+    installs: '320k',
+    rating: '4.9',
+    badge: 'Essential',
+    bannerGradient: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
+    icon: 'alt_route',
+    link: 'https://www.figma.com/community/plugin/733902567457592893',
+    tags: ['User Flows', 'Connectors', 'Information Architecture']
+  },
+  {
+    id: 'stark',
+    name: 'Stark Accessibility Suite',
+    author: 'Stark Lab',
+    category: 'Accessibility',
+    desc: 'Contrast checker, color blindness simulator, and WCAG AA / AAA compliance audit suite right in your workflow.',
+    installs: '210k',
+    rating: '5.0',
+    badge: 'WCAG AA / AAA',
+    bannerGradient: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
+    icon: 'visibility',
+    link: 'https://www.figma.com/community/plugin/732603254453395948',
+    tags: ['Contrast', 'Color Blindness', 'Compliance']
+  },
+  {
+    id: 'contentreel',
+    name: 'Content Reel',
+    author: 'Microsoft Design',
+    category: 'Content',
+    desc: 'Pull real names, text avatars, address tokens, and dummy financial data into components instantly.',
+    installs: '490k',
+    rating: '4.8',
+    badge: 'Data Generator',
+    bannerGradient: 'linear-gradient(135deg, #d97706 0%, #b45309 100%)',
+    icon: 'dataset',
+    link: 'https://www.figma.com/community/plugin/731627003475729986',
+    tags: ['Personas', 'Text Data', 'Avatars']
+  },
+  {
+    id: 'iconify',
+    name: 'Iconify',
+    author: 'Vjacheslav Trushkin',
+    category: 'Assets & Icons',
+    desc: 'Access 100,000+ vector icons (Lucide, Material, Phosphor, Carbon) directly inside the canvas without external SVG drag-and-drop.',
+    installs: '850k',
+    rating: '5.0',
+    badge: '100k+ Vectors',
+    bannerGradient: 'linear-gradient(135deg, #db2777 0%, #be185d 100%)',
+    icon: 'interests',
+    link: 'https://www.figma.com/community/plugin/735098326275342410',
+    tags: ['Lucide', 'Material', 'SVG Icons']
+  },
+  {
+    id: 'unsplash',
+    name: 'Unsplash',
+    author: 'Unsplash Team',
+    category: 'Media',
+    desc: 'Insert royalty-free, high-resolution photography directly into shapes, cards, and avatar frames with instant keyword filtering.',
+    installs: '1.2M',
+    rating: '4.9',
+    badge: 'High-Res Media',
+    bannerGradient: 'linear-gradient(135deg, #0d9488 0%, #0f766e 100%)',
+    icon: 'image',
+    link: 'https://www.figma.com/community/plugin/738454987945972471',
+    tags: ['Photography', 'Placeholders', 'Avatars']
+  },
+  {
+    id: 'similayer',
+    name: 'Similayer',
+    author: 'Dave Williames',
+    category: 'Productivity',
+    desc: 'Select layers with similar fill, stroke, text style, or auto-layout settings across complex nested frames.',
+    installs: '180k',
+    rating: '4.8',
+    badge: 'Power Tool',
+    bannerGradient: 'linear-gradient(135deg, #9333ea 0%, #7e22ce 100%)',
+    icon: 'filter_none',
+    link: 'https://www.figma.com/community/plugin/736952773253018895',
+    tags: ['Batch Selection', 'Token Matching', 'Styles']
+  },
+  {
+    id: 'automator',
+    name: 'Automator',
+    author: 'Diagram',
+    category: 'Automation',
+    desc: 'Build and run one-click custom automations for component re-indexing, token updates, and export pipelines.',
+    installs: '130k',
+    rating: '4.9',
+    badge: 'Batch Workflows',
+    bannerGradient: 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)',
+    icon: 'smart_toy',
+    link: 'https://www.figma.com/community/plugin/876024456526148978',
+    tags: ['Batch Rename', 'Token Sync', 'Scripts']
+  }
 ];
+
+const PAGE_LAYERS_MAP = {
+  home: [
+    { id: 'h-root', title: 'Varun_Sehgal_Portfolio (Frame)', type: 'frame', indent: 0, visible: true, locked: false },
+    { id: 'h-hero', title: 'Hero_Section_Grid', type: 'frame', indent: 1, visible: true, locked: false },
+    { id: 'h-badge', title: 'Author_Pill · Product Designer', type: 'component', indent: 2, visible: true, locked: true },
+    { id: 'h-title', title: 'Headline: I design digital products...', type: 'text', indent: 2, visible: true, locked: false },
+    { id: 'h-tag', title: 'Tagline: UI/UX · SaaS · Design Systems', type: 'text', indent: 2, visible: true, locked: false },
+    { id: 'h-cta', title: 'CTA_Group: See My Work / About', type: 'component', indent: 2, visible: true, locked: false },
+    { id: 'h-now', title: 'Now_Panel (Live Availability)', type: 'frame', indent: 1, visible: true, locked: false },
+    { id: 'h-bento', title: 'Featured_Bento_Grid (4 Projects)', type: 'frame', indent: 1, visible: true, locked: false },
+    { id: 'h-notes', title: 'Sticky_Notes_Canvas_Layer', type: 'group', indent: 0, visible: true, locked: false }
+  ],
+  projects: [
+    { id: 'w-root', title: 'Work_Case_Studies (Stage)', type: 'frame', indent: 0, visible: true, locked: false },
+    { id: 'w-search', title: 'Search_Input & Category_Filters', type: 'component', indent: 1, visible: true, locked: false },
+    { id: 'w-grid', title: 'Bento_Projects_Grid (7 Case Studies)', type: 'group', indent: 1, visible: true, locked: false },
+    { id: 'w-p1', title: 'AI Interview Prep System (SaaS)', type: 'component', indent: 2, visible: true, locked: false },
+    { id: 'w-p2', title: 'Movie Ticket Booking App (Mobile)', type: 'component', indent: 2, visible: true, locked: false },
+    { id: 'w-p3', title: 'Expensify Budget Tracker (FinTech)', type: 'component', indent: 2, visible: true, locked: false },
+    { id: 'w-p4', title: 'CodeSrijan Hackathon Portal', type: 'component', indent: 2, visible: true, locked: false },
+    { id: 'w-p5', title: 'EventFlow Experience Platform', type: 'component', indent: 2, visible: true, locked: false },
+    { id: 'w-p6', title: 'Conversion Landing Page', type: 'component', indent: 2, visible: true, locked: false },
+    { id: 'w-p7', title: 'Enterprise SaaS Dashboard', type: 'component', indent: 2, visible: true, locked: false }
+  ],
+  experience: [
+    { id: 'e-root', title: 'Recent_Activity_Canvas (Frame)', type: 'frame', indent: 0, visible: true, locked: false },
+    { id: 'e-header', title: 'Activity_Header & Filter_Pills', type: 'component', indent: 1, visible: true, locked: false },
+    { id: 'e-spine', title: 'Center_Vertical_Spine (Path)', type: 'vector', indent: 1, visible: true, locked: true },
+    { id: 'e-m1', title: 'Milestone: UniEvent (Lead Designer)', type: 'component', indent: 2, visible: true, locked: false },
+    { id: 'e-m2', title: 'Milestone: HAckeThor Winner (🏆 1st)', type: 'component', indent: 2, visible: true, locked: false },
+    { id: 'e-m3', title: 'Milestone: Assemble (Operations & UX)', type: 'component', indent: 2, visible: true, locked: false },
+    { id: 'e-m4', title: 'Milestone: Udemy Masterclass Credential', type: 'component', indent: 2, visible: true, locked: false },
+    { id: 'e-m5', title: 'Milestone: CodeSrijan (Organizing Lead)', type: 'component', indent: 2, visible: true, locked: false },
+    { id: 'e-m6', title: 'Milestone: Code Conquerors (🥈 2nd)', type: 'component', indent: 2, visible: true, locked: false },
+    { id: 'e-m7', title: 'Milestone: Knaptix Ventures (Intern)', type: 'component', indent: 2, visible: true, locked: false },
+    { id: 'e-m8', title: 'Milestone: Freelance (10+ Startups)', type: 'component', indent: 2, visible: true, locked: false }
+  ],
+  about: [
+    { id: 'a-root', title: 'About_Whiteboard (FigJam Canvas)', type: 'frame', indent: 0, visible: true, locked: false },
+    { id: 'a-sec1', title: 'Origin & Philosophy (Sticky Cards)', type: 'group', indent: 1, visible: true, locked: false },
+    { id: 'a-svg1', title: 'Dashed_Bezier_Connector_1', type: 'vector', indent: 1, visible: true, locked: true },
+    { id: 'a-sec2', title: 'Skill Architecture (Flow Frame)', type: 'component', indent: 1, visible: true, locked: false },
+    { id: 'a-svg2', title: 'Dashed_Bezier_Connector_2', type: 'vector', indent: 1, visible: true, locked: true },
+    { id: 'a-sec3', title: 'Technical Arsenal (Tool Badges)', type: 'group', indent: 1, visible: true, locked: false },
+    { id: 'a-sec4', title: 'Current Status & Connect Buttons', type: 'component', indent: 1, visible: true, locked: false }
+  ],
+  resume: [
+    { id: 'r-root', title: 'Varun_Sehgal_Resume.pdf (Document)', type: 'frame', indent: 0, visible: true, locked: false },
+    { id: 'r-left', title: 'Sidebar: Contact, Education & Skills', type: 'frame', indent: 1, visible: true, locked: false },
+    { id: 'r-main', title: 'Main: Header & Professional Summary', type: 'frame', indent: 1, visible: true, locked: false },
+    { id: 'r-exp', title: 'Section: Work Experience (4 Roles)', type: 'group', indent: 2, visible: true, locked: false },
+    { id: 'r-proj', title: 'Section: Design Projects (3 Apps)', type: 'group', indent: 2, visible: true, locked: false },
+    { id: 'r-hack', title: 'Section: Hackathons & Leadership', type: 'group', indent: 2, visible: true, locked: false }
+  ],
+  process: [
+    { id: 'p-root', title: 'Process_Methodology (FigJam Canvas)', type: 'frame', indent: 0, visible: true, locked: false },
+    { id: 'p-sec1', title: 'Problem Discovery (Tilted Cards)', type: 'group', indent: 1, visible: true, locked: false },
+    { id: 'p-svg1', title: 'Cyan_Dashed_Bezier_Connector_1', type: 'vector', indent: 1, visible: true, locked: true },
+    { id: 'p-sec2', title: 'User Flow (Flowchart Frame)', type: 'component', indent: 1, visible: true, locked: false },
+    { id: 'p-sec3', title: 'Design System & Tokens (Primitives)', type: 'group', indent: 1, visible: true, locked: false },
+    { id: 'p-svg2', title: 'Purple_Dashed_Bezier_Connector_2', type: 'vector', indent: 1, visible: true, locked: true },
+    { id: 'p-sec4', title: 'Validation & Prototype Impact (Metrics)', type: 'component', indent: 1, visible: true, locked: false }
+  ],
+  plugins: [
+    { id: 'pl-root', title: 'Figma_Community_Plugins (Gallery)', type: 'frame', indent: 0, visible: true, locked: false },
+    { id: 'pl-search', title: 'Search_Input & Category_Filters', type: 'component', indent: 1, visible: true, locked: false },
+    { id: 'pl-banner', title: 'Creative_Hero_Banner', type: 'frame', indent: 1, visible: true, locked: false },
+    { id: 'pl-grid', title: 'Plugins_Creative_Grid (8 Plugins)', type: 'group', indent: 1, visible: true, locked: false },
+    { id: 'pl-sim', title: 'Plugin_Simulator_Modal (Interactive)', type: 'component', indent: 1, visible: true, locked: false }
+  ]
+};
 
 const FigmaApp = ({ isInteracting, userName, onOpenApp }) => {
   const [activeTab, setActiveTab] = useState('home'); // 'home' | 'projects' | 'experience' | 'about' | 'resume' | 'process' | 'plugins'
@@ -438,6 +616,18 @@ const FigmaApp = ({ isInteracting, userName, onOpenApp }) => {
   // Projects filter state
   const [projectFilter, setProjectFilter] = useState('All');
   const [projectSearch, setProjectSearch] = useState('');
+
+  // Dynamic Left Sidebar State (Pages, Layers, Assets)
+  const [sidebarTab, setSidebarTab] = useState('layers'); // 'layers' | 'pages' | 'assets'
+  const [selectedLayerId, setSelectedLayerId] = useState(null);
+  const [layerVisibilityMap, setLayerVisibilityMap] = useState({});
+  const [layerLockMap, setLayerLockMap] = useState({});
+
+  // Creative Plugins & Simulator State
+  const [activeSimulatorPlugin, setActiveSimulatorPlugin] = useState(null);
+  const [pluginSearch, setPluginSearch] = useState('');
+  const [pluginCategory, setPluginCategory] = useState('All');
+  const [simulatorStep, setSimulatorStep] = useState(0);
 
   // About & Process Canvas View states
   const [aboutVariant, setAboutVariant] = useState('Product Designer');
@@ -691,6 +881,42 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
     return true;
   });
 
+  const filteredPlugins = COMMUNITY_PLUGINS.filter(plug => {
+    const matchesCat = pluginCategory === 'All' || plug.category === pluginCategory;
+    const matchesSearch = pluginSearch.trim() === '' ||
+      plug.name.toLowerCase().includes(pluginSearch.toLowerCase()) ||
+      plug.desc.toLowerCase().includes(pluginSearch.toLowerCase()) ||
+      plug.tags.some(t => t.toLowerCase().includes(pluginSearch.toLowerCase()));
+    return matchesCat && matchesSearch;
+  });
+
+  const toggleLayerVisibility = (layerId, e) => {
+    e.stopPropagation();
+    setLayerVisibilityMap(prev => ({
+      ...prev,
+      [layerId]: prev[layerId] === false ? true : false
+    }));
+  };
+
+  const toggleLayerLock = (layerId, e) => {
+    e.stopPropagation();
+    setLayerLockMap(prev => ({
+      ...prev,
+      [layerId]: !prev[layerId]
+    }));
+  };
+
+  const currentLayers = PAGE_LAYERS_MAP[activeTab] || [];
+  const PAGES_LIST = [
+    { id: 'home', num: '01', title: 'Home Artboard', icon: 'home' },
+    { id: 'projects', num: '02', title: 'Work & Case Studies', icon: 'dashboard' },
+    { id: 'experience', num: '03', title: 'Recent Activity & Timeline', icon: 'timeline' },
+    { id: 'about', num: '04', title: 'About (Whiteboard Canvas)', icon: 'space_dashboard' },
+    { id: 'resume', num: '05', title: 'Resume (ATS Sheet)', icon: 'description' },
+    { id: 'process', num: '06', title: 'Process (FigJam Flow)', icon: 'schema' },
+    { id: 'plugins', num: '07', title: 'Plugins (Community)', icon: 'extension' }
+  ];
+
   return (
     <div className={`lovable-figma-portfolio theme-${currentTheme}`}>
       {/* =========================================================================
@@ -819,23 +1045,149 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
           2. Main Workspace Layout
           ========================================================================= */}
       <div className="lovable-workspace-layout">
-        {/* Left Sidebar ("Project Files" & "Assets") */}
+        {/* Left Sidebar ("Layers", "Pages" & "Assets") */}
         <aside className="lovable-sidebar">
           <div className="sidebar-header">
-            <h2 className="sidebar-heading">Project Files</h2>
-            <p className="sidebar-sub">V3 Final Render</p>
+            <h2 className="sidebar-heading">Varun_Sehgal_Portfolio</h2>
+            <p className="sidebar-sub">PAGE: {activeTab.toUpperCase()}</p>
+          </div>
+
+          {/* Sidebar Mode Tabs */}
+          <div className="sidebar-tabs-row">
+            <button
+              type="button"
+              className={`sidebar-tab-btn ${sidebarTab === 'layers' ? 'active' : ''}`}
+              onClick={() => setSidebarTab('layers')}
+              title="Page Layers Tree"
+            >
+              Layers
+            </button>
+            <button
+              type="button"
+              className={`sidebar-tab-btn ${sidebarTab === 'pages' ? 'active' : ''}`}
+              onClick={() => setSidebarTab('pages')}
+              title="All Pages in Portfolio"
+            >
+              Pages
+            </button>
+            <button
+              type="button"
+              className={`sidebar-tab-btn ${sidebarTab === 'assets' ? 'active' : ''}`}
+              onClick={() => setSidebarTab('assets')}
+              title="Design System Assets & Themes"
+            >
+              Assets
+            </button>
           </div>
 
           <div className="sidebar-nav-list">
-            <div
-              className={`sidebar-nav-item ${showAssets ? 'active' : ''}`}
-              onClick={() => setShowAssets(!showAssets)}
-            >
-              <span className="material-symbols-outlined text-[18px]">grid_view</span>
-              <span>Assets</span>
-            </div>
+            {/* 1. PAGES TAB */}
+            {sidebarTab === 'pages' && (
+              <div className="sidebar-pages-list">
+                {PAGES_LIST.map(p => (
+                  <div
+                    key={p.id}
+                    className={`sidebar-page-item ${activeTab === p.id ? 'active' : ''}`}
+                    onClick={() => {
+                      setActiveTab(p.id);
+                      showToast(`Navigated to ${p.title}`);
+                    }}
+                  >
+                    <span className="sidebar-page-num">{p.num}</span>
+                    <span className="material-symbols-outlined text-[15px]">{p.icon}</span>
+                    <span>{p.title}</span>
+                  </div>
+                ))}
+              </div>
+            )}
 
-            <div className="sidebar-section-title">QUICK JUMP</div>
+            {/* 2. LAYERS TAB (Dynamic to active page) */}
+            {sidebarTab === 'layers' && (
+              <div className="sidebar-layers-tree">
+                {currentLayers.map(layer => {
+                  const isVisible = layerVisibilityMap[layer.id] !== false;
+                  const isLocked = !!layerLockMap[layer.id];
+                  const isSelected = selectedLayerId === layer.id;
+
+                  const getLayerIcon = (type) => {
+                    switch (type) {
+                      case 'frame': return 'crop_free';
+                      case 'component': return 'widgets';
+                      case 'text': return 'text_fields';
+                      case 'image': return 'image';
+                      case 'vector': return 'alt_route';
+                      default: return 'layers';
+                    }
+                  };
+
+                  return (
+                    <div
+                      key={layer.id}
+                      className={`sidebar-layer-row layer-indent-${layer.indent} ${isSelected ? 'selected' : ''}`}
+                      onClick={() => {
+                        setSelectedLayerId(layer.id);
+                        showToast(`Selected: ${layer.title}`);
+                      }}
+                    >
+                      <span className="material-symbols-outlined layer-icon">
+                        {getLayerIcon(layer.type)}
+                      </span>
+                      <span className="layer-title">{layer.title}</span>
+
+                      <div className="layer-actions">
+                        <button
+                          type="button"
+                          className="layer-mini-btn"
+                          onClick={(e) => toggleLayerLock(layer.id, e)}
+                          title={isLocked ? "Unlock Layer" : "Lock Layer"}
+                        >
+                          <span className="material-symbols-outlined text-[12px]">
+                            {isLocked ? 'lock' : 'lock_open'}
+                          </span>
+                        </button>
+                        <button
+                          type="button"
+                          className="layer-mini-btn"
+                          onClick={(e) => toggleLayerVisibility(layer.id, e)}
+                          title={isVisible ? "Hide Layer" : "Show Layer"}
+                        >
+                          <span className="material-symbols-outlined text-[12px]">
+                            {isVisible ? 'visibility' : 'visibility_off'}
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* 3. ASSETS TAB */}
+            {sidebarTab === 'assets' && (
+              <div className="p-3 flex flex-col gap-3">
+                <span className="text-[11px] font-bold text-zinc-400">DESIGN SYSTEM THEMES</span>
+                <div className="flex flex-col gap-2">
+                  <button onClick={() => changeTheme('default')} className="drawer-theme-btn">
+                    <span className="theme-dot default"></span>
+                    <span>Default Dark</span>
+                  </button>
+                  <button onClick={() => changeTheme('cyberpunk')} className="drawer-theme-btn">
+                    <span className="theme-dot cyberpunk"></span>
+                    <span>Cyberpunk</span>
+                  </button>
+                  <button onClick={() => changeTheme('ocean')} className="drawer-theme-btn">
+                    <span className="theme-dot ocean"></span>
+                    <span>Ocean Breeze</span>
+                  </button>
+                  <button onClick={() => changeTheme('monochrome')} className="drawer-theme-btn">
+                    <span className="theme-dot monochrome"></span>
+                    <span>Monochrome</span>
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <div className="sidebar-section-title">QUICK JUMP FIGMA FILES</div>
             <a
               href="https://www.figma.com/design/ezDh2NmBto6iv7xaQNs3Ha/AI-Interview?node-id=11-1842&t=siyh0b32g2XWrRNe-1"
               target="_blank"
@@ -1761,7 +2113,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
           )}
 
           {/* =========================================================================
-              VIEW 5: RESUME (Document Viewer)
+              VIEW 5: RESUME (Full ATS Resume Document Sheet)
               ========================================================================= */}
           {activeTab === 'resume' && (
             <div className="lovable-static-view">
@@ -1770,7 +2122,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   <div className="resume-header-flex">
                     <div>
                       <h1 className="view-page-title">Resume & Qualifications</h1>
-                      <p className="view-page-desc">Complete overview of professional experience and educational credentials.</p>
+                      <p className="view-page-desc">Official ATS-optimized curriculum vitae — UI/UX Designer & Product Designer.</p>
                     </div>
 
                     <a
@@ -1784,47 +2136,259 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   </div>
                 </header>
 
-                <div className="resume-sheet-card">
-                  <div className="sheet-top-header">
-                    <h2>VARUN SEHGAL</h2>
-                    <p className="sheet-subtitle">UI/UX Designer • Product Designer</p>
-                    <p className="sheet-contact-line">Bengaluru, IN • varun.sehgal02@gmail.com • +91 9399361193</p>
-                  </div>
-
-                  <div className="sheet-section">
-                    <h3>EDUCATION</h3>
-                    <div className="sheet-entry">
-                      <div className="entry-header">
-                        <strong>Jaypee University Of Engineering And Technology</strong>
-                        <span>2023 — 2027</span>
+                <div className="figma-resume-sheet-container">
+                  <div className="figma-resume-two-col">
+                    {/* Left Column: Contact, Education, Skills */}
+                    <aside className="figma-resume-sidebar">
+                      {/* Contact */}
+                      <div>
+                        <h4 className="figma-resume-section-title">
+                          <span className="text-[#ffb5a1]">#</span> CONTACT
+                        </h4>
+                        <ul className="figma-resume-contact-list">
+                          <li>
+                            <span className="material-symbols-outlined text-[14px]">call</span>
+                            <span>+91 9399361193</span>
+                          </li>
+                          <li>
+                            <span className="material-symbols-outlined text-[14px]">mail</span>
+                            <a href="mailto:varun.sehgal02@gmail.com">varun.sehgal02@gmail.com</a>
+                          </li>
+                          <li>
+                            <span className="material-symbols-outlined text-[14px]">location_on</span>
+                            <span>Gwalior, MP, India</span>
+                          </li>
+                          <li>
+                            <span className="material-symbols-outlined text-[14px]">language</span>
+                            <a href="https://varunsehgal.runs-on.dev" target="_blank" rel="noreferrer">varunsehgal.runs-on.dev</a>
+                          </li>
+                          <li>
+                            <span className="material-symbols-outlined text-[14px]">work</span>
+                            <a href="https://linkedin.com/in/varunsehgal02" target="_blank" rel="noreferrer">linkedin.com/in/varunsehgal02</a>
+                          </li>
+                          <li>
+                            <span className="material-symbols-outlined text-[14px]">palette</span>
+                            <a href="https://behance.net/varunsehgal3" target="_blank" rel="noreferrer">behance.net/varunsehgal3</a>
+                          </li>
+                          <li>
+                            <span className="material-symbols-outlined text-[14px]">code</span>
+                            <a href="https://github.com/varunsehgal05" target="_blank" rel="noreferrer">github.com/varunsehgal05</a>
+                          </li>
+                        </ul>
                       </div>
-                      <p className="entry-sub">B.Tech in Computer Science & Engineering</p>
-                    </div>
-                  </div>
 
-                  <div className="sheet-section">
-                    <h3>EXPERIENCE</h3>
-                    <div className="sheet-entry">
-                      <div className="entry-header">
-                        <strong>UniEvent — Lead Product Designer</strong>
-                        <span>Oct 2024 — Present</span>
+                      {/* Education */}
+                      <div>
+                        <h4 className="figma-resume-section-title">
+                          <span className="text-[#ffb5a1]">#</span> EDUCATION
+                        </h4>
+                        <div className="text-[12px] text-white font-semibold">Jaypee University of Eng. & Tech.</div>
+                        <div className="text-[11px] text-[#ffb5a1]">B.Tech in Computer Science & Eng.</div>
+                        <div className="text-[10.5px] text-zinc-500 mt-1 font-mono">Aug 2023 – May 2027 • Guna, India</div>
                       </div>
-                      <p className="entry-sub">Engineered campus event management UI, cutting transaction drop-off by 30% through a 50+ component design system.</p>
-                    </div>
 
-                    <div className="sheet-entry">
-                      <div className="entry-header">
-                        <strong>Assemble — UI/UX Design Intern</strong>
-                        <span>Jul 2024 — Sep 2024</span>
+                      {/* Skills */}
+                      <div>
+                        <h4 className="figma-resume-section-title">
+                          <span className="text-[#ffb5a1]">#</span> SKILLS ARSENAL
+                        </h4>
+
+                        <div className="mb-3">
+                          <div className="text-[11px] font-bold text-zinc-300 mb-1">UI/UX Design:</div>
+                          <div className="flex flex-wrap gap-1">
+                            {['Wireframing', 'Prototyping', 'User Research', 'Usability Testing', 'Design Systems', 'Info Architecture'].map((s, i) => (
+                              <span key={i} className="cert-id-badge">{s}</span>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="mb-3">
+                          <div className="text-[11px] font-bold text-zinc-300 mb-1">Design Tools:</div>
+                          <div className="flex flex-wrap gap-1">
+                            {['Figma', 'Figma AI', 'Adobe XD', 'Photoshop', 'Illustrator', 'FigJam'].map((s, i) => (
+                              <span key={i} className="cert-id-badge">{s}</span>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="mb-3">
+                          <div className="text-[11px] font-bold text-zinc-300 mb-1">AI-Augmented Design:</div>
+                          <div className="flex flex-wrap gap-1">
+                            {['Uizard', 'Galileo AI', 'Visily', 'Figma Magician', 'Automator'].map((s, i) => (
+                              <span key={i} className="cert-id-badge">{s}</span>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div>
+                          <div className="text-[11px] font-bold text-zinc-300 mb-1">Tech & Prototyping:</div>
+                          <div className="flex flex-wrap gap-1">
+                            {['React.js', 'Next.js', 'TypeScript', 'Tailwind CSS', 'HTML5/CSS3', 'Git'].map((s, i) => (
+                              <span key={i} className="cert-id-badge">{s}</span>
+                            ))}
+                          </div>
+                        </div>
                       </div>
-                      <p className="entry-sub">Designed interactive creator tooling and workflows in Figma with seamless handoff to engineering.</p>
-                    </div>
-                  </div>
+                    </aside>
 
-                  <div className="sheet-section">
-                    <h3>SKILLS & COMPETENCIES</h3>
-                    <p className="sheet-skills-text"><strong>Design:</strong> Figma, Figma AI, Adobe XD, Wireframing, Rapid Prototyping, Design Systems, Tokens, WCAG AA</p>
-                    <p className="sheet-skills-text"><strong>Development:</strong> React.js, Next.js, TypeScript, Tailwind CSS, HTML5, CSS3, Git</p>
+                    {/* Right Column: Main ATS Content */}
+                    <main className="figma-resume-main">
+                      {/* Candidate Header */}
+                      <header>
+                        <div className="flex items-center justify-between gap-3">
+                          <h2 className="figma-resume-candidate-title">Varun Sehgal</h2>
+                          <span className="cert-id-badge" style={{ background: 'rgba(52, 211, 153, 0.1)', color: '#34d399', borderColor: 'rgba(52, 211, 153, 0.3)' }}>
+                            ATS-Optimized
+                          </span>
+                        </div>
+                        <p className="figma-resume-roles">UI/UX Designer • Product Designer • Frontend Engineer</p>
+                        <p className="figma-resume-summary-text">
+                          UI/UX & Product Designer with 3+ years of experience delivering high-impact SaaS and AI product experiences. Skilled in user research, wireframing, rapid prototyping, and design systems, with proven results including a 45% increase in user engagement and a 30% reduction in drop-off rates.
+                        </p>
+                      </header>
+
+                      {/* Work Experience */}
+                      <section>
+                        <h4 className="figma-resume-section-title">
+                          <span className="material-symbols-outlined text-[15px] text-[#ffb5a1]">work</span>
+                          WORK EXPERIENCE
+                        </h4>
+
+                        <div className="figma-resume-item">
+                          <div className="figma-resume-item-header">
+                            <div><strong>Lead Product Designer</strong> — UniEvent (Remote)</div>
+                            <span className="figma-resume-item-date">Oct 2024 – Present</span>
+                          </div>
+                          <ul className="figma-resume-bullets">
+                            <li>Designed user-focused digital experiences and translated complex business requirements into clear, consistent interfaces for campus ticketing platform (EventFlow).</li>
+                            <li>Architected 4-step booking flow optimization, slashing transaction drop-off by 30% across 50+ modular components.</li>
+                          </ul>
+                        </div>
+
+                        <div className="figma-resume-item">
+                          <div className="figma-resume-item-header">
+                            <div><strong>Assistant Head of Operations / UX Intern</strong> — Assemble (Remote)</div>
+                            <span className="figma-resume-item-date">Jul 2024 – Sep 2024</span>
+                          </div>
+                          <ul className="figma-resume-bullets">
+                            <li>Assisted in the planning and smooth execution of esports competitions, driving cross-functional coordination.</li>
+                            <li>Designed collaborative creator workspace tools and interaction prototypes in Figma.</li>
+                          </ul>
+                        </div>
+
+                        <div className="figma-resume-item">
+                          <div className="figma-resume-item-header">
+                            <div><strong>UI/UX Designer Intern</strong> — Knaptix Ventures (Remote)</div>
+                            <span className="figma-resume-item-date">Jan 2024 – Jun 2024</span>
+                          </div>
+                          <ul className="figma-resume-bullets">
+                            <li>Conceptualized 5+ high-fidelity UI/UX interfaces for web/mobile, achieving a 40% increase in user satisfaction scores during testing phases.</li>
+                            <li>Accelerated wireframe-to-prototype turnaround by leveraging AI-assisted Figma plugins (Magician, Automator), cutting early-stage design time by 45%.</li>
+                            <li>Facilitated design-to-engineering hand-offs, reducing implementation friction and technical errors by 15%.</li>
+                          </ul>
+                        </div>
+
+                        <div className="figma-resume-item">
+                          <div className="figma-resume-item-header">
+                            <div><strong>Freelance UI/UX Designer</strong> — Self-Employed (Remote)</div>
+                            <span className="figma-resume-item-date">Jan 2024 – Present</span>
+                          </div>
+                          <ul className="figma-resume-bullets">
+                            <li>Executed 10+ end-to-end UI/UX design projects for tech startups, maintaining a 95% client retention rate through human-centered delivery.</li>
+                            <li>Redesigned product interfaces for 4 early-stage companies, utilizing AI-assisted prototyping tools to speed concept iteration.</li>
+                          </ul>
+                        </div>
+                      </section>
+
+                      {/* Design Projects */}
+                      <section>
+                        <h4 className="figma-resume-section-title">
+                          <span className="material-symbols-outlined text-[15px] text-[#ffb5a1]">folder</span>
+                          DESIGN PROJECTS
+                        </h4>
+
+                        <div className="figma-resume-item">
+                          <div className="figma-resume-item-header">
+                            <div><strong>AI Interview & Preparation Platform</strong></div>
+                            <a href="https://www.figma.com/design/ezDh2NmBto6iv7xaQNs3Ha/AI-Interview?node-id=11-1842" target="_blank" rel="noreferrer" className="text-[#ffb5a1] text-[11px] font-semibold underline">
+                              Figma Showcase ↗
+                            </a>
+                          </div>
+                          <div className="text-[11px] text-zinc-400 font-mono mb-1">Stack: Figma, SaaS Design, AI Security & Grading UX</div>
+                          <ul className="figma-resume-bullets">
+                            <li>Architected an AI-driven SaaS platform, integrating specialized "Security" and "Grading" modules to automate candidate evaluation processes.</li>
+                            <li>Streamlined dense analytical data into a clean dark-themed UI, enhancing dashboard scannability and user task efficiency by 25%.</li>
+                          </ul>
+                        </div>
+
+                        <div className="figma-resume-item">
+                          <div className="figma-resume-item-header">
+                            <div><strong>EventFlow: Event Ticketing SaaS</strong></div>
+                            <a href="https://www.figma.com/design/29nTBBWxZfoOKdFnOaQWbq/EventFlow?node-id=2-2" target="_blank" rel="noreferrer" className="text-[#ffb5a1] text-[11px] font-semibold underline">
+                              Figma Showcase ↗
+                            </a>
+                          </div>
+                          <div className="text-[11px] text-zinc-400 font-mono mb-1">Stack: Figma, Design Systems, Modular Components</div>
+                          <ul className="figma-resume-bullets">
+                            <li>Spearheaded a 4-step booking flow optimization that minimized user drop-off by 30% through simplified checkout psychology.</li>
+                            <li>Constructed a comprehensive design system with 50+ modular components to ensure cross-platform visual consistency.</li>
+                          </ul>
+                        </div>
+
+                        <div className="figma-resume-item">
+                          <div className="figma-resume-item-header">
+                            <div><strong>Expensify: Budget Tracker App</strong></div>
+                            <a href="https://www.figma.com/design/3mw8XBHEZ3b8HKNNqcs6U2/Expensify---Budget-Tracker-App?node-id=135-318" target="_blank" rel="noreferrer" className="text-[#ffb5a1] text-[11px] font-semibold underline">
+                              Figma Showcase ↗
+                            </a>
+                          </div>
+                          <div className="text-[11px] text-zinc-400 font-mono mb-1">Stack: Mobile UX, Real-time Analytics, Micro-interactions</div>
+                          <ul className="figma-resume-bullets">
+                            <li>Refined 17+ screens for real-time analytics, reducing the average "Add Expense" transaction time to under 5 seconds.</li>
+                          </ul>
+                        </div>
+                      </section>
+
+                      {/* Hackathons & Leadership */}
+                      <section>
+                        <h4 className="figma-resume-section-title">
+                          <span className="material-symbols-outlined text-[15px] text-[#ffb5a1]">emoji_events</span>
+                          HACKATHONS & LEADERSHIP
+                        </h4>
+
+                        <div className="figma-resume-item">
+                          <div className="figma-resume-item-header">
+                            <div><strong>Co-Organizer & Lead Designer</strong> — CodeSrijan Hackathon (JUET)</div>
+                            <span className="figma-resume-item-date">Apr 2026</span>
+                          </div>
+                          <ul className="figma-resume-bullets">
+                            <li>Directed complete visual identity and design system for a 72-hour hackathon with 200+ participants; designed official event merchandise, participant ID cards, certificates, and marketing creatives.</li>
+                            <li>Architected the digital platform UI covering team formation, submission portals, and real-time mentor evaluation under 72h high-pressure conditions.</li>
+                          </ul>
+                        </div>
+
+                        <div className="figma-resume-item">
+                          <div className="figma-resume-item-header">
+                            <div><strong>2nd Runner-up (Team Pixel_Codes)</strong> — Code Conquerors Hackathon (JUET)</div>
+                            <span className="figma-resume-item-date">Apr 2025</span>
+                          </div>
+                          <ul className="figma-resume-bullets">
+                            <li>Led frontend development and UI design in a 12-hour offline hackathon (150+ participants), building an AI-powered quiz generator using Next.js and Tailwind CSS.</li>
+                            <li>Engineered interactive question builder workflows and dynamic answer-key verification interfaces consuming Ollama local LLM APIs.</li>
+                          </ul>
+                        </div>
+
+                        <div className="figma-resume-item">
+                          <div className="figma-resume-item-header">
+                            <div><strong>🏆 HAckeThor Winner (1st Place)</strong> — Unstop Hackathon</div>
+                            <span className="figma-resume-item-date">Apr 2025</span>
+                          </div>
+                          <ul className="figma-resume-bullets">
+                            <li>Awarded 1st place in national competitive hackathon demonstrating rapid UX prototyping, interactive user testing, and AI tool integration.</li>
+                          </ul>
+                        </div>
+                      </section>
+                    </main>
                   </div>
                 </div>
               </div>
@@ -2059,33 +2623,271 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
           )}
 
           {/* =========================================================================
-              VIEW 7: PLUGINS (Creative Workflow Tools)
+              VIEW 7: PLUGINS (Creative Figma Community Ecosystem & Simulator)
               ========================================================================= */}
           {activeTab === 'plugins' && (
             <div className="lovable-static-view">
               <div className="view-content-wrapper">
-                <header className="view-page-header">
-                  <h1 className="view-page-title">Figma Plugins & Extensions</h1>
-                  <p className="view-page-desc">Installed plugins that supercharge the creative design workflow.</p>
-                </header>
+                <div className="plugins-page-wrapper">
+                  {/* Creative Hero Banner */}
+                  <div className="plugins-hero-banner">
+                    <div className="plugins-hero-text">
+                      <h2>
+                        <span className="material-symbols-outlined text-[24px] text-[#ffb5a1]">extension</span>
+                        Figma Community & Creative Extensions
+                      </h2>
+                      <p>
+                        Supercharge your product design workflows — from generative AI copy and vector generation to automated WCAG AA accessibility compliance audits.
+                      </p>
+                    </div>
 
-                <div className="plugins-grid-container">
-                  {PLUGINS.map(plugin => (
-                    <a key={plugin.name} href={plugin.link} target="_blank" rel="noreferrer" className="plugin-item-card">
-                      <div className="plugin-icon-wrap">
-                        <span className="material-symbols-outlined text-[24px] text-[#ffb5a1]">{plugin.icon}</span>
-                      </div>
-                      <div className="plugin-info">
-                        <div className="plugin-top">
-                          <h3 className="plugin-name">{plugin.name}</h3>
-                          <span className="plugin-cat-badge">{plugin.category}</span>
+                    <div className="flex items-center gap-3">
+                      <button
+                        type="button"
+                        className="cta-btn primary"
+                        onClick={() => {
+                          setActiveSimulatorPlugin(COMMUNITY_PLUGINS[0]);
+                          showToast('Launched Figma Magician AI simulator');
+                        }}
+                      >
+                        <span className="material-symbols-outlined text-[16px]">play_arrow</span>
+                        <span>Try AI Simulator</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Filter Toolbar & Search */}
+                  <div className="plugins-filter-toolbar">
+                    <div className="activity-filter-pills">
+                      {['All', 'AI & Automation', 'Diagramming', 'Accessibility', 'Content', 'Assets & Icons', 'Media', 'Productivity', 'Automation'].map(cat => (
+                        <button
+                          key={cat}
+                          type="button"
+                          className={`activity-filter-btn ${pluginCategory === cat ? 'active' : ''}`}
+                          onClick={() => setPluginCategory(cat)}
+                        >
+                          {cat}
+                        </button>
+                      ))}
+                    </div>
+
+                    <div className="plugins-search-box">
+                      <span className="material-symbols-outlined text-[16px] text-zinc-400">search</span>
+                      <input
+                        type="text"
+                        placeholder="Search 8+ creative plugins..."
+                        value={pluginSearch}
+                        onChange={(e) => setPluginSearch(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Creative Plugins Grid */}
+                  <div className="plugins-creative-grid">
+                    {filteredPlugins.map(plugin => (
+                      <div key={plugin.id} className="plugin-creative-card">
+                        <div
+                          className="plugin-card-banner"
+                          style={{ background: plugin.bannerGradient }}
+                        >
+                          <span className="plugin-banner-badge">{plugin.badge}</span>
                         </div>
-                        <p className="plugin-desc">{plugin.desc}</p>
+
+                        <div className="plugin-card-body">
+                          <div className="plugin-title-row">
+                            <div className="plugin-icon-avatar">
+                              <span className="material-symbols-outlined text-[20px]">{plugin.icon}</span>
+                            </div>
+                            <div className="plugin-names-wrap">
+                              <h3 className="plugin-main-name">{plugin.name}</h3>
+                              <p className="plugin-author-label">by {plugin.author}</p>
+                            </div>
+                          </div>
+
+                          <p className="plugin-card-desc">{plugin.desc}</p>
+
+                          <div className="flex flex-wrap gap-1 my-1">
+                            {plugin.tags.map((t, idx) => (
+                              <span key={idx} className="cert-id-badge">{t}</span>
+                            ))}
+                          </div>
+
+                          <div className="plugin-stats-row">
+                            <span>
+                              <span className="material-symbols-outlined text-[13px] text-amber-400">star</span>
+                              {plugin.rating}
+                            </span>
+                            <span>
+                              <span className="material-symbols-outlined text-[13px]">download</span>
+                              {plugin.installs} installs
+                            </span>
+                          </div>
+
+                          <div className="plugin-card-actions">
+                            <button
+                              type="button"
+                              className="plugin-run-btn"
+                              onClick={() => {
+                                setActiveSimulatorPlugin(plugin);
+                                setSimulatorStep(0);
+                                showToast(`Launched ${plugin.name} simulator`);
+                              }}
+                            >
+                              <span className="material-symbols-outlined text-[14px]">play_circle</span>
+                              <span>Run Simulator</span>
+                            </button>
+                            <a
+                              href={plugin.link}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="plugin-external-btn"
+                              title="Open in Figma Community"
+                            >
+                              <span className="material-symbols-outlined text-[16px]">open_in_new</span>
+                            </a>
+                          </div>
+                        </div>
                       </div>
-                    </a>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
+
+              {/* Interactive Plugin Simulator Modal */}
+              {activeSimulatorPlugin && (
+                <div className="plugin-modal-overlay" onClick={() => setActiveSimulatorPlugin(null)}>
+                  <div className="plugin-simulator-window" onClick={(e) => e.stopPropagation()}>
+                    <div className="simulator-window-titlebar">
+                      <div className="simulator-title-left">
+                        <span className="material-symbols-outlined text-[16px] text-[#ffb5a1]">
+                          {activeSimulatorPlugin.icon}
+                        </span>
+                        <span>{activeSimulatorPlugin.name}</span>
+                      </div>
+                      <button
+                        type="button"
+                        className="simulator-close-btn"
+                        onClick={() => setActiveSimulatorPlugin(null)}
+                      >
+                        <span className="material-symbols-outlined text-[16px]">close</span>
+                      </button>
+                    </div>
+
+                    <div className="simulator-body">
+                      {/* 1. STARK ACCESSIBILITY AUDIT */}
+                      {activeSimulatorPlugin.id === 'stark' && (
+                        <div>
+                          <div className="text-[12px] font-semibold text-white mb-2">Live WCAG AA / AAA Contrast Checker</div>
+                          <div className="simulator-result-box flex flex-col gap-3">
+                            <div className="flex items-center justify-between">
+                              <span className="text-[12px] text-zinc-300">Background vs Text</span>
+                              <span className="text-[15px] font-bold text-emerald-400">15.8 : 1 (AAA)</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <div className="w-6 h-6 rounded border border-white/20" style={{ background: fillColor }}></div>
+                              <span className="text-[11px] text-zinc-400 font-mono">Fill: {fillColor}</span>
+                              <span className="text-zinc-600">/</span>
+                              <div className="w-6 h-6 rounded bg-white border border-white/20"></div>
+                              <span className="text-[11px] text-zinc-400 font-mono">Text: #FFFFFF</span>
+                            </div>
+                            <div className="flex gap-2 text-[10px] font-semibold">
+                              <span className="px-2 py-1 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Normal Text: PASS AAA</span>
+                              <span className="px-2 py-1 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Large Text: PASS AAA</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* 2. FIGMA MAGICIAN AI */}
+                      {activeSimulatorPlugin.id === 'magician' && (
+                        <div>
+                          <div className="text-[12px] font-semibold text-white mb-2">Multimodal Generative Copy & Icons</div>
+                          <div className="simulator-result-box flex flex-col gap-2">
+                            <span className="text-[11px] text-zinc-400">Prompt: "High-converting SaaS CTA"</span>
+                            <div className="p-2 rounded bg-white/5 border border-white/10 text-[12px] text-white">
+                              ⚡ "Experience Seamless Event Ticketing — Start in 30 Seconds"
+                            </div>
+                            <div className="flex gap-2 mt-1">
+                              <span className="cert-id-badge cursor-pointer hover:border-white">Variant A: Claim Pass</span>
+                              <span className="cert-id-badge cursor-pointer hover:border-white">Variant B: Reserve Now</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* 3. CONTENT REEL */}
+                      {activeSimulatorPlugin.id === 'contentreel' && (
+                        <div>
+                          <div className="text-[12px] font-semibold text-white mb-2">Persona & Dummy Data Injector</div>
+                          <div className="simulator-result-box flex flex-col gap-2">
+                            <div className="flex items-center gap-3 p-2 rounded bg-white/5">
+                              <div className="w-8 h-8 rounded-full bg-indigo-500/30 flex items-center justify-center text-[12px] font-bold text-white">VS</div>
+                              <div>
+                                <div className="text-[12px] font-bold text-white">Varun Sehgal</div>
+                                <div className="text-[10px] text-zinc-400">Lead Product Designer • Bangalore</div>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-3 p-2 rounded bg-white/5">
+                              <div className="w-8 h-8 rounded-full bg-pink-500/30 flex items-center justify-center text-[12px] font-bold text-white">AR</div>
+                              <div>
+                                <div className="text-[12px] font-bold text-white">Anya Rao</div>
+                                <div className="text-[10px] text-zinc-400">Senior UX Researcher • San Francisco</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* 4. AUTOFLOW */}
+                      {activeSimulatorPlugin.id === 'autoflow' && (
+                        <div>
+                          <div className="text-[12px] font-semibold text-white mb-2">Smart Connector Engine</div>
+                          <div className="simulator-result-box flex flex-col items-center gap-2 py-4">
+                            <div className="flex items-center gap-4">
+                              <span className="px-3 py-1.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30 text-[11px] font-mono">Screen A</span>
+                              <span className="text-[#38bdf8] font-mono font-bold">───▶</span>
+                              <span className="px-3 py-1.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30 text-[11px] font-mono">Screen B</span>
+                            </div>
+                            <span className="text-[10px] text-zinc-400 mt-1">Smart bezier collision avoidance enabled</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* 5. DEFAULT / OTHER PLUGINS */}
+                      {!['stark', 'magician', 'contentreel', 'autoflow'].includes(activeSimulatorPlugin.id) && (
+                        <div>
+                          <div className="text-[12px] font-semibold text-white mb-2">{activeSimulatorPlugin.name} In-Canvas Engine</div>
+                          <div className="simulator-result-box flex flex-col gap-2">
+                            <p className="text-[12px] text-zinc-300">{activeSimulatorPlugin.desc}</p>
+                            <span className="text-[11px] text-emerald-400 font-mono">✓ Ready to inject into active canvas artboard</span>
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="simulator-footer-actions">
+                        <button
+                          type="button"
+                          className="cert-action-btn secondary"
+                          onClick={() => setActiveSimulatorPlugin(null)}
+                        >
+                          Close
+                        </button>
+                        <button
+                          type="button"
+                          className="cert-action-btn primary"
+                          onClick={() => {
+                            showToast(`Applied ${activeSimulatorPlugin.name} changes to canvas!`);
+                            setActiveSimulatorPlugin(null);
+                          }}
+                        >
+                          <span>Apply to Canvas</span>
+                          <span className="material-symbols-outlined text-[13px]">check</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </main>

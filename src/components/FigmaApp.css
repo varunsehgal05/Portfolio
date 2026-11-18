@@ -3444,3 +3444,639 @@
     padding: 24px 20px 40px;
   }
 }
+
+/* --------------------------------------------------------------------------
+   Dynamic Left Sidebar (Pages, Layers Tree & Assets)
+   -------------------------------------------------------------------------- */
+.sidebar-tabs-row {
+  display: flex;
+  background: rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 4px;
+  gap: 4px;
+}
+
+.sidebar-tab-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: center;
+}
+
+.sidebar-tab-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.sidebar-tab-btn.active {
+  color: #ffb5a1;
+  background: rgba(255, 181, 161, 0.12);
+}
+
+.sidebar-pages-list {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 6px;
+  gap: 2px;
+}
+
+.sidebar-page-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.sidebar-page-item:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.sidebar-page-item.active {
+  color: #ffb5a1;
+  background: rgba(255, 181, 161, 0.14);
+  font-weight: 600;
+}
+
+.sidebar-page-num {
+  font-family: monospace;
+  font-size: 10px;
+  color: #64748b;
+}
+
+.sidebar-page-item.active .sidebar-page-num {
+  color: #ffb5a1;
+}
+
+.sidebar-layers-tree {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 4px;
+  gap: 1px;
+  overflow-y: auto;
+  max-height: calc(100vh - 280px);
+}
+
+.sidebar-layer-row {
+  display: flex;
+  align-items: center;
+  padding: 5px 8px;
+  border-radius: 4px;
+  color: #cbd5e1;
+  font-size: 11.5px;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  user-select: none;
+  gap: 6px;
+}
+
+.sidebar-layer-row:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+}
+
+.sidebar-layer-row.selected {
+  background: rgba(255, 181, 161, 0.18);
+  color: #ffffff;
+  border-left: 2px solid #ffb5a1;
+}
+
+.layer-indent-1 {
+  padding-left: 18px;
+}
+
+.layer-indent-2 {
+  padding-left: 30px;
+}
+
+.layer-indent-3 {
+  padding-left: 42px;
+}
+
+.layer-icon {
+  font-size: 13px !important;
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+.sidebar-layer-row:hover .layer-icon,
+.sidebar-layer-row.selected .layer-icon {
+  color: #ffb5a1;
+}
+
+.layer-title {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.layer-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.sidebar-layer-row:hover .layer-actions,
+.sidebar-layer-row.selected .layer-actions {
+  opacity: 1;
+}
+
+.layer-mini-btn {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+}
+
+.layer-mini-btn:hover {
+  color: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   Creative Figma Community Plugins Gallery & Simulator
+   -------------------------------------------------------------------------- */
+.plugins-page-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+}
+
+.plugins-hero-banner {
+  background: linear-gradient(135deg, rgba(30, 27, 46, 0.8) 0%, rgba(18, 20, 28, 0.95) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  padding: 24px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.plugins-hero-text h2 {
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 6px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.plugins-hero-text p {
+  font-size: 12.5px;
+  color: #94a3b8;
+  margin: 0;
+  max-width: 580px;
+  line-height: 1.5;
+}
+
+.plugins-filter-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.plugins-search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 6px 12px;
+  min-width: 240px;
+}
+
+.plugins-search-box input {
+  background: transparent;
+  border: none;
+  color: #f1f5f9;
+  font-size: 12px;
+  outline: none;
+  width: 100%;
+}
+
+.plugins-creative-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 18px;
+}
+
+.plugin-creative-card {
+  background: #14151b;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.plugin-creative-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 181, 161, 0.3);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.55);
+}
+
+.plugin-card-banner {
+  height: 90px;
+  display: flex;
+  align-items: flex-end;
+  padding: 12px 16px;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+}
+
+.plugin-card-banner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 30%, rgba(20, 21, 27, 0.95) 100%);
+}
+
+.plugin-banner-badge {
+  position: relative;
+  z-index: 2;
+  font-size: 9.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #cbd5e1;
+}
+
+.plugin-card-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 8px;
+}
+
+.plugin-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.plugin-icon-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(255, 181, 161, 0.12);
+  border: 1px solid rgba(255, 181, 161, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffb5a1;
+  flex-shrink: 0;
+}
+
+.plugin-names-wrap {
+  flex: 1;
+  overflow: hidden;
+}
+
+.plugin-main-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.plugin-author-label {
+  font-size: 11px;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.plugin-card-desc {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #94a3b8;
+  margin: 4px 0 8px 0;
+  flex: 1;
+}
+
+.plugin-stats-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 11px;
+  color: #64748b;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 8px;
+}
+
+.plugin-stats-row span {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.plugin-card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.plugin-run-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 7px 12px;
+  border-radius: 6px;
+  background: rgba(255, 181, 161, 0.15);
+  color: #ffb5a1;
+  border: 1px solid rgba(255, 181, 161, 0.3);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.plugin-run-btn:hover {
+  background: #ffb5a1;
+  color: #121318;
+}
+
+.plugin-external-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 10px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  color: #cbd5e1;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.plugin-external-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+/* Plugin Simulator Modal */
+.plugin-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.plugin-simulator-window {
+  width: 100%;
+  max-width: 440px;
+  background: #171821;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+  overflow: hidden;
+  animation: modalPop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalPop {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.simulator-window-titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: #1e1f2b;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.simulator-title-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.simulator-close-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+}
+
+.simulator-close-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.simulator-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.simulator-result-box {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.simulator-footer-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* --------------------------------------------------------------------------
+   ATS Resume Sheet Styles (Inside Figma View 5)
+   -------------------------------------------------------------------------- */
+.figma-resume-sheet-container {
+  max-width: 900px;
+  margin: 0 auto;
+  background: #121318;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.5);
+}
+
+.figma-resume-two-col {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 28px;
+}
+
+@media (max-width: 768px) {
+  .figma-resume-two-col {
+    grid-template-columns: 1fr;
+  }
+}
+
+.figma-resume-sidebar {
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  padding-right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .figma-resume-sidebar {
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-right: 0;
+    padding-bottom: 20px;
+  }
+}
+
+.figma-resume-contact-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 11.5px;
+}
+
+.figma-resume-contact-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #94a3b8;
+}
+
+.figma-resume-contact-list a {
+  color: #ffb5a1;
+  text-decoration: none;
+}
+
+.figma-resume-contact-list a:hover {
+  text-decoration: underline;
+}
+
+.figma-resume-main {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.figma-resume-candidate-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 4px 0;
+}
+
+.figma-resume-roles {
+  font-size: 13px;
+  color: #ffb5a1;
+  font-weight: 600;
+  margin: 0 0 10px 0;
+}
+
+.figma-resume-summary-text {
+  font-size: 12px;
+  line-height: 1.6;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.figma-resume-section-title {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #ffffff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 4px;
+  margin: 0 0 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.figma-resume-item {
+  margin-bottom: 14px;
+}
+
+.figma-resume-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 12.5px;
+  color: #f1f5f9;
+  margin-bottom: 4px;
+}
+
+.figma-resume-item-date {
+  font-size: 11px;
+  color: #64748b;
+  font-family: monospace;
+}
+
+.figma-resume-bullets {
+  margin: 4px 0 0 0;
+  padding-left: 18px;
+  font-size: 12px;
+  color: #94a3b8;
+  line-height: 1.55;
+}
+
+.figma-resume-bullets li {
+  margin-bottom: 4px;
+}
