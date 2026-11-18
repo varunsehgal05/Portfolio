@@ -14,15 +14,15 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
   const [maximizedWindows, setMaximizedWindows] = useState([]);
 
   const toggleMaximizeWindow = (appId) => {
-    setMaximizedWindows(prev => 
+    setMaximizedWindows(prev =>
       prev.includes(appId) ? prev.filter(id => id !== appId) : [...prev, appId]
     );
   };
 
   // Full-screen window detection: when a full screen window is active and not minimized
   const isFullScreenActive = Boolean(
-    activeWindow && 
-    maximizedWindows.includes(activeWindow) && 
+    activeWindow &&
+    maximizedWindows.includes(activeWindow) &&
     !minimizedWindows.includes(activeWindow)
   );
 
@@ -118,7 +118,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
       <div className={`desktop-menubar-wrap ${swarmStage < 5 ? (swarmStage >= 1 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
         <MenuBar userName={userName} onReplaySwarm={handleInternalReplaySwarm} />
       </div>
-      
+
       <div className="desktop-content">
         {/* Left Column Desktop Icons */}
         <div className={`desktop-icons ${swarmStage < 5 ? (swarmStage >= 2 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
@@ -126,7 +126,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
             const app = portfolioApps[id];
             if (!app) return null;
             return (
-              <DesktopIcon 
+              <DesktopIcon
                 key={app.id}
                 app={app}
                 className="desktop-icon-stagger-item"
@@ -143,7 +143,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
           {openWindows.map((appId) => {
             const app = portfolioApps[appId] || { id: appId, name: appId };
             return (
-              <Window 
+              <Window
                 key={appId}
                 app={app}
                 userName={userName}
@@ -160,7 +160,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
             );
           })}
         </div>
-        
+
         {/* PixelAssistant / Clippy bot remains untouched on the right/bottom */}
         <div className={`desktop-bot-wrap ${swarmStage < 5 ? (swarmStage >= 5 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
           <PixelAssistant isIdle={isIdle} onOpenApp={openApp} />
@@ -168,7 +168,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
 
         {/* Bottom macOS Dock */}
         <div className={`desktop-dock-wrap ${swarmStage < 5 ? (swarmStage >= 4 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
-          <Dock 
+          <Dock
             openWindows={openWindows}
             minimizedWindows={minimizedWindows}
             activeWindow={activeWindow}
