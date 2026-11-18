@@ -574,18 +574,6 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
 
   return (
     <>
-      {/* Quick Sound Option Pill directly above Clippy - only when chat dialog is closed */}
-      {!isChatOpen && (
-        <div
-          className={`clippy-quick-sound-pill ${isMuted ? 'muted' : 'unmuted'}`}
-          onClick={toggleMute}
-          title={isMuted ? "Bot Sound is Muted. Click to Unmute" : "Bot Sound is On. Click to Mute"}
-        >
-          {isMuted ? <VolumeX size={12} color="#f87171" /> : <Volume2 size={12} color="#34d399" />}
-          <span>{isMuted ? "Sound: Muted" : "Sound: On"}</span>
-        </div>
-      )}
-
       {/* Interactive Clippy Ask Dialog */}
       {isChatOpen && (
         <div className="clippy-dialog-container" ref={dialogRef}>

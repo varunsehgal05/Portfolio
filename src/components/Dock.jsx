@@ -105,7 +105,7 @@ const Dock = ({ openWindows = [], minimizedWindows = [], activeWindow, bouncingA
   // Global mouse tracking: pops up when mouse touches bottom edge (like Windows / macOS auto-hide)
   useEffect(() => {
     const handleGlobalMouseMove = (e) => {
-      const bottomThreshold = window.innerHeight - 24; // within 24px of bottom edge
+      const bottomThreshold = window.innerHeight - 14; // within 14px of bottom edge
 
       if (e.clientY >= bottomThreshold) {
         if (hideTimerRef.current) {
@@ -113,7 +113,7 @@ const Dock = ({ openWindows = [], minimizedWindows = [], activeWindow, bouncingA
           hideTimerRef.current = null;
         }
         setIsDockVisible(true);
-      } else if (e.clientY < window.innerHeight - 85 && !isHoveringRef.current) {
+      } else if (e.clientY < window.innerHeight - 80 && !isHoveringRef.current) {
         // Mouse moved well above the bottom bar
         if (!hideTimerRef.current && isDockVisible) {
           hideTimerRef.current = setTimeout(() => {

@@ -1900,21 +1900,22 @@
    -------------------------------------------------------------------------- */
 .lovable-workspace-bottom-nav {
   position: absolute;
-  bottom: 22px;
+  bottom: 78px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;
-  background: rgba(30, 32, 32, 0.8);
+  background: rgba(30, 32, 32, 0.92);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 12px;
-  padding: 5px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 14px;
+  padding: 6px 10px;
   display: flex;
   align-items: center;
   gap: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
   max-width: 95%;
   overflow-x: auto;
+  transition: bottom 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .lovable-workspace-bottom-nav::-webkit-scrollbar {

@@ -648,7 +648,12 @@ const FigmaApp = () => {
                     {ALL_PROJECTS.slice(0, 4).map((proj) => (
                       <div key={proj.id} className="featured-project-card">
                         <div className="project-preview-wrap">
-                          <img src={proj.image} alt={proj.name} className="project-preview-img" />
+                          <FirebaseImage 
+                            storagePath={`projects/${proj.id}.png`}
+                            fallbackSrc={proj.image} 
+                            alt={proj.name} 
+                            className="project-preview-img" 
+                          />
                           <span className="project-badge-pill">{proj.badge}</span>
                         </div>
 
@@ -728,7 +733,12 @@ const FigmaApp = () => {
                   {filteredProjects.map(proj => (
                     <div key={proj.id} className="bento-card">
                       <div className="bento-img-wrap">
-                        <img src={proj.image} alt={proj.name} className="bento-img" />
+                        <FirebaseImage 
+                          storagePath={`projects/${proj.id}.png`}
+                          fallbackSrc={proj.image} 
+                          alt={proj.name} 
+                          className="bento-img" 
+                        />
                         <span className="bento-badge">{proj.badge}</span>
                       </div>
                       <div className="bento-body">

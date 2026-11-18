@@ -223,7 +223,7 @@ const Window = ({
       bounds="parent"
       style={{ zIndex: isMaximized ? (isActive ? 300 : 150) : (isActive ? 100 : 10) }}
     >
-      <div ref={windowInnerRef} className={`window-inner glass-dark ${getAnimClass()}`}>
+      <div ref={windowInnerRef} className={`window-inner ${getAnimClass()}`}>
         {/* macOS Style Titlebar - double-click to toggle fullscreen */}
         <div
           className="window-titlebar"

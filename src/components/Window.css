@@ -106,8 +106,9 @@
   flex-direction: column;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
   transition: border-radius 0.3s ease;
+  background: #181920;
 }
 
 .app-window.maximized .window-inner {
@@ -301,7 +302,7 @@
 
 .window-content {
   flex: 1;
-  background: rgba(20, 20, 20, 0.6);
+  background: #16171e;
   overflow: auto;
   position: relative;
 }
