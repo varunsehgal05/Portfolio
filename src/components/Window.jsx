@@ -59,12 +59,12 @@ const Window = ({
       const dockRect = dockIcon.getBoundingClientRect();
 
       const winCenterX = winRect.left + winRect.width / 2;
-      const winCenterY = winRect.top + winRect.height / 2;
+      const winBottom = winRect.bottom;
       const dockCenterX = dockRect.left + dockRect.width / 2;
       const dockCenterY = dockRect.top + dockRect.height / 2;
 
       const deltaX = dockCenterX - winCenterX;
-      const deltaY = dockCenterY - winCenterY;
+      const deltaY = dockCenterY - winBottom;
 
       winInner.style.setProperty('--genie-target-x', `${deltaX}px`);
       winInner.style.setProperty('--genie-target-y', `${deltaY}px`);
@@ -82,7 +82,7 @@ const Window = ({
       setAnimState('minimizing');
       const timer = setTimeout(() => {
         setAnimState('hidden');
-      }, 460);
+      }, 360);
       return () => clearTimeout(timer);
     } else {
       setAnimState('restoring');
@@ -91,7 +91,7 @@ const Window = ({
       });
       const timer = setTimeout(() => {
         setAnimState('visible');
-      }, 420);
+      }, 340);
       return () => clearTimeout(timer);
     }
   }, [isMinimized]);
