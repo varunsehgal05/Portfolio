@@ -6,6 +6,9 @@ import ResumeApp from './ResumeApp';
 import ContactApp from './ContactApp';
 import FigmaApp from './FigmaApp';
 import FinderApp from './FinderApp';
+import SafariApp from './SafariApp';
+import TerminalApp from './TerminalApp';
+import SettingsApp from './SettingsApp';
 
 const Window = ({ 
   app, 
@@ -18,7 +21,8 @@ const Window = ({
   onToggleMaximize,
   onFocus,
   onOpenApp,
-  defaultMaximized = (app.id !== 'finder')
+  onReplaySwarm,
+  defaultMaximized = false
 }) => {
   const [localMaximized, setLocalMaximized] = useState(defaultMaximized);
   const isMaximized = controlledMaximized !== undefined ? controlledMaximized : localMaximized;
@@ -44,7 +48,6 @@ const Window = ({
     // Target matching dock icon if available, fallback to dock container
     const dockIcon =
       document.querySelector(`.dock-item[data-app-id="${app.id}"]`) ||
-      (app.id === 'contact' ? document.querySelector(`.dock-item[data-app-id="settings"]`) : null) ||
       document.querySelector('.dock');
 
     if (dockIcon) {
@@ -89,20 +92,26 @@ const Window = ({
 
   // Default bounds and position based on app type
   const getDefaultSize = () => {
-    if (app.id === 'trash') return { width: 400, height: 300 };
+    if (typeof window === 'undefined') return { width: 800, height: 500 };
+    if (app.id === 'trash') return { width: 440, height: 320 };
+    if (app.id === 'terminal') return { width: Math.min(window.innerWidth - 80, 720), height: Math.min(window.innerHeight - 120, 460) };
+    if (app.id === 'settings') return { width: Math.min(window.innerWidth - 80, 680), height: Math.min(window.innerHeight - 120, 500) };
+    if (app.id === 'safari') return { width: Math.min(window.innerWidth - 80, 960), height: Math.min(window.innerHeight - 100, 580) };
     if (app.id === 'finder') return { width: Math.min(window.innerWidth - 80, 920), height: Math.min(window.innerHeight - 100, 560) };
     if (app.id === 'figma') return { width: Math.min(window.innerWidth - 60, 1100), height: Math.min(window.innerHeight - 80, 720) };
+    if (app.id === 'contact') return { width: Math.min(window.innerWidth - 80, 840), height: Math.min(window.innerHeight - 100, 560) };
     return { width: 800, height: 500 };
   };
 
   const getInitialPosition = () => {
+    if (typeof window === 'undefined') return { x: 40, y: 40 };
     const size = getDefaultSize();
     const centerX = Math.max(20, (window.innerWidth - size.width) / 2);
     const centerY = Math.max(36, (window.innerHeight - size.height) / 2 - 15);
     if (app.id === 'finder' || app.id === 'figma') {
       return { x: centerX, y: centerY };
     }
-    return { x: 100 + Math.random() * 40, y: 50 + Math.random() * 40 };
+    return { x: Math.max(30, centerX + (Math.random() * 60 - 30)), y: Math.max(40, centerY + (Math.random() * 40 - 20)) };
   };
 
   const [position, setPosition] = useState(getInitialPosition());
@@ -123,8 +132,14 @@ const Window = ({
     switch (app.id) {
       case 'finder':
         return <FinderApp onOpenApp={onOpenApp} />;
+      case 'safari':
+        return <SafariApp />;
       case 'figma':
         return <FigmaApp isInteracting={isInteracting} userName={userName} />;
+      case 'terminal':
+        return <TerminalApp userName={userName} onOpenApp={onOpenApp} />;
+      case 'settings':
+        return <SettingsApp userName={userName} onReplaySwarm={onReplaySwarm} />;
       case 'vscode':
         return (
           <div className="window-content-inner vscode-content">
@@ -154,7 +169,7 @@ Motion Graphics Artist
                   </code>
                 </pre>
                 <br />
-                <a href={app.url} target="_blank" rel="noreferrer" className="action-button">
+                <a href={app.url || 'https://github.com/varunsehgal05'} target="_blank" rel="noreferrer" className="action-button">
                   Open GitHub
                 </a>
               </div>
@@ -176,11 +191,13 @@ Motion Graphics Artist
     }
   };
 
+  const maximizedHeight = typeof window !== 'undefined' ? Math.max(300, window.innerHeight - 28 - 76) : 600;
+
   return (
     <Rnd
       className={`app-window ${isActive ? 'active' : ''} ${isMaximized ? 'maximized' : ''} ${getAnimClass()}`}
-      size={isMaximized ? { width: '100%', height: '100%' } : size}
-      position={isMaximized ? { x: 0, y: 0 } : position}
+      size={isMaximized ? { width: '100%', height: maximizedHeight } : size}
+      position={isMaximized ? { x: 0, y: 28 } : position}
       onDragStart={() => setIsInteracting(true)}
       onDragStop={(e, d) => {
         setIsInteracting(false);
@@ -256,7 +273,7 @@ Motion Graphics Artist
           </div>
         </div>
 
-        <div className={`window-content ${app.id === 'resume' || app.id === 'contact' || app.id === 'figma' || app.id === 'finder' ? 'no-padding' : ''}`}>
+        <div className={`window-content ${app.id === 'resume' || app.id === 'contact' || app.id === 'figma' || app.id === 'finder' || app.id === 'safari' || app.id === 'settings' ? 'no-padding' : ''}`}>
           {renderContent()}
         </div>
       </div>

@@ -44,11 +44,11 @@ body.has-fullscreen-window .clippy-dialog-container {
    ========================================= */
 .clippy-dialog-container {
   position: fixed;
-  right: 165px;
-  bottom: 24px;
+  right: 28px;
+  bottom: 88px;
   width: 380px;
-  max-width: calc(100vw - 190px);
-  max-height: calc(100vh - 120px);
+  max-width: calc(100vw - 60px);
+  max-height: calc(100vh - 140px);
   background: rgba(22, 27, 34, 0.95);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);

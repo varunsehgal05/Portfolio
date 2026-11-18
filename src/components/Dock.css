@@ -12,12 +12,12 @@
   display: flex;
   gap: 8px;
   padding: 6px 12px;
-  border-radius: 18px;
-  background: rgba(22, 22, 28, 0.7);
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  background: rgba(22, 22, 28, 0.75);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2);
   pointer-events: auto;
   align-items: flex-end;
 }
@@ -28,7 +28,9 @@
   flex-direction: column;
   align-items: center;
   cursor: pointer;
-  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transform-origin: bottom center;
+  will-change: transform;
+  transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .dock-icon-wrapper {
@@ -38,26 +40,38 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  transition: box-shadow 0.15s ease;
 }
 
 .dock-item:hover .dock-icon-wrapper {
-  transform: scale(1.22) translateY(-8px);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
 }
 
-.dock-item.minimized-app .dock-icon-wrapper {
-  animation: dockIconAbsorb 0.4s ease 0.22s 1 normal both;
+/* Authentic macOS Dock Click Bounce Animation */
+.dock-item.dock-bouncing .dock-icon-wrapper {
+  animation: macDockBounce 0.9s cubic-bezier(0.28, 0.84, 0.42, 1) forwards;
 }
 
-@keyframes dockIconAbsorb {
-  0% { transform: scale(1); }
-  50% { transform: scale(0.88) translateY(2px); }
-  75% { transform: scale(1.08) translateY(-3px); }
-  100% { transform: scale(1) translateY(0); }
+@keyframes macDockBounce {
+  0% { transform: translateY(0); }
+  25% { transform: translateY(-24px) scale(1.05); }
+  45% { transform: translateY(0); }
+  65% { transform: translateY(-12px) scale(1.02); }
+  80% { transform: translateY(0); }
+  90% { transform: translateY(-4px); }
+  100% { transform: translateY(0); }
 }
 
+.dock-item.minimized-app {
+  opacity: 0.75;
+}
+
+.dock-item.minimized-app:hover {
+  opacity: 1;
+}
+
+/* Dock Icon Backgrounds */
 .dock-icon-inner {
   width: 100%;
   height: 100%;
@@ -66,68 +80,111 @@
   justify-content: center;
   border-radius: 11px;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .dock-icon-inner.finder-bg {
   background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 .dock-icon-inner.safari-bg {
   background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.dock-icon-inner.vscode-bg {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+}
+
+.dock-icon-inner.figma-bg {
+  background: rgba(30, 30, 38, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.dock-icon-inner.terminal-bg {
+  background: linear-gradient(135deg, #18181b 0%, #09090b 100%);
+  border: 1px solid rgba(74, 222, 128, 0.25);
+}
+
+.dock-icon-inner.resume-bg {
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.dock-icon-inner.contact-bg {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.dock-icon-inner.settings-bg {
+  background: linear-gradient(135deg, #475569 0%, #334155 100%);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.dock-icon-inner.dark-bg {
-  background: rgba(32, 32, 40, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+.dock-icon-inner.trash-bg {
+  background: linear-gradient(135deg, #27272a 0%, #18181b 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-.dock-icon-inner.orange-bg {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
+/* Separator */
 .dock-separator {
   width: 1px;
-  height: 30px;
-  background: rgba(255, 255, 255, 0.15);
-  margin: 0 4px 6px 4px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.16);
+  margin: 0 4px 8px 4px;
   align-self: center;
 }
 
+/* Tooltip */
 .dock-tooltip {
   position: absolute;
-  top: -36px;
-  background: rgba(18, 18, 22, 0.85);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  top: -38px;
+  background: rgba(20, 20, 26, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   color: #f4f4f5;
-  padding: 3px 8px;
+  padding: 3px 9px;
   border-radius: 6px;
   font-size: 11px;
   font-weight: 500;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.15s ease;
+  transform: translateY(4px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
   white-space: nowrap;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  z-index: 1002;
 }
 
 .dock-item:hover .dock-tooltip {
   opacity: 1;
+  transform: translateY(0);
+}
+
+/* Active Indicator Dots */
+.dock-dot-slot {
+  height: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 3px;
 }
 
 .dock-dot {
   width: 4px;
   height: 4px;
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.5);
   border-radius: 50%;
-  margin-top: 3px;
-  transition: background 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .dock-dot.active {
   background: #38bdf8;
   box-shadow: 0 0 6px #38bdf8;
+  width: 5px;
+  height: 5px;
 }

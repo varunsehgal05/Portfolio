@@ -1,8 +1,11 @@
+import React, { useState, useRef } from 'react';
 import { 
   Compass, 
   Settings, 
   Trash2, 
-  FileText
+  FileText,
+  Mail,
+  Folder
 } from 'lucide-react';
 import './Dock.css';
 
@@ -18,7 +21,7 @@ const FigmaLogo = () => (
 
 const FinderIcon = () => (
   <div className="dock-icon-inner finder-bg">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
       <circle cx="8" cy="9.5" r="1.5" fill="#ffffff" />
       <circle cx="16" cy="9.5" r="1.5" fill="#ffffff" />
       <path d="M7 14.5C8.5 17 15.5 17 17 14.5" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" />
@@ -33,21 +36,21 @@ const SafariIcon = () => (
 );
 
 const VsCodeIcon = () => (
-  <div className="dock-icon-inner dark-bg">
+  <div className="dock-icon-inner vscode-bg">
     <span style={{ color: '#38bdf8', fontSize: '15px', fontWeight: '800', fontFamily: 'monospace' }}>
-      &lt;&gt;
+      &lt;/&gt;
     </span>
   </div>
 );
 
 const FigmaDockIcon = () => (
-  <div className="dock-icon-inner dark-bg">
+  <div className="dock-icon-inner figma-bg">
     <FigmaLogo />
   </div>
 );
 
 const TerminalIcon = () => (
-  <div className="dock-icon-inner dark-bg">
+  <div className="dock-icon-inner terminal-bg">
     <span style={{ color: '#4ade80', fontSize: '13px', fontWeight: '800', fontFamily: 'monospace' }}>
       &gt;_
     </span>
@@ -55,19 +58,25 @@ const TerminalIcon = () => (
 );
 
 const ResumeIcon = () => (
-  <div className="dock-icon-inner orange-bg">
+  <div className="dock-icon-inner resume-bg">
     <FileText size={22} color="#ffffff" />
   </div>
 );
 
+const ContactDockIcon = () => (
+  <div className="dock-icon-inner contact-bg">
+    <Mail size={22} color="#ffffff" />
+  </div>
+);
+
 const SettingsIcon = () => (
-  <div className="dock-icon-inner dark-bg">
-    <Settings size={22} color="#d4d4d8" />
+  <div className="dock-icon-inner settings-bg">
+    <Settings size={22} color="#e4e4e7" />
   </div>
 );
 
 const TrashDockIcon = () => (
-  <div className="dock-icon-inner dark-bg">
+  <div className="dock-icon-inner trash-bg">
     <Trash2 size={21} color="#d4d4d8" />
   </div>
 );
@@ -79,15 +88,48 @@ const DOCK_ITEMS = [
   { id: 'figma', name: 'Figma', icon: FigmaDockIcon },
   { id: 'terminal', name: 'Terminal', icon: TerminalIcon },
   { id: 'resume', name: 'Resume', icon: ResumeIcon },
+  { id: 'contact', name: 'Contact', icon: ContactDockIcon },
   { id: 'settings', name: 'Settings', icon: SettingsIcon },
   { id: 'separator', isSeparator: true },
   { id: 'trash', name: 'Trash', icon: TrashDockIcon }
 ];
 
 const Dock = ({ openWindows = [], minimizedWindows = [], activeWindow, onAppClick }) => {
+  const [mouseX, setMouseX] = useState(null);
+  const [bouncingApp, setBouncingApp] = useState(null);
+  const dockRef = useRef(null);
+
+  const handleMouseMove = (e) => {
+    if (dockRef.current) {
+      const rect = dockRef.current.getBoundingClientRect();
+      setMouseX(e.clientX - rect.left);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setMouseX(null);
+  };
+
+  const handleClick = (id) => {
+    // Trigger macOS dock bounce animation on click
+    setBouncingApp(id);
+    setTimeout(() => {
+      setBouncingApp(null);
+    }, 900);
+
+    if (onAppClick) {
+      onAppClick(id);
+    }
+  };
+
   return (
     <div className="dock-container">
-      <div className="dock">
+      <div 
+        ref={dockRef}
+        className="dock"
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+      >
         {DOCK_ITEMS.map((item, idx) => {
           if (item.isSeparator) {
             return <div key={`sep-${idx}`} className="dock-separator" />;
@@ -97,19 +139,42 @@ const Dock = ({ openWindows = [], minimizedWindows = [], activeWindow, onAppClic
           const isOpen = openWindows.includes(item.id);
           const isMin = minimizedWindows.includes(item.id);
           const isActive = activeWindow === item.id && !isMin;
+          const isBouncing = bouncingApp === item.id;
+
+          // Compute magnification scale using smooth cosine curve
+          let scale = 1;
+          let translateY = 0;
+          if (mouseX !== null && dockRef.current) {
+            // Estimate icon center relative to dock
+            const iconWidth = 50; // 42px icon + 8px gap
+            const iconCenter = idx * iconWidth + iconWidth / 2;
+            const dist = Math.abs(mouseX - iconCenter);
+            const maxDist = 110;
+
+            if (dist < maxDist) {
+              const factor = Math.cos((dist / maxDist) * (Math.PI / 2));
+              scale = 1 + 0.32 * factor;
+              translateY = -10 * factor;
+            }
+          }
 
           return (
             <div 
               key={item.id} 
               data-app-id={item.id}
-              className={`dock-item ${isMin ? 'minimized-app' : ''}`}
-              onClick={() => onAppClick(item.id)}
+              className={`dock-item ${isMin ? 'minimized-app' : ''} ${isBouncing ? 'dock-bouncing' : ''}`}
+              onClick={() => handleClick(item.id)}
+              style={{
+                transform: `translate3d(0, ${translateY}px, 0) scale(${scale})`
+              }}
             >
               <div className="dock-tooltip">{item.name}</div>
               <div className="dock-icon-wrapper">
                 <IconComponent />
               </div>
-              {isOpen && <div className={`dock-dot ${isActive ? 'active' : ''}`} />}
+              <div className="dock-dot-slot">
+                {isOpen && <div className={`dock-dot ${isActive ? 'active' : ''}`} />}
+              </div>
             </div>
           );
         })}

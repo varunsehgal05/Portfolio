@@ -11,7 +11,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
   const [openWindows, setOpenWindows] = useState(['finder']);
   const [minimizedWindows, setMinimizedWindows] = useState([]);
   const [activeWindow, setActiveWindow] = useState('finder');
-  const [maximizedWindows, setMaximizedWindows] = useState(['figma', 'vscode', 'resume', 'contact', 'trash']);
+  const [maximizedWindows, setMaximizedWindows] = useState([]);
 
   const toggleMaximizeWindow = (appId) => {
     setMaximizedWindows(prev => 
@@ -75,25 +75,16 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
   };
 
   const handleDockClick = (appId) => {
-    if (appId === 'safari') {
-      window.open('https://github.com/varunsehgal05', '_blank');
-      return;
-    }
-    if (appId === 'terminal') {
-      openApp('vscode');
-      return;
-    }
-    if (appId === 'settings') {
-      openApp('contact');
-      return;
-    }
-
     if (openWindows.includes(appId)) {
       if (minimizedWindows.includes(appId)) {
-        toggleMinimize(appId);
+        // Restore window
+        setMinimizedWindows(prev => prev.filter(id => id !== appId));
+        setActiveWindow(appId);
       } else if (activeWindow === appId) {
+        // Active window clicked in dock -> minimize it (macOS Dock toggle behavior)
         toggleMinimize(appId);
       } else {
+        // App is open in background -> bring to front
         setActiveWindow(appId);
       }
     } else {
@@ -163,6 +154,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
                 onMinimize={() => toggleMinimize(appId)}
                 onFocus={() => focusApp(appId)}
                 onOpenApp={openApp}
+                onReplaySwarm={handleInternalReplaySwarm}
               />
             );
           })}
