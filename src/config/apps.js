@@ -21,7 +21,7 @@ export const portfolioApps = {
   figma: {
     id: 'figma',
     name: 'Figma',
-    title: 'Figma — Collaborative Canvas',
+    title: 'Figma — Portfolio Workspace',
     url: 'http://localhost:8080',
     icon: 'figma'
   },
