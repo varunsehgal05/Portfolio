@@ -7,7 +7,7 @@ import PixelAssistant from './PixelAssistant';
 import { portfolioApps, desktopIconIds } from '../config/apps';
 import './Desktop.css';
 
-const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm }) => {
+const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) => {
   const [openWindows, setOpenWindows] = useState(['finder']);
   const [minimizedWindows, setMinimizedWindows] = useState([]);
   const [activeWindow, setActiveWindow] = useState('finder');
@@ -104,56 +104,70 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm }) => {
   const displayedIcons = desktopIconIds || ['figma', 'vscode', 'resume', 'contact', 'trash'];
 
   return (
-    <div className="desktop">
-      <MenuBar userName={userName} onReplaySwarm={onReplaySwarm} />
+    <div className={`desktop ${swarmStage < 5 ? 'desktop-in-rebuild' : ''}`}>
+      {/* Top MenuBar wrapper */}
+      <div className={`desktop-menubar-wrap ${swarmStage >= 1 ? 'stage-revealed' : 'stage-hidden'}`}>
+        <MenuBar userName={userName} onReplaySwarm={onReplaySwarm} />
+      </div>
       
       <div className="desktop-content">
         {/* Left Column Desktop Icons */}
-        <div className="desktop-icons">
-          {displayedIcons.map((id) => {
+        <div className={`desktop-icons ${swarmStage >= 2 ? 'stage-revealed' : 'stage-hidden'}`}>
+          {displayedIcons.map((id, index) => {
             const app = portfolioApps[id];
             if (!app) return null;
             return (
-              <DesktopIcon 
-                key={app.id}
-                app={app}
-                onClick={() => openApp(app.id)}
-                onDoubleClick={() => openApp(app.id)}
-              />
+              <div 
+                key={app.id} 
+                className="desktop-icon-stagger-item"
+                style={{ '--icon-delay': `${index * 0.08}s` }}
+              >
+                <DesktopIcon 
+                  app={app}
+                  onClick={() => openApp(app.id)}
+                  onDoubleClick={() => openApp(app.id)}
+                />
+              </div>
             );
           })}
         </div>
 
-        {/* Windows */}
-        {openWindows.map((appId) => {
-          const app = portfolioApps[appId] || { id: appId, name: appId };
-          return (
-            <Window 
-              key={appId}
-              app={app}
-              userName={userName}
-              isActive={activeWindow === appId}
-              isMinimized={minimizedWindows.includes(appId)}
-              isMaximized={maximizedWindows.includes(appId)}
-              onToggleMaximize={() => toggleMaximizeWindow(appId)}
-              onClose={() => closeApp(appId)}
-              onMinimize={() => toggleMinimize(appId)}
-              onFocus={() => focusApp(appId)}
-              onOpenApp={openApp}
-            />
-          );
-        })}
+        {/* Windows Layer */}
+        <div className={`desktop-windows-layer ${swarmStage >= 3 ? 'stage-revealed' : 'stage-hidden'}`}>
+          {openWindows.map((appId) => {
+            const app = portfolioApps[appId] || { id: appId, name: appId };
+            return (
+              <Window 
+                key={appId}
+                app={app}
+                userName={userName}
+                isActive={activeWindow === appId}
+                isMinimized={minimizedWindows.includes(appId)}
+                isMaximized={maximizedWindows.includes(appId)}
+                onToggleMaximize={() => toggleMaximizeWindow(appId)}
+                onClose={() => closeApp(appId)}
+                onMinimize={() => toggleMinimize(appId)}
+                onFocus={() => focusApp(appId)}
+                onOpenApp={openApp}
+              />
+            );
+          })}
+        </div>
         
         {/* PixelAssistant / Clippy bot remains untouched on the right/bottom */}
-        <PixelAssistant isIdle={isIdle} onOpenApp={openApp} />
+        <div className={`desktop-bot-wrap ${swarmStage >= 5 ? 'stage-revealed' : 'stage-hidden'}`}>
+          <PixelAssistant isIdle={isIdle} onOpenApp={openApp} />
+        </div>
 
         {/* Bottom macOS Dock */}
-        <Dock 
-          openWindows={openWindows}
-          minimizedWindows={minimizedWindows}
-          activeWindow={activeWindow}
-          onAppClick={handleDockClick}
-        />
+        <div className={`desktop-dock-wrap ${swarmStage >= 4 ? 'stage-revealed' : 'stage-hidden'}`}>
+          <Dock 
+            openWindows={openWindows}
+            minimizedWindows={minimizedWindows}
+            activeWindow={activeWindow}
+            onAppClick={handleDockClick}
+          />
+        </div>
       </div>
     </div>
   );

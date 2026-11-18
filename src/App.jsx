@@ -9,6 +9,7 @@ const IDLE_TIMEOUT = 180000; // 3 minutes
 
 function App() {
   const [bootState, setBootState] = useState('booting'); // 'booting' | 'swarm' | 'ready'
+  const [swarmStage, setSwarmStage] = useState(0); // 0 (blank/blueprint) to 5 (complete)
   const [userName, setUserName] = useState(() => {
     try {
       return localStorage.getItem('varunos_user_name') || '';
@@ -22,14 +23,17 @@ function App() {
 
   const handleBootComplete = (enteredName) => {
     setUserName(enteredName);
+    setSwarmStage(0);
     setBootState('swarm');
   };
 
   const handleSwarmComplete = () => {
+    setSwarmStage(5);
     setBootState('ready');
   };
 
   const handleReplaySwarm = () => {
+    setSwarmStage(0);
     setBootState('swarm');
   };
 
@@ -45,7 +49,6 @@ function App() {
       }, IDLE_TIMEOUT);
     };
 
-    // Initial setup
     resetIdleTimer();
 
     window.addEventListener('mousemove', resetIdleTimer);
@@ -77,6 +80,7 @@ function App() {
           isIdle={isIdle} 
           userName={userName}
           onReplaySwarm={handleReplaySwarm}
+          swarmStage={bootState === 'swarm' ? swarmStage : 5}
         />
       )}
 
@@ -84,6 +88,7 @@ function App() {
       {bootState === 'swarm' && (
         <SwarmRebuildOverlay 
           userName={userName} 
+          onStageChange={setSwarmStage}
           onComplete={handleSwarmComplete} 
         />
       )}
