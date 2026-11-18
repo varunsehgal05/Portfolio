@@ -1,9 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FastForward, Check, Sparkles, Crosshair } from 'lucide-react';
+import { FastForward, Volume2, VolumeX, Sparkles, Crosshair, Play, Pause } from 'lucide-react';
 import './SwarmRebuildOverlay.css';
 
 // SVG Pointer Component in authentic Figma/Swarm style
-const SwarmCursor = ({ x, y, color, label, action, isDrawing, boxBounds, isCrosshair, caretText }) => {
+const SwarmCursor = ({
+  x,
+  y,
+  color,
+  label,
+  action,
+  isDrawing,
+  boxBounds,
+  isCrosshair,
+  caretText,
+  dupBadge
+}) => {
   return (
     <div
       className="swarm-cursor-agent"
@@ -35,10 +46,17 @@ const SwarmCursor = ({ x, y, color, label, action, isDrawing, boxBounds, isCross
         {action && <span className="swarm-cursor-action">{action}</span>}
       </div>
 
+      {/* Option-drag duplicate badge (⌥ Duplicate) */}
+      {dupBadge && (
+        <div className="swarm-dup-badge" style={{ backgroundColor: color }}>
+          <span>⌥ {dupBadge}</span>
+        </div>
+      )}
+
       {/* Simulated Typing Caret Bubble */}
       {caretText && (
         <div className="swarm-typing-bubble" style={{ borderColor: color }}>
-          <span>{caretText}</span>
+          <span className="typing-text">{caretText}</span>
           <span className="typing-caret" />
         </div>
       )}
@@ -68,10 +86,11 @@ const SwarmCursor = ({ x, y, color, label, action, isDrawing, boxBounds, isCross
   );
 };
 
-// Web Audio API Synthesizer for tactile mechanical clicks and celebratory chord
+// Web Audio API Synthesizer with rich mechanical tactile clicks & chord chime
 class SwarmSoundSynthesizer {
   constructor() {
     this.ctx = null;
+    this.muted = false;
   }
 
   init() {
@@ -86,15 +105,34 @@ class SwarmSoundSynthesizer {
     }
   }
 
-  isMuted() {
-    if (typeof document !== 'undefined') {
-      return document.body.classList.contains('sound-muted');
-    }
-    return false;
+  toggleMute() {
+    this.muted = !this.muted;
+    return this.muted;
   }
 
-  playSnap(freq = 640, duration = 0.04) {
-    if (this.isMuted()) return;
+  playTypeClick(freq = 340) {
+    if (this.muted) return;
+    try {
+      this.init();
+      if (!this.ctx) return;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq + (Math.random() * 60 - 30), this.ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(120, this.ctx.currentTime + 0.03);
+
+      gain.gain.setValueAtTime(0.04, this.ctx.currentTime);
+      gain.gain.linearRampToValueAtTime(0.0001, this.ctx.currentTime + 0.03);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start();
+      osc.stop(this.ctx.currentTime + 0.03);
+    } catch (e) {}
+  }
+
+  playSnap(freq = 680, duration = 0.04) {
+    if (this.muted) return;
     try {
       this.init();
       if (!this.ctx) return;
@@ -102,9 +140,9 @@ class SwarmSoundSynthesizer {
       const gain = this.ctx.createGain();
       osc.type = 'sine';
       osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(140, this.ctx.currentTime + duration);
+      osc.frequency.exponentialRampToValueAtTime(160, this.ctx.currentTime + duration);
 
-      gain.gain.setValueAtTime(0.05, this.ctx.currentTime);
+      gain.gain.setValueAtTime(0.06, this.ctx.currentTime);
       gain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + duration);
 
       osc.connect(gain);
@@ -114,8 +152,29 @@ class SwarmSoundSynthesizer {
     } catch (e) {}
   }
 
+  playDropThump(freq = 180) {
+    if (this.muted) return;
+    try {
+      this.init();
+      if (!this.ctx) return;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(60, this.ctx.currentTime + 0.08);
+
+      gain.gain.setValueAtTime(0.07, this.ctx.currentTime);
+      gain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.08);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start();
+      osc.stop(this.ctx.currentTime + 0.08);
+    } catch (e) {}
+  }
+
   playChime() {
-    if (this.isMuted()) return;
+    if (this.muted) return;
     try {
       this.init();
       if (!this.ctx) return;
@@ -124,15 +183,15 @@ class SwarmSoundSynthesizer {
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
         osc.type = 'triangle';
-        osc.frequency.setValueAtTime(freq, this.ctx.currentTime + i * 0.07);
+        osc.frequency.setValueAtTime(freq, this.ctx.currentTime + i * 0.075);
 
-        gain.gain.setValueAtTime(0.04, this.ctx.currentTime + i * 0.07);
-        gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + i * 0.07 + 0.45);
+        gain.gain.setValueAtTime(0.05, this.ctx.currentTime + i * 0.075);
+        gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + i * 0.075 + 0.55);
 
         osc.connect(gain);
         gain.connect(this.ctx.destination);
-        osc.start(this.ctx.currentTime + i * 0.07);
-        osc.stop(this.ctx.currentTime + i * 0.07 + 0.45);
+        osc.start(this.ctx.currentTime + i * 0.075);
+        osc.stop(this.ctx.currentTime + i * 0.075 + 0.55);
       });
     } catch (e) {}
   }
@@ -140,18 +199,30 @@ class SwarmSoundSynthesizer {
 
 const soundSynth = new SwarmSoundSynthesizer();
 
-// Smooth cubic bezier easing
+// Smooth easing formulas
 const easeInOutCubic = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+const easeOutBack = (t) => {
+  const c1 = 1.70158;
+  const c3 = c1 + 1;
+  return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+};
 const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
 const lerp = (a, b, t) => a + (b - a) * t;
 
 const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) => {
   const [guides, setGuides] = useState([]);
+  const [statusMessage, setStatusMessage] = useState('Initializing swarm agents...');
+  const [speedMultiplier, setSpeedMultiplier] = useState(1); // 1x or 2x
+  const [isMuted, setIsMuted] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const [completeBanner, setCompleteBanner] = useState(false);
+
   const animFrameRef = useRef(null);
   const startTimeRef = useRef(Date.now());
+  const pausedTimeRef = useRef(0);
   const isFinishedRef = useRef(false);
   const stageRef = useRef(0);
+  const lastTypeTimeRef = useRef(0);
 
   // Screen dimensions
   const [dims, setDims] = useState({
@@ -171,8 +242,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
   const [cursors, setCursors] = useState({
     varun: { x: 40, y: 40, color: '#A259FF', label: 'Varun Sehgal', action: 'Lead Architect', isDrawing: false, boxBounds: null },
     user: { x: dims.w - 100, y: 60, color: '#1ABCFE', label: userName || 'You', action: 'Joining...', isDrawing: false, boxBounds: null },
-    sarah: { x: 80, y: dims.h - 120, color: '#FF7262', label: 'Sarah (UI)', action: 'Wireframing', isDrawing: false, boxBounds: null },
-    alex: { x: dims.w - 120, y: dims.h - 80, color: '#0ACF83', label: 'Alex (Systems)', action: 'Building Dock', isDrawing: false, boxBounds: null }
+    sarah: { x: 80, y: dims.h - 120, color: '#FF7262', label: 'Sarah Lin', action: 'UI Systems', isDrawing: false, boxBounds: null },
+    alex: { x: dims.w - 120, y: dims.h - 80, color: '#0ACF83', label: 'Alex Chen', action: 'Systems & Dock', isDrawing: false, boxBounds: null }
   });
 
   const finishSwarm = () => {
@@ -180,18 +251,37 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
     isFinishedRef.current = true;
     soundSynth.playChime();
     setCompleteBanner(true);
+    setStatusMessage('✓ VarunOS Workspace Assembled & Ready!');
     if (onStageChange) onStageChange(5);
 
     setTimeout(() => {
       if (onComplete) onComplete();
-    }, 420);
+    }, 450);
   };
 
-  // Keyboard shortcut (Escape or Space to skip)
+  const handleToggleSound = () => {
+    const nextMuted = soundSynth.toggleMute();
+    setIsMuted(nextMuted);
+  };
+
+  const handleToggleSpeed = () => {
+    setSpeedMultiplier((prev) => (prev === 1 ? 2 : 1));
+  };
+
+  const handleTogglePause = () => {
+    setIsPaused((prev) => !prev);
+  };
+
+  // Keyboard shortcuts (Escape = Skip, M = Mute, Space = Pause)
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape' || e.key === ' ') {
+      if (e.key === 'Escape') {
         finishSwarm();
+      } else if (e.key.toLowerCase() === 'm') {
+        handleToggleSound();
+      } else if (e.key === ' ') {
+        e.preventDefault();
+        handleTogglePause();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -199,15 +289,15 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
   }, []);
 
   // Update parent stage smoothly
-  const updateStage = (newStage) => {
+  const updateStage = (newStage, soundFreq = 640) => {
     if (stageRef.current !== newStage) {
       stageRef.current = newStage;
       if (onStageChange) onStageChange(newStage);
-      soundSynth.playSnap(580 + newStage * 60, 0.04);
+      soundSynth.playSnap(soundFreq, 0.045);
     }
   };
 
-  // Continuous loop with smooth physics
+  // High-fidelity continuous animation loop
   useEffect(() => {
     startTimeRef.current = Date.now();
     soundSynth.init();
@@ -216,22 +306,30 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
     const loop = () => {
       if (isFinishedRef.current) return;
 
-      const elapsed = (Date.now() - startTimeRef.current) / 1000;
+      if (isPaused) {
+        animFrameRef.current = requestAnimationFrame(loop);
+        return;
+      }
+
+      // Elapsed scaled by speedMultiplier
+      const rawElapsed = (Date.now() - startTimeRef.current) / 1000;
+      const elapsed = rawElapsed * speedMultiplier;
       const { w, h } = dims;
 
       // =====================================================================
-      // Phase 1: Top MenuBar Construction (0.0s - 0.75s)
+      // Phase 1: Top MenuBar Drafting & Snapping (0.0s - 1.1s)
       // =====================================================================
-      if (elapsed < 0.75) {
-        const t = elapsed / 0.75;
+      if (elapsed < 1.1) {
+        setStatusMessage('[1/5] Drafting macOS MenuBar wireframe...');
+        const t = Math.min(1, elapsed / 1.1);
         const eased = easeInOutCubic(t);
 
         const menuX = lerp(40, w, eased);
-        const userX = lerp(w - 80, w - 240, eased);
-        const userY = lerp(40, 18, eased);
+        const userX = lerp(w - 60, w - 240, eased);
+        const userY = lerp(50, 18, eased);
 
-        if (t > 0.7) {
-          updateStage(1); // Reveal real MenuBar
+        if (t > 0.75) {
+          updateStage(1, 680); // Reveal MenuBar
         }
 
         setCursors({
@@ -240,116 +338,139 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             y: 18,
             color: '#A259FF',
             label: 'Varun Sehgal',
-            action: 'Drafting MenuBar',
+            action: 'Drafting 100vw MenuBar',
             isDrawing: true,
             isCrosshair: true,
-            boxBounds: { x: 0, y: 0, w: menuX, h: 28, label: 'MenuBar 100vw × 28px' }
+            boxBounds: { x: 0, y: 0, w: menuX, h: 28, label: 'MenuBar 100vw × 28px • Blur(24px)' }
           },
           user: {
             x: userX,
             y: userY,
             color: '#1ABCFE',
             label: userName || 'You',
-            action: 'Aligning Status Icons',
+            action: 'Aligning Status Tray',
             isDrawing: false
           },
           sarah: {
-            x: lerp(60, 48, eased),
-            y: lerp(200, 100, eased),
+            x: lerp(80, 56, eased),
+            y: lerp(240, 90, eased),
             color: '#FF7262',
-            label: 'Sarah (UI)',
-            action: 'Preparing Left Margin'
+            label: 'Sarah Lin',
+            action: 'Grid Setup: 20px Margin'
           },
           alex: {
-            x: lerp(w - 140, w / 2, eased),
+            x: lerp(w - 120, w / 2, eased),
             y: lerp(h - 100, h - 80, eased),
             color: '#0ACF83',
-            label: 'Alex (Systems)',
-            action: 'Measuring Horizon'
+            label: 'Alex Chen',
+            action: 'Baseline Measuring'
           }
         });
 
         setGuides([
-          { type: 'h', pos: 28, label: 'Y: 28px (Top Bar)' }
+          { type: 'h', pos: 28, label: 'Y: 28px (Top Bar Snapped)' }
         ]);
       }
       // =====================================================================
-      // Phase 2: Desktop Icons Column Stamping (0.75s - 1.55s)
+      // Phase 2: Desktop App Icons Stamping & Stagger (1.1s - 2.2s)
       // =====================================================================
-      else if (elapsed < 1.55) {
-        const t = (elapsed - 0.75) / 0.8;
-        const eased = easeOutCubic(t);
+      else if (elapsed < 2.2) {
+        setStatusMessage('[2/5] Stamping & Duplicating Desktop Apps...');
+        const t = (elapsed - 1.1) / 1.1;
+        const eased = easeOutBack(Math.min(1, t));
 
         if (t > 0.65) {
-          updateStage(2); // Reveal desktop icons
+          updateStage(2, 740); // Reveal Desktop Icons
         }
 
-        const iconHeight = lerp(50, 360, eased);
+        const iconYProgress = lerp(60, 420, Math.min(1, t * 1.1));
+        const iconIndex = Math.min(4, Math.floor(t * 5));
+        const iconNames = ['Figma', 'VS Code', 'Resume.pdf', 'Contact', 'Trash'];
+
+        // Typing/Stamping sound trigger
+        if (Date.now() - lastTypeTimeRef.current > 180 && t < 0.8) {
+          soundSynth.playDropThump(220 + iconIndex * 40);
+          lastTypeTimeRef.current = Date.now();
+        }
 
         setCursors({
           sarah: {
-            x: 48,
-            y: 60 + iconHeight,
+            x: 56,
+            y: iconYProgress,
             color: '#FF7262',
-            label: 'Sarah (UI)',
-            action: 'Option-Dragging Icons',
+            label: 'Sarah Lin',
+            action: `Stamping: ${iconNames[iconIndex]}`,
             isDrawing: true,
             isCrosshair: true,
-            boxBounds: { x: 20, y: 48, w: 76, h: iconHeight, label: 'Icons (Figma, VS Code, Resume, Contact, Trash)' }
+            dupBadge: `Duplicate +${iconIndex + 1}`,
+            boxBounds: {
+              x: 20,
+              y: iconYProgress - 35,
+              w: 72,
+              h: 70,
+              label: `${iconNames[iconIndex]} (72 × 70px)`
+            }
           },
           varun: {
-            x: lerp(w - 40, w / 2 - 120, eased),
-            y: lerp(28, (h - 520) / 2, eased),
+            x: lerp(w - 80, w / 2 - 200, easeInOutCubic(t)),
+            y: lerp(28, (h - 560) / 2 + 40, easeInOutCubic(t)),
             color: '#A259FF',
             label: 'Varun Sehgal',
-            action: 'Anchoring Window Frame'
+            action: 'Targeting Finder Viewport'
           },
           user: {
-            x: lerp(w - 240, w / 2 + 180, eased),
-            y: lerp(28, (h - 520) / 2 + 60, eased),
+            x: lerp(w - 240, w / 2 + 200, easeInOutCubic(t)),
+            y: lerp(28, (h - 560) / 2 + 100, easeInOutCubic(t)),
             color: '#1ABCFE',
             label: userName || 'You',
-            action: 'Inspecting Alignment'
+            action: 'Verifying Vertical Spacing'
           },
           alex: {
-            x: lerp(w / 2, w / 2, eased),
-            y: lerp(h - 80, h - 70, eased),
+            x: lerp(w / 2, w / 2, easeInOutCubic(t)),
+            y: lerp(h - 80, h - 70, easeInOutCubic(t)),
             color: '#0ACF83',
-            label: 'Alex (Systems)',
-            action: 'Grid Locked'
+            label: 'Alex Chen',
+            action: 'Holding Anchor'
           }
         });
 
         setGuides([
-          { type: 'v', pos: 20, label: 'X: 20px (Margin)' },
-          { type: 'v', pos: 96, label: 'X: 96px (Column Right)' }
+          { type: 'v', pos: 20, label: 'X: 20px Margin' },
+          { type: 'v', pos: 92, label: 'X: 92px Column' }
         ]);
       }
       // =====================================================================
-      // Phase 3: Center Finder Window & Live Typing (1.55s - 2.55s)
+      // Phase 3: Center Finder Window & Live Headline Typing (2.2s - 3.8s)
       // =====================================================================
-      else if (elapsed < 2.55) {
-        const t = (elapsed - 1.55) / 1.0;
-        const eased = easeInOutCubic(t);
+      else if (elapsed < 3.8) {
+        setStatusMessage('[3/5] Constructing Finder Window & Typing Content...');
+        const t = (elapsed - 2.2) / 1.6;
+        const eased = easeInOutCubic(Math.min(1, t));
 
         const targetW = Math.min(920, w - 80);
         const targetH = Math.min(560, h - 110);
         const winX = (w - targetW) / 2;
         const winY = (h - targetH) / 2 - 10;
 
-        const currentW = lerp(320, targetW, eased);
-        const currentH = lerp(200, targetH, eased);
+        const currentW = lerp(340, targetW, Math.min(1, eased * 1.2));
+        const currentH = lerp(220, targetH, Math.min(1, eased * 1.2));
         const curX = (w - currentW) / 2;
         const curY = (h - currentH) / 2 - 10;
 
-        if (t > 0.6) {
-          updateStage(3); // Reveal Center Finder Window
+        if (t > 0.45) {
+          updateStage(3, 800); // Reveal Finder Window
         }
 
-        // Typing simulation text
-        const fullText = 'Designing intuitive web apps & modern interfaces';
-        const typedCount = Math.floor(Math.min(fullText.length, t * fullText.length * 1.5));
-        const currentTypedText = fullText.substring(0, typedCount);
+        // Live Headline Typing Simulation
+        const headlineText = 'Designing intuitive web apps & modern interfaces';
+        const typingProgress = Math.min(1, Math.max(0, (t - 0.4) / 0.55));
+        const charCount = Math.floor(typingProgress * headlineText.length);
+        const currentTyped = headlineText.substring(0, charCount);
+
+        if (typingProgress > 0 && typingProgress < 1 && Date.now() - lastTypeTimeRef.current > 75) {
+          soundSynth.playTypeClick(320 + Math.random() * 80);
+          lastTypeTimeRef.current = Date.now();
+        }
 
         setCursors({
           user: {
@@ -357,7 +478,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             y: curY + currentH,
             color: '#1ABCFE',
             label: userName || 'You',
-            action: 'Expanding Bounds',
+            action: 'Bottom-Right Extrude',
             isDrawing: true,
             isCrosshair: true,
             boxBounds: {
@@ -365,138 +486,148 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
               y: curY,
               w: currentW,
               h: currentH,
-              label: `VarunOS Portfolio — ${Math.round(currentW)} × ${Math.round(currentH)}`
+              label: `VarunOS Portfolio — ${Math.round(currentW)} × ${Math.round(currentH)} px`
             }
           },
           varun: {
-            x: curX + 220,
-            y: curY + 90,
+            x: curX + 210 + (charCount * 7.5),
+            y: curY + 95,
             color: '#A259FF',
             label: 'Varun Sehgal',
-            action: 'Typing Headline',
-            caretText: currentTypedText
+            action: 'Typing Headline...',
+            caretText: currentTyped
           },
           sarah: {
-            x: curX,
-            y: curY,
+            x: curX + 180 + (t > 0.6 ? 240 : 0),
+            y: curY + 280,
             color: '#FF7262',
-            label: 'Sarah (UI)',
-            action: 'Top-Left Origin'
+            label: 'Sarah Lin',
+            action: t > 0.6 ? 'Duplicating Project Cards' : 'Top-Right Anchor',
+            dupBadge: t > 0.6 ? '4 Projects Grid' : null
           },
           alex: {
             x: curX,
             y: curY + currentH,
             color: '#0ACF83',
-            label: 'Alex (Systems)',
+            label: 'Alex Chen',
             action: 'Bottom-Left Anchor'
           }
         });
 
         setGuides([
           { type: 'h', pos: winY, label: 'Y: Window Top' },
-          { type: 'v', pos: winX, label: 'X: Left Snap' },
-          { type: 'v', pos: winX + targetW, label: 'X: Right Snap' }
+          { type: 'h', pos: winY + targetH, label: 'Y: Window Bottom' },
+          { type: 'v', pos: winX, label: 'X: Center Left Snap' },
+          { type: 'v', pos: winX + targetW, label: 'X: Center Right Snap' }
         ]);
       }
       // =====================================================================
-      // Phase 4: Bottom macOS Dock Assembly (2.55s - 3.25s)
+      // Phase 4: Bottom macOS Dock Capsule (3.8s - 4.7s)
       // =====================================================================
-      else if (elapsed < 3.25) {
-        const t = (elapsed - 2.55) / 0.7;
-        const eased = easeOutCubic(t);
+      else if (elapsed < 4.7) {
+        setStatusMessage('[4/5] Extruding Glass Dock Capsule...');
+        const t = (elapsed - 3.8) / 0.9;
+        const eased = easeOutBack(Math.min(1, t));
 
         const dockTargetW = Math.min(480, w - 40);
-        const currentDockW = lerp(120, dockTargetW, eased);
+        const currentDockW = lerp(140, dockTargetW, Math.min(1, eased));
         const dockX = (w - currentDockW) / 2;
         const dockY = h - 68;
 
-        if (t > 0.6) {
-          updateStage(4); // Reveal Dock
+        if (t > 0.5) {
+          updateStage(4, 880); // Reveal Dock
         }
 
         setCursors({
           alex: {
             x: dockX + currentDockW,
-            y: dockY + 22,
+            y: dockY + 24,
             color: '#0ACF83',
-            label: 'Alex (Systems)',
-            action: 'Drawing Glass Capsule',
+            label: 'Alex Chen',
+            action: 'Extruding Glass Capsule',
             isDrawing: true,
             isCrosshair: true,
-            boxBounds: { x: dockX, y: dockY - 8, w: currentDockW, h: 56, label: 'macOS Glass Dock' }
+            boxBounds: {
+              x: dockX,
+              y: dockY - 8,
+              w: currentDockW,
+              h: 56,
+              label: 'macOS Glass Dock • 480 × 58px'
+            }
           },
           sarah: {
             x: dockX,
-            y: dockY + 22,
+            y: dockY + 24,
             color: '#FF7262',
-            label: 'Sarah (UI)',
-            action: 'Capsule Anchor'
-          },
-          varun: {
-            x: lerp(w / 2, w - 80, eased),
-            y: lerp(h / 2, h - 80, eased),
-            color: '#A259FF',
-            label: 'Varun Sehgal',
-            action: 'Placing Assistant Bot'
+            label: 'Sarah Lin',
+            action: 'Capsule Left Edge'
           },
           user: {
-            x: lerp(w / 2 + 100, w / 2, eased),
-            y: lerp(h / 2 + 100, h - 90, eased),
+            x: lerp(w / 2 + 120, w / 2, easeInOutCubic(t)),
+            y: lerp(h / 2 + 80, h - 90, easeInOutCubic(t)),
             color: '#1ABCFE',
             label: userName || 'You',
-            action: 'Verifying Dock Icons'
+            action: 'Dropping Dock Icons'
+          },
+          varun: {
+            x: lerp(w / 2 + 200, w - 75, easeInOutCubic(t)),
+            y: lerp(h / 2, h - 75, easeInOutCubic(t)),
+            color: '#A259FF',
+            label: 'Varun Sehgal',
+            action: 'Deploying Assistant Bot'
           }
         });
 
         setGuides([
-          { type: 'h', pos: dockY - 8, label: 'Y: Dock Baseline' }
+          { type: 'h', pos: dockY - 8, label: 'Y: Dock Baseline Horizon' }
         ]);
       }
       // =====================================================================
-      // Phase 5: Convergence, Bot Activation & Celebration (3.25s - 3.75s)
+      // Phase 5: Assistant Bot & Grand Convergence (4.7s - 5.5s)
       // =====================================================================
-      else if (elapsed < 3.8) {
-        const t = (elapsed - 3.25) / 0.55;
-        const eased = easeInOutCubic(t);
+      else if (elapsed < 5.6) {
+        setStatusMessage('[5/5] Deploying Assistant Bot & Convergence...');
+        const t = (elapsed - 4.7) / 0.85;
+        const eased = easeInOutCubic(Math.min(1, t));
         const centerX = w / 2;
         const centerY = h / 2;
 
-        updateStage(5); // Everything unlocked!
+        updateStage(5, 960); // Everything unlocked!
 
         setCursors({
           user: {
-            x: lerp(centerX, centerX - 50, eased),
-            y: lerp(h - 90, centerY - 30, eased),
+            x: lerp(centerX, centerX - 60, eased),
+            y: lerp(h - 90, centerY - 40, eased),
             color: '#1ABCFE',
             label: userName || 'You',
-            action: 'Ready ✓'
+            action: 'Approved ✓'
           },
           varun: {
-            x: lerp(w - 80, centerX + 50, eased),
-            y: lerp(h - 80, centerY - 30, eased),
+            x: lerp(w - 75, centerX + 60, eased),
+            y: lerp(h - 75, centerY - 40, eased),
             color: '#A259FF',
             label: 'Varun Sehgal',
-            action: 'Live 🚀'
+            action: 'System Ready 🚀'
           },
           sarah: {
-            x: lerp(centerX - 100, centerX - 50, eased),
-            y: lerp(h - 60, centerY + 40, eased),
+            x: lerp(centerX - 120, centerX - 60, eased),
+            y: lerp(h - 60, centerY + 50, eased),
             color: '#FF7262',
-            label: 'Sarah (UI)',
-            action: 'Complete ✨'
+            label: 'Sarah Lin',
+            action: 'UI Verified ✨'
           },
           alex: {
-            x: lerp(centerX + 100, centerX + 50, eased),
-            y: lerp(h - 60, centerY + 40, eased),
+            x: lerp(centerX + 120, centerX + 60, eased),
+            y: lerp(h - 60, centerY + 50, eased),
             color: '#0ACF83',
-            label: 'Alex (Systems)',
-            action: '100% Synced'
+            label: 'Alex Chen',
+            action: '100% Operational'
           }
         });
 
         setGuides([]);
       }
-      // Completed!
+      // Rebuild complete!
       else {
         finishSwarm();
         return;
@@ -509,27 +640,60 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
     return () => {
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
     };
-  }, [dims, userName]);
+  }, [dims, userName, speedMultiplier, isPaused]);
 
   return (
     <div className={`swarm-overlay-container ${completeBanner ? 'fade-out-overlay' : ''}`}>
-      {/* Top Status HUD Badge */}
+      {/* Top Status & Controls HUD Badge */}
       <div className="swarm-hud-badge">
         <div className="swarm-hud-pulse" />
+        
         <span className="swarm-hud-text">
-          {completeBanner
-            ? '✓ VarunOS Workspace Assembled & Ready!'
-            : `⚡ Swarm Rebuild: Assembling VarunOS for ${userName || 'Guest'}...`}
+          {completeBanner ? '✓ VarunOS Workspace Assembled & Ready!' : statusMessage}
         </span>
-        <button className="swarm-skip-btn" onClick={finishSwarm} title="Skip animation (Esc)">
+
+        {/* Speed Toggle (1x / 2x) */}
+        <button
+          className="swarm-control-btn"
+          onClick={handleToggleSpeed}
+          title="Toggle Rebuild Speed (1x / 2x)"
+        >
+          <span>{speedMultiplier}× Speed</span>
+        </button>
+
+        {/* Sound Toggle */}
+        <button
+          className={`swarm-control-btn ${isMuted ? 'muted' : ''}`}
+          onClick={handleToggleSound}
+          title={isMuted ? 'Unmute Synthesizer Audio (M)' : 'Mute Synthesizer Audio (M)'}
+        >
+          {isMuted ? <VolumeX size={13} /> : <Volume2 size={13} />}
+        </button>
+
+        {/* Pause/Play Toggle */}
+        <button
+          className="swarm-control-btn"
+          onClick={handleTogglePause}
+          title={isPaused ? 'Resume (Space)' : 'Pause (Space)'}
+        >
+          {isPaused ? <Play size={12} fill="currentColor" /> : <Pause size={12} fill="currentColor" />}
+        </button>
+
+        {/* Skip Button */}
+        <button className="swarm-skip-btn" onClick={finishSwarm} title="Skip Rebuild Animation (Esc)">
           <FastForward size={13} /> Skip
         </button>
       </div>
 
-      {/* Blueprint Coordinates Indicator */}
+      {/* Blueprint Coordinates Indicator (Bottom-Left) */}
       <div className="swarm-blueprint-indicator">
-        <span className="blueprint-tag">SWARM BLUEPRINT v2.4</span>
-        <span className="blueprint-coords">AUTONOMOUS MULTIPLAYER REBUILD</span>
+        <span className="blueprint-tag">⚡ SWARM REBUILD ENGINE v3.0</span>
+        <span className="blueprint-coords">AUTONOMOUS MULTIPLAYER RECONSTRUCTION • 4 AGENTS</span>
+      </div>
+
+      {/* Viewport Info Readout (Bottom-Right) */}
+      <div className="swarm-blueprint-viewport">
+        <span>VIEWPORT: {dims.w} × {dims.h} px • 60 FPS</span>
       </div>
 
       {/* SVG Canvas for trailing paths & ruler alignment guides */}
@@ -545,7 +709,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
                 stroke="#ec4899"
                 strokeDasharray="4 4"
                 strokeWidth="1.2"
-                opacity="0.75"
+                opacity="0.8"
               />
             ) : (
               <line
@@ -556,7 +720,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
                 stroke="#ec4899"
                 strokeDasharray="4 4"
                 strokeWidth="1.2"
-                opacity="0.75"
+                opacity="0.8"
               />
             )}
           </g>
@@ -576,6 +740,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           boxBounds={cursor.boxBounds}
           isCrosshair={cursor.isCrosshair}
           caretText={cursor.caretText}
+          dupBadge={cursor.dupBadge}
         />
       ))}
     </div>

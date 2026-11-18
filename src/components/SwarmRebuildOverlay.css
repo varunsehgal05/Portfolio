@@ -7,7 +7,7 @@
   pointer-events: none;
   overflow: hidden;
   user-select: none;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.45s ease;
 }
 
 .swarm-overlay-container.fade-out-overlay {
@@ -15,23 +15,23 @@
 }
 
 /* ============================================================
-   Top Status HUD Badge
+   Top Status & Controls HUD Badge
    ============================================================ */
 .swarm-hud-badge {
   position: fixed;
   top: 14px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(20, 20, 26, 0.92);
+  background: rgba(20, 20, 26, 0.94);
   backdrop-filter: blur(28px);
   -webkit-backdrop-filter: blur(28px);
   border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 999px;
-  padding: 6px 16px;
+  padding: 5px 14px;
   display: flex;
   align-items: center;
-  gap: 12px;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  gap: 10px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.08);
   pointer-events: auto;
   z-index: 1000001;
   animation: hudDropIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -40,7 +40,7 @@
 @keyframes hudDropIn {
   from {
     opacity: 0;
-    transform: translate(-50%, -20px);
+    transform: translate(-50%, -24px);
   }
   to {
     opacity: 1;
@@ -55,6 +55,7 @@
   background: #38bdf8;
   box-shadow: 0 0 10px #38bdf8;
   animation: pulseGlow 1.2s infinite ease-in-out;
+  flex-shrink: 0;
 }
 
 @keyframes pulseGlow {
@@ -69,18 +70,48 @@
 }
 
 .swarm-hud-text {
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 500;
   color: #f4f4f5;
   letter-spacing: 0.2px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  min-width: 280px;
+}
+
+/* Control Buttons in HUD */
+.swarm-control-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #e4e4e7;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: all 0.15s ease;
+}
+
+.swarm-control-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+.swarm-control-btn.muted {
+  color: #f87171;
+  border-color: rgba(248, 113, 113, 0.3);
 }
 
 .swarm-skip-btn {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #ffffff;
-  padding: 3px 9px;
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  color: #38bdf8;
+  padding: 3px 10px;
   border-radius: 999px;
   font-size: 11px;
   font-weight: 600;
@@ -92,16 +123,17 @@
 }
 
 .swarm-skip-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: scale(1.05);
+  background: #38bdf8;
+  color: #000000;
+  transform: scale(1.04);
 }
 
 .swarm-skip-btn:active {
-  transform: scale(0.95);
+  transform: scale(0.96);
 }
 
 /* ============================================================
-   Bottom Blueprint Technical Readout
+   Bottom Blueprint Technical Readouts
    ============================================================ */
 .swarm-blueprint-indicator {
   position: fixed;
@@ -113,7 +145,7 @@
   font-family: 'SF Mono', Consolas, Monaco, monospace;
   pointer-events: none;
   z-index: 1000000;
-  opacity: 0.75;
+  opacity: 0.8;
 }
 
 .blueprint-tag {
@@ -127,6 +159,18 @@
   font-size: 9px;
   color: #a1a1aa;
   letter-spacing: 0.4px;
+}
+
+.swarm-blueprint-viewport {
+  position: fixed;
+  bottom: 14px;
+  right: 20px;
+  font-family: 'SF Mono', Consolas, Monaco, monospace;
+  font-size: 9.5px;
+  color: #71717a;
+  pointer-events: none;
+  z-index: 1000000;
+  opacity: 0.75;
 }
 
 /* ============================================================
@@ -150,7 +194,7 @@
   pointer-events: none;
   z-index: 1000000;
   will-change: transform;
-  transition: transform 0.04s linear;
+  transition: transform 0.035s linear;
 }
 
 .swarm-pointer-svg {
@@ -159,8 +203,8 @@
 
 /* Crosshair Drafting Cursor */
 .swarm-crosshair-icon {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   border: 1px dashed;
   position: relative;
@@ -170,20 +214,20 @@
 }
 
 .swarm-crosshair-icon .ch-h {
-  width: 24px;
+  width: 28px;
   height: 1px;
   position: absolute;
 }
 
 .swarm-crosshair-icon .ch-v {
-  height: 24px;
+  height: 28px;
   width: 1px;
   position: absolute;
 }
 
 .swarm-cursor-tag {
   position: absolute;
-  top: 14px;
+  top: 15px;
   left: 12px;
   padding: 2px 8px;
   border-radius: 4px;
@@ -209,6 +253,27 @@
   font-weight: 500;
   padding-left: 5px;
   border-left: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+/* Option-Drag Duplicate Badge */
+.swarm-dup-badge {
+  position: absolute;
+  top: 38px;
+  left: 12px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  color: #ffffff;
+  font-size: 9.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  border: 0.5px solid rgba(255, 255, 255, 0.25);
+  animation: badgePop 0.15s ease-out;
+}
+
+@keyframes badgePop {
+  0% { transform: scale(0.7); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 /* Simulated Typing Caret Bubble */
@@ -250,7 +315,7 @@
 .swarm-active-box {
   position: fixed;
   border: 1.5px dashed var(--cursor-color, #38bdf8);
-  background: rgba(56, 189, 248, 0.07);
+  background: rgba(56, 189, 248, 0.08);
   border-radius: 6px;
   box-sizing: border-box;
   pointer-events: none;

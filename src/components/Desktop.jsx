@@ -117,17 +117,14 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
             const app = portfolioApps[id];
             if (!app) return null;
             return (
-              <div 
-                key={app.id} 
+              <DesktopIcon 
+                key={app.id}
+                app={app}
                 className="desktop-icon-stagger-item"
                 style={{ '--icon-delay': `${index * 0.08}s` }}
-              >
-                <DesktopIcon 
-                  app={app}
-                  onClick={() => openApp(app.id)}
-                  onDoubleClick={() => openApp(app.id)}
-                />
-              </div>
+                onClick={() => openApp(app.id)}
+                onDoubleClick={() => openApp(app.id)}
+              />
             );
           })}
         </div>
