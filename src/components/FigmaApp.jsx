@@ -563,12 +563,16 @@ const PAGE_LAYERS_MAP = {
   ],
   about: [
     { id: 'a-root', title: 'About_Whiteboard (FigJam Canvas)', type: 'frame', indent: 0, visible: true, locked: false },
-    { id: 'a-sec1', title: 'Origin & Philosophy (Sticky Cards)', type: 'group', indent: 1, visible: true, locked: false },
+    { id: 'a-sec1', title: 'Phase 01: Ideation (Brainstorming Stickies)', type: 'group', indent: 1, visible: true, locked: false },
+    { id: 'a-stk-blue', title: 'Sticky: Idea (How might we...)', type: 'component', indent: 2, visible: true, locked: false },
+    { id: 'a-stk-orange', title: 'Sticky: Aesthetic (Dark Mode)', type: 'component', indent: 2, visible: true, locked: false },
+    { id: 'a-stk-purple', title: 'Sticky: Typography (Crisp Monospace)', type: 'component', indent: 2, visible: true, locked: false },
     { id: 'a-svg1', title: 'Dashed_Bezier_Connector_1', type: 'vector', indent: 1, visible: true, locked: true },
-    { id: 'a-sec2', title: 'Skill Architecture (Flow Frame)', type: 'component', indent: 1, visible: true, locked: false },
+    { id: 'a-sec2', title: 'Phase 02: Architecture & Systems Flow', type: 'component', indent: 1, visible: true, locked: false },
     { id: 'a-svg2', title: 'Dashed_Bezier_Connector_2', type: 'vector', indent: 1, visible: true, locked: true },
-    { id: 'a-sec3', title: 'Technical Arsenal (Tool Badges)', type: 'group', indent: 1, visible: true, locked: false },
-    { id: 'a-sec4', title: 'Current Status & Connect Buttons', type: 'component', indent: 1, visible: true, locked: false }
+    { id: 'a-sec3', title: 'Phase 03: Execution & AI Velocity', type: 'group', indent: 1, visible: true, locked: false },
+    { id: 'a-svg3', title: 'Dashed_Bezier_Connector_3', type: 'vector', indent: 1, visible: true, locked: true },
+    { id: 'a-sec4', title: 'Phase 04: Availability & CTA Action Bar', type: 'component', indent: 1, visible: true, locked: false }
   ],
   resume: [
     { id: 'r-root', title: 'Varun_Sehgal_Resume.pdf (Document)', type: 'frame', indent: 0, visible: true, locked: false },
@@ -1891,29 +1895,56 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     </div>
 
                     <div className="figjam-grid-layout">
-                      {/* Row 1: Origin & Philosophy -> Skill Architecture */}
+                      {/* Row 1: Phase 01: Ideation -> Phase 02: Architecture */}
                       <div className="figjam-flow-row">
-                        {/* Section 1: Origin & Philosophy */}
+                        {/* Section 1: Phase 01: Ideation (Matching User Reference) */}
                         <div className="figjam-section-col">
-                          <div className="figjam-section-header">
-                            <div className="figjam-icon-pin pin-blue">
-                              <span className="material-symbols-outlined text-[15px]">location_on</span>
+                          <div className="figjam-phase-card">
+                            <div className="phase-header-block">
+                              <h2 className="phase-title-large">Phase 01: Ideation</h2>
+                              <p className="phase-desc-muted">
+                                Unstructured thoughts, user journey mapping, and early structural wireframes. Mapping the chaotic void before styling.
+                              </p>
+                              <div className="phase-subheading-pin">
+                                <span className="material-symbols-outlined phase-pin-symbol">location_on</span>
+                                <span>Brainstorming</span>
+                              </div>
                             </div>
-                            <h2 className="figjam-section-title">Origin & Philosophy</h2>
-                          </div>
 
-                          <div className="figjam-cards-stack">
-                            <div className="figjam-sticky-card tilt-left">
-                              <span className="figjam-card-label">Design Philosophy</span>
-                              Lead UI/UX & Product Designer with 3+ years experience turning complex multi-tenant systems into intuitive, joyful software.
-                            </div>
-                            <div className="figjam-sticky-card tilt-right">
-                              <span className="figjam-card-label">Academic Foundations</span>
-                              Undergraduate at Jaypee University of Engineering & Technology (JUET, 2023–2027) bridging design craft with production frontend engineering.
-                            </div>
-                            <div className="figjam-sticky-card tilt-none">
-                              <span className="figjam-card-label">Core Principle</span>
-                              Clean typography, deliberate whitespace, and micro-interactions eliminate cognitive load and build user trust.
+                            {/* Overlapping Colorful Sticky Notes */}
+                            <div className="phase-stickies-cluster">
+                              {/* Blue Sticky */}
+                              <div className="figjam-color-sticky sticky-blue">
+                                <p className="sticky-body-text">
+                                  How might we make the portfolio feel like a high-end application rather than a static document?
+                                </p>
+                                <div className="sticky-footer-row">
+                                  <span>Idea</span>
+                                  <span className="material-symbols-outlined sticky-footer-icon">lightbulb</span>
+                                </div>
+                              </div>
+
+                              {/* Orange Sticky (Overlapping) */}
+                              <div className="figjam-color-sticky sticky-orange">
+                                <p className="sticky-body-text">
+                                  Focus heavily on dark mode aesthetics. Deep blacks, atmospheric blurs, and spectral accent colors.
+                                </p>
+                                <div className="sticky-footer-row">
+                                  <span>Aesthetic</span>
+                                  <span className="material-symbols-outlined sticky-footer-icon">palette</span>
+                                </div>
+                              </div>
+
+                              {/* Purple Sticky */}
+                              <div className="figjam-color-sticky sticky-purple">
+                                <p className="sticky-body-text">
+                                  Typography needs to be crisp. Use Monospace for technical details, Sans for body, Geist for headings.
+                                </p>
+                                <div className="sticky-footer-row">
+                                  <span>Typography</span>
+                                  <span className="material-symbols-outlined sticky-footer-icon">text_fields</span>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -1926,61 +1957,112 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                           </svg>
                         </div>
 
-                        {/* Section 2: Skill Architecture Flow */}
+                        {/* Section 2: Phase 02: Architecture & Systems */}
                         <div className="figjam-section-col">
-                          <div className="figjam-section-header">
-                            <div className="figjam-icon-pin pin-purple">
-                              <span className="material-symbols-outlined text-[15px]">alt_route</span>
-                            </div>
-                            <h2 className="figjam-section-title">Skill Architecture</h2>
-                          </div>
-
-                          <div className="figjam-flow-frame">
-                            <div className="flow-step-node active-node">
-                              Varun Sehgal (Lead Product Designer)
-                            </div>
-                            <div className="flow-stem-divider"></div>
-                            <div className="flow-step-node">
-                              Design Systems & Component Architecture
-                            </div>
-                            <div className="flow-stem-divider"></div>
-                            <div className="flow-branch-row">
-                              <div className="flow-step-node">
-                                Frontend Code (React / Tailwind)
+                          <div className="figjam-phase-card">
+                            <div className="phase-header-block">
+                              <h2 className="phase-title-large">Phase 02: Architecture</h2>
+                              <p className="phase-desc-muted">
+                                Synthesizing user journeys, scalable design tokens, and modular atomic primitives across web & mobile.
+                              </p>
+                              <div className="phase-subheading-pin">
+                                <span className="material-symbols-outlined phase-pin-symbol" style={{ color: '#c084fc' }}>schema</span>
+                                <span>Design Systems & Flows</span>
                               </div>
+                            </div>
+
+                            {/* Overlapping Emerald & Amber Stickies */}
+                            <div className="phase-stickies-cluster mb-4">
+                              <div className="figjam-color-sticky sticky-emerald">
+                                <p className="sticky-body-text">
+                                  Tokens first: semantic color mapping, fluid spacing scales, and strict WCAG AA/AAA contrast ratios.
+                                </p>
+                                <div className="sticky-footer-row">
+                                  <span>Tokens</span>
+                                  <span className="material-symbols-outlined sticky-footer-icon">token</span>
+                                </div>
+                              </div>
+
+                              <div className="figjam-color-sticky sticky-amber">
+                                <p className="sticky-body-text">
+                                  Atomic hierarchy: Primitives → Compounds → Responsive Artboards with auto-layout padding.
+                                </p>
+                                <div className="sticky-footer-row">
+                                  <span>Auto-Layout</span>
+                                  <span className="material-symbols-outlined sticky-footer-icon">view_quilt</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="figjam-flow-frame mt-2">
+                              <div className="flow-step-node active-node">
+                                Varun Sehgal (Lead Product Designer)
+                              </div>
+                              <div className="flow-stem-divider"></div>
                               <div className="flow-step-node">
-                                AI Product Prototyping
+                                Design Systems & Component Architecture
+                              </div>
+                              <div className="flow-stem-divider"></div>
+                              <div className="flow-branch-row">
+                                <div className="flow-step-node">
+                                  Frontend Code (React / Tailwind)
+                                </div>
+                                <div className="flow-step-node">
+                                  AI Product Prototyping
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
 
-                      {/* Row 2: Technical Arsenal -> Status & Connect */}
+                      {/* Row 2: Phase 03: Execution -> Phase 04: Availability */}
                       <div className="figjam-flow-row">
-                        {/* Section 3: Technical Arsenal */}
+                        {/* Section 3: Phase 03: Execution & AI Velocity */}
                         <div className="figjam-section-col">
-                          <div className="figjam-section-header">
-                            <div className="figjam-icon-pin pin-emerald">
-                              <span className="material-symbols-outlined text-[15px]">architecture</span>
-                            </div>
-                            <h2 className="figjam-section-title">Technical Arsenal</h2>
-                          </div>
-
-                          <div className="figjam-cards-stack">
-                            <div className="figjam-sticky-card tilt-right">
-                              <span className="figjam-card-label">Design & Prototyping</span>
-                              Figma, FigJam, Figma AI, Adobe XD, Photoshop, Illustrator, Tokens Studio.
-                              <div className="figjam-tokens-row">
-                                <span className="figjam-token-pill">Tokens</span>
-                                <span className="figjam-token-pill">Variants</span>
-                                <span className="figjam-token-pill">Auto-Layout</span>
+                          <div className="figjam-phase-card">
+                            <div className="phase-header-block">
+                              <h2 className="phase-title-large">Phase 03: Execution</h2>
+                              <p className="phase-desc-muted">
+                                High-fidelity Figma prototypes, vibecoded AI acceleration, and frictionless design-engineering handoffs.
+                              </p>
+                              <div className="phase-subheading-pin">
+                                <span className="material-symbols-outlined phase-pin-symbol" style={{ color: '#34d399' }}>rocket_launch</span>
+                                <span>AI Velocity & Production Stack</span>
                               </div>
                             </div>
 
-                            <div className="figjam-sticky-card tilt-left">
-                              <span className="figjam-card-label">Engineering Stack</span>
-                              React.js, Next.js, Tailwind CSS, TypeScript, Vite, HTML5, CSS3, Git workflows.
+                            {/* Overlapping Rose & Teal Stickies */}
+                            <div className="phase-stickies-cluster mb-4">
+                              <div className="figjam-color-sticky sticky-rose">
+                                <p className="sticky-body-text">
+                                  AI-assisted prototyping (Figma Magician, Automator, Galileo) cuts concept turnaround by 45% without losing craft.
+                                </p>
+                                <div className="sticky-footer-row">
+                                  <span>Velocity</span>
+                                  <span className="material-symbols-outlined sticky-footer-icon">bolt</span>
+                                </div>
+                              </div>
+
+                              <div className="figjam-color-sticky sticky-teal">
+                                <p className="sticky-body-text">
+                                  Bridging design & code: Every Figma component maps 1:1 to React.js, TypeScript, and Tailwind CSS props.
+                                </p>
+                                <div className="sticky-footer-row">
+                                  <span>Engineering</span>
+                                  <span className="material-symbols-outlined sticky-footer-icon">code</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="figjam-tokens-row">
+                              <span className="figjam-token-pill">Figma AI</span>
+                              <span className="figjam-token-pill">FigJam</span>
+                              <span className="figjam-token-pill">Tokens Studio</span>
+                              <span className="figjam-token-pill">React.js</span>
+                              <span className="figjam-token-pill">TypeScript</span>
+                              <span className="figjam-token-pill">Tailwind CSS</span>
+                              <span className="figjam-token-pill">Git</span>
                             </div>
                           </div>
                         </div>
@@ -1993,39 +2075,54 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                           </svg>
                         </div>
 
-                        {/* Section 4: Current Status & Connect */}
+                        {/* Section 4: Phase 04: Availability & Impact */}
                         <div className="figjam-section-col">
-                          <div className="figjam-section-header">
-                            <div className="figjam-icon-pin pin-amber">
-                              <span className="material-symbols-outlined text-[15px]">rocket_launch</span>
+                          <div className="figjam-phase-card">
+                            <div className="phase-header-block">
+                              <h2 className="phase-title-large">Phase 04: Availability</h2>
+                              <p className="phase-desc-muted">
+                                Open for high-impact full-time design roles, product collaborations, and design system leadership.
+                              </p>
+                              <div className="phase-subheading-pin">
+                                <span className="material-symbols-outlined phase-pin-symbol" style={{ color: '#fbbf24' }}>stars</span>
+                                <span>Next Chapter</span>
+                              </div>
                             </div>
-                            <h2 className="figjam-section-title">Current Status</h2>
-                          </div>
 
-                          <div className="figjam-flow-frame">
-                            <div className="flow-step-node active-node" style={{ borderColor: 'rgba(245, 158, 11, 0.6)', background: 'rgba(245, 158, 11, 0.12)', color: '#fde68a' }}>
-                              🟢 Open for Full-Time Roles & Summer 2025 Collaborations
-                            </div>
-                            <p className="text-[12px] text-zinc-400 mt-3 leading-relaxed">
-                              Experienced delivering end-to-end B2B dashboards, mobile UX flows, and scalable design token libraries with rapid turnaround.
-                            </p>
-                            <div className="figjam-actions-bar">
-                              <button 
-                                type="button" 
-                                className="cert-action-btn primary"
-                                onClick={() => onOpenApp ? onOpenApp('contact') : window.location.href = 'mailto:varun.sehgal02@gmail.com'}
-                              >
-                                <span className="material-symbols-outlined text-[14px]">mail</span>
-                                <span>Email Me</span>
-                              </button>
-                              <a 
-                                href="/Varun_Sehgal_Resume_Updated.pdf" 
-                                download="Varun_Sehgal_Resume.pdf" 
-                                className="cert-action-btn secondary"
-                              >
-                                <span className="material-symbols-outlined text-[14px]">download</span>
-                                <span>Download Resume</span>
-                              </a>
+                            <div className="figjam-flow-frame">
+                              <div className="flow-step-node active-node" style={{ borderColor: 'rgba(245, 158, 11, 0.6)', background: 'rgba(245, 158, 11, 0.12)', color: '#fde68a' }}>
+                                🟢 Open for Full-Time Roles & Design Collaborations
+                              </div>
+                              <p className="text-[12.5px] text-zinc-400 mt-3 leading-relaxed">
+                                Pursuing B.Tech in CSE at Jaypee University of Engineering and Technology (2023–2027) with 3+ years experience delivering scalable B2B dashboards, mobile UX flows, and atomic design systems.
+                              </p>
+                              <div className="figjam-actions-bar">
+                                <button 
+                                  type="button" 
+                                  className="cert-action-btn primary"
+                                  onClick={() => onOpenApp ? onOpenApp('contact') : window.location.href = 'mailto:varun.sehgal02@gmail.com'}
+                                >
+                                  <span className="material-symbols-outlined text-[14px]">mail</span>
+                                  <span>Email Me</span>
+                                </button>
+                                <a 
+                                  href="/Varun_Sehgal_Resume_Updated.pdf" 
+                                  download="Varun_Sehgal_Resume.pdf" 
+                                  className="cert-action-btn secondary"
+                                >
+                                  <span className="material-symbols-outlined text-[14px]">download</span>
+                                  <span>Download Resume</span>
+                                </a>
+                                <a 
+                                  href="https://linkedin.com/in/varunsehgal02" 
+                                  target="_blank" 
+                                  rel="noreferrer" 
+                                  className="cert-action-btn secondary"
+                                >
+                                  <span className="material-symbols-outlined text-[14px]">open_in_new</span>
+                                  <span>LinkedIn</span>
+                                </a>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -2455,27 +2552,50 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     <div className="figjam-grid-layout">
                       {/* Row 1: Problem -> User Flow */}
                       <div className="figjam-flow-row">
-                        {/* Section 1: Problem */}
+                        {/* Section 1: Problem / Phase 01 */}
                         <div className="figjam-section-col">
-                          <div className="figjam-section-header">
-                            <div className="figjam-icon-pin pin-blue">
-                              <span className="material-symbols-outlined text-[15px]">location_on</span>
+                          <div className="figjam-phase-card">
+                            <div className="phase-header-block">
+                              <h2 className="phase-title-large">Phase 01: Discovery</h2>
+                              <p className="phase-desc-muted">
+                                Unstructured thoughts, user journey mapping, and early structural wireframes. Mapping the chaotic void before styling.
+                              </p>
+                              <div className="phase-subheading-pin">
+                                <span className="material-symbols-outlined phase-pin-symbol">location_on</span>
+                                <span>Problem & Pain Points</span>
+                              </div>
                             </div>
-                            <h2 className="figjam-section-title">Problem</h2>
-                          </div>
 
-                          <div className="figjam-cards-stack">
-                            <div className="figjam-sticky-card tilt-left">
-                              <span className="figjam-card-label">Pain Point 1</span>
-                              Users find tracking daily expenses tedious and often abandon budgeting tools due to manual entry friction.
-                            </div>
-                            <div className="figjam-sticky-card tilt-right">
-                              <span className="figjam-card-label">Pain Point 2</span>
-                              Lack of visual clarity in spending categories makes it hard to identify areas for saving.
-                            </div>
-                            <div className="figjam-sticky-card tilt-none">
-                              <span className="figjam-card-label">Research Insight</span>
-                              Validate these pain points with qualitative user feedback and continuous transaction analytics.
+                            <div className="phase-stickies-cluster">
+                              <div className="figjam-color-sticky sticky-blue">
+                                <p className="sticky-body-text">
+                                  Users find tracking daily expenses tedious and often abandon budgeting tools due to manual entry friction.
+                                </p>
+                                <div className="sticky-footer-row">
+                                  <span>Pain Point</span>
+                                  <span className="material-symbols-outlined sticky-footer-icon">error_outline</span>
+                                </div>
+                              </div>
+
+                              <div className="figjam-color-sticky sticky-orange">
+                                <p className="sticky-body-text">
+                                  Lack of visual clarity in spending categories makes it hard to identify areas for saving.
+                                </p>
+                                <div className="sticky-footer-row">
+                                  <span>Friction</span>
+                                  <span className="material-symbols-outlined sticky-footer-icon">visibility_off</span>
+                                </div>
+                              </div>
+
+                              <div className="figjam-color-sticky sticky-purple">
+                                <p className="sticky-body-text">
+                                  Validate pain points through qualitative interviews and continuous transaction telemetry.
+                                </p>
+                                <div className="sticky-footer-row">
+                                  <span>Insight</span>
+                                  <span className="material-symbols-outlined sticky-footer-icon">lightbulb</span>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
