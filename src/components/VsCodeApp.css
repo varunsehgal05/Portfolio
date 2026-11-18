@@ -520,3 +520,778 @@
 .status-item.prettier-item {
   font-weight: 600;
 }
+
+/* ========================================================
+   VS Code Interactive Features: Code Editor, Terminal & Sidebar
+   ======================================================== */
+
+.dirty-indicator {
+  font-size: 8px;
+  color: #cccccc;
+  margin-left: auto;
+}
+
+.tab-dirty-dot {
+  font-size: 9px;
+  color: #ffffff;
+  margin-left: 2px;
+}
+
+.tab-run-code-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  color: #4ade80;
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  margin-right: 4px;
+}
+
+.tab-run-code-btn:hover:not(:disabled) {
+  background: rgba(34, 197, 94, 0.25);
+  border-color: #4ade80;
+}
+
+.tab-run-code-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.tab-action-btn.active {
+  background: rgba(255, 255, 255, 0.15);
+  color: #38bdf8;
+}
+
+.run-accent {
+  background: #16a34a !important;
+  border-color: #22c55e !important;
+}
+
+.run-accent:hover {
+  background: #15803d !important;
+}
+
+/* Code Editor Textarea */
+.code-editor-wrapper {
+  flex: 1;
+  display: flex;
+  min-width: 0;
+}
+
+.code-editor-textarea {
+  width: 100%;
+  background: transparent;
+  color: #d4d4d4;
+  border: none;
+  outline: none;
+  resize: none;
+  font-family: 'SF Mono', Menlo, Monaco, Consolas, 'Courier New', monospace;
+  font-size: 12.5px;
+  line-height: 1.6;
+  tab-size: 2;
+  white-space: pre;
+  padding: 0 20px 20px 10px;
+  caret-color: #528bff;
+  box-sizing: border-box;
+}
+
+/* Sidebar Search */
+.sidebar-search-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.search-input-box {
+  position: relative;
+  margin: 10px 12px 6px 12px;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon-inside {
+  position: absolute;
+  left: 8px;
+  color: #858585;
+  pointer-events: none;
+}
+
+.vsc-search-input {
+  width: 100%;
+  background: #3c3c3c;
+  border: 1px solid #3c3c3c;
+  border-radius: 3px;
+  color: #cccccc;
+  font-size: 12px;
+  padding: 5px 24px 5px 28px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.vsc-search-input:focus {
+  border-color: #007acc;
+}
+
+.search-clear-btn {
+  position: absolute;
+  right: 6px;
+  background: transparent;
+  border: none;
+  color: #858585;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.search-results-info {
+  font-size: 11px;
+  color: #858585;
+  padding: 4px 14px 8px 14px;
+  border-bottom: 1px solid #2d2d30;
+}
+
+.search-results-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 0;
+}
+
+.search-result-row {
+  padding: 6px 14px;
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  transition: background 0.12s ease;
+}
+
+.search-result-row:hover {
+  background: #2a2d2e;
+  border-left-color: #007acc;
+}
+
+.search-res-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.search-res-match {
+  font-size: 11px;
+  color: #9cdcfe;
+  margin-top: 2px;
+}
+
+.search-res-sub {
+  font-size: 10px;
+  color: #71717a;
+}
+
+/* Sidebar Git */
+.sidebar-git-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.git-branch-banner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: rgba(0, 122, 204, 0.1);
+  border-bottom: 1px solid #2d2d30;
+  font-size: 11px;
+  color: #38bdf8;
+}
+
+.git-sync-chip {
+  margin-left: auto;
+  font-size: 10px;
+  color: #a1a1aa;
+}
+
+.git-commit-form {
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-bottom: 1px solid #2d2d30;
+}
+
+.git-commit-input {
+  width: 100%;
+  background: #3c3c3c;
+  border: 1px solid #3c3c3c;
+  border-radius: 3px;
+  color: #cccccc;
+  font-size: 12px;
+  padding: 6px 8px;
+  outline: none;
+  resize: none;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.git-commit-input:focus {
+  border-color: #007acc;
+}
+
+.git-commit-btn {
+  background: #007acc;
+  color: #ffffff;
+  border: none;
+  border-radius: 3px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.git-commit-btn:hover:not(:disabled) {
+  background: #0098ff;
+}
+
+.git-commit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.git-commit-success {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #4ade80;
+  padding: 4px 6px;
+  background: rgba(34, 197, 94, 0.1);
+  border-radius: 3px;
+}
+
+.git-changes-header {
+  font-size: 11px;
+  font-weight: 700;
+  color: #858585;
+  padding: 8px 14px 4px 14px;
+}
+
+.git-changes-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.git-change-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 14px;
+  font-size: 12px;
+  color: #cccccc;
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+
+.git-change-item:hover {
+  background: #2a2d2e;
+}
+
+.git-badge-m {
+  color: #e2c08d;
+  font-weight: 700;
+  font-size: 11px;
+}
+
+.git-badge-a {
+  color: #73c991;
+  font-weight: 700;
+  font-size: 11px;
+}
+
+.git-change-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.git-change-status {
+  font-size: 10px;
+  color: #71717a;
+}
+
+/* Sidebar Debug */
+.sidebar-debug-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.debug-launch-box {
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-bottom: 1px solid #2d2d30;
+}
+
+.debug-config-select {
+  background: #3c3c3c;
+  border: 1px solid #3c3c3c;
+  color: #cccccc;
+  font-size: 11.5px;
+  padding: 5px 8px;
+  border-radius: 3px;
+  outline: none;
+}
+
+.debug-play-btn {
+  background: #238636;
+  color: #ffffff;
+  border: none;
+  border-radius: 3px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.debug-play-btn:hover {
+  background: #2ea043;
+}
+
+.debug-section-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #858585;
+  padding: 8px 14px 4px 14px;
+}
+
+.debug-watch-list,
+.debug-breakpoints-list {
+  padding: 4px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-bottom: 1px solid #2d2d30;
+  font-family: 'SF Mono', Consolas, monospace;
+}
+
+.debug-watch-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+}
+
+.watch-key {
+  color: #9cdcfe;
+}
+
+.watch-val {
+  color: #ce9178;
+}
+
+.debug-bp-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: #cccccc;
+  cursor: pointer;
+  padding: 2px 0;
+}
+
+.debug-bp-row:hover {
+  color: #ffffff;
+}
+
+.bp-dot.red {
+  color: #f87171;
+  font-size: 12px;
+}
+
+/* Sidebar Extensions */
+.sidebar-ext-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.ext-search-box {
+  position: relative;
+  margin: 10px 12px 6px 12px;
+  display: flex;
+  align-items: center;
+}
+
+.ext-section-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #858585;
+  padding: 8px 14px 4px 14px;
+}
+
+.ext-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.ext-item {
+  display: flex;
+  gap: 10px;
+  padding: 8px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  transition: background 0.12s ease;
+}
+
+.ext-item:hover {
+  background: #2a2d2e;
+}
+
+.ext-icon {
+  font-size: 20px;
+  padding-top: 2px;
+}
+
+.ext-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.ext-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ext-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ext-version {
+  font-size: 10px;
+  color: #858585;
+}
+
+.ext-desc {
+  font-size: 11px;
+  color: #999999;
+  margin: 2px 0 4px 0;
+  line-height: 1.3;
+}
+
+.ext-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #858585;
+}
+
+.ext-installed-badge {
+  color: #38bdf8;
+  font-weight: 600;
+}
+
+/* ========================================================
+   VS Code Integrated Terminal Panel
+   ======================================================== */
+.vscode-terminal-panel {
+  display: flex;
+  flex-direction: column;
+  background: #181818 !important;
+  border-top: 1px solid #2d2d30;
+  transition: height 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  position: relative;
+  z-index: 5;
+}
+
+.terminal-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #1e1e1e !important;
+  border-bottom: 1px solid #282828;
+  padding: 0 10px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.terminal-tabs-left {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.terminal-tab-btn {
+  background: transparent;
+  border: none;
+  color: #858585;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  padding: 6px 10px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.15s ease;
+}
+
+.terminal-tab-btn:hover {
+  color: #ffffff;
+}
+
+.terminal-tab-btn.active {
+  color: #ffffff;
+  border-bottom-color: #007acc;
+}
+
+.term-badge {
+  background: #333333;
+  color: #a1a1aa;
+  font-size: 9px;
+  padding: 1px 5px;
+  border-radius: 8px;
+}
+
+.term-badge-blue {
+  background: rgba(0, 122, 204, 0.25);
+  color: #38bdf8;
+  font-size: 9px;
+  padding: 1px 5px;
+  border-radius: 8px;
+}
+
+.terminal-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.term-action-btn {
+  background: transparent;
+  border: none;
+  color: #858585;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.term-action-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.term-action-btn.term-run-btn {
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #4ade80;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  margin-right: 4px;
+}
+
+.term-action-btn.term-run-btn:hover:not(:disabled) {
+  background: rgba(34, 197, 94, 0.25);
+}
+
+/* Terminal Quick Chips Bar */
+.terminal-chips-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: #141414;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex-shrink: 0;
+}
+
+.terminal-chips-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.chips-label {
+  font-size: 10px;
+  color: #71717a;
+  text-transform: uppercase;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.term-chip {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  font-size: 11px;
+  font-family: 'SF Mono', Consolas, monospace;
+  padding: 2px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.term-chip:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+}
+
+.term-chip.primary {
+  background: rgba(0, 122, 204, 0.2);
+  border-color: rgba(0, 122, 204, 0.45);
+  color: #38bdf8;
+  font-weight: 600;
+}
+
+.term-chip.primary:hover {
+  background: rgba(0, 122, 204, 0.35);
+}
+
+/* Terminal Scroll Body */
+.terminal-scroll-body {
+  flex: 1;
+  padding: 10px 14px;
+  overflow-y: auto;
+  font-family: 'SF Mono', Menlo, Monaco, Consolas, 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  background: #141414 !important;
+  color: #d4d4d4;
+  user-select: text;
+}
+
+.terminal-tab-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #858585;
+  font-size: 12px;
+  gap: 8px;
+}
+
+.terminal-log-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.term-line {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.term-line.term-prompt {
+  color: #e2e8f0;
+  font-weight: 600;
+}
+
+.term-prompt-prefix {
+  color: #38bdf8;
+  font-weight: 700;
+}
+
+.term-line.term-info {
+  color: #9cdcfe;
+}
+
+.term-line.term-success {
+  color: #4ade80;
+}
+
+.term-line.term-warn {
+  color: #facc15;
+}
+
+.term-line.term-system {
+  color: #a78bfa;
+}
+
+/* Interactive Prompt Line */
+.term-prompt-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.term-prompt-user {
+  color: #38bdf8;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.term-interactive-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 12px;
+  caret-color: #528bff;
+}
+
+/* Status Bar updates */
+.status-item.clickable {
+  cursor: pointer;
+  border-radius: 3px;
+  padding: 1px 4px;
+  transition: background 0.12s ease;
+}
+
+.status-item.clickable:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.status-term-btn {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 11px;
+  font-family: inherit;
+  font-weight: 500;
+  padding: 1px 6px;
+  border-radius: 3px;
+  transition: background 0.12s ease;
+}
+
+.status-term-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.status-term-btn.active {
+  background: rgba(0, 0, 0, 0.2);
+}
