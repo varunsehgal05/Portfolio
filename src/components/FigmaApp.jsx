@@ -100,35 +100,148 @@ const TIMELINE = [
     role: 'Lead Product Designer',
     company: 'UniEvent',
     period: 'Oct 2024 — Present',
-    desc: 'Leading product design for campus event ticketing platform, developing end-to-end design systems and reducing checkout friction by 30%.'
+    location: 'Remote',
+    link: 'https://www.linkedin.com/in/varunsehgal02',
+    desc: 'Leading product design for campus event ticketing platform (EventFlow). Architected 4-step booking flow optimization, slashing transaction drop-off by 30% across 50+ modular components.'
   },
   {
-    role: 'UI/UX Design Intern',
+    role: 'Assistant Head of Operations / UI/UX Intern',
     company: 'Assemble',
     period: 'Jul 2024 — Sep 2024',
-    desc: 'Designed collaborative creator workspace tools and interaction prototypes in Figma, translating complex user workflows into clean UI.'
+    location: 'Remote',
+    link: 'https://www.linkedin.com/in/varunsehgal02',
+    desc: 'Designed collaborative creator workspace tools and interaction prototypes in Figma. Coordinated platform operations for multi-team esports competitions.'
   },
   {
-    role: 'UI/UX Intern',
+    role: 'UI/UX Designer Intern',
     company: 'Knaptix Ventures',
     period: 'Jan 2024 — Jun 2024',
-    desc: 'Created high-fidelity wireframes and design system components for B2B client applications and web dashboards.'
+    location: 'Remote',
+    link: 'https://www.linkedin.com/in/varunsehgal02',
+    desc: 'Engineered high-fidelity wireframes and design system components for 5+ B2B client applications and web dashboards, boosting customer satisfaction scores by 40%.'
   },
   {
     role: 'Freelance UI/UX Designer',
-    company: 'Independent',
-    period: '2023 — Present',
-    desc: 'Delivered brand identities, mobile interfaces, and conversion-focused landing pages for international startups and SaaS clients.'
+    company: 'Self-Employed',
+    period: 'Jan 2024 — Present',
+    location: 'Remote',
+    link: 'https://www.linkedin.com/in/varunsehgal02',
+    desc: 'Delivered brand identities, mobile interfaces, and conversion-focused SaaS landing pages for 10+ tech startups with a 95% client retention rate.'
   }
 ];
 
 const CERTIFICATIONS = [
-  { id: 'hackethor', title: 'HAckeThor Winner', issuer: 'Unstop', date: 'Apr 2025', desc: 'Participated in competitive hackathon demonstrating rapid UX prototyping.' },
-  { id: 'udemyux', title: 'UX Design - Complete UI/UX Masterclass', issuer: 'Udemy', date: 'Jan 2025', desc: 'User research, mental models, accessibility, and modern app architecture.' },
-  { id: 'udemyfigma', title: 'UI/UX Design with Figma', issuer: 'Udemy', date: 'Jan 2025', desc: 'Advanced auto-layout, component variants, and interactive design pipelines.' },
-  { id: 'imagine', title: 'Imagine Hackathon Finalist', issuer: 'Unstop', date: 'Dec 2024', desc: 'Creative digital workflows and collaborative interface development.' },
-  { id: 'python', title: 'Python (Basic)', issuer: 'HackerRank', date: 'Jun 2024', desc: 'Core programming logic, data structures, and automation scripting.' },
-  { id: 'iosux', title: 'UI and UX for iOS', issuer: 'Infosys Springboard', date: 'Jun 2024', desc: 'Apple Human Interface Guidelines, iOS navigation patterns, and typography.' }
+  {
+    id: 'hackethor',
+    title: 'HAckeThor Winner',
+    issuer: 'Unstop',
+    date: 'Apr 2025',
+    credentialId: 'd883bbf5-5d9f-43e9-a417-21a4f009f4ff',
+    link: 'https://unstop.com/competitions/hackethor',
+    desc: 'Awarded 1st place in national competitive hackathon for rapid UX prototyping, interactive user testing, and AI tool integration.'
+  },
+  {
+    id: 'imagine',
+    title: 'Imagine Hackathon Finalist',
+    issuer: 'Unstop',
+    date: 'Dec 2024',
+    credentialId: 'imgn-finalist-2024',
+    link: 'https://unstop.com/competitions/imagine-hackathon',
+    desc: 'Selected among top national finalists for innovative collaborative workflow tools and human-centered design systems.'
+  },
+  {
+    id: 'codeconquerors',
+    title: 'Code Conquerors 2nd Runner-up',
+    issuer: 'JUET ACM & CSI',
+    date: 'Apr 2025',
+    credentialId: 'team-pixel-codes-2025',
+    link: 'https://github.com/varunsehgal05',
+    desc: 'Led frontend engineering and design for Team Pixel_Codes in a 12-hour offline hackathon (150+ devs), delivering an AI quiz generator with Ollama local LLM APIs.'
+  },
+  {
+    id: 'codesrijan',
+    title: 'CodeSrijan Hackathon Lead Designer & Co-Organizer',
+    issuer: 'JUET',
+    date: 'Apr 2026',
+    credentialId: 'codesrijan-lead-2026',
+    link: 'https://github.com/varunsehgal05',
+    desc: 'Directed visual identity, participant portals, and 72-hour live evaluation leaderboard system for 200+ hackathon participants.'
+  },
+  {
+    id: 'udemyux',
+    title: 'UX Design - Complete UI/UX Masterclass',
+    issuer: 'Udemy',
+    date: 'Jan 2025',
+    credentialId: 'UC-uiux-varun-sehgal',
+    link: 'https://www.udemy.com',
+    desc: 'Comprehensive training in user research, mental models, WCAG AA accessibility, wireframing, and modern web application architecture.'
+  },
+  {
+    id: 'udemyfigma',
+    title: 'UI/UX Design with Figma',
+    issuer: 'Udemy',
+    date: 'Jan 2025',
+    credentialId: 'UC-figma-varun-sehgal',
+    link: 'https://www.udemy.com',
+    desc: 'Mastery of advanced Figma design tokens, nested component variants, auto-layout algorithms, and interactive prototype pipelines.'
+  },
+  {
+    id: 'python',
+    title: 'Python (Basic) Certification',
+    issuer: 'HackerRank',
+    date: 'Jun 2024',
+    credentialId: 'HR-PYTHON-VARUN',
+    link: 'https://www.hackerrank.com/certificates',
+    desc: 'Certified in core algorithmic problem solving, data structures, and automation scripting.'
+  },
+  {
+    id: 'iosux',
+    title: 'UI and UX for iOS',
+    issuer: 'Infosys Springboard',
+    date: 'Jun 2024',
+    credentialId: 'INFY-IOS-UX-2024',
+    link: 'https://infyspringboard.onwingspan.com',
+    desc: 'Apple Human Interface Guidelines, fluid gestures, dynamic island layouts, and iOS mobile typography.'
+  }
+];
+
+const HACKATHONS = [
+  {
+    id: 'hackethor-winner',
+    title: 'HAckeThor Winner',
+    issuer: 'Unstop',
+    date: 'Apr 2025',
+    award: '🏆 1st Place Winner',
+    link: 'https://unstop.com/competitions/hackethor',
+    desc: 'Awarded 1st place in national competitive hackathon for rapid UX prototyping, interactive user testing, and AI tool integration.'
+  },
+  {
+    id: 'codesrijan-organizer',
+    title: 'CodeSrijan Hackathon Lead Designer & Co-Organizer',
+    issuer: 'Jaypee University of Engineering & Technology',
+    date: 'Apr 2026',
+    award: '⚡ Organizing Lead & Identity Designer',
+    link: 'https://github.com/varunsehgal05',
+    desc: 'Directed visual identity, participant portals, and 72-hour live evaluation leaderboard system for 200+ hackathon participants.'
+  },
+  {
+    id: 'code-conquerors-runnerup',
+    title: 'Code Conquerors Hackathon (2nd Runner-up)',
+    issuer: 'JUET ACM & CSI',
+    date: 'Apr 2025',
+    award: '🥈 2nd Runner-up (Team Pixel_Codes)',
+    link: 'https://github.com/varunsehgal05',
+    desc: 'Led frontend engineering and design for a 12-hour offline hackathon (150+ devs), delivering an AI quiz generator with Next.js and Ollama local LLM APIs.'
+  },
+  {
+    id: 'imagine-finalist',
+    title: 'Imagine Hackathon Finalist',
+    issuer: 'Unstop',
+    date: 'Dec 2024',
+    award: '🎖️ National Finalist',
+    link: 'https://unstop.com/competitions/imagine-hackathon',
+    desc: 'Selected among top national finalists for creative digital workflows, collaborative interface development, and user-centric problem solving.'
+  }
 ];
 
 const PLUGINS = [
@@ -140,12 +253,13 @@ const PLUGINS = [
   { name: 'Similayer', category: 'Productivity', desc: 'Select layers with similar fill, stroke, text style, or auto-layout settings.', link: 'https://www.figma.com/community/plugin/736952773253018895', icon: 'filter_none' }
 ];
 
-const FigmaApp = () => {
+const FigmaApp = ({ isInteracting, userName, onOpenApp }) => {
   const [activeTab, setActiveTab] = useState('home'); // 'home' | 'projects' | 'experience' | 'about' | 'resume' | 'process' | 'plugins'
   const [showAssets, setShowAssets] = useState(false);
   const [colorMenuOpen, setColorMenuOpen] = useState(false);
   const [currentTheme, setCurrentTheme] = useState('default');
   const [copiedToast, setCopiedToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('Link copied to clipboard!');
 
   // Canvas pan & zoom state
   const [pan, setPan] = useState({ x: 0, y: 0 });
@@ -163,7 +277,7 @@ const FigmaApp = () => {
   // About variant state
   const [aboutVariant, setAboutVariant] = useState('Product Designer');
 
-  // Right sidebar properties panel
+  // Right sidebar properties panel state
   const [rightSidebarOpen, setRightSidebarOpen] = useState(true);
   const [propertiesTab, setPropertiesTab] = useState('design');
   const [inspectMode, setInspectMode] = useState('css');
@@ -171,15 +285,145 @@ const FigmaApp = () => {
   const [exportFormat, setExportFormat] = useState('PNG');
   const [exportToast, setExportToast] = useState(false);
 
+  // Interactive Frame & Alignment State
+  const [selectedAlign, setSelectedAlign] = useState(null);
+  const [frameX, setFrameX] = useState(0);
+  const [frameY, setFrameY] = useState(0);
+  const [frameW, setFrameW] = useState(1200);
+  const [frameH, setFrameH] = useState(850);
+  const [frameAngle, setFrameAngle] = useState(0);
+  const [frameRadius, setFrameRadius] = useState(16);
+  const [clipContent, setClipContent] = useState(true);
+  const [isLocked, setIsLocked] = useState(false);
+  const [isFrameVisible, setIsFrameVisible] = useState(true);
+
+  // Auto Layout State
+  const [autoLayoutDir, setAutoLayoutDir] = useState('vertical'); // 'vertical' | 'horizontal'
+  const [autoLayoutGap, setAutoLayoutGap] = useState(24);
+  const [padX, setPadX] = useState(28);
+  const [padY, setPadY] = useState(24);
+
+  // Layer State
+  const [blendMode, setBlendMode] = useState('Pass through');
+  const [layerOpacity, setLayerOpacity] = useState(100);
+
+  // Fill State
+  const [fillColor, setFillColor] = useState('#1E2020');
+  const [fillOpacity, setFillOpacity] = useState(35);
+  const [fillVisible, setFillVisible] = useState(true);
+  const [showColorPicker, setShowColorPicker] = useState(false);
+
+  // Stroke State
+  const [strokeColor, setStrokeColor] = useState('#FFFFFF');
+  const [strokeOpacity, setStrokeOpacity] = useState(10);
+  const [strokeWidth, setStrokeWidth] = useState(1);
+  const [strokeType, setStrokeType] = useState('Inside');
+  const [strokeVisible, setStrokeVisible] = useState(true);
+
+  // Effects State
+  const [blurAmount, setBlurAmount] = useState(40);
+  const [blurVisible, setBlurVisible] = useState(true);
+  const [shadowVisible, setShadowVisible] = useState(true);
+
+  // Prototype State
+  const [selectedDevice, setSelectedDevice] = useState('MacBook Pro 16"');
+  const [activeFlow, setActiveFlow] = useState('Flow 1');
+  const [previewAnimation, setPreviewAnimation] = useState(false);
+
+  const showToast = (msg) => {
+    setToastMessage(msg);
+    setCopiedToast(true);
+    setTimeout(() => setCopiedToast(false), 2400);
+  };
+
+  const handleCopyLink = (url, label = 'Link') => {
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(url);
+    }
+    showToast(`${label} copied to clipboard!`);
+  };
+
   const handleExportFrame = () => {
+    const format = exportFormat.toLowerCase();
+    const filename = `Varun_Sehgal_Portfolio_${activeTab}.${format}`;
+
+    try {
+      if (format === 'svg') {
+        const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="${frameW}" height="${frameH}" viewBox="0 0 ${frameW} ${frameH}">
+  <rect width="100%" height="100%" fill="${fillColor}" rx="${frameRadius}"/>
+  <text x="60" y="80" fill="#ffb5a1" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="32" font-weight="bold">Varun Sehgal Portfolio</text>
+  <text x="60" y="120" fill="#9ca3af" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="18">UI/UX Designer | Product Designer</text>
+  <text x="60" y="170" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="22" font-weight="600">Active View: ${activeTab.toUpperCase()}</text>
+</svg>`;
+        const blob = new Blob([svgContent], { type: 'image/svg+xml;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      } else {
+        const canvas = document.createElement('canvas');
+        canvas.width = Number(frameW) || 1200;
+        canvas.height = Number(frameH) || 850;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.fillStyle = fillColor || '#181920';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = '#ffb5a1';
+          ctx.font = 'bold 36px sans-serif';
+          ctx.fillText('Varun Sehgal Portfolio', 60, 100);
+          ctx.fillStyle = '#9ca3af';
+          ctx.font = '20px sans-serif';
+          ctx.fillText('Lead UI/UX Designer & Product Designer', 60, 140);
+          ctx.fillStyle = '#ffffff';
+          ctx.font = 'bold 24px sans-serif';
+          ctx.fillText(`Exported Section: ${activeTab.toUpperCase()}`, 60, 200);
+        }
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+          }
+        }, format === 'pdf' ? 'application/pdf' : 'image/png');
+      }
+    } catch (e) {
+      console.warn('Export generated fallback', e);
+    }
+
     setExportToast(true);
     setTimeout(() => setExportToast(false), 2400);
   };
 
   const handleCopyInspectCode = () => {
-    const code = inspectMode === 'css' 
-      ? `/* Frame: Varun_Sehgal_Portfolio */\nwidth: 100%;\nmax-width: 1200px;\nheight: 88%;\nbackground: rgba(30, 32, 32, 0.35);\nbackdrop-filter: blur(40px);\nborder: 1px solid rgba(255, 255, 255, 0.1);\nborder-radius: 16px;\nbox-shadow: 0 30px 100px -20px rgba(0, 0, 0, 0.9);`
-      : `<div className="w-full max-w-6xl h-[88%] bg-zinc-900/35 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl p-7 flex flex-col overflow-y-auto">`;
+    const code = inspectMode === 'css'
+      ? `/* Frame: Varun_Sehgal_Portfolio */
+width: 100%;
+max-width: ${frameW}px;
+min-height: ${frameH}px;
+background: ${fillVisible ? fillColor : 'transparent'};
+border: ${strokeVisible ? `${strokeWidth}px solid ${strokeColor}` : 'none'};
+border-radius: ${frameRadius}px;
+padding: ${padY}px ${padX}px;
+gap: ${autoLayoutGap}px;
+backdrop-filter: ${blurVisible ? `blur(${blurAmount}px)` : 'none'};
+box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};`
+      : `<div className="w-full max-w-[${frameW}px] min-h-[${frameH}px]
+  ${fillVisible ? `bg-[${fillColor}]` : 'bg-transparent'}
+  ${strokeVisible ? `border border-[${strokeColor}]` : ''}
+  rounded-[${frameRadius}px]
+  p-[${padY}px_${padX}px] gap-[${autoLayoutGap}px]
+  ${blurVisible ? `backdrop-blur-[${blurAmount}px]` : ''}
+  ${shadowVisible ? 'shadow-2xl' : ''}">`;
+
     if (navigator.clipboard?.writeText) {
       navigator.clipboard.writeText(code);
     }
@@ -261,7 +505,7 @@ const FigmaApp = () => {
 
   const filteredProjects = ALL_PROJECTS.filter(p => {
     const matchesCat = projectFilter === 'All' || p.category === projectFilter;
-    const matchesSearch = projectSearch.trim() === '' || 
+    const matchesSearch = projectSearch.trim() === '' ||
       p.name.toLowerCase().includes(projectSearch.toLowerCase()) ||
       p.desc.toLowerCase().includes(projectSearch.toLowerCase()) ||
       p.tags.some(t => t.toLowerCase().includes(projectSearch.toLowerCase()));
@@ -278,10 +522,10 @@ const FigmaApp = () => {
           {/* Varun Profile Link */}
           <div className="nav-profile-link" onClick={() => setActiveTab('home')}>
             <div className="nav-avatar-circle">
-              <FirebaseImage 
+              <FirebaseImage
                 storagePath="profile/varun.jpg"
                 fallbackSrc="/varun.jpg"
-                alt="Varun Sehgal" 
+                alt="Varun Sehgal"
                 className="nav-avatar-img"
                 onError={(e) => { e.currentTarget.style.display = 'none'; }}
               />
@@ -292,8 +536,8 @@ const FigmaApp = () => {
 
           {/* Color & Theme Dropdown */}
           <div className="theme-menu-container">
-            <button 
-              className="theme-menu-trigger" 
+            <button
+              className="theme-menu-trigger"
               onClick={() => setColorMenuOpen(!colorMenuOpen)}
             >
               Color <span className="material-symbols-outlined text-[14px]">expand_more</span>
@@ -324,23 +568,31 @@ const FigmaApp = () => {
         </div>
 
         <div className="nav-right-section">
-          <a 
-            href="mailto:varun.sehgal02@gmail.com" 
+          <button 
+            type="button"
             className="nav-email-btn"
+            onClick={() => {
+              if (onOpenApp) {
+                onOpenApp('contact');
+              } else {
+                window.location.href = 'mailto:varun.sehgal02@gmail.com';
+              }
+            }}
+            title="Open Contact Form"
           >
             <span className="material-symbols-outlined text-[16px]">mail</span>
             <span>Email Me</span>
-          </a>
+          </button>
 
-          <button 
-            className="nav-share-btn" 
-            onClick={handleShare}
+          <button
+            className="nav-share-btn"
+            onClick={() => handleCopyLink(window.location.origin, 'Portfolio link')}
             title="Share portfolio link"
           >
             <span className="material-symbols-outlined text-[18px]">share</span>
           </button>
 
-          <button 
+          <button
             className={`nav-sidebar-toggle-btn ${rightSidebarOpen ? 'active' : ''}`}
             onClick={() => setRightSidebarOpen(!rightSidebarOpen)}
             title={rightSidebarOpen ? "Hide Properties Panel" : "Show Properties Panel"}
@@ -348,20 +600,20 @@ const FigmaApp = () => {
             <span className="material-symbols-outlined text-[18px]">view_sidebar</span>
           </button>
 
-          <a 
-            href="https://www.linkedin.com/in/varunsehgal02" 
-            target="_blank" 
-            rel="noreferrer" 
-            className="nav-linkedin-link" 
+          <a
+            href="https://www.linkedin.com/in/varunsehgal02"
+            target="_blank"
+            rel="noreferrer"
+            className="nav-linkedin-link"
             title="Varun Sehgal on LinkedIn"
           >
             <div className="nav-linkedin-avatar">
-              <FirebaseImage 
+              <FirebaseImage
                 storagePath="profile/varun.jpg"
-                fallbackSrc="/varun.jpg" 
-                alt="VS" 
-                className="nav-avatar-img" 
-                onError={(e) => { e.currentTarget.style.display = 'none'; }} 
+                fallbackSrc="/varun.jpg"
+                alt="VS"
+                className="nav-avatar-img"
+                onError={(e) => { e.currentTarget.style.display = 'none'; }}
               />
               <span className="nav-avatar-fallback">VS</span>
             </div>
@@ -373,7 +625,7 @@ const FigmaApp = () => {
       {copiedToast && (
         <div className="lovable-toast-notification">
           <span className="material-symbols-outlined text-[16px]">check_circle</span>
-          Link copied to clipboard!
+          {toastMessage}
         </div>
       )}
 
@@ -396,7 +648,7 @@ const FigmaApp = () => {
           </div>
 
           <div className="sidebar-nav-list">
-            <div 
+            <div
               className={`sidebar-nav-item ${showAssets ? 'active' : ''}`}
               onClick={() => setShowAssets(!showAssets)}
             >
@@ -405,37 +657,37 @@ const FigmaApp = () => {
             </div>
 
             <div className="sidebar-section-title">QUICK JUMP</div>
-            <a 
-              href="https://www.figma.com/design/ezDh2NmBto6iv7xaQNs3Ha/AI-Interview?node-id=11-1842&t=siyh0b32g2XWrRNe-1" 
-              target="_blank" 
-              rel="noreferrer" 
+            <a
+              href="https://www.figma.com/design/ezDh2NmBto6iv7xaQNs3Ha/AI-Interview?node-id=11-1842&t=siyh0b32g2XWrRNe-1"
+              target="_blank"
+              rel="noreferrer"
               className="sidebar-file-link"
             >
               <span className="material-symbols-outlined text-[14px]">smart_toy</span>
               <span>AI Interview</span>
             </a>
-            <a 
-              href="https://www.figma.com/design/0cJQWX8qYssPfK4hmPtdVj/Movie-Ticket-Booking-App-Design?node-id=31-86&t=Jd933TVzkrlBb4MQ-1" 
-              target="_blank" 
-              rel="noreferrer" 
+            <a
+              href="https://www.figma.com/design/0cJQWX8qYssPfK4hmPtdVj/Movie-Ticket-Booking-App-Design?node-id=31-86&t=Jd933TVzkrlBb4MQ-1"
+              target="_blank"
+              rel="noreferrer"
               className="sidebar-file-link"
             >
               <span className="material-symbols-outlined text-[14px]">confirmation_number</span>
               <span>Movie Tickets</span>
             </a>
-            <a 
-              href="https://www.figma.com/design/3mw8XBHEZ3b8HKNNqcs6U2/Expensify---Budget-Tracker-App?node-id=135-318&t=gUJEMUlyDc8ERNeR-1" 
-              target="_blank" 
-              rel="noreferrer" 
+            <a
+              href="https://www.figma.com/design/3mw8XBHEZ3b8HKNNqcs6U2/Expensify---Budget-Tracker-App?node-id=135-318&t=gUJEMUlyDc8ERNeR-1"
+              target="_blank"
+              rel="noreferrer"
               className="sidebar-file-link"
             >
               <span className="material-symbols-outlined text-[14px]">account_balance_wallet</span>
               <span>Expensify</span>
             </a>
-            <a 
-              href="https://www.figma.com/design/hCaNWKm2qTY2kQ0KOZRywa/M-1?node-id=40-2&t=vfPIBYY278lzphVq-1" 
-              target="_blank" 
-              rel="noreferrer" 
+            <a
+              href="https://www.figma.com/design/hCaNWKm2qTY2kQ0KOZRywa/M-1?node-id=40-2&t=vfPIBYY278lzphVq-1"
+              target="_blank"
+              rel="noreferrer"
               className="sidebar-file-link"
             >
               <span className="material-symbols-outlined text-[14px]">diversity_3</span>
@@ -444,8 +696,8 @@ const FigmaApp = () => {
           </div>
 
           <div className="sidebar-footer">
-            <a 
-              href="/Varun_Sehgal_Resume_Updated.pdf" 
+            <a
+              href="/Varun_Sehgal_Resume_Updated.pdf"
               download="Varun_Sehgal_Resume.pdf"
               className="sidebar-download-btn"
             >
@@ -494,7 +746,7 @@ const FigmaApp = () => {
         )}
 
         {/* Center Main Stage */}
-        <main 
+        <main
           ref={containerRef}
           className={`lovable-canvas-stage ${isPanning ? 'panning' : ''}`}
           onMouseDown={handleCanvasMouseDown}
@@ -502,8 +754,8 @@ const FigmaApp = () => {
           onMouseUp={handleCanvasMouseUp}
         >
           {/* Dot Grid Background */}
-          <div 
-            className="lovable-dot-grid" 
+          <div
+            className="lovable-dot-grid"
             style={{
               backgroundPosition: `${pan.x}px ${pan.y}px`
             }}
@@ -513,7 +765,7 @@ const FigmaApp = () => {
               VIEW 1: HOME (Infinite Panning Canvas + Glass Artboard)
               ========================================================================= */}
           {activeTab === 'home' && (
-            <div 
+            <div
               className="lovable-canvas-world"
               style={{
                 transform: `translate3d(${pan.x}px, ${pan.y}px, 0)`
@@ -529,7 +781,7 @@ const FigmaApp = () => {
                   >
                     <div className="sticky-note-top">
                       <span className="note-label">NOTE</span>
-                      <span 
+                      <span
                         className={`material-symbols-outlined pin-icon ${shape.isPinned ? 'active' : ''}`}
                         onClick={() => togglePin(shape.id)}
                         title="Toggle pin"
@@ -543,8 +795,8 @@ const FigmaApp = () => {
                       className="sticky-note-textarea"
                       placeholder="Type here..."
                     />
-                    <button 
-                      className="sticky-note-close-btn" 
+                    <button
+                      className="sticky-note-close-btn"
                       onClick={() => removeStickyNote(shape.id)}
                       title="Remove note"
                     >
@@ -555,7 +807,26 @@ const FigmaApp = () => {
               </div>
 
               {/* Central Glass Artboard */}
-              <div className="artboard-container">
+              <div 
+                className="artboard-container"
+                style={{
+                  maxWidth: `${frameW}px`,
+                  minHeight: `${frameH}px`,
+                  borderRadius: `${frameRadius}px`,
+                  padding: `${padY}px ${padX}px`,
+                  gap: `${autoLayoutGap}px`,
+                  flexDirection: autoLayoutDir === 'vertical' ? 'column' : 'row',
+                  backgroundColor: fillVisible ? fillColor : 'transparent',
+                  opacity: isFrameVisible ? (Number(layerOpacity) / 100) : 0.08,
+                  border: strokeVisible ? `${strokeWidth}px solid ${strokeColor}` : 'none',
+                  backdropFilter: blurVisible ? `blur(${blurAmount}px)` : 'none',
+                  WebkitBackdropFilter: blurVisible ? `blur(${blurAmount}px)` : 'none',
+                  boxShadow: shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none',
+                  overflow: clipContent ? 'hidden' : 'visible',
+                  transform: `rotate(${frameAngle}deg)`,
+                  transition: 'all 0.2s ease'
+                }}
+              >
                 {/* Artboard Frame Header */}
                 <div className="artboard-frame-header">
                   <div className="frame-header-left">
@@ -577,11 +848,11 @@ const FigmaApp = () => {
                     <div className="hero-badge-row">
                       <div className="hero-author-pill">
                         <div className="author-thumb">
-                          <FirebaseImage 
+                          <FirebaseImage
                             storagePath="profile/varun.jpg"
-                            fallbackSrc="/varun.jpg" 
-                            alt="Varun" 
-                            onError={(e) => { e.currentTarget.style.display = 'none'; }} 
+                            fallbackSrc="/varun.jpg"
+                            alt="Varun"
+                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
                           />
                           <span className="author-fallback">VS</span>
                         </div>
@@ -648,11 +919,11 @@ const FigmaApp = () => {
                     {ALL_PROJECTS.slice(0, 4).map((proj) => (
                       <div key={proj.id} className="featured-project-card">
                         <div className="project-preview-wrap">
-                          <FirebaseImage 
+                          <FirebaseImage
                             storagePath={`projects/${proj.id}.png`}
-                            fallbackSrc={proj.image} 
-                            alt={proj.name} 
-                            className="project-preview-img" 
+                            fallbackSrc={proj.image}
+                            alt={proj.name}
+                            className="project-preview-img"
                           />
                           <span className="project-badge-pill">{proj.badge}</span>
                         </div>
@@ -673,10 +944,10 @@ const FigmaApp = () => {
                           </div>
 
                           <div className="project-card-actions">
-                            <a 
-                              href={proj.link} 
-                              target="_blank" 
-                              rel="noreferrer" 
+                            <a
+                              href={proj.link}
+                              target="_blank"
+                              rel="noreferrer"
                               className="open-in-figma-link"
                             >
                               Open in Figma <span className="material-symbols-outlined text-[16px]">open_in_new</span>
@@ -706,9 +977,9 @@ const FigmaApp = () => {
                 <div className="projects-filter-bar">
                   <div className="search-input-wrap">
                     <span className="material-symbols-outlined search-icon">search</span>
-                    <input 
-                      type="text" 
-                      placeholder="Search projects by name, tags, domain..." 
+                    <input
+                      type="text"
+                      placeholder="Search projects by name, tags, domain..."
                       value={projectSearch}
                       onChange={(e) => setProjectSearch(e.target.value)}
                       className="search-field"
@@ -717,8 +988,8 @@ const FigmaApp = () => {
 
                   <div className="category-filter-pills">
                     {['All', 'Mobile App', 'SaaS / Web'].map(cat => (
-                      <button 
-                        key={cat} 
+                      <button
+                        key={cat}
                         className={`cat-filter-btn ${projectFilter === cat ? 'active' : ''}`}
                         onClick={() => setProjectFilter(cat)}
                       >
@@ -733,11 +1004,11 @@ const FigmaApp = () => {
                   {filteredProjects.map(proj => (
                     <div key={proj.id} className="bento-card">
                       <div className="bento-img-wrap">
-                        <FirebaseImage 
+                        <FirebaseImage
                           storagePath={`projects/${proj.id}.png`}
-                          fallbackSrc={proj.image} 
-                          alt={proj.name} 
-                          className="bento-img" 
+                          fallbackSrc={proj.image}
+                          alt={proj.name}
+                          className="bento-img"
                         />
                         <span className="bento-badge">{proj.badge}</span>
                       </div>
@@ -762,20 +1033,20 @@ const FigmaApp = () => {
           )}
 
           {/* =========================================================================
-              VIEW 3: EXPERIENCE (Career Nodes & Official Certifications)
+              VIEW 3: EXPERIENCE (Career Nodes, Hackathons & Official Certifications)
               ========================================================================= */}
           {activeTab === 'experience' && (
             <div className="lovable-static-view">
               <div className="view-content-wrapper">
                 <header className="view-page-header">
-                  <h1 className="view-page-title">Experience & Certifications</h1>
-                  <p className="view-page-desc">Professional journey, leadership roles, and validated technical credentials.</p>
+                  <h1 className="view-page-title">Experience, Hackathons & Certifications</h1>
+                  <p className="view-page-desc">Professional journey, leadership roles, hackathon wins, and validated technical credentials.</p>
                 </header>
 
                 <div className="experience-columns-grid">
                   {/* Timeline Column */}
                   <div className="timeline-section">
-                    <h2 className="sub-section-title">Career Timeline</h2>
+                    <h2 className="sub-section-title">Career Timeline & Internships</h2>
                     <div className="timeline-flow">
                       {TIMELINE.map((item, index) => (
                         <div key={index} className="timeline-flow-node">
@@ -786,11 +1057,56 @@ const FigmaApp = () => {
                           <div className="flow-content-card">
                             <span className="flow-period">{item.period}</span>
                             <h3 className="flow-role">{item.role}</h3>
-                            <h4 className="flow-company">{item.company}</h4>
+                            <div className="timeline-meta-row">
+                              <a 
+                                href={item.link} 
+                                target="_blank" 
+                                rel="noreferrer" 
+                                className="timeline-company-link"
+                              >
+                                {item.company}
+                                <span className="material-symbols-outlined text-[13px]">open_in_new</span>
+                              </a>
+                              {item.location && <span className="timeline-location-pill">{item.location}</span>}
+                            </div>
                             <p className="flow-desc">{item.desc}</p>
                           </div>
                         </div>
                       ))}
+                    </div>
+
+                    {/* Hackathons Section */}
+                    <div className="hackathons-section">
+                      <h2 className="sub-section-title">Hackathon Wins & Leadership</h2>
+                      <div className="timeline-flow">
+                        {HACKATHONS.map((hack, index) => (
+                          <div key={hack.id} className="timeline-flow-node">
+                            <div className="flow-dot-col">
+                              <span className="flow-dot" style={{ background: '#f59e0b' }}></span>
+                              {index < HACKATHONS.length - 1 && <span className="flow-stem"></span>}
+                            </div>
+                            <div className="flow-content-card">
+                              <span className="flow-period">{hack.date}</span>
+                              <div className="hackathon-award-badge">
+                                <span>{hack.award}</span>
+                              </div>
+                              <h3 className="flow-role">{hack.title}</h3>
+                              <div className="timeline-meta-row">
+                                <a 
+                                  href={hack.link} 
+                                  target="_blank" 
+                                  rel="noreferrer" 
+                                  className="timeline-company-link"
+                                >
+                                  {hack.issuer}
+                                  <span className="material-symbols-outlined text-[13px]">open_in_new</span>
+                                </a>
+                              </div>
+                              <p className="flow-desc">{hack.desc}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
 
@@ -806,7 +1122,32 @@ const FigmaApp = () => {
                           </div>
                           <h3 className="cert-title">{cert.title}</h3>
                           <span className="cert-issuer">Issued by {cert.issuer}</span>
+                          {cert.credentialId && (
+                            <span className="cert-id-badge">ID: {cert.credentialId}</span>
+                          )}
                           <p className="cert-desc">{cert.desc}</p>
+                          
+                          <div className="cert-actions-row">
+                            <a 
+                              href={cert.link} 
+                              target="_blank" 
+                              rel="noreferrer" 
+                              className="cert-action-btn primary"
+                              title="Open verified credential in browser"
+                            >
+                              <span>Verify Credential</span>
+                              <span className="material-symbols-outlined text-[13px]">open_in_new</span>
+                            </a>
+                            <button 
+                              type="button"
+                              className="cert-action-btn secondary"
+                              onClick={() => handleCopyLink(cert.link, `${cert.title} link`)}
+                              title="Copy certificate verification link"
+                            >
+                              <span className="material-symbols-outlined text-[13px]">content_copy</span>
+                              <span>Copy Link</span>
+                            </button>
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -848,11 +1189,11 @@ const FigmaApp = () => {
                   {/* Master Card */}
                   <div className="about-profile-card">
                     <div className="profile-photo-circle">
-                      <FirebaseImage 
+                      <FirebaseImage
                         storagePath="profile/varun.jpg"
-                        fallbackSrc="/varun.jpg" 
-                        alt="Varun Sehgal" 
-                        onError={(e) => { e.currentTarget.style.display = 'none'; }} 
+                        fallbackSrc="/varun.jpg"
+                        alt="Varun Sehgal"
+                        onError={(e) => { e.currentTarget.style.display = 'none'; }}
                       />
                       <span className="photo-fallback">VS</span>
                     </div>
@@ -862,7 +1203,7 @@ const FigmaApp = () => {
                       <h2 className="profile-name">Varun Sehgal</h2>
                       <span className="profile-role-pill">{aboutVariant}</span>
                       <p className="profile-bio">
-                        Undergraduate at Jaypee University Of Engineering And Technology (2023–2027) 
+                        Undergraduate at Jaypee University Of Engineering And Technology (2023–2027)
                         bridging visual design craft with scalable frontend systems.
                       </p>
                     </div>
@@ -934,8 +1275,8 @@ const FigmaApp = () => {
                       <p className="view-page-desc">Complete overview of professional experience and educational credentials.</p>
                     </div>
 
-                    <a 
-                      href="/Varun_Sehgal_Resume_Updated.pdf" 
+                    <a
+                      href="/Varun_Sehgal_Resume_Updated.pdf"
                       download="Varun_Sehgal_Resume.pdf"
                       className="resume-download-action-btn"
                     >
@@ -1081,26 +1422,26 @@ const FigmaApp = () => {
             {/* Inspector Top Tabs */}
             <div className="properties-top-header">
               <div className="properties-tabs-row">
-                <button 
+                <button
                   className={`prop-tab-btn ${propertiesTab === 'design' ? 'active' : ''}`}
                   onClick={() => setPropertiesTab('design')}
                 >
                   Design
                 </button>
-                <button 
+                <button
                   className={`prop-tab-btn ${propertiesTab === 'prototype' ? 'active' : ''}`}
                   onClick={() => setPropertiesTab('prototype')}
                 >
                   Prototype
                 </button>
-                <button 
+                <button
                   className={`prop-tab-btn ${propertiesTab === 'inspect' ? 'active' : ''}`}
                   onClick={() => setPropertiesTab('inspect')}
                 >
                   Inspect
                 </button>
               </div>
-              <button 
+              <button
                 className="prop-sidebar-close-btn"
                 onClick={() => setRightSidebarOpen(false)}
                 title="Collapse properties sidebar"
@@ -1119,32 +1460,107 @@ const FigmaApp = () => {
                     </div>
                     <div className="prop-target-name">
                       <span className="target-label">Varun_Sehgal_Portfolio</span>
-                      <span className="target-type">Frame · 1440 × 900</span>
+                      <span className="target-type">Frame · {frameW} × {frameH}</span>
                     </div>
                     <div className="prop-target-controls">
-                      <span className="material-symbols-outlined text-[14px] text-zinc-500 hover:text-white cursor-pointer" title="Locked">lock</span>
-                      <span className="material-symbols-outlined text-[14px] text-zinc-500 hover:text-white cursor-pointer" title="Visible">visibility</span>
+                      <button 
+                        type="button"
+                        className={`prop-mini-icon-btn ${isLocked ? 'active' : 'inactive'}`}
+                        onClick={() => {
+                          setIsLocked(!isLocked);
+                          showToast(isLocked ? 'Frame unlocked' : 'Frame locked');
+                        }}
+                        title={isLocked ? "Unlock Frame" : "Lock Frame"}
+                      >
+                        <span className="material-symbols-outlined text-[14px]">
+                          {isLocked ? 'lock' : 'lock_open'}
+                        </span>
+                      </button>
+                      <button 
+                        type="button"
+                        className={`prop-mini-icon-btn ${isFrameVisible ? '' : 'inactive'}`}
+                        onClick={() => setIsFrameVisible(!isFrameVisible)}
+                        title={isFrameVisible ? "Hide Frame" : "Show Frame"}
+                      >
+                        <span className="material-symbols-outlined text-[14px]">
+                          {isFrameVisible ? 'visibility' : 'visibility_off'}
+                        </span>
+                      </button>
                     </div>
                   </div>
 
                   {/* Alignment Toolbar */}
                   <div className="prop-section prop-alignment-bar">
-                    <button className="prop-align-btn" title="Align Left">
+                    <button 
+                      type="button"
+                      className={`prop-align-btn ${selectedAlign === 'left' ? 'active' : ''}`}
+                      onClick={() => {
+                        setSelectedAlign('left');
+                        setPan(prev => ({ ...prev, x: 150 }));
+                        showToast('Aligned Left');
+                      }} 
+                      title="Align Left"
+                    >
                       <span className="material-symbols-outlined text-[15px]">align_horizontal_left</span>
                     </button>
-                    <button className="prop-align-btn" title="Align Horizontal Center">
+                    <button 
+                      type="button"
+                      className={`prop-align-btn ${selectedAlign === 'hcenter' ? 'active' : ''}`}
+                      onClick={() => {
+                        setSelectedAlign('hcenter');
+                        setPan(prev => ({ ...prev, x: 0 }));
+                        showToast('Aligned Horizontal Center');
+                      }} 
+                      title="Align Horizontal Center"
+                    >
                       <span className="material-symbols-outlined text-[15px]">align_horizontal_center</span>
                     </button>
-                    <button className="prop-align-btn" title="Align Right">
+                    <button 
+                      type="button"
+                      className={`prop-align-btn ${selectedAlign === 'right' ? 'active' : ''}`}
+                      onClick={() => {
+                        setSelectedAlign('right');
+                        setPan(prev => ({ ...prev, x: -150 }));
+                        showToast('Aligned Right');
+                      }} 
+                      title="Align Right"
+                    >
                       <span className="material-symbols-outlined text-[15px]">align_horizontal_right</span>
                     </button>
-                    <button className="prop-align-btn" title="Align Top">
+                    <button 
+                      type="button"
+                      className={`prop-align-btn ${selectedAlign === 'top' ? 'active' : ''}`}
+                      onClick={() => {
+                        setSelectedAlign('top');
+                        setPan(prev => ({ ...prev, y: 100 }));
+                        showToast('Aligned Top');
+                      }} 
+                      title="Align Top"
+                    >
                       <span className="material-symbols-outlined text-[15px]">align_vertical_top</span>
                     </button>
-                    <button className="prop-align-btn" title="Align Vertical Center">
+                    <button 
+                      type="button"
+                      className={`prop-align-btn ${selectedAlign === 'vcenter' ? 'active' : ''}`}
+                      onClick={() => {
+                        setSelectedAlign('vcenter');
+                        setPan(prev => ({ ...prev, y: 0 }));
+                        showToast('Aligned Vertical Center');
+                      }} 
+                      title="Align Vertical Center"
+                    >
                       <span className="material-symbols-outlined text-[15px]">align_vertical_center</span>
                     </button>
-                    <button className="prop-align-btn" title="Align Bottom">
+                    <button 
+                      type="button"
+                      className={`prop-align-btn ${selectedAlign === 'bottom' ? 'active' : ''}`}
+                      onClick={() => {
+                        setSelectedAlign('bottom');
+                        setPan(prev => ({ ...prev, y: -100 }));
+                        showToast('Aligned Bottom');
+                      }} 
+                      title="Align Bottom"
+                    >
                       <span className="material-symbols-outlined text-[15px]">align_vertical_bottom</span>
                     </button>
                   </div>
@@ -1155,36 +1571,71 @@ const FigmaApp = () => {
                     <div className="prop-grid-2x2">
                       <div className="prop-input-wrap">
                         <span className="prop-input-label">X</span>
-                        <input type="text" readOnly value="0" className="prop-num-input" />
+                        <input 
+                          type="number" 
+                          value={frameX} 
+                          onChange={(e) => setFrameX(Number(e.target.value) || 0)} 
+                          className="prop-num-input" 
+                        />
                       </div>
                       <div className="prop-input-wrap">
                         <span className="prop-input-label">Y</span>
-                        <input type="text" readOnly value="0" className="prop-num-input" />
+                        <input 
+                          type="number" 
+                          value={frameY} 
+                          onChange={(e) => setFrameY(Number(e.target.value) || 0)} 
+                          className="prop-num-input" 
+                        />
                       </div>
                       <div className="prop-input-wrap">
                         <span className="prop-input-label">W</span>
-                        <input type="text" readOnly value="1440" className="prop-num-input" />
+                        <input 
+                          type="number" 
+                          value={frameW} 
+                          onChange={(e) => setFrameW(Number(e.target.value) || 0)} 
+                          className="prop-num-input" 
+                        />
                       </div>
                       <div className="prop-input-wrap">
                         <span className="prop-input-label">H</span>
-                        <input type="text" readOnly value="900" className="prop-num-input" />
+                        <input 
+                          type="number" 
+                          value={frameH} 
+                          onChange={(e) => setFrameH(Number(e.target.value) || 0)} 
+                          className="prop-num-input" 
+                        />
                       </div>
                     </div>
                     <div className="prop-grid-2x2 mt-2">
                       <div className="prop-input-wrap">
                         <span className="prop-input-label">∠</span>
-                        <input type="text" readOnly value="0°" className="prop-num-input" />
+                        <input 
+                          type="number" 
+                          value={frameAngle} 
+                          onChange={(e) => setFrameAngle(Number(e.target.value) || 0)} 
+                          className="prop-num-input" 
+                        />
                       </div>
                       <div className="prop-input-wrap">
                         <span className="prop-input-label">
                           <span className="material-symbols-outlined text-[13px]">rounded_corner</span>
                         </span>
-                        <input type="text" readOnly value="16" className="prop-num-input" />
+                        <input 
+                          type="number" 
+                          value={frameRadius} 
+                          onChange={(e) => setFrameRadius(Number(e.target.value) || 0)} 
+                          className="prop-num-input" 
+                        />
                       </div>
                     </div>
                     <div className="prop-checkbox-row">
                       <label className="prop-checkbox-label">
-                        <input type="checkbox" defaultChecked disabled className="prop-checkbox" />
+                        <input 
+                          type="checkbox" 
+                          checked={clipContent} 
+                          onChange={(e) => setClipContent(e.target.checked)} 
+                          className="prop-checkbox cursor-pointer" 
+                        />
                         <span>Clip content</span>
                       </label>
                     </div>
@@ -1194,30 +1645,67 @@ const FigmaApp = () => {
                   <div className="prop-section">
                     <div className="prop-section-header">
                       <span className="prop-section-title">Auto layout</span>
-                      <span className="material-symbols-outlined text-[14px] text-zinc-500">add</span>
+                      <button 
+                        type="button"
+                        className="prop-header-icon-btn"
+                        onClick={() => {
+                          setAutoLayoutGap(24);
+                          setPadX(28);
+                          setPadY(24);
+                          showToast('Auto layout reset to defaults');
+                        }}
+                        title="Reset Layout Defaults"
+                      >
+                        <span className="material-symbols-outlined text-[14px]">restart_alt</span>
+                      </button>
                     </div>
                     <div className="prop-autolayout-controls">
                       <div className="autolayout-dir-group">
-                        <button className="prop-icon-btn active" title="Vertical Layout">
+                        <button 
+                          type="button"
+                          className={`prop-icon-btn ${autoLayoutDir === 'vertical' ? 'active' : ''}`} 
+                          onClick={() => setAutoLayoutDir('vertical')}
+                          title="Vertical Direction"
+                        >
                           <span className="material-symbols-outlined text-[14px]">arrow_downward</span>
                         </button>
-                        <button className="prop-icon-btn" title="Horizontal Layout">
+                        <button 
+                          type="button"
+                          className={`prop-icon-btn ${autoLayoutDir === 'horizontal' ? 'active' : ''}`} 
+                          onClick={() => setAutoLayoutDir('horizontal')}
+                          title="Horizontal Direction"
+                        >
                           <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
                         </button>
                       </div>
                       <div className="prop-input-wrap flex-1">
                         <span className="prop-input-label">Gap</span>
-                        <input type="text" readOnly value="24px" className="prop-num-input" />
+                        <input 
+                          type="number" 
+                          value={autoLayoutGap} 
+                          onChange={(e) => setAutoLayoutGap(Number(e.target.value) || 0)} 
+                          className="prop-num-input" 
+                        />
                       </div>
                     </div>
                     <div className="prop-grid-2x2 mt-2">
                       <div className="prop-input-wrap">
                         <span className="prop-input-label">Pad X</span>
-                        <input type="text" readOnly value="28px" className="prop-num-input" />
+                        <input 
+                          type="number" 
+                          value={padX} 
+                          onChange={(e) => setPadX(Number(e.target.value) || 0)} 
+                          className="prop-num-input" 
+                        />
                       </div>
                       <div className="prop-input-wrap">
                         <span className="prop-input-label">Pad Y</span>
-                        <input type="text" readOnly value="24px" className="prop-num-input" />
+                        <input 
+                          type="number" 
+                          value={padY} 
+                          onChange={(e) => setPadY(Number(e.target.value) || 0)} 
+                          className="prop-num-input" 
+                        />
                       </div>
                     </div>
                   </div>
@@ -1226,14 +1714,28 @@ const FigmaApp = () => {
                   <div className="prop-section">
                     <div className="prop-section-title">Layer</div>
                     <div className="prop-flex-row">
-                      <select className="prop-select flex-1" defaultValue="Pass through" disabled>
+                      <select 
+                        className="prop-select flex-1 cursor-pointer" 
+                        value={blendMode} 
+                        onChange={(e) => setBlendMode(e.target.value)}
+                      >
                         <option>Pass through</option>
                         <option>Normal</option>
                         <option>Multiply</option>
                         <option>Screen</option>
+                        <option>Overlay</option>
+                        <option>Darken</option>
+                        <option>Lighten</option>
                       </select>
                       <div className="prop-input-wrap w-16">
-                        <input type="text" readOnly value="100%" className="prop-num-input text-right" />
+                        <input 
+                          type="number" 
+                          min="0" 
+                          max="100" 
+                          value={layerOpacity} 
+                          onChange={(e) => setLayerOpacity(Math.min(100, Math.max(0, Number(e.target.value) || 0)))} 
+                          className="prop-num-input text-right" 
+                        />
                       </div>
                     </div>
                   </div>
@@ -1242,36 +1744,127 @@ const FigmaApp = () => {
                   <div className="prop-section">
                     <div className="prop-section-header">
                       <span className="prop-section-title">Fill</span>
-                      <span className="material-symbols-outlined text-[14px] text-zinc-500">add</span>
+                      <button 
+                        type="button"
+                        className="prop-header-icon-btn"
+                        onClick={() => setShowColorPicker(!showColorPicker)}
+                        title="Color presets"
+                      >
+                        <span className="material-symbols-outlined text-[14px]">palette</span>
+                      </button>
                     </div>
                     <div className="prop-color-row">
-                      <div className="color-swatch-box" style={{ background: '#1e2020' }}></div>
-                      <span className="color-hex-text">1E2020</span>
-                      <span className="color-opacity-text">35%</span>
-                      <span className="material-symbols-outlined text-[13px] text-zinc-500 ml-auto">visibility</span>
+                      <input 
+                        type="color" 
+                        value={fillColor.startsWith('#') && fillColor.length === 7 ? fillColor : '#1E2020'} 
+                        onChange={(e) => setFillColor(e.target.value)}
+                        className="color-picker-input-native"
+                        title="Pick fill color"
+                      />
+                      <input 
+                        type="text" 
+                        value={fillColor.toUpperCase()} 
+                        onChange={(e) => setFillColor(e.target.value)}
+                        className="color-hex-input"
+                        title="Hex color code"
+                      />
+                      <span className="color-opacity-text">{fillOpacity}%</span>
+                      <button 
+                        type="button"
+                        className="prop-eye-toggle-btn ml-auto"
+                        onClick={() => setFillVisible(!fillVisible)}
+                        title={fillVisible ? "Hide Fill" : "Show Fill"}
+                      >
+                        <span className="material-symbols-outlined text-[13px]">
+                          {fillVisible ? 'visibility' : 'visibility_off'}
+                        </span>
+                      </button>
                     </div>
+
+                    {showColorPicker && (
+                      <div className="color-presets-popover">
+                        {['#1E2020', '#0a0a0c', '#1e1e2f', '#0f172a', '#241442', '#14201e'].map(hex => (
+                          <div 
+                            key={hex} 
+                            className="color-preset-dot"
+                            style={{ background: hex }}
+                            onClick={() => {
+                              setFillColor(hex);
+                              setShowColorPicker(false);
+                            }}
+                            title={`Select ${hex}`}
+                          />
+                        ))}
+                      </div>
+                    )}
                   </div>
 
                   {/* Stroke */}
                   <div className="prop-section">
                     <div className="prop-section-header">
                       <span className="prop-section-title">Stroke</span>
-                      <span className="material-symbols-outlined text-[14px] text-zinc-500">add</span>
+                      <button 
+                        type="button"
+                        className="prop-header-icon-btn"
+                        onClick={() => {
+                          setStrokeColor('#FFFFFF');
+                          setStrokeWidth(1);
+                        }}
+                        title="Reset stroke"
+                      >
+                        <span className="material-symbols-outlined text-[14px]">refresh</span>
+                      </button>
                     </div>
                     <div className="prop-color-row">
-                      <div className="color-swatch-box" style={{ background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255,255,255,0.2)' }}></div>
-                      <span className="color-hex-text">FFFFFF</span>
-                      <span className="color-opacity-text">10%</span>
-                      <span className="material-symbols-outlined text-[13px] text-zinc-500 ml-auto">visibility</span>
+                      <input 
+                        type="color" 
+                        value={strokeColor.startsWith('#') && strokeColor.length === 7 ? strokeColor : '#FFFFFF'} 
+                        onChange={(e) => setStrokeColor(e.target.value)}
+                        className="color-picker-input-native"
+                        title="Pick stroke color"
+                      />
+                      <input 
+                        type="text" 
+                        value={strokeColor.toUpperCase()} 
+                        onChange={(e) => setStrokeColor(e.target.value)}
+                        className="color-hex-input"
+                        title="Stroke hex color"
+                      />
+                      <span className="color-opacity-text">{strokeOpacity}%</span>
+                      <button 
+                        type="button"
+                        className="prop-eye-toggle-btn ml-auto"
+                        onClick={() => setStrokeVisible(!strokeVisible)}
+                        title={strokeVisible ? "Hide Stroke" : "Show Stroke"}
+                      >
+                        <span className="material-symbols-outlined text-[13px]">
+                          {strokeVisible ? 'visibility' : 'visibility_off'}
+                        </span>
+                      </button>
                     </div>
                     <div className="prop-grid-2x2 mt-2">
                       <div className="prop-input-wrap">
                         <span className="prop-input-label">Width</span>
-                        <input type="text" readOnly value="1px" className="prop-num-input" />
+                        <input 
+                          type="number" 
+                          min="0" 
+                          max="20" 
+                          value={strokeWidth} 
+                          onChange={(e) => setStrokeWidth(Number(e.target.value) || 0)} 
+                          className="prop-num-input" 
+                        />
                       </div>
                       <div className="prop-input-wrap">
                         <span className="prop-input-label">Type</span>
-                        <input type="text" readOnly value="Inside" className="prop-num-input" />
+                        <select 
+                          value={strokeType} 
+                          onChange={(e) => setStrokeType(e.target.value)}
+                          className="prop-select-transparent"
+                        >
+                          <option>Inside</option>
+                          <option>Center</option>
+                          <option>Outside</option>
+                        </select>
                       </div>
                     </div>
                   </div>
@@ -1280,17 +1873,56 @@ const FigmaApp = () => {
                   <div className="prop-section">
                     <div className="prop-section-header">
                       <span className="prop-section-title">Effects</span>
-                      <span className="material-symbols-outlined text-[14px] text-zinc-500">add</span>
+                      <button 
+                        type="button"
+                        className="prop-header-icon-btn"
+                        onClick={() => {
+                          setBlurVisible(true);
+                          setShadowVisible(true);
+                          setBlurAmount(40);
+                        }}
+                        title="Reset effects"
+                      >
+                        <span className="material-symbols-outlined text-[14px]">refresh</span>
+                      </button>
                     </div>
                     <div className="prop-effect-item">
                       <span className="material-symbols-outlined text-[13px] text-[#ffb5a1]">blur_on</span>
                       <span className="effect-name">Background Blur</span>
-                      <span className="effect-val">40px</span>
+                      <input 
+                        type="number" 
+                        min="0" 
+                        max="100" 
+                        value={blurAmount} 
+                        onChange={(e) => setBlurAmount(Number(e.target.value) || 0)} 
+                        className="effect-val-input" 
+                      />
+                      <span className="prop-unit-suffix">px</span>
+                      <button 
+                        type="button"
+                        className="prop-eye-toggle-btn ml-auto"
+                        onClick={() => setBlurVisible(!blurVisible)}
+                        title={blurVisible ? "Hide Blur" : "Show Blur"}
+                      >
+                        <span className="material-symbols-outlined text-[13px]">
+                          {blurVisible ? 'visibility' : 'visibility_off'}
+                        </span>
+                      </button>
                     </div>
-                    <div className="prop-effect-item">
+                    <div className="prop-effect-item mt-1">
                       <span className="material-symbols-outlined text-[13px] text-[#ffb5a1]">shadow</span>
                       <span className="effect-name">Drop Shadow</span>
                       <span className="effect-val">0 30px 100px</span>
+                      <button 
+                        type="button"
+                        className="prop-eye-toggle-btn ml-auto"
+                        onClick={() => setShadowVisible(!shadowVisible)}
+                        title={shadowVisible ? "Hide Shadow" : "Show Shadow"}
+                      >
+                        <span className="material-symbols-outlined text-[13px]">
+                          {shadowVisible ? 'visibility' : 'visibility_off'}
+                        </span>
+                      </button>
                     </div>
                   </div>
 
@@ -1300,8 +1932,9 @@ const FigmaApp = () => {
                       <span className="prop-section-title">Export</span>
                       <div className="prop-export-presets">
                         {['PNG', 'SVG', 'PDF'].map(fmt => (
-                          <button 
-                            key={fmt} 
+                          <button
+                            key={fmt}
+                            type="button"
                             className={`prop-fmt-pill ${exportFormat === fmt ? 'active' : ''}`}
                             onClick={() => setExportFormat(fmt)}
                           >
@@ -1310,12 +1943,13 @@ const FigmaApp = () => {
                         ))}
                       </div>
                     </div>
-                    <button 
+                    <button
+                      type="button"
                       className="prop-export-action-btn"
                       onClick={handleExportFrame}
                     >
                       <span className="material-symbols-outlined text-[16px]">file_download</span>
-                      <span>Export Varun_Sehgal_Portfolio</span>
+                      <span>Export Varun_Sehgal_Portfolio ({exportFormat})</span>
                     </button>
                   </div>
                 </>
@@ -1328,9 +1962,11 @@ const FigmaApp = () => {
                     <div className="prop-prototype-card">
                       <div className="flow-badge-row">
                         <span className="material-symbols-outlined text-[15px] text-[#ffb5a1]">play_circle</span>
-                        <span className="font-semibold text-white text-[12px]">Flow 1</span>
+                        <span className="font-semibold text-white text-[12px]">{activeFlow}</span>
                       </div>
-                      <p className="text-[11px] text-zinc-400 mt-1">Starting point: Varun Sehgal Portfolio Home Artboard</p>
+                      <p className="text-[11px] text-zinc-400 mt-1">
+                        Starting point: Varun Sehgal Portfolio ({activeTab.toUpperCase()})
+                      </p>
                     </div>
                   </div>
 
@@ -1338,29 +1974,77 @@ const FigmaApp = () => {
                     <div className="prop-section-title">Device</div>
                     <div className="prop-device-box">
                       <span className="material-symbols-outlined text-[18px] text-zinc-400">laptop_mac</span>
-                      <div>
-                        <div className="text-[12px] font-semibold text-white">MacBook Pro 16"</div>
-                        <div className="text-[10px] text-zinc-500">1728 × 1117 · Scaled to fit</div>
+                      <div className="flex-1">
+                        <select 
+                          value={selectedDevice} 
+                          onChange={(e) => {
+                            setSelectedDevice(e.target.value);
+                            showToast(`Device switched to ${e.target.value}`);
+                          }}
+                          className="prop-device-select"
+                        >
+                          <option>MacBook Pro 16"</option>
+                          <option>iPhone 15 Pro</option>
+                          <option>iPad Pro 12.9"</option>
+                          <option>Desktop 1440px</option>
+                        </select>
+                        <div className="text-[10px] text-zinc-500 mt-0.5">Scaled to fit viewport</div>
                       </div>
                     </div>
                   </div>
 
                   <div className="prop-section">
-                    <div className="prop-section-title">Interactions</div>
-                    <div className="prop-interaction-item">
+                    <div className="prop-section-title">Interactive Triggers</div>
+                    <div 
+                      className="prop-interaction-item clickable"
+                      onClick={() => {
+                        setActiveTab('projects');
+                        showToast('Navigated to Work');
+                      }}
+                      title="Click to trigger flow"
+                    >
                       <span className="interaction-trigger">On Click</span>
                       <span className="interaction-arrow">→</span>
                       <span className="interaction-target">Navigate to Work</span>
                     </div>
-                    <div className="prop-interaction-item">
+                    <div 
+                      className="prop-interaction-item clickable"
+                      onClick={() => {
+                        setActiveTab('experience');
+                        showToast('Navigated to Experience');
+                      }}
+                      title="Click to trigger flow"
+                    >
                       <span className="interaction-trigger">On Click</span>
                       <span className="interaction-arrow">→</span>
-                      <span className="interaction-target">Change Variant: About</span>
+                      <span className="interaction-target">Navigate to Experience</span>
                     </div>
-                    <div className="prop-interaction-item">
+                    <div 
+                      className="prop-interaction-item clickable"
+                      onClick={() => {
+                        setActiveTab('about');
+                        showToast('Navigated to About');
+                      }}
+                      title="Click to trigger flow"
+                    >
+                      <span className="interaction-trigger">On Click</span>
+                      <span className="interaction-arrow">→</span>
+                      <span className="interaction-target">Navigate to About</span>
+                    </div>
+                    <div 
+                      className="prop-interaction-item clickable"
+                      onClick={() => {
+                        setPreviewAnimation(true);
+                        setTimeout(() => setPreviewAnimation(false), 600);
+                        showToast('Smart Animate triggered (300ms)');
+                      }}
+                      title="Test animation"
+                    >
                       <span className="interaction-trigger">On Hover</span>
                       <span className="interaction-arrow">→</span>
-                      <span className="interaction-target">Smart Animate (300ms)</span>
+                      <span className="interaction-target">
+                        Smart Animate {previewAnimation ? '⚡ Playing...' : '(300ms)'}
+                      </span>
                     </div>
                   </div>
                 </>
@@ -1372,13 +2056,15 @@ const FigmaApp = () => {
                     <div className="prop-section-header">
                       <span className="prop-section-title">Code Inspection</span>
                       <div className="inspect-mode-switch">
-                        <button 
+                        <button
+                          type="button"
                           className={`inspect-switch-btn ${inspectMode === 'css' ? 'active' : ''}`}
                           onClick={() => setInspectMode('css')}
                         >
                           CSS
                         </button>
-                        <button 
+                        <button
+                          type="button"
                           className={`inspect-switch-btn ${inspectMode === 'tailwind' ? 'active' : ''}`}
                           onClick={() => setInspectMode('tailwind')}
                         >
@@ -1390,25 +2076,31 @@ const FigmaApp = () => {
                     <div className="inspect-code-block">
                       <pre>
                         {inspectMode === 'css' ? (
-`/* Varun_Sehgal_Portfolio Frame */
+                          `/* Varun_Sehgal_Portfolio Frame */
 width: 100%;
-max-width: 1200px;
-min-height: 88%;
-background: rgba(30, 32, 32, 0.35);
-backdrop-filter: blur(40px);
-border: 1px solid rgba(255, 255, 255, 0.1);
-border-radius: 16px;
-box-shadow: 0 30px 100px -20px rgba(0, 0, 0, 0.9);`
+max-width: ${frameW}px;
+min-height: ${frameH}px;
+background: ${fillVisible ? fillColor : 'transparent'};
+border: ${strokeVisible ? `${strokeWidth}px solid ${strokeColor}` : 'none'};
+border-radius: ${frameRadius}px;
+padding: ${padY}px ${padX}px;
+gap: ${autoLayoutGap}px;
+backdrop-filter: ${blurVisible ? `blur(${blurAmount}px)` : 'none'};
+box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};`
                         ) : (
-`<div className="w-full max-w-6xl min-h-[88%]
-  bg-zinc-900/35 backdrop-blur-2xl
-  border border-white/10 rounded-2xl
-  shadow-2xl p-7 flex flex-col">`
+`<div className="w-full max-w-[${frameW}px] min-h-[${frameH}px]
+  ${fillVisible ? `bg-[${fillColor}]` : 'bg-transparent'}
+  ${strokeVisible ? `border border-[${strokeColor}]` : ''}
+  rounded-[${frameRadius}px]
+  p-[${padY}px_${padX}px] gap-[${autoLayoutGap}px]
+  ${blurVisible ? `backdrop-blur-[${blurAmount}px]` : ''}
+  ${shadowVisible ? 'shadow-2xl' : ''}">`
                         )}
                       </pre>
                     </div>
 
-                    <button 
+                    <button
+                      type="button"
                       className="prop-copy-code-btn"
                       onClick={handleCopyInspectCode}
                     >
@@ -1430,7 +2122,7 @@ box-shadow: 0 30px 100px -20px rgba(0, 0, 0, 0.9);`
           ========================================================================= */}
       <nav className="lovable-workspace-bottom-nav">
         <div className="nav-primary-group">
-          <button 
+          <button
             className={`bottom-nav-item ${activeTab === 'home' ? 'active' : ''}`}
             onClick={() => setActiveTab('home')}
           >
@@ -1438,7 +2130,7 @@ box-shadow: 0 30px 100px -20px rgba(0, 0, 0, 0.9);`
             <span>Home</span>
           </button>
 
-          <button 
+          <button
             className={`bottom-nav-item ${activeTab === 'projects' ? 'active' : ''}`}
             onClick={() => setActiveTab('projects')}
           >
@@ -1446,7 +2138,7 @@ box-shadow: 0 30px 100px -20px rgba(0, 0, 0, 0.9);`
             <span>Work</span>
           </button>
 
-          <button 
+          <button
             className={`bottom-nav-item ${activeTab === 'experience' ? 'active' : ''}`}
             onClick={() => setActiveTab('experience')}
           >
@@ -1454,7 +2146,7 @@ box-shadow: 0 30px 100px -20px rgba(0, 0, 0, 0.9);`
             <span>Experience</span>
           </button>
 
-          <button 
+          <button
             className={`bottom-nav-item ${activeTab === 'about' ? 'active' : ''}`}
             onClick={() => setActiveTab('about')}
           >
@@ -1462,7 +2154,7 @@ box-shadow: 0 30px 100px -20px rgba(0, 0, 0, 0.9);`
             <span>About</span>
           </button>
 
-          <button 
+          <button
             className={`bottom-nav-item ${activeTab === 'resume' ? 'active' : ''}`}
             onClick={() => setActiveTab('resume')}
           >
@@ -1474,7 +2166,7 @@ box-shadow: 0 30px 100px -20px rgba(0, 0, 0, 0.9);`
         <div className="nav-divider-stem"></div>
 
         <div className="nav-secondary-group">
-          <button 
+          <button
             className={`bottom-nav-item secondary ${activeTab === 'process' ? 'active' : ''}`}
             onClick={() => setActiveTab('process')}
           >
@@ -1482,7 +2174,7 @@ box-shadow: 0 30px 100px -20px rgba(0, 0, 0, 0.9);`
             <span>Process</span>
           </button>
 
-          <button 
+          <button
             className={`bottom-nav-item secondary ${activeTab === 'plugins' ? 'active' : ''}`}
             onClick={() => setActiveTab('plugins')}
           >

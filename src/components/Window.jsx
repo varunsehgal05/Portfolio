@@ -163,7 +163,7 @@ const Window = ({
       case 'safari':
         return <SafariApp />;
       case 'figma':
-        return <FigmaApp isInteracting={isInteracting} userName={userName} />;
+        return <FigmaApp isInteracting={isInteracting} userName={userName} onOpenApp={onOpenApp} />;
       case 'terminal':
         return <TerminalApp userName={userName} onOpenApp={onOpenApp} />;
       case 'settings':

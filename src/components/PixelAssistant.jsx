@@ -190,9 +190,9 @@ const renderFormattedText = (text) => {
 
     const parts = cleanLine.split(/(\*\*.*?\*\*)/g);
     return (
-      <div 
-        key={idx} 
-        style={{ 
+      <div
+        key={idx}
+        style={{
           minHeight: '1.25em',
           paddingLeft: isBullet ? '14px' : '0',
           position: 'relative',
