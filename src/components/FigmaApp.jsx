@@ -66,7 +66,7 @@ const ALL_PROJECTS = [
     category: 'Design Systems',
     badge: '50+ Tokens',
     metric: '50+ Modular Components • 30% Less Dropoff',
-    image: '/figma_Movie_Tickets.png',
+    image: '/figma_EventFlow.png',
     desc: 'Modular event planning UI design system with reusable atomic components, flexible themes, and 4-step optimized checkout.',
     tags: ['Design System', 'Figma', 'Tokens'],
     link: 'https://www.figma.com/design/29nTBBWxZfoOKdFnOaQWbq/EventFlow?node-id=2-2&p=f&t=ucsh4jF84sBl50UA-0'
@@ -77,7 +77,7 @@ const ALL_PROJECTS = [
     category: 'SaaS / Web',
     badge: 'High Conversion',
     metric: 'Responsive • Conversion Focused',
-    image: '/figma_AI_Interview.png',
+    image: '/figma_LandingPage.png',
     desc: 'Modern SaaS marketing landing page engineered for maximum conversion velocity and crisp brand typography.',
     tags: ['SaaS', 'Marketing', 'Figma'],
     link: 'https://www.figma.com/design/WfUzGPYsE7UFYS9YaQp5v6/home-page?node-id=0-1&p=f&t=cA3tERTu8AuInovg-0'
@@ -88,7 +88,7 @@ const ALL_PROJECTS = [
     category: 'SaaS / Web',
     badge: 'Enterprise UI',
     metric: 'Multi-tenant • Telemetry',
-    image: '/figma_Expensify.png',
+    image: '/figma_SaasDashboard.png',
     desc: 'Complex data visualization telemetry suite with role-based access, dark mode analytics, and filtering.',
     tags: ['Dashboard', 'Analytics', 'Enterprise'],
     link: 'https://www.figma.com/design/PbO4QNnkgAyrPtkuyduZFE/sas?node-id=0-1&t=yHd7NxOZzn7AZUuw-0'
