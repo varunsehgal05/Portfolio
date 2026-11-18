@@ -286,7 +286,7 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
   const handleAsk = (queryText) => {
     if (!queryText || !queryText.trim()) return;
     const q = queryText.trim();
-    
+
     // Append User Message
     const userMsgId = `user-${Date.now()}`;
     setMessages(prev => [...prev, { id: userMsgId, role: 'user', content: q }]);
@@ -338,7 +338,7 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
         // Mute all sounds by default
         if (agent._animator) {
           const originalPlaySound = agent._animator._playSound;
-          agent._animator._playSound = function() {
+          agent._animator._playSound = function () {
             if (isMutedRef.current) return;
             originalPlaySound?.call(this);
           };
@@ -442,8 +442,8 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
     <>
       {/* Quick Sound Option Pill directly above Clippy - only when chat dialog is closed */}
       {!isChatOpen && (
-        <div 
-          className={`clippy-quick-sound-pill ${isMuted ? 'muted' : 'unmuted'}`} 
+        <div
+          className={`clippy-quick-sound-pill ${isMuted ? 'muted' : 'unmuted'}`}
           onClick={toggleMute}
           title={isMuted ? "Bot Sound is Muted. Click to Unmute" : "Bot Sound is On. Click to Mute"}
         >
@@ -464,7 +464,7 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
             </div>
 
             <div className="clippy-header-actions">
-              <button 
+              <button
                 type="button"
                 className={`clippy-sound-toggle-btn ${isMuted ? 'muted' : 'unmuted'}`}
                 onClick={toggleMute}
@@ -473,8 +473,8 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
                 {isMuted ? <VolumeX size={13} color="#f87171" /> : <Volume2 size={13} color="#34d399" />}
                 <span>{isMuted ? "Unmute" : "Mute"}</span>
               </button>
-              <button 
-                className="clippy-close-btn" 
+              <button
+                className="clippy-close-btn"
                 onClick={() => setIsChatOpen(false)}
                 title="Close Assistant (Esc)"
               >
@@ -624,8 +624,8 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
           </div>
 
           {/* Input Bar */}
-          <form 
-            className="clippy-input-bar" 
+          <form
+            className="clippy-input-bar"
             onSubmit={(e) => {
               e.preventDefault();
               handleAsk(inputText);
@@ -639,9 +639,9 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
               placeholder="Ask anything about Varun or type a command..."
               autoFocus
             />
-            <button 
-              type="submit" 
-              className="clippy-send-btn" 
+            <button
+              type="submit"
+              className="clippy-send-btn"
               disabled={!inputText.trim() || isThinking}
               title="Send question"
             >

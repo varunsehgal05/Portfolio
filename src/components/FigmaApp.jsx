@@ -12,11 +12,7 @@ const CREATIVE_NOTES = [
   "Send invoice to client"
 ];
 
-const INITIAL_SHAPES = [
-  { id: 1, text: "Don't forget to redesign the logo!", color: 'bg-yellow-200 text-black', x: 40, y: 30, isPinned: true },
-  { id: 2, text: "Meeting with the dev team at 4pm", color: 'bg-blue-200 text-black', x: 260, y: 25, isPinned: false },
-  { id: 3, text: "Buy more coffee ☕", color: 'bg-pink-200 text-black', x: 480, y: 40, isPinned: false },
-];
+const INITIAL_SHAPES = [];
 
 const ALL_PROJECTS = [
   {
@@ -165,6 +161,30 @@ const FigmaApp = () => {
 
   // About variant state
   const [aboutVariant, setAboutVariant] = useState('Product Designer');
+
+  // Right sidebar properties panel
+  const [rightSidebarOpen, setRightSidebarOpen] = useState(true);
+  const [propertiesTab, setPropertiesTab] = useState('design');
+  const [inspectMode, setInspectMode] = useState('css');
+  const [codeCopied, setCodeCopied] = useState(false);
+  const [exportFormat, setExportFormat] = useState('PNG');
+  const [exportToast, setExportToast] = useState(false);
+
+  const handleExportFrame = () => {
+    setExportToast(true);
+    setTimeout(() => setExportToast(false), 2400);
+  };
+
+  const handleCopyInspectCode = () => {
+    const code = inspectMode === 'css' 
+      ? `/* Frame: Varun_Sehgal_Portfolio */\nwidth: 100%;\nmax-width: 1200px;\nheight: 88%;\nbackground: rgba(30, 32, 32, 0.35);\nbackdrop-filter: blur(40px);\nborder: 1px solid rgba(255, 255, 255, 0.1);\nborder-radius: 16px;\nbox-shadow: 0 30px 100px -20px rgba(0, 0, 0, 0.9);`
+      : `<div className="w-full max-w-6xl h-[88%] bg-zinc-900/35 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl p-7 flex flex-col overflow-y-auto">`;
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(code);
+    }
+    setCodeCopied(true);
+    setTimeout(() => setCodeCopied(false), 2000);
+  };
 
   const containerRef = useRef(null);
 
@@ -318,6 +338,14 @@ const FigmaApp = () => {
             <span className="material-symbols-outlined text-[18px]">share</span>
           </button>
 
+          <button 
+            className={`nav-sidebar-toggle-btn ${rightSidebarOpen ? 'active' : ''}`}
+            onClick={() => setRightSidebarOpen(!rightSidebarOpen)}
+            title={rightSidebarOpen ? "Hide Properties Panel" : "Show Properties Panel"}
+          >
+            <span className="material-symbols-outlined text-[18px]">view_sidebar</span>
+          </button>
+
           <a 
             href="https://www.linkedin.com/in/varunsehgal02" 
             target="_blank" 
@@ -338,6 +366,13 @@ const FigmaApp = () => {
         <div className="lovable-toast-notification">
           <span className="material-symbols-outlined text-[16px]">check_circle</span>
           Link copied to clipboard!
+        </div>
+      )}
+
+      {exportToast && (
+        <div className="lovable-toast-notification">
+          <span className="material-symbols-outlined text-[16px]">file_download_done</span>
+          Exported frame: Varun_Sehgal_Portfolio.{exportFormat.toLowerCase()}
         </div>
       )}
 
@@ -560,9 +595,6 @@ const FigmaApp = () => {
                       </button>
                       <button className="cta-btn secondary" onClick={() => setActiveTab('about')}>
                         <span className="material-symbols-outlined text-[18px]">person</span> About Me
-                      </button>
-                      <button className="cta-btn sticky-add-btn" onClick={addStickyNote}>
-                        <span className="material-symbols-outlined text-[18px]">edit_note</span> Add Note
                       </button>
                     </div>
                   </div>
@@ -1014,6 +1046,355 @@ const FigmaApp = () => {
             </div>
           )}
         </main>
+
+        {/* Right Sidebar ("Design / Prototype / Inspect" Inspector Panel) */}
+        {rightSidebarOpen && (
+          <aside className="lovable-properties-sidebar">
+            {/* Inspector Top Tabs */}
+            <div className="properties-top-header">
+              <div className="properties-tabs-row">
+                <button 
+                  className={`prop-tab-btn ${propertiesTab === 'design' ? 'active' : ''}`}
+                  onClick={() => setPropertiesTab('design')}
+                >
+                  Design
+                </button>
+                <button 
+                  className={`prop-tab-btn ${propertiesTab === 'prototype' ? 'active' : ''}`}
+                  onClick={() => setPropertiesTab('prototype')}
+                >
+                  Prototype
+                </button>
+                <button 
+                  className={`prop-tab-btn ${propertiesTab === 'inspect' ? 'active' : ''}`}
+                  onClick={() => setPropertiesTab('inspect')}
+                >
+                  Inspect
+                </button>
+              </div>
+              <button 
+                className="prop-sidebar-close-btn"
+                onClick={() => setRightSidebarOpen(false)}
+                title="Collapse properties sidebar"
+              >
+                <span className="material-symbols-outlined text-[14px]">chevron_right</span>
+              </button>
+            </div>
+
+            <div className="properties-body-scroll">
+              {propertiesTab === 'design' && (
+                <>
+                  {/* Selected Object Header */}
+                  <div className="prop-section prop-target-header">
+                    <div className="prop-target-icon">
+                      <span className="material-symbols-outlined text-[15px]">crop_free</span>
+                    </div>
+                    <div className="prop-target-name">
+                      <span className="target-label">Varun_Sehgal_Portfolio</span>
+                      <span className="target-type">Frame · 1440 × 900</span>
+                    </div>
+                    <div className="prop-target-controls">
+                      <span className="material-symbols-outlined text-[14px] text-zinc-500 hover:text-white cursor-pointer" title="Locked">lock</span>
+                      <span className="material-symbols-outlined text-[14px] text-zinc-500 hover:text-white cursor-pointer" title="Visible">visibility</span>
+                    </div>
+                  </div>
+
+                  {/* Alignment Toolbar */}
+                  <div className="prop-section prop-alignment-bar">
+                    <button className="prop-align-btn" title="Align Left">
+                      <span className="material-symbols-outlined text-[15px]">align_horizontal_left</span>
+                    </button>
+                    <button className="prop-align-btn" title="Align Horizontal Center">
+                      <span className="material-symbols-outlined text-[15px]">align_horizontal_center</span>
+                    </button>
+                    <button className="prop-align-btn" title="Align Right">
+                      <span className="material-symbols-outlined text-[15px]">align_horizontal_right</span>
+                    </button>
+                    <button className="prop-align-btn" title="Align Top">
+                      <span className="material-symbols-outlined text-[15px]">align_vertical_top</span>
+                    </button>
+                    <button className="prop-align-btn" title="Align Vertical Center">
+                      <span className="material-symbols-outlined text-[15px]">align_vertical_center</span>
+                    </button>
+                    <button className="prop-align-btn" title="Align Bottom">
+                      <span className="material-symbols-outlined text-[15px]">align_vertical_bottom</span>
+                    </button>
+                  </div>
+
+                  {/* Frame Coordinates & Dimensions */}
+                  <div className="prop-section">
+                    <div className="prop-section-title">Frame</div>
+                    <div className="prop-grid-2x2">
+                      <div className="prop-input-wrap">
+                        <span className="prop-input-label">X</span>
+                        <input type="text" readOnly value="0" className="prop-num-input" />
+                      </div>
+                      <div className="prop-input-wrap">
+                        <span className="prop-input-label">Y</span>
+                        <input type="text" readOnly value="0" className="prop-num-input" />
+                      </div>
+                      <div className="prop-input-wrap">
+                        <span className="prop-input-label">W</span>
+                        <input type="text" readOnly value="1440" className="prop-num-input" />
+                      </div>
+                      <div className="prop-input-wrap">
+                        <span className="prop-input-label">H</span>
+                        <input type="text" readOnly value="900" className="prop-num-input" />
+                      </div>
+                    </div>
+                    <div className="prop-grid-2x2 mt-2">
+                      <div className="prop-input-wrap">
+                        <span className="prop-input-label">∠</span>
+                        <input type="text" readOnly value="0°" className="prop-num-input" />
+                      </div>
+                      <div className="prop-input-wrap">
+                        <span className="prop-input-label">
+                          <span className="material-symbols-outlined text-[13px]">rounded_corner</span>
+                        </span>
+                        <input type="text" readOnly value="16" className="prop-num-input" />
+                      </div>
+                    </div>
+                    <div className="prop-checkbox-row">
+                      <label className="prop-checkbox-label">
+                        <input type="checkbox" defaultChecked disabled className="prop-checkbox" />
+                        <span>Clip content</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Auto Layout */}
+                  <div className="prop-section">
+                    <div className="prop-section-header">
+                      <span className="prop-section-title">Auto layout</span>
+                      <span className="material-symbols-outlined text-[14px] text-zinc-500">add</span>
+                    </div>
+                    <div className="prop-autolayout-controls">
+                      <div className="autolayout-dir-group">
+                        <button className="prop-icon-btn active" title="Vertical Layout">
+                          <span className="material-symbols-outlined text-[14px]">arrow_downward</span>
+                        </button>
+                        <button className="prop-icon-btn" title="Horizontal Layout">
+                          <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+                        </button>
+                      </div>
+                      <div className="prop-input-wrap flex-1">
+                        <span className="prop-input-label">Gap</span>
+                        <input type="text" readOnly value="24px" className="prop-num-input" />
+                      </div>
+                    </div>
+                    <div className="prop-grid-2x2 mt-2">
+                      <div className="prop-input-wrap">
+                        <span className="prop-input-label">Pad X</span>
+                        <input type="text" readOnly value="28px" className="prop-num-input" />
+                      </div>
+                      <div className="prop-input-wrap">
+                        <span className="prop-input-label">Pad Y</span>
+                        <input type="text" readOnly value="24px" className="prop-num-input" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Layer */}
+                  <div className="prop-section">
+                    <div className="prop-section-title">Layer</div>
+                    <div className="prop-flex-row">
+                      <select className="prop-select flex-1" defaultValue="Pass through" disabled>
+                        <option>Pass through</option>
+                        <option>Normal</option>
+                        <option>Multiply</option>
+                        <option>Screen</option>
+                      </select>
+                      <div className="prop-input-wrap w-16">
+                        <input type="text" readOnly value="100%" className="prop-num-input text-right" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Fill */}
+                  <div className="prop-section">
+                    <div className="prop-section-header">
+                      <span className="prop-section-title">Fill</span>
+                      <span className="material-symbols-outlined text-[14px] text-zinc-500">add</span>
+                    </div>
+                    <div className="prop-color-row">
+                      <div className="color-swatch-box" style={{ background: '#1e2020' }}></div>
+                      <span className="color-hex-text">1E2020</span>
+                      <span className="color-opacity-text">35%</span>
+                      <span className="material-symbols-outlined text-[13px] text-zinc-500 ml-auto">visibility</span>
+                    </div>
+                  </div>
+
+                  {/* Stroke */}
+                  <div className="prop-section">
+                    <div className="prop-section-header">
+                      <span className="prop-section-title">Stroke</span>
+                      <span className="material-symbols-outlined text-[14px] text-zinc-500">add</span>
+                    </div>
+                    <div className="prop-color-row">
+                      <div className="color-swatch-box" style={{ background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255,255,255,0.2)' }}></div>
+                      <span className="color-hex-text">FFFFFF</span>
+                      <span className="color-opacity-text">10%</span>
+                      <span className="material-symbols-outlined text-[13px] text-zinc-500 ml-auto">visibility</span>
+                    </div>
+                    <div className="prop-grid-2x2 mt-2">
+                      <div className="prop-input-wrap">
+                        <span className="prop-input-label">Width</span>
+                        <input type="text" readOnly value="1px" className="prop-num-input" />
+                      </div>
+                      <div className="prop-input-wrap">
+                        <span className="prop-input-label">Type</span>
+                        <input type="text" readOnly value="Inside" className="prop-num-input" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Effects */}
+                  <div className="prop-section">
+                    <div className="prop-section-header">
+                      <span className="prop-section-title">Effects</span>
+                      <span className="material-symbols-outlined text-[14px] text-zinc-500">add</span>
+                    </div>
+                    <div className="prop-effect-item">
+                      <span className="material-symbols-outlined text-[13px] text-[#ffb5a1]">blur_on</span>
+                      <span className="effect-name">Background Blur</span>
+                      <span className="effect-val">40px</span>
+                    </div>
+                    <div className="prop-effect-item">
+                      <span className="material-symbols-outlined text-[13px] text-[#ffb5a1]">shadow</span>
+                      <span className="effect-name">Drop Shadow</span>
+                      <span className="effect-val">0 30px 100px</span>
+                    </div>
+                  </div>
+
+                  {/* Export */}
+                  <div className="prop-section">
+                    <div className="prop-section-header">
+                      <span className="prop-section-title">Export</span>
+                      <div className="prop-export-presets">
+                        {['PNG', 'SVG', 'PDF'].map(fmt => (
+                          <button 
+                            key={fmt} 
+                            className={`prop-fmt-pill ${exportFormat === fmt ? 'active' : ''}`}
+                            onClick={() => setExportFormat(fmt)}
+                          >
+                            {fmt}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <button 
+                      className="prop-export-action-btn"
+                      onClick={handleExportFrame}
+                    >
+                      <span className="material-symbols-outlined text-[16px]">file_download</span>
+                      <span>Export Varun_Sehgal_Portfolio</span>
+                    </button>
+                  </div>
+                </>
+              )}
+
+              {propertiesTab === 'prototype' && (
+                <>
+                  <div className="prop-section">
+                    <div className="prop-section-title">Prototype Flow</div>
+                    <div className="prop-prototype-card">
+                      <div className="flow-badge-row">
+                        <span className="material-symbols-outlined text-[15px] text-[#ffb5a1]">play_circle</span>
+                        <span className="font-semibold text-white text-[12px]">Flow 1</span>
+                      </div>
+                      <p className="text-[11px] text-zinc-400 mt-1">Starting point: Varun Sehgal Portfolio Home Artboard</p>
+                    </div>
+                  </div>
+
+                  <div className="prop-section">
+                    <div className="prop-section-title">Device</div>
+                    <div className="prop-device-box">
+                      <span className="material-symbols-outlined text-[18px] text-zinc-400">laptop_mac</span>
+                      <div>
+                        <div className="text-[12px] font-semibold text-white">MacBook Pro 16"</div>
+                        <div className="text-[10px] text-zinc-500">1728 × 1117 · Scaled to fit</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="prop-section">
+                    <div className="prop-section-title">Interactions</div>
+                    <div className="prop-interaction-item">
+                      <span className="interaction-trigger">On Click</span>
+                      <span className="interaction-arrow">→</span>
+                      <span className="interaction-target">Navigate to Work</span>
+                    </div>
+                    <div className="prop-interaction-item">
+                      <span className="interaction-trigger">On Click</span>
+                      <span className="interaction-arrow">→</span>
+                      <span className="interaction-target">Change Variant: About</span>
+                    </div>
+                    <div className="prop-interaction-item">
+                      <span className="interaction-trigger">On Hover</span>
+                      <span className="interaction-arrow">→</span>
+                      <span className="interaction-target">Smart Animate (300ms)</span>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {propertiesTab === 'inspect' && (
+                <>
+                  <div className="prop-section">
+                    <div className="prop-section-header">
+                      <span className="prop-section-title">Code Inspection</span>
+                      <div className="inspect-mode-switch">
+                        <button 
+                          className={`inspect-switch-btn ${inspectMode === 'css' ? 'active' : ''}`}
+                          onClick={() => setInspectMode('css')}
+                        >
+                          CSS
+                        </button>
+                        <button 
+                          className={`inspect-switch-btn ${inspectMode === 'tailwind' ? 'active' : ''}`}
+                          onClick={() => setInspectMode('tailwind')}
+                        >
+                          Tailwind
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="inspect-code-block">
+                      <pre>
+                        {inspectMode === 'css' ? (
+`/* Varun_Sehgal_Portfolio Frame */
+width: 100%;
+max-width: 1200px;
+min-height: 88%;
+background: rgba(30, 32, 32, 0.35);
+backdrop-filter: blur(40px);
+border: 1px solid rgba(255, 255, 255, 0.1);
+border-radius: 16px;
+box-shadow: 0 30px 100px -20px rgba(0, 0, 0, 0.9);`
+                        ) : (
+`<div className="w-full max-w-6xl min-h-[88%]
+  bg-zinc-900/35 backdrop-blur-2xl
+  border border-white/10 rounded-2xl
+  shadow-2xl p-7 flex flex-col">`
+                        )}
+                      </pre>
+                    </div>
+
+                    <button 
+                      className="prop-copy-code-btn"
+                      onClick={handleCopyInspectCode}
+                    >
+                      <span className="material-symbols-outlined text-[15px]">
+                        {codeCopied ? 'check' : 'content_copy'}
+                      </span>
+                      <span>{codeCopied ? 'Copied to Clipboard!' : 'Copy Code'}</span>
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          </aside>
+        )}
       </div>
 
       {/* =========================================================================
