@@ -15,22 +15,22 @@
 }
 
 /* ============================================================
-   Top Status & Controls HUD Badge
+   Top Status & Controls HUD Badge (Cleanly floating at top: 48px)
    ============================================================ */
 .swarm-hud-badge {
   position: fixed;
-  top: 14px;
+  top: 48px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(20, 20, 26, 0.94);
+  background: rgba(18, 18, 24, 0.95);
   backdrop-filter: blur(28px);
   -webkit-backdrop-filter: blur(28px);
   border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 999px;
-  padding: 5px 14px;
+  padding: 6px 16px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.08);
   pointer-events: auto;
   z-index: 1000001;
@@ -40,7 +40,7 @@
 @keyframes hudDropIn {
   from {
     opacity: 0;
-    transform: translate(-50%, -24px);
+    transform: translate(-50%, -20px);
   }
   to {
     opacity: 1;
@@ -75,7 +75,7 @@
   color: #f4f4f5;
   letter-spacing: 0.2px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  min-width: 280px;
+  min-width: 290px;
 }
 
 /* Control Buttons in HUD */
@@ -133,7 +133,7 @@
 }
 
 /* ============================================================
-   Bottom Blueprint Technical Readouts
+   Bottom Technical Indicators
    ============================================================ */
 .swarm-blueprint-indicator {
   position: fixed;
@@ -182,6 +182,33 @@
   width: 100%;
   height: 100%;
   pointer-events: none;
+}
+
+/* ============================================================
+   Click Ripple Effects
+   ============================================================ */
+.swarm-click-ripple {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid;
+  transform: translate(-50%, -50%) scale(0.3);
+  opacity: 0.9;
+  pointer-events: none;
+  animation: rippleExpand 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  z-index: 999997;
+}
+
+@keyframes rippleExpand {
+  0% {
+    transform: translate(-50%, -50%) scale(0.2);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.2);
+    opacity: 0;
+  }
 }
 
 /* ============================================================
@@ -262,7 +289,8 @@
   left: 12px;
   padding: 1px 6px;
   border-radius: 3px;
-  color: #ffffff;
+  background: #38bdf8;
+  color: #000000;
   font-size: 9.5px;
   font-weight: 700;
   white-space: nowrap;
@@ -315,9 +343,9 @@
 .swarm-active-box {
   position: absolute;
   border: 1.5px dashed var(--cursor-color, #38bdf8);
-  background: rgba(56, 189, 248, 0.08);
-  box-shadow: 0 0 16px rgba(56, 189, 248, 0.14);
-  border-radius: 6px;
+  background: rgba(56, 189, 248, 0.05);
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.12);
+  border-radius: 8px;
   box-sizing: border-box;
   pointer-events: none;
   z-index: 999998;
@@ -339,14 +367,156 @@
 
 .box-dimension-label {
   position: absolute;
-  bottom: -22px;
+  bottom: -24px;
   left: 50%;
   transform: translateX(-50%);
   color: #ffffff;
   font-size: 10px;
   font-weight: 700;
-  padding: 1px 7px;
-  border-radius: 3px;
+  padding: 2px 8px;
+  border-radius: 4px;
   white-space: nowrap;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* ============================================================
+   Structured Blueprint Wireframe Preview (Phase 3)
+   ============================================================ */
+.swarm-window-wireframe {
+  position: absolute;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  background: rgba(18, 18, 24, 0.88);
+  backdrop-filter: blur(20px);
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 999995;
+  box-sizing: border-box;
+}
+
+.wireframe-titlebar {
+  height: 38px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  gap: 14px;
+}
+
+.wireframe-lights {
+  display: flex;
+  gap: 6px;
+}
+
+.wireframe-lights .light {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  opacity: 0.6;
+}
+
+.wireframe-lights .light.red { background: #ef4444; }
+.wireframe-lights .light.yellow { background: #eab308; }
+.wireframe-lights .light.green { background: #22c55e; }
+
+.wireframe-title {
+  font-size: 11px;
+  color: #a1a1aa;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 500;
+}
+
+.wireframe-body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.wireframe-sidebar {
+  width: 180px;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wireframe-side-item {
+  height: 22px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.wireframe-side-item.active {
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.wireframe-content {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.wireframe-hero {
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.wireframe-badge {
+  width: 120px;
+  height: 14px;
+  border-radius: 999px;
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.wireframe-heading {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-height: 24px;
+}
+
+.typing-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 15px;
+  background: #38bdf8;
+  animation: blinkCaret 0.8s infinite;
+}
+
+.wireframe-subline {
+  width: 70%;
+  height: 10px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.wireframe-cards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  flex: 1;
+}
+
+.wireframe-card {
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  min-height: 80px;
 }

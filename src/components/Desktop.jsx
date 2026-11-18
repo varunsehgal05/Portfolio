@@ -101,13 +101,30 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
     }
   };
 
+  // Replay Swarm Rebuild handler guaranteeing Finder is open & restored
+  const handleInternalReplaySwarm = () => {
+    setOpenWindows(prev => (prev.includes('finder') ? prev : [...prev, 'finder']));
+    setMinimizedWindows(prev => prev.filter(id => id !== 'finder'));
+    setActiveWindow('finder');
+    if (onReplaySwarm) onReplaySwarm();
+  };
+
+  // Ensure Finder is always present when entering rebuild mode
+  useEffect(() => {
+    if (swarmStage < 5) {
+      setOpenWindows(prev => (prev.includes('finder') ? prev : [...prev, 'finder']));
+      setMinimizedWindows(prev => prev.filter(id => id !== 'finder'));
+      setActiveWindow('finder');
+    }
+  }, [swarmStage]);
+
   const displayedIcons = desktopIconIds || ['figma', 'vscode', 'resume', 'contact', 'trash'];
 
   return (
     <div className={`desktop ${swarmStage < 5 ? 'desktop-in-rebuild' : ''}`}>
       {/* Top MenuBar wrapper */}
       <div className={`desktop-menubar-wrap ${swarmStage < 5 ? (swarmStage >= 1 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
-        <MenuBar userName={userName} onReplaySwarm={onReplaySwarm} />
+        <MenuBar userName={userName} onReplaySwarm={handleInternalReplaySwarm} />
       </div>
       
       <div className="desktop-content">

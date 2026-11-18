@@ -111,18 +111,16 @@
 
 .desktop-windows-layer.stage-hidden {
   opacity: 0;
-  transform: scale(0.92);
-  filter: blur(10px);
+  visibility: hidden;
   pointer-events: none;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease, filter 0.5s ease;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
 }
 
 .desktop-windows-layer.stage-revealed {
   opacity: 1;
-  transform: scale(1);
-  filter: blur(0px);
+  visibility: visible;
   pointer-events: auto;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease, filter 0.5s ease;
+  transition: opacity 0.45s ease, visibility 0.45s ease;
 }
 
 /* Dock wrap */
