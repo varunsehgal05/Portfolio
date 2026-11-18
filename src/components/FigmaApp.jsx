@@ -97,17 +97,17 @@ const ALL_PROJECTS = [
 
 const TIMELINE = [
   {
-    role: 'Lead Product Designer',
+    role: 'UI/UX Designer Intern',
     company: 'UniEvent',
-    period: 'Oct 2024 — Present',
+    period: 'Jun 2024 — Nov 2024',
     location: 'Remote',
     link: 'https://www.linkedin.com/in/varunsehgal02',
-    desc: 'Leading product design for campus event ticketing platform (EventFlow). Architected 4-step booking flow optimization, slashing transaction drop-off by 30% across 50+ modular components.'
+    desc: 'Designed user-focused digital experiences and translated complex business requirements into clear, consistent interfaces for campus event ticketing platform (EventFlow). Architected 4-step booking flow optimization, slashing transaction drop-off by 30% across 50+ modular components. Completed in early November 2024.'
   },
   {
     role: 'Assistant Head of Operations / UI/UX Intern',
     company: 'Assemble',
-    period: 'Jul 2024 — Sep 2024',
+    period: 'Aug 2024 — Jan 2025',
     location: 'Remote',
     link: 'https://www.linkedin.com/in/varunsehgal02',
     desc: 'Designed collaborative creator workspace tools and interaction prototypes in Figma. Coordinated platform operations for multi-team esports competitions.'
@@ -115,7 +115,7 @@ const TIMELINE = [
   {
     role: 'UI/UX Designer Intern',
     company: 'Knaptix Ventures',
-    period: 'Jan 2024 — Jun 2024',
+    period: 'Jun 2024 — Aug 2024',
     location: 'Remote',
     link: 'https://www.linkedin.com/in/varunsehgal02',
     desc: 'Engineered high-fidelity wireframes and design system components for 5+ B2B client applications and web dashboards, boosting customer satisfaction scores by 40%.'
@@ -153,18 +153,18 @@ const CERTIFICATIONS = [
     id: 'codeconquerors',
     title: 'Code Conquerors 2nd Runner-up',
     issuer: 'JUET ACM & CSI',
-    date: 'Apr 2025',
-    credentialId: 'team-pixel-codes-2025',
-    link: 'https://github.com/varunsehgal05',
+    date: 'Apr 2024',
+    credentialId: 'team-pixel-codes-2024',
+    link: 'https://www.linkedin.com/posts/pushkar-chaturvedi-a83778284_hackathon2025-codeconquerors-aiineducation-activity-7335535096017375236-DBk_',
     desc: 'Led frontend engineering and design for Team Pixel_Codes in a 12-hour offline hackathon (150+ devs), delivering an AI quiz generator with Ollama local LLM APIs.'
   },
   {
     id: 'codesrijan',
     title: 'CodeSrijan Hackathon Lead Designer & Co-Organizer',
     issuer: 'JUET',
-    date: 'Apr 2026',
-    credentialId: 'codesrijan-lead-2026',
-    link: 'https://github.com/varunsehgal05',
+    date: 'Apr 2024',
+    credentialId: 'codesrijan-lead-2024',
+    link: 'https://lnkd.in/p/dUXQYx92',
     desc: 'Directed visual identity, participant portals, and 72-hour live evaluation leaderboard system for 200+ hackathon participants.'
   },
   {
@@ -219,18 +219,18 @@ const HACKATHONS = [
     id: 'codesrijan-organizer',
     title: 'CodeSrijan Hackathon Lead Designer & Co-Organizer',
     issuer: 'Jaypee University of Engineering & Technology',
-    date: 'Apr 2026',
+    date: 'Apr 2024',
     award: '⚡ Organizing Lead & Identity Designer',
-    link: 'https://github.com/varunsehgal05',
-    desc: 'Directed visual identity, participant portals, and 72-hour live evaluation leaderboard system for 200+ hackathon participants.'
+    link: 'https://lnkd.in/p/dUXQYx92',
+    desc: 'Directed visual identity, participant portals, and 72-hour live evaluation leaderboard system for 200+ hackathon participants. Boosted event registrations by 20% YoY.'
   },
   {
     id: 'code-conquerors-runnerup',
     title: 'Code Conquerors Hackathon (2nd Runner-up)',
     issuer: 'JUET ACM & CSI',
-    date: 'Apr 2025',
+    date: 'Apr 2024',
     award: '🥈 2nd Runner-up (Team Pixel_Codes)',
-    link: 'https://github.com/varunsehgal05',
+    link: 'https://www.linkedin.com/posts/pushkar-chaturvedi-a83778284_hackathon2025-codeconquerors-aiineducation-activity-7335535096017375236-DBk_',
     desc: 'Led frontend engineering and design for a 12-hour offline hackathon (150+ devs), delivering an AI quiz generator with Next.js and Ollama local LLM APIs.'
   },
   {
@@ -249,11 +249,11 @@ const TIMELINE_ACTIVITY = [
     id: 'act-unievent',
     type: 'experience',
     category: 'Product Design',
-    date: 'Oct 2024 — Present',
+    date: 'Jun 2024 — Nov 2024',
     icon: 'edit',
-    highlight: 'Varun S.',
-    titleRest: 'led Product Design at UniEvent (EventFlow)',
-    desc: 'Leading product design for campus event ticketing platform. Architected 4-step booking flow optimization, slashing transaction drop-off by 30% across 50+ modular components.',
+    highlight: 'UniEvent',
+    titleRest: 'completed UI/UX Design Internship (EventFlow)',
+    desc: 'Designed user-focused digital experiences and translated complex business requirements into clear, consistent interfaces for campus event ticketing platform (EventFlow). Completed internship in early November 2024.',
     quote: 'Spearheaded end-to-end design system with 50+ tokens, responsive checkout patterns, and real-time seat reservation micro-interactions.',
     location: 'Remote',
     link: 'https://www.linkedin.com/in/varunsehgal02',
@@ -277,7 +277,7 @@ const TIMELINE_ACTIVITY = [
     id: 'act-assemble',
     type: 'experience',
     category: 'Operations & UX',
-    date: 'Jul 2024 — Sep 2024',
+    date: 'Aug 2024 — Jan 2025',
     icon: 'terminal',
     highlight: 'Assemble',
     titleRest: 'appointed Assistant Head of Operations / UI/UX Intern',
@@ -303,29 +303,29 @@ const TIMELINE_ACTIVITY = [
     id: 'act-codesrijan',
     type: 'hackathons',
     category: 'Leadership',
-    date: 'Apr 2026',
+    date: 'Apr 2024',
     icon: 'groups',
     highlight: 'CodeSrijan Hackathon',
     titleRest: 'directed by Varun as Lead Designer & Co-Organizer',
-    desc: 'Directed visual identity, participant portals, and 72-hour live evaluation leaderboard system for 200+ hackathon participants.',
+    desc: 'Directed visual identity, participant portals, and 72-hour live evaluation leaderboard system for 200+ hackathon participants. Boosted registrations by 20% YoY.',
     award: '⚡ Organizing Lead & Identity Designer',
-    credentialId: 'codesrijan-lead-2026',
-    link: 'https://github.com/varunsehgal05',
-    actionLabel: 'View Repository'
+    credentialId: 'codesrijan-lead-2024',
+    link: 'https://lnkd.in/p/dUXQYx92',
+    actionLabel: 'View on LinkedIn'
   },
   {
     id: 'act-code-conquerors',
     type: 'hackathons',
     category: 'Hackathon Award',
-    date: 'Apr 2025',
+    date: 'Apr 2024',
     icon: 'military_tech',
     highlight: 'Code Conquerors',
     titleRest: 'awarded 2nd Runner-up (JUET ACM & CSI)',
     desc: 'Led frontend engineering and design for Team Pixel_Codes in a 12-hour offline hackathon (150+ devs), delivering an AI quiz generator with Next.js and Ollama local LLM APIs.',
     award: '🥈 2nd Runner-up (Team Pixel_Codes)',
-    credentialId: 'team-pixel-codes-2025',
-    link: 'https://github.com/varunsehgal05',
-    actionLabel: 'View Project'
+    credentialId: 'team-pixel-codes-2024',
+    link: 'https://www.linkedin.com/posts/pushkar-chaturvedi-a83778284_hackathon2025-codeconquerors-aiineducation-activity-7335535096017375236-DBk_',
+    actionLabel: 'View on LinkedIn'
   },
   {
     id: 'act-knaptix',
@@ -552,7 +552,7 @@ const PAGE_LAYERS_MAP = {
     { id: 'e-root', title: 'Recent_Activity_Canvas (Frame)', type: 'frame', indent: 0, visible: true, locked: false },
     { id: 'e-header', title: 'Activity_Header & Filter_Pills', type: 'component', indent: 1, visible: true, locked: false },
     { id: 'e-spine', title: 'Center_Vertical_Spine (Path)', type: 'vector', indent: 1, visible: true, locked: true },
-    { id: 'e-m1', title: 'Milestone: UniEvent (Lead Designer)', type: 'component', indent: 2, visible: true, locked: false },
+    { id: 'e-m1', title: 'Milestone: UniEvent (UI/UX Intern - Nov 2024)', type: 'component', indent: 2, visible: true, locked: false },
     { id: 'e-m2', title: 'Milestone: HAckeThor Winner (🏆 1st)', type: 'component', indent: 2, visible: true, locked: false },
     { id: 'e-m3', title: 'Milestone: Assemble (Operations & UX)', type: 'component', indent: 2, visible: true, locked: false },
     { id: 'e-m4', title: 'Milestone: Udemy Masterclass Credential', type: 'component', indent: 2, visible: true, locked: false },
@@ -2256,19 +2256,19 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
 
                         <div className="figma-resume-item">
                           <div className="figma-resume-item-header">
-                            <div><strong>Lead Product Designer</strong> — UniEvent (Remote)</div>
-                            <span className="figma-resume-item-date">Oct 2024 – Present</span>
+                            <div><strong>UI/UX Designer Intern</strong> — UniEvent (Remote)</div>
+                            <span className="figma-resume-item-date">Jun 2024 – Nov 2024</span>
                           </div>
                           <ul className="figma-resume-bullets">
-                            <li>Designed user-focused digital experiences and translated complex business requirements into clear, consistent interfaces for campus ticketing platform (EventFlow).</li>
-                            <li>Architected 4-step booking flow optimization, slashing transaction drop-off by 30% across 50+ modular components.</li>
+                            <li>Designed user-focused digital experiences and translated complex business requirements into clear, consistent interfaces for campus ticketing platform (EventFlow). Completed internship in early November 2024.</li>
+                            <li>Architected 4-step booking flow optimization, slashing transaction drop-off by 30% across 50+ modular components and checkout psychology.</li>
                           </ul>
                         </div>
 
                         <div className="figma-resume-item">
                           <div className="figma-resume-item-header">
                             <div><strong>Assistant Head of Operations / UX Intern</strong> — Assemble (Remote)</div>
-                            <span className="figma-resume-item-date">Jul 2024 – Sep 2024</span>
+                            <span className="figma-resume-item-date">Aug 2024 – Jan 2025</span>
                           </div>
                           <ul className="figma-resume-bullets">
                             <li>Assisted in the planning and smooth execution of esports competitions, driving cross-functional coordination.</li>
@@ -2358,23 +2358,33 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
 
                         <div className="figma-resume-item">
                           <div className="figma-resume-item-header">
-                            <div><strong>Co-Organizer & Lead Designer</strong> — CodeSrijan Hackathon (JUET)</div>
-                            <span className="figma-resume-item-date">Apr 2026</span>
+                            <div>
+                              <strong>Co-Organizer & Lead Designer</strong> — CodeSrijan Hackathon (JUET)
+                              <a href="https://lnkd.in/p/dUXQYx92" target="_blank" rel="noreferrer" className="text-[#ffb5a1] ml-2 text-[11px] font-semibold underline inline-flex items-center gap-0.5">
+                                LinkedIn Post ↗
+                              </a>
+                            </div>
+                            <span className="figma-resume-item-date">Apr 2024</span>
                           </div>
                           <ul className="figma-resume-bullets">
                             <li>Directed complete visual identity and design system for a 72-hour hackathon with 200+ participants; designed official event merchandise, participant ID cards, certificates, and marketing creatives.</li>
-                            <li>Architected the digital platform UI covering team formation, submission portals, and real-time mentor evaluation under 72h high-pressure conditions.</li>
+                            <li>Architected the digital platform UI covering team formation, submission portals, and real-time mentor evaluation under 72h high-pressure conditions. Boosted registrations by 20% YoY.</li>
                           </ul>
                         </div>
 
                         <div className="figma-resume-item">
                           <div className="figma-resume-item-header">
-                            <div><strong>2nd Runner-up (Team Pixel_Codes)</strong> — Code Conquerors Hackathon (JUET)</div>
-                            <span className="figma-resume-item-date">Apr 2025</span>
+                            <div>
+                              <strong>2nd Runner-up (Team Pixel_Codes)</strong> — Code Conquerors Hackathon (JUET)
+                              <a href="https://www.linkedin.com/posts/pushkar-chaturvedi-a83778284_hackathon2025-codeconquerors-aiineducation-activity-7335535096017375236-DBk_" target="_blank" rel="noreferrer" className="text-[#ffb5a1] ml-2 text-[11px] font-semibold underline inline-flex items-center gap-0.5">
+                                LinkedIn Post ↗
+                              </a>
+                            </div>
+                            <span className="figma-resume-item-date">Apr 2024</span>
                           </div>
                           <ul className="figma-resume-bullets">
                             <li>Led frontend development and UI design in a 12-hour offline hackathon (150+ participants), building an AI-powered quiz generator using Next.js and Tailwind CSS.</li>
-                            <li>Engineered interactive question builder workflows and dynamic answer-key verification interfaces consuming Ollama local LLM APIs.</li>
+                            <li>Engineered interactive question builder workflows and dynamic answer-key verification interfaces consuming Ollama local LLM APIs, placing 3rd out of 50+ competing teams.</li>
                           </ul>
                         </div>
 

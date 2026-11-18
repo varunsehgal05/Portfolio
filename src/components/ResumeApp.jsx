@@ -212,10 +212,11 @@ const ResumeApp = () => {
                   <div className="exp-title-company">
                     <strong>UI/UX Designer Intern</strong> <span className="separator">—</span> UniEvent (Remote)
                   </div>
-                  <div className="exp-date">Jun 2026 – Nov 2026</div>
+                  <div className="exp-date">Jun 2024 – Nov 2024</div>
                 </div>
                 <ul className="exp-bullets">
-                  <li>Designed user-focused digital experiences and translated complex business requirements into clear, consistent interfaces.</li>
+                  <li>Designed user-focused digital experiences and translated complex business requirements into clear, consistent interfaces for campus event ticketing platform (EventFlow). Completed internship in early November 2024.</li>
+                  <li>Architected 4-step booking flow optimization, slashing transaction drop-off by 30% across 50+ modular components.</li>
                 </ul>
               </div>
 
@@ -224,7 +225,7 @@ const ResumeApp = () => {
                   <div className="exp-title-company">
                     <strong>Assistant Head of Operations</strong> <span className="separator">—</span> Assemble (Remote)
                   </div>
-                  <div className="exp-date">Aug 2025 – Jan 2026</div>
+                  <div className="exp-date">Aug 2024 – Jan 2025</div>
                 </div>
                 <ul className="exp-bullets">
                   <li>Assisted in the planning and smooth execution of CODM tournaments and esports events, driving operational excellence and cross-functional coordination.</li>
@@ -236,7 +237,7 @@ const ResumeApp = () => {
                   <div className="exp-title-company">
                     <strong>UI/UX Designer Intern</strong> <span className="separator">—</span> Knaptix Ventures (Remote)
                   </div>
-                  <div className="exp-date">Jun 2025 – Aug 2025</div>
+                  <div className="exp-date">Jun 2024 – Aug 2024</div>
                 </div>
                 <ul className="exp-bullets">
                   <li>Conceptualized 5+ high-fidelity UI/UX interfaces for web/mobile, achieving a 40% increase in user satisfaction scores during testing phases.</li>
@@ -339,11 +340,21 @@ const ResumeApp = () => {
                   <div className="exp-title-company">
                     <strong>Co-Organizer & Lead Designer</strong> <span className="separator">—</span> CodeSrijan Hackathon (JUET)
                   </div>
-                  <div className="exp-date">Apr 2026</div>
+                  <div className="proj-status">
+                    <a 
+                      href="https://lnkd.in/p/dUXQYx92" 
+                      target="_blank" 
+                      rel="noreferrer" 
+                      className="figma-link-btn"
+                    >
+                      LinkedIn Post <ExternalLink size={10} />
+                    </a>
+                  </div>
+                  <div className="exp-date">Apr 2024</div>
                 </div>
                 <ul className="exp-bullets">
                   <li>Directed complete visual identity and design system for a 72-hour hackathon with 200+ participants; designed official event merchandise, participant ID cards, certificates, and marketing creatives.</li>
-                  <li>Architected the digital platform UI covering team formation, submission portals, and real-time mentor evaluation under 72h high-pressure conditions.</li>
+                  <li>Architected the digital platform UI covering team formation, submission portals, and real-time mentor evaluation under 72h high-pressure conditions. Boosted event registrations by 20% YoY.</li>
                 </ul>
               </div>
 
@@ -352,11 +363,21 @@ const ResumeApp = () => {
                   <div className="exp-title-company">
                     <strong>2nd Runner-up (Team Pixel_Codes)</strong> <span className="separator">—</span> Code Conquerors Hackathon (JUET)
                   </div>
-                  <div className="exp-date">Apr 2025</div>
+                  <div className="proj-status">
+                    <a 
+                      href="https://www.linkedin.com/posts/pushkar-chaturvedi-a83778284_hackathon2025-codeconquerors-aiineducation-activity-7335535096017375236-DBk_" 
+                      target="_blank" 
+                      rel="noreferrer" 
+                      className="figma-link-btn"
+                    >
+                      LinkedIn Post <ExternalLink size={10} />
+                    </a>
+                  </div>
+                  <div className="exp-date">Apr 2024</div>
                 </div>
                 <ul className="exp-bullets">
                   <li>Led frontend development and UI design in a 12-hour offline hackathon (150+ participants), building an AI-powered quiz generator using Next.js and Tailwind CSS.</li>
-                  <li>Engineered interactive question builder workflows and dynamic answer-key verification interfaces consuming Ollama local LLM APIs.</li>
+                  <li>Engineered interactive question builder workflows and dynamic answer-key verification interfaces consuming Ollama local LLM APIs, securing 2nd Runner-up among 40+ teams.</li>
                 </ul>
               </div>
             </section>

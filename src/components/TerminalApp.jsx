@@ -148,9 +148,9 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
         setHistory([
           ...newHistory,
           '💼 CAREER & PROFESSIONAL EXPERIENCE:',
-          '  • UniEvent (Jun 2026 – Nov 2026):          UI/UX Designer Intern (Remote)',
-          '  • Assemble (Aug 2025 – Jan 2026):          Assistant Head of Operations (Remote)',
-          '  • Knaptix Ventures (Jun 2025 – Aug 2025):  UI/UX Designer Intern (Remote)',
+          '  • UniEvent (Jun 2024 – Nov 2024):          UI/UX Designer Intern (Remote - Ended early Nov)',
+          '  • Assemble (Aug 2024 – Jan 2025):          Assistant Head of Operations (Remote)',
+          '  • Knaptix Ventures (Jun 2024 – Aug 2024):  UI/UX Designer Intern (Remote)',
           '  • Freelance UI/UX (Jan 2024 – Present):    10+ high-retention client projects',
           ''
         ]);

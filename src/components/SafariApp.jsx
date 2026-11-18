@@ -480,7 +480,7 @@ const SafariApp = () => {
                   Varun Sehgal - Jaypee University of Engineering and Technology
                 </a>
                 <p className="result-snippet">
-                  Gwalior, Madhya Pradesh, India. UI/UX Designer Intern at UniEvent and Knaptix Ventures. Specializing in Design Systems, User Research, and High-Fidelity Prototyping.
+                  Gwalior, Madhya Pradesh, India. UI/UX Designer Intern at UniEvent (Jun 2024 – Nov 2024, ended early Nov) and Knaptix Ventures. Specializing in Design Systems, User Research, and High-Fidelity Prototyping.
                 </p>
               </div>
             </div>
