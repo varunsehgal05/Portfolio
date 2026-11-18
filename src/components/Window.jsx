@@ -25,7 +25,7 @@ const Window = ({
   onReplaySwarm,
   defaultMaximized = false
 }) => {
-  const DOCK_CLEARANCE = 80;
+  const DOCK_CLEARANCE = 86;
   const MENUBAR_HEIGHT = 28;
 
   // Track window dimensions dynamically for responsive window snapping and bounds

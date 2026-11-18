@@ -586,7 +586,7 @@ const FigmaApp = ({ isInteracting, userName = 'Varun Sehgal', onOpenApp }) => {
 
         {/* Center Canvas Tools */}
         <div className="nav-center-group">
-          <button 
+          <button
             type="button" 
             className="nav-tool-btn" 
             onClick={addStickyNote}

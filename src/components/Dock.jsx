@@ -213,20 +213,36 @@ const Dock = ({ openWindows = [], minimizedWindows = [], activeWindow, bouncingA
           const isActive = activeWindow === item.id && !isMin;
           const isBouncing = bouncingApp === item.id || bouncingAppProp === item.id;
 
-          // Compute magnification scale using smooth cosine curve
+          // Geometric position of item center for accurate smooth cosine curve
+          const ICON_SIZE = 44;
+          const DOCK_GAP = 12;
+          const DOCK_PAD_LEFT = 16;
+          const SEPARATOR_SLOT = 17; // 1px separator + 8px margin each side
+
+          const getExactItemCenter = (index) => {
+            if (index < 8) {
+              return DOCK_PAD_LEFT + index * (ICON_SIZE + DOCK_GAP) + ICON_SIZE / 2;
+            }
+            const itemsBeforeSep = 8 * (ICON_SIZE + DOCK_GAP);
+            return DOCK_PAD_LEFT + itemsBeforeSep + SEPARATOR_SLOT + DOCK_GAP + ICON_SIZE / 2;
+          };
+
+          // Compute magnification scale & dynamic horizontal expansion to prevent overlap
           let scale = 1;
           let translateY = 0;
+          let marginX = 0;
+
           if (mouseX !== null && dockRef.current) {
-            // Estimate icon center relative to dock
-            const iconWidth = 50; // 42px icon + 8px gap
-            const iconCenter = idx * iconWidth + iconWidth / 2;
-            const dist = Math.abs(mouseX - iconCenter);
-            const maxDist = 110;
+            const itemCenter = getExactItemCenter(idx);
+            const dist = Math.abs(mouseX - itemCenter);
+            const maxDist = 120;
 
             if (dist < maxDist) {
               const factor = Math.cos((dist / maxDist) * (Math.PI / 2));
-              scale = 1 + 0.32 * factor;
-              translateY = -10 * factor;
+              scale = 1 + 0.35 * factor;
+              translateY = -12 * factor;
+              // Push adjacent icons outward horizontally so they never collide or overlap
+              marginX = Math.max(0, (scale - 1) * 14);
             }
           }
 
@@ -237,7 +253,9 @@ const Dock = ({ openWindows = [], minimizedWindows = [], activeWindow, bouncingA
               className={`dock-item ${isMin ? 'minimized-app' : ''} ${isBouncing ? 'dock-bouncing' : ''}`}
               onClick={() => handleClick(item.id)}
               style={{
-                transform: `translate3d(0, ${translateY}px, 0) scale(${scale})`
+                transform: `translate3d(0, ${translateY}px, 0) scale(${scale})`,
+                margin: `0 ${marginX.toFixed(1)}px`,
+                zIndex: Math.round(scale * 50)
               }}
             >
               <div className="dock-tooltip">{item.name}</div>

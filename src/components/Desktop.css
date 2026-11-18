@@ -104,7 +104,7 @@
   top: 0;
   left: 0;
   right: 0;
-  bottom: 80px; /* Clean workspace clearance above the macOS Dock */
+  bottom: 86px; /* Clean workspace clearance above the macOS Dock */
   pointer-events: none;
 }
 
