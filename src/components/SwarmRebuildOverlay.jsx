@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { FastForward, Volume2, VolumeX, Sparkles, Play, Pause } from 'lucide-react';
 import './SwarmRebuildOverlay.css';
 
-// SVG Pointer Component in authentic Figma/Swarm style
+// SVG Pointer Component in authentic Figma/Swarm style with fluid particle trail
 const SwarmCursor = ({
   x,
   y,
@@ -12,54 +12,75 @@ const SwarmCursor = ({
   isDrawing,
   isCrosshair,
   caretText,
-  dupBadge
+  dupBadge,
+  trail = []
 }) => {
   return (
-    <div
-      className="swarm-cursor-agent"
-      style={{
-        transform: `translate3d(${x}px, ${y}px, 0)`,
-        '--cursor-color': color
-      }}
-    >
-      {/* Cursor Icon: Crosshair when drafting, Arrow when navigating */}
-      {isCrosshair ? (
-        <div className="swarm-crosshair-icon" style={{ borderColor: color }}>
-          <div className="ch-h" style={{ backgroundColor: color }} />
-          <div className="ch-v" style={{ backgroundColor: color }} />
-        </div>
-      ) : (
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className="swarm-pointer-svg">
-          <path
-            d="M5.65376 12.3673H5.46026L5.31717 12.4976L0.500002 16.8829L0.500002 1.19841L11.7841 12.3673H5.65376Z"
-            fill={color}
-            stroke="#ffffff"
-            strokeWidth="1.5"
-          />
-        </svg>
-      )}
+    <>
+      {/* Liquid glowing trail behind active cursor */}
+      {trail && trail.map((t, idx) => (
+        <div
+          key={`trail-${idx}`}
+          className="swarm-cursor-trail-dot"
+          style={{
+            transform: `translate3d(${t.x.toFixed(1)}px, ${t.y.toFixed(1)}px, 0)`,
+            backgroundColor: color,
+            color: color,
+            opacity: t.opacity,
+            width: `${Math.max(3, 7 - idx * 1.2)}px`,
+            height: `${Math.max(3, 7 - idx * 1.2)}px`,
+            marginLeft: '-3px',
+            marginTop: '-3px'
+          }}
+        />
+      ))}
 
-      {/* Floating user name tag */}
-      <div className="swarm-cursor-tag" style={{ backgroundColor: color }}>
-        <span className="swarm-cursor-name">{label}</span>
-        {action && <span className="swarm-cursor-action">{action}</span>}
+      <div
+        className="swarm-cursor-agent"
+        style={{
+          transform: `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`,
+          '--cursor-color': color
+        }}
+      >
+        {/* Cursor Icon: Crosshair when drafting, Arrow when navigating */}
+        {isCrosshair ? (
+          <div className="swarm-crosshair-icon" style={{ borderColor: color }}>
+            <div className="ch-h" style={{ backgroundColor: color }} />
+            <div className="ch-v" style={{ backgroundColor: color }} />
+          </div>
+        ) : (
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className="swarm-pointer-svg">
+            <path
+              d="M5.65376 12.3673H5.46026L5.31717 12.4976L0.500002 16.8829L0.500002 1.19841L11.7841 12.3673H5.65376Z"
+              fill={color}
+              stroke="#ffffff"
+              strokeWidth="1.5"
+            />
+          </svg>
+        )}
+
+        {/* Floating user name tag */}
+        <div className="swarm-cursor-tag" style={{ backgroundColor: color }}>
+          <span className="swarm-cursor-name">{label}</span>
+          {action && <span className="swarm-cursor-action">{action}</span>}
+        </div>
+
+        {/* Option-drag duplicate badge (⌥ Duplicate) */}
+        {dupBadge && (
+          <div className="swarm-dup-badge" style={{ backgroundColor: color }}>
+            <span>⌥ {dupBadge}</span>
+          </div>
+        )}
+
+        {/* Simulated Typing Caret Bubble */}
+        {caretText && (
+          <div className="swarm-typing-bubble" style={{ borderColor: color }}>
+            <span className="typing-text">{caretText}</span>
+            <span className="typing-caret" />
+          </div>
+        )}
       </div>
-
-      {/* Option-drag duplicate badge (⌥ Duplicate) */}
-      {dupBadge && (
-        <div className="swarm-dup-badge" style={{ backgroundColor: color }}>
-          <span>⌥ {dupBadge}</span>
-        </div>
-      )}
-
-      {/* Simulated Typing Caret Bubble */}
-      {caretText && (
-        <div className="swarm-typing-bubble" style={{ borderColor: color }}>
-          <span className="typing-text">{caretText}</span>
-          <span className="typing-caret" />
-        </div>
-      )}
-    </div>
+    </>
   );
 };
 
@@ -201,6 +222,9 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
   const isFinishedRef = useRef(false);
   const stageRef = useRef(0);
   const lastTypeTimeRef = useRef(0);
+  const lastTimeRef = useRef(Date.now());
+  const lastStampedIndexRef = useRef(-1);
+  const physicsRef = useRef(null);
 
   // Screen dimensions
   const [dims, setDims] = useState({
@@ -294,13 +318,28 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
       if (isFinishedRef.current) return;
 
       if (isPaused) {
+        lastTimeRef.current = Date.now();
         animFrameRef.current = requestAnimationFrame(loop);
         return;
       }
 
-      const rawElapsed = (Date.now() - startTimeRef.current) / 1000;
+      const now = Date.now();
+      const dt = Math.min(0.04, Math.max(0.005, (now - lastTimeRef.current) / 1000));
+      lastTimeRef.current = now;
+
+      const rawElapsed = (now - startTimeRef.current) / 1000;
       const elapsed = rawElapsed * speedMultiplier;
       const { w, h } = dims;
+
+      // Initialize persistent physics if needed
+      if (!physicsRef.current) {
+        physicsRef.current = {
+          varun: { x: 30, y: 18, trail: [] },
+          user: { x: w - 80, y: 18, trail: [] },
+          sarah: { x: 60, y: 60, trail: [] },
+          alex: { x: w - 120, y: 180, trail: [] }
+        };
+      }
 
       // Exact target formulas matching Window.jsx and Dock.css
       const winTargetW = Math.min(w - 80, 920);
@@ -312,22 +351,24 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
       const dockTargetX = (w - dockTargetW) / 2;
       const dockTargetY = h - 68;
 
+      let agentTargets = {};
+
       // =====================================================================
-      // Phase 1: Top MenuBar Drafting & Snapping (0.0s - 1.2s)
+      // Phase 1: Top MenuBar Drafting & Alignment (0.0s - 1.3s)
       // =====================================================================
-      if (elapsed < 1.2) {
+      if (elapsed < 1.3) {
         setStatusMessage('[1/5] Drafting macOS MenuBar wireframe...');
-        const t = Math.min(1, elapsed / 1.2);
+        const t = Math.min(1, Math.max(0, elapsed / 1.3));
         const eased = easeInOutCubic(t);
 
-        const menuX = lerp(20, w, eased);
-        const userX = lerp(w - 40, w - 210, eased);
+        const menuX = lerp(20, w - 20, eased);
+        const userX = lerp(w - 60, w - 210, eased);
 
-        if (t > 0.7) {
+        if (t > 0.68) {
           updateStage(1, 680); // Reveal MenuBar
         }
 
-        setCursors({
+        agentTargets = {
           varun: {
             x: menuX,
             y: 18,
@@ -347,25 +388,26 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             isDrawing: false
           },
           sarah: {
-            x: lerp(80, 56, eased),
-            y: lerp(180, 75, eased),
+            x: lerp(60, 56, eased),
+            y: lerp(160, 48, eased),
             color: '#FF7262',
             label: 'Sarah Lin',
             action: 'Grid Setup: 20px Margin'
           },
           alex: {
-            x: lerp(w - 120, winTargetX, eased),
-            y: lerp(h - 100, winTargetY, eased),
+            x: lerp(w - 140, winTargetX, eased),
+            y: lerp(h - 120, winTargetY, eased),
             color: '#0ACF83',
             label: 'Alex Chen',
             action: 'Window Origin Snap'
           }
-        });
+        };
 
         setWireframeData({
           type: 'menubar',
           w: menuX,
-          h: 28
+          h: 28,
+          opacity: 1
         });
 
         setActiveGuides([
@@ -373,33 +415,37 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         ]);
       }
       // =====================================================================
-      // Phase 2: Desktop App Icons Stamping & Stagger (1.2s - 2.4s)
+      // Phase 2: Desktop App Icons Continuous Stamping (1.3s - 2.6s)
       // =====================================================================
-      else if (elapsed < 2.4) {
+      else if (elapsed < 2.6) {
         setStatusMessage('[2/5] Stamping & Duplicating Desktop Apps...');
-        const t = (elapsed - 1.2) / 1.2;
-        const eased = easeOutBack(Math.min(1, t));
+        const t = Math.min(1, Math.max(0, (elapsed - 1.3) / 1.3));
+        const eased = easeInOutCubic(t);
+        const arcOffset = Math.sin(t * Math.PI) * 40;
 
-        if (t > 0.6) {
+        if (t > 0.65) {
           updateStage(2, 740); // Reveal Desktop Icons
         }
 
-        const iconIndex = Math.min(4, Math.floor(t * 5));
         const iconNames = ['Figma', 'VS Code', 'Resume.pdf', 'Contact', 'Trash'];
         const iconYPositions = [48, 126, 204, 282, 360];
+        const iconIndex = Math.min(4, Math.floor(t * 5));
         const currentIconY = iconYPositions[iconIndex];
 
-        // Typing/Stamping sound trigger
-        if (Date.now() - lastTypeTimeRef.current > 190 && t < 0.85) {
+        // Sarah glides down smoothly without teleporting
+        const sarahY = lerp(48, 360, eased);
+
+        // Stamp audio & ripple trigger when reaching each icon
+        if (lastStampedIndexRef.current !== iconIndex) {
+          lastStampedIndexRef.current = iconIndex;
           soundSynth.playDropThump(220 + iconIndex * 40);
           triggerRipple(56, currentIconY + 35, '#FF7262');
-          lastTypeTimeRef.current = Date.now();
         }
 
-        setCursors({
+        agentTargets = {
           sarah: {
             x: 56,
-            y: currentIconY + 35,
+            y: sarahY + 35,
             color: '#FF7262',
             label: 'Sarah Lin',
             action: `Stamping: ${iconNames[iconIndex]}`,
@@ -415,27 +461,27 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             }
           },
           varun: {
-            x: lerp(w / 2, winTargetX + winTargetW / 2, easeInOutCubic(t)),
-            y: lerp(28, winTargetY + 60, easeInOutCubic(t)),
+            x: lerp(w - 20, winTargetX + 220, eased),
+            y: lerp(18, winTargetY + 98, eased) + arcOffset,
             color: '#A259FF',
             label: 'Varun Sehgal',
             action: 'Preparing Headline'
           },
           user: {
-            x: lerp(w - 210, winTargetX + winTargetW, easeInOutCubic(t)),
-            y: lerp(18, winTargetY + winTargetH, easeInOutCubic(t)),
+            x: lerp(w - 210, winTargetX + winTargetW, eased),
+            y: lerp(18, winTargetY + winTargetH, eased) + arcOffset,
             color: '#1ABCFE',
             label: userName || 'You',
             action: 'Extrude Target Ready'
           },
           alex: {
-            x: lerp(winTargetX, winTargetX, easeInOutCubic(t)),
-            y: lerp(winTargetY, winTargetY, easeInOutCubic(t)),
+            x: winTargetX,
+            y: winTargetY,
             color: '#0ACF83',
             label: 'Alex Chen',
             action: 'Holding Top-Left Origin'
           }
-        });
+        };
 
         setWireframeData(null);
 
@@ -445,41 +491,40 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         ]);
       }
       // =====================================================================
-      // Phase 3: Center Finder Window & Live Headline Typing (2.4s - 4.2s)
+      // Phase 3: Center Finder Window & Live Headline Typing (2.6s - 4.4s)
       // =====================================================================
-      else if (elapsed < 4.2) {
+      else if (elapsed < 4.4) {
         setStatusMessage('[3/5] Constructing Finder Window & Typing Content...');
-        const t = (elapsed - 2.4) / 1.8;
-        const eased = easeInOutCubic(Math.min(1, t));
+        const t = Math.min(1, Math.max(0, (elapsed - 2.6) / 1.8));
+        const eased = easeInOutCubic(t);
 
-        // Start from small frame, expand out smoothly to exact target bounds
-        const startW = Math.min(420, winTargetW * 0.55);
-        const startH = Math.min(280, winTargetH * 0.55);
+        const startW = Math.min(440, winTargetW * 0.55);
+        const startH = Math.min(290, winTargetH * 0.55);
         const curW = lerp(startW, winTargetW, eased);
         const curH = lerp(startH, winTargetH, eased);
         const curX = lerp(winTargetX + (winTargetW - startW) / 2, winTargetX, eased);
         const curY = lerp(winTargetY + (winTargetH - startH) / 2, winTargetY, eased);
 
-        // Smoothly reveal the real window as it reaches 85% build completion
+        // Smoothly reveal the real window as it reaches 82% completion
         if (t > 0.82) {
-          updateStage(3, 800); // Reveal Finder Window seamlessly
+          updateStage(3, 800);
         }
 
         // Live Headline Typing Simulation
         const headlineText = 'Designing intuitive web apps & modern interfaces';
-        const typingProgress = Math.min(1, Math.max(0, (t - 0.25) / 0.6));
+        const typingProgress = Math.min(1, Math.max(0, (t - 0.15) / 0.65));
         const charCount = Math.floor(typingProgress * headlineText.length);
         const currentTyped = headlineText.substring(0, charCount);
 
-        if (typingProgress > 0 && typingProgress < 1 && Date.now() - lastTypeTimeRef.current > 70) {
+        if (typingProgress > 0 && typingProgress < 1 && Date.now() - lastTypeTimeRef.current > 75) {
           soundSynth.playTypeClick(320 + Math.random() * 80);
           lastTypeTimeRef.current = Date.now();
         }
 
-        const varunX = curX + 220 + (charCount * 6.5);
+        const varunX = curX + 220 + typingProgress * 290;
         const varunY = curY + 98;
 
-        setCursors({
+        agentTargets = {
           user: {
             x: curX + curW,
             y: curY + curH,
@@ -505,8 +550,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             caretText: currentTyped
           },
           sarah: {
-            x: curX + curW - 60,
-            y: curY + 45,
+            x: lerp(56, curX + curW - 65, eased),
+            y: lerp(360, curY + 50, eased) - Math.sin(t * Math.PI) * 35,
             color: '#FF7262',
             label: 'Sarah Lin',
             action: t > 0.6 ? '4 Projects Grid Auto-Layout' : 'Top-Right Anchor',
@@ -519,9 +564,9 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             label: 'Alex Chen',
             action: 'Top-Left Anchor (Snap)'
           }
-        });
+        };
 
-        // Structured wireframe preview inside window box
+        const wireframeOpacity = t < 0.82 ? 1 : Math.max(0, 1 - (t - 0.82) / 0.18);
         setWireframeData({
           type: 'window',
           x: curX,
@@ -529,7 +574,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           w: curW,
           h: curH,
           charCount,
-          typedText: currentTyped
+          typedText: currentTyped,
+          opacity: wireframeOpacity
         });
 
         setActiveGuides([
@@ -538,15 +584,16 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         ]);
       }
       // =====================================================================
-      // Phase 4: Bottom macOS Dock Capsule (4.2s - 5.3s)
+      // Phase 4: Bottom macOS Dock Capsule (4.4s - 5.4s)
       // =====================================================================
-      else if (elapsed < 5.3) {
+      else if (elapsed < 5.4) {
         setStatusMessage('[4/5] Extruding Glass Dock Capsule...');
-        const t = (elapsed - 4.2) / 1.1;
-        const eased = easeOutBack(Math.min(1, t));
+        const t = Math.min(1, Math.max(0, (elapsed - 4.4) / 1.0));
+        const easedDock = easeOutBack(t);
+        const easedMove = easeInOutCubic(t);
+        const arcSwoop = Math.sin(t * Math.PI) * 30;
 
-        const startDockW = 160;
-        const curDockW = lerp(startDockW, dockTargetW, eased);
+        const curDockW = lerp(180, dockTargetW, Math.min(1, easedDock));
         const curDockX = (w - curDockW) / 2;
         const curDockY = dockTargetY;
 
@@ -554,10 +601,10 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           updateStage(4, 880); // Reveal Dock
         }
 
-        setCursors({
+        agentTargets = {
           alex: {
-            x: curDockX + curDockW,
-            y: curDockY + 28,
+            x: lerp(winTargetX, curDockX + curDockW, easedMove),
+            y: lerp(winTargetY, curDockY + 28, easedMove) + arcSwoop,
             color: '#0ACF83',
             label: 'Alex Chen',
             action: 'Extruding Glass Capsule',
@@ -572,27 +619,27 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             }
           },
           sarah: {
-            x: curDockX,
-            y: curDockY + 28,
+            x: lerp(winTargetX + winTargetW - 65, curDockX, easedMove),
+            y: lerp(winTargetY + 50, curDockY + 28, easedMove) + arcSwoop,
             color: '#FF7262',
             label: 'Sarah Lin',
             action: 'Capsule Left Edge'
           },
           user: {
-            x: lerp(w / 2 + 80, w / 2, easeInOutCubic(t)),
-            y: lerp(h / 2, curDockY - 20, easeInOutCubic(t)),
+            x: lerp(winTargetX + winTargetW, w / 2, easedMove),
+            y: lerp(winTargetY + winTargetH, curDockY - 15, easedMove),
             color: '#1ABCFE',
             label: userName || 'You',
             action: 'Deploying Dock Apps'
           },
           varun: {
-            x: lerp(w / 2, w - 75, easeInOutCubic(t)),
-            y: lerp(curDockY - 60, h - 85, easeInOutCubic(t)),
+            x: lerp(winTargetX + 510, w - 75, easedMove),
+            y: lerp(winTargetY + 98, h - 85, easedMove),
             color: '#A259FF',
             label: 'Varun Sehgal',
             action: 'Assistant Bot Setup'
           }
-        });
+        };
 
         setWireframeData(null);
 
@@ -601,47 +648,50 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         ]);
       }
       // =====================================================================
-      // Phase 5: Assistant Bot & Grand Convergence (5.3s - 6.2s)
+      // Phase 5: Assistant Bot & Grand Harmonic Convergence (5.4s - 6.2s)
       // =====================================================================
       else if (elapsed < 6.2) {
         setStatusMessage('[5/5] Deploying Assistant Bot & Convergence...');
-        const t = (elapsed - 5.3) / 0.9;
-        const eased = easeInOutCubic(Math.min(1, t));
+        const t = Math.min(1, Math.max(0, (elapsed - 5.4) / 0.8));
+        const eased = easeInOutCubic(t);
         const centerX = w / 2;
         const centerY = h / 2;
 
         updateStage(5, 960); // Everything unlocked!
 
-        setCursors({
+        const r = lerp(240, 110, eased);
+        const angleBase = t * Math.PI * 0.9;
+
+        agentTargets = {
           user: {
-            x: lerp(centerX, centerX - 80, eased),
-            y: lerp(h - 90, centerY - 30, eased),
+            x: centerX + Math.cos(angleBase + Math.PI) * r,
+            y: centerY + Math.sin(angleBase + Math.PI) * r * 0.65,
             color: '#1ABCFE',
             label: userName || 'You',
             action: 'Approved ✓'
           },
           varun: {
-            x: lerp(w - 75, centerX + 80, eased),
-            y: lerp(h - 85, centerY - 30, eased),
+            x: centerX + Math.cos(angleBase) * r,
+            y: centerY + Math.sin(angleBase) * r * 0.65,
             color: '#A259FF',
             label: 'Varun Sehgal',
             action: 'System Ready 🚀'
           },
           sarah: {
-            x: lerp(centerX - 100, centerX - 80, eased),
-            y: lerp(h - 60, centerY + 45, eased),
+            x: centerX + Math.cos(angleBase + Math.PI * 0.5) * r,
+            y: centerY + Math.sin(angleBase + Math.PI * 0.5) * r * 0.65,
             color: '#FF7262',
             label: 'Sarah Lin',
             action: 'UI Verified ✨'
           },
           alex: {
-            x: lerp(centerX + 100, centerX + 80, eased),
-            y: lerp(h - 60, centerY + 45, eased),
+            x: centerX + Math.cos(angleBase - Math.PI * 0.5) * r,
+            y: centerY + Math.sin(angleBase - Math.PI * 0.5) * r * 0.65,
             color: '#0ACF83',
             label: 'Alex Chen',
             action: '100% Operational ⚡'
           }
-        });
+        };
 
         setActiveGuides([]);
       }
@@ -651,6 +701,35 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         return;
       }
 
+      // Critically-damped exponential spring pursuit for liquid-smooth cursor motion
+      const followAlpha = 1 - Math.exp(-15 * dt);
+      const updatedCursors = {};
+
+      Object.entries(agentTargets).forEach(([key, target]) => {
+        let p = physicsRef.current[key];
+        if (!p) {
+          p = { x: target.x, y: target.y, trail: [] };
+          physicsRef.current[key] = p;
+        }
+
+        // Apply smooth continuous spring pursuit
+        p.x += (target.x - p.x) * followAlpha;
+        p.y += (target.y - p.y) * followAlpha;
+
+        // Update fluid motion trail
+        if (!p.trail) p.trail = [];
+        p.trail.unshift({ x: p.x, y: p.y });
+        if (p.trail.length > 5) p.trail.pop();
+
+        updatedCursors[key] = {
+          ...target,
+          x: p.x,
+          y: p.y,
+          trail: p.trail.map((pt, idx) => ({ ...pt, opacity: Math.max(0, (1 - idx / 5) * 0.4) }))
+        };
+      });
+
+      setCursors(updatedCursors);
       animFrameRef.current = requestAnimationFrame(loop);
     };
 
@@ -765,7 +844,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             left: `${wireframeData.x}px`,
             top: `${wireframeData.y}px`,
             width: `${wireframeData.w}px`,
-            height: `${wireframeData.h}px`
+            height: `${wireframeData.h}px`,
+            opacity: wireframeData.opacity !== undefined ? wireframeData.opacity : 1
           }}
         >
           {/* Titlebar Wireframe */}
@@ -852,6 +932,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           isCrosshair={cursor.isCrosshair}
           caretText={cursor.caretText}
           dupBadge={cursor.dupBadge}
+          trail={cursor.trail}
         />
       ))}
     </div>

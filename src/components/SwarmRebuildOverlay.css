@@ -213,6 +213,7 @@
 
 /* ============================================================
    Multiplayer Cursors (Figma & Swarm Style)
+   Direct high-performance transform without CSS transition lag
    ============================================================ */
 .swarm-cursor-agent {
   position: absolute;
@@ -221,7 +222,20 @@
   pointer-events: none;
   z-index: 1000000;
   will-change: transform;
-  transition: transform 0.035s linear;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Fluid Glowing Particle Trails */
+.swarm-cursor-trail-dot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 999999;
+  filter: blur(1.5px);
+  will-change: transform, opacity;
+  box-shadow: 0 0 8px currentColor;
 }
 
 .swarm-pointer-svg {
@@ -396,6 +410,7 @@
   pointer-events: none;
   z-index: 999995;
   box-sizing: border-box;
+  transition: opacity 0.28s ease;
 }
 
 .wireframe-titlebar {
