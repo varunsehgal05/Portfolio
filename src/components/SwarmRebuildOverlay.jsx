@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FastForward, Volume2, VolumeX, Sparkles, Play, Pause } from 'lucide-react';
 import './SwarmRebuildOverlay.css';
 
 // SVG Pointer Component in authentic Figma/Swarm style with fluid particle trail
@@ -856,47 +855,6 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
 
   return (
     <div className={`swarm-overlay-container ${completeBanner ? 'fade-out-overlay' : ''}`}>
-      {/* Top Status & Controls HUD Badge — Safely positioned at top: 48px below MenuBar */}
-      <div className="swarm-hud-badge">
-        <div className="swarm-hud-pulse" />
-        
-        <span className="swarm-hud-text">
-          {completeBanner ? '✓ VarunOS Workspace Assembled & Ready!' : statusMessage}
-        </span>
-
-        {/* Speed Toggle (1x / 2x) */}
-        <button
-          className="swarm-control-btn"
-          onClick={handleToggleSpeed}
-          title="Toggle Rebuild Speed (1x / 2x)"
-        >
-          <span>{speedMultiplier}× Speed</span>
-        </button>
-
-        {/* Sound Toggle */}
-        <button
-          className={`swarm-control-btn ${isMuted ? 'muted' : ''}`}
-          onClick={handleToggleSound}
-          title={isMuted ? 'Unmute Synthesizer Audio (M)' : 'Mute Synthesizer Audio (M)'}
-        >
-          {isMuted ? <VolumeX size={13} /> : <Volume2 size={13} />}
-        </button>
-
-        {/* Pause/Play Toggle */}
-        <button
-          className="swarm-control-btn"
-          onClick={handleTogglePause}
-          title={isPaused ? 'Resume (Space)' : 'Pause (Space)'}
-        >
-          {isPaused ? <Play size={12} fill="currentColor" /> : <Pause size={12} fill="currentColor" />}
-        </button>
-
-        {/* Skip Button */}
-        <button className="swarm-skip-btn" onClick={finishSwarm} title="Skip Rebuild Animation (Esc)">
-          <FastForward size={13} /> Skip
-        </button>
-      </div>
-
       {/* Blueprint Coordinates Indicator (Bottom-Left) */}
       <div className="swarm-blueprint-indicator">
         <span className="blueprint-tag">⚡ SWARM REBUILD ENGINE v3.5</span>
