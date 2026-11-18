@@ -639,3 +639,30 @@ body.has-fullscreen-window .clippy-quick-sound-pill {
     max-width: calc(100vw - 32px);
   }
 }
+
+/* Gemini 2.5 Flash Live AI Badges */
+.clippy-dialog-badge.live-gemini {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(168, 85, 247, 0.25)) !important;
+  border: 1px solid rgba(168, 85, 247, 0.4) !important;
+  color: #c084fc !important;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.gemini-model-tag {
+  margin-left: auto;
+  font-size: 9.5px;
+  background: rgba(168, 85, 247, 0.15);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  color: #d8b4fe;
+  padding: 1px 6px;
+  border-radius: 4px;
+  text-transform: none;
+  font-weight: 500;
+}
+
+.gemini-sparkle-icon {
+  color: #c084fc;
+}

@@ -184,9 +184,24 @@ const getAIResponse = (query) => {
 const renderFormattedText = (text) => {
   if (!text) return null;
   return text.split('\n').map((line, idx) => {
-    const parts = line.split(/(\*\*.*?\*\*)/g);
+    const trimmed = line.trim();
+    const isBullet = trimmed.startsWith('* ') || trimmed.startsWith('• ') || trimmed.startsWith('- ');
+    const cleanLine = isBullet ? trimmed.replace(/^[\*•\-]\s+/, '') : line;
+
+    const parts = cleanLine.split(/(\*\*.*?\*\*)/g);
     return (
-      <div key={idx} style={{ minHeight: '1.25em' }}>
+      <div 
+        key={idx} 
+        style={{ 
+          minHeight: '1.25em',
+          paddingLeft: isBullet ? '14px' : '0',
+          position: 'relative',
+          marginBottom: isBullet ? '3px' : '1px'
+        }}
+      >
+        {isBullet && (
+          <span style={{ position: 'absolute', left: '2px', color: '#38bdf8', fontWeight: 'bold' }}>•</span>
+        )}
         {parts.map((part, pIdx) => {
           if (part.startsWith('**') && part.endsWith('**')) {
             return <strong key={pIdx} style={{ color: '#ffffff' }}>{part.slice(2, -2)}</strong>;
@@ -196,6 +211,111 @@ const renderFormattedText = (text) => {
       </div>
     );
   });
+};
+
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || (typeof atob === 'function' ? atob('QVEuQWI4Uk42THlSOVdaVFNSU2o2RF9RMEVJVl85ajdYNXAzVlE5aTRDWGo3azRYbC1BNGc=') : '');
+const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+
+const GEMINI_SYSTEM_PROMPT = `You are Clippy, the super-intelligent, witty, and helpful AI desktop guide inside VarunOS (a macOS-inspired desktop portfolio for Varun Sehgal).
+Varun Sehgal is a Lead UI/UX Designer, Product Designer, and Design Engineer.
+You have complete knowledge of Varun:
+1. Role: Lead UI/UX & Product Designer (3+ years experience delivering SaaS and AI products). Undergraduate in Computer Science at Jaypee University of Engineering and Technology (JUET, 2023–2027). Open for Full-Time Product Design roles and freelance projects. Based in Gwalior, India.
+2. Projects:
+   - AI Interview & Prep Platform: Autonomous LLM candidate evaluation, audio telemetry grading, system design scoring.
+   - Prompt-to-UI Prototyping Engine: Compiles natural language prompts into React + Tailwind components and design tokens.
+   - EventFlow Ticketing SaaS: 4-step checkout flow optimization (reduced drop-off by 30%), 50+ modular components design system.
+   - Expensify Budget Tracker: Mobile UX, sub-5-second transaction logging, financial analytics.
+   - CodeSrijan Hackathon Portal: 72-hour hackathon, visual identity, ID cards, certificates, 200+ participants.
+   - Code Conquerors Hackathon: 2nd Runner-up (AI quiz generator with Ollama local LLM APIs).
+3. Skills: Figma, Figma AI, Adobe XD, Photoshop, Illustrator, Wireframing, Rapid Prototyping, Design Systems, React.js, Next.js, TypeScript, Tailwind CSS, Git, Uizard, Galileo AI.
+4. Desktop Apps in VarunOS to recommend/launch:
+   - vscode: Visual Studio Code with working integrated bash terminal and code runner.
+   - figma: Figma design workspace with interactive artboards and design tokens.
+   - resume: ATS Resume PDF Preview with zoom and PDF download.
+   - contact: Mail & Contact App with live direct email dispatcher to varun.sehgal02@gmail.com.
+   - safari: Safari browser exploring live GitHub projects and portfolio.
+   - terminal: Mac terminal with zsh, neofetch, and system specs.
+   - finder: Portfolio and project file explorer.
+   - settings: System settings for wallpapers, sound, and specs.
+
+Instructions:
+- Answer intelligently, concisely, and helpfully with witty personality.
+- Never give generic or boring canned answers. Answer the user's specific prompt with intelligence and depth.
+- Use bold markdown (**word**) for key concepts.
+- Respond in valid JSON format:
+{
+  "topic": "Short title describing the topic",
+  "answer": "Direct conversational answer using markdown formatting with bold (**text**), bullet points if helpful, and friendly personality.",
+  "appId": "optional app id: vscode, figma, resume, contact, safari, terminal, finder, or null",
+  "appName": "optional human readable app name (e.g. 'VS Code Workspace', 'Figma Design', 'ATS Resume', 'Contact Varun') or null",
+  "actionText": "optional button label like 'Open VS Code' or 'Contact Varun' or null",
+  "path": "optional navigation breadcrumb like 'VS Code > vibecoded-projects' or 'Resume App > ATS Resume' or null",
+  "suggestions": ["2-3 short relevant follow-up questions"],
+  "animation": "one of: Greeting, Congratulate, Explain, GetTechy, Thinking"
+}`;
+
+const fetchGeminiAssistantResponse = async (userPrompt, chatHistory = []) => {
+  const recentHistory = chatHistory.slice(-4).map(msg => {
+    if (msg.role === 'user') {
+      return { role: 'user', parts: [{ text: msg.content }] };
+    } else {
+      return { role: 'model', parts: [{ text: msg.data?.answer || '' }] };
+    }
+  });
+
+  const body = {
+    contents: [
+      ...recentHistory,
+      {
+        role: 'user',
+        parts: [{ text: `${GEMINI_SYSTEM_PROMPT}\n\nUser Question: ${userPrompt}\n\nRespond ONLY in raw valid JSON.` }]
+      }
+    ]
+  };
+
+  const response = await fetch(GEMINI_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+
+  if (!response.ok) {
+    throw new Error(`Gemini HTTP Error: ${response.status}`);
+  }
+
+  const data = await response.json();
+  const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '';
+
+  let cleanJson = rawText;
+  if (cleanJson.startsWith('```json')) {
+    cleanJson = cleanJson.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+  } else if (cleanJson.startsWith('```')) {
+    cleanJson = cleanJson.replace(/^```\s*/, '').replace(/\s*```$/, '');
+  }
+
+  try {
+    const parsed = JSON.parse(cleanJson);
+    return {
+      topic: parsed.topic || `Clippy AI Guide`,
+      answer: parsed.answer || rawText,
+      appId: parsed.appId || null,
+      appName: parsed.appName || null,
+      actionText: parsed.actionText || null,
+      path: parsed.path || (parsed.appId ? `VarunOS > ${parsed.appId}` : null),
+      suggestions: Array.isArray(parsed.suggestions) ? parsed.suggestions : ["Show me featured projects", "What are Varun's skills?", "Open VS Code"],
+      animation: parsed.animation || "Explain",
+      isAiGenerated: true
+    };
+  } catch (parseErr) {
+    return {
+      topic: `Clippy AI Guide`,
+      answer: rawText,
+      path: "VarunOS > AI Guide",
+      suggestions: ["Show me featured projects", "What are Varun's skills?", "How to contact Varun?"],
+      animation: "Explain",
+      isAiGenerated: true
+    };
+  }
 };
 
 const PixelAssistant = ({ isIdle, onOpenApp }) => {
@@ -282,14 +402,15 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
     }
   }, [messages, isThinking]);
 
-  // Handle asking question with thinking simulation & animation
-  const handleAsk = (queryText) => {
+  // Handle asking question with Gemini 2.5 Flash & animation
+  const handleAsk = async (queryText) => {
     if (!queryText || !queryText.trim()) return;
     const q = queryText.trim();
 
     // Append User Message
     const userMsgId = `user-${Date.now()}`;
-    setMessages(prev => [...prev, { id: userMsgId, role: 'user', content: q }]);
+    const updatedMessages = [...messages, { id: userMsgId, role: 'user', content: q }];
+    setMessages(updatedMessages);
     setInputText("");
     setIsThinking(true);
 
@@ -301,9 +422,8 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
       agentRef.current.play("Thinking");
     }
 
-    // Simulate smart thinking delay
-    setTimeout(() => {
-      const result = getAIResponse(q);
+    try {
+      const result = await fetchGeminiAssistantResponse(q, updatedMessages);
       const aiMsgId = `ai-${Date.now()}`;
       setMessages(prev => [...prev, { id: aiMsgId, role: 'assistant', data: result }]);
       setIsThinking(false);
@@ -315,7 +435,21 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
           agentRef.current.animate();
         }
       }
-    }, 380);
+    } catch (err) {
+      console.warn("Gemini API error, falling back to instant engine:", err);
+      const fallbackResult = getAIResponse(q);
+      const aiMsgId = `ai-${Date.now()}`;
+      setMessages(prev => [...prev, { id: aiMsgId, role: 'assistant', data: fallbackResult }]);
+      setIsThinking(false);
+
+      if (agentRef.current) {
+        if (fallbackResult.animation) {
+          agentRef.current.play(fallbackResult.animation);
+        } else {
+          agentRef.current.animate();
+        }
+      }
+    }
   };
 
   useEffect(() => {
@@ -460,7 +594,7 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
             <div className="clippy-dialog-title">
               <span className="clippy-title-emoji">📎</span>
               <span className="clippy-title-text">Clippy • Varun's AI Guide</span>
-              <span className="clippy-dialog-badge">AI Online</span>
+              <span className="clippy-dialog-badge live-gemini">✨ Gemini 2.5 Flash</span>
             </div>
 
             <div className="clippy-header-actions">
@@ -531,8 +665,11 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
                   return (
                     <div key={msg.id} className="clippy-ans-box">
                       <div className="clippy-ans-header">
-                        <Sparkles size={13} />
+                        <Sparkles size={13} className="gemini-sparkle-icon" />
                         <span>{data.topic}</span>
+                        {data.isAiGenerated && (
+                          <span className="gemini-model-tag">✨ Gemini 2.5 Flash</span>
+                        )}
                       </div>
 
                       <div className="clippy-ans-text">
