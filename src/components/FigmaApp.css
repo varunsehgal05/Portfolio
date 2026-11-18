@@ -3145,3 +3145,302 @@
     right: auto !important;
   }
 }
+
+/* --------------------------------------------------------------------------
+   FigJam Whiteboard Canvas Design (Process & About Views)
+   Matching Problem -> User Flow Canvas Mockup (media_1795014351906_1ef05955.png)
+   -------------------------------------------------------------------------- */
+.figjam-whiteboard-board {
+  position: relative;
+  width: 100%;
+  border-radius: 16px;
+  background-color: #0b0c10;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  padding: 36px 40px 60px;
+  box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.8), 0 20px 50px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.figjam-canvas-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.figjam-canvas-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.figjam-grid-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 52px;
+  position: relative;
+  z-index: 2;
+}
+
+.figjam-flow-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  position: relative;
+}
+
+.figjam-section-col {
+  flex: 1;
+  min-width: 300px;
+  position: relative;
+}
+
+.figjam-section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.figjam-icon-pin {
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  font-size: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.pin-blue {
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.35);
+  background: rgba(56, 189, 248, 0.1);
+}
+
+.pin-purple {
+  color: #c084fc;
+  border-color: rgba(192, 132, 252, 0.35);
+  background: rgba(192, 132, 252, 0.1);
+}
+
+.pin-emerald {
+  color: #34d399;
+  border-color: rgba(52, 211, 153, 0.35);
+  background: rgba(52, 211, 153, 0.1);
+}
+
+.pin-amber {
+  color: #fbbf24;
+  border-color: rgba(251, 191, 36, 0.35);
+  background: rgba(251, 191, 36, 0.1);
+}
+
+.figjam-section-title {
+  font-size: 26px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.4px;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.figjam-cards-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+}
+
+.figjam-sticky-card {
+  background: #14151c;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 12px;
+  padding: 18px 22px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+  font-size: 13px;
+  line-height: 1.6;
+  color: #cbd5e1;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: default;
+}
+
+.figjam-sticky-card.tilt-left {
+  transform: rotate(-1.5deg);
+}
+
+.figjam-sticky-card.tilt-right {
+  transform: rotate(1.2deg);
+}
+
+.figjam-sticky-card.tilt-none {
+  transform: rotate(0deg);
+}
+
+.figjam-sticky-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  border-color: rgba(255, 181, 161, 0.4);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.7);
+  z-index: 10;
+}
+
+.figjam-card-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #ffb5a1;
+  margin-bottom: 6px;
+}
+
+/* Flowchart Frame */
+.figjam-flow-frame {
+  background: #121319;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.5);
+  width: 100%;
+}
+
+.flow-step-node {
+  background: #1c1d26;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 12px 20px;
+  color: #e2e8f0;
+  font-weight: 600;
+  font-size: 13px;
+  text-align: center;
+  transition: all 0.2s ease;
+  cursor: default;
+}
+
+.flow-step-node:hover {
+  background: #252735;
+  border-color: #ffb5a1;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+}
+
+.flow-step-node.active-node {
+  border-color: rgba(192, 132, 252, 0.6);
+  background: rgba(192, 132, 252, 0.12);
+  color: #e9d5ff;
+}
+
+.flow-stem-divider {
+  width: 1.5px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 0 auto;
+}
+
+.flow-branch-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  width: 100%;
+}
+
+.flow-branch-row .flow-step-node {
+  flex: 1;
+}
+
+/* SVG Curve Bridge */
+.figjam-connector-bridge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 110px;
+  height: 140px;
+  flex-shrink: 0;
+  margin-top: 50px;
+}
+
+.figjam-curve-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.figjam-curve-path {
+  fill: none;
+  stroke: #38bdf8;
+  stroke-width: 2px;
+  stroke-dasharray: 6 6;
+  stroke-linecap: round;
+  animation: figjamDash 30s linear infinite;
+}
+
+.figjam-curve-path.purple {
+  stroke: #c084fc;
+}
+
+.figjam-curve-path.amber {
+  stroke: #fbbf24;
+}
+
+@keyframes figjamDash {
+  to {
+    stroke-dashoffset: -120;
+  }
+}
+
+/* Token / Atomic Primitives Showcase */
+.figjam-tokens-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.figjam-token-pill {
+  font-size: 11px;
+  font-family: monospace;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+}
+
+.figjam-actions-bar {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 900px) {
+  .figjam-flow-row {
+    flex-direction: column;
+  }
+  .figjam-connector-bridge {
+    width: 60px;
+    height: 60px;
+    margin: 10px auto;
+    transform: rotate(90deg);
+  }
+  .figjam-whiteboard-board {
+    padding: 24px 20px 40px;
+  }
+}
