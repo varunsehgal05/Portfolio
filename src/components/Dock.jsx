@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   Compass, 
   Settings, 
@@ -97,7 +97,69 @@ const DOCK_ITEMS = [
 const Dock = ({ openWindows = [], minimizedWindows = [], activeWindow, bouncingAppProp = null, onAppClick }) => {
   const [mouseX, setMouseX] = useState(null);
   const [bouncingApp, setBouncingApp] = useState(null);
+  const [isDockVisible, setIsDockVisible] = useState(false);
+  const isHoveringRef = useRef(false);
+  const hideTimerRef = useRef(null);
   const dockRef = useRef(null);
+
+  // Global mouse tracking: pops up when mouse touches bottom edge (like Windows / macOS auto-hide)
+  useEffect(() => {
+    const handleGlobalMouseMove = (e) => {
+      const bottomThreshold = window.innerHeight - 24; // within 24px of bottom edge
+
+      if (e.clientY >= bottomThreshold) {
+        if (hideTimerRef.current) {
+          clearTimeout(hideTimerRef.current);
+          hideTimerRef.current = null;
+        }
+        setIsDockVisible(true);
+      } else if (e.clientY < window.innerHeight - 85 && !isHoveringRef.current) {
+        // Mouse moved well above the bottom bar
+        if (!hideTimerRef.current && isDockVisible) {
+          hideTimerRef.current = setTimeout(() => {
+            if (!isHoveringRef.current) {
+              setIsDockVisible(false);
+            }
+          }, 350);
+        }
+      }
+    };
+
+    window.addEventListener('mousemove', handleGlobalMouseMove);
+    return () => {
+      window.removeEventListener('mousemove', handleGlobalMouseMove);
+      if (hideTimerRef.current) {
+        clearTimeout(hideTimerRef.current);
+      }
+    };
+  }, [isDockVisible]);
+
+  // Keep dock visible while an app is bouncing
+  useEffect(() => {
+    if (bouncingApp || bouncingAppProp) {
+      setIsDockVisible(true);
+    }
+  }, [bouncingApp, bouncingAppProp]);
+
+  const handleMouseEnterDock = () => {
+    isHoveringRef.current = true;
+    if (hideTimerRef.current) {
+      clearTimeout(hideTimerRef.current);
+      hideTimerRef.current = null;
+    }
+    setIsDockVisible(true);
+  };
+
+  const handleMouseLeaveDock = () => {
+    isHoveringRef.current = false;
+    setMouseX(null);
+    if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+    hideTimerRef.current = setTimeout(() => {
+      if (!isHoveringRef.current) {
+        setIsDockVisible(false);
+      }
+    }, 400);
+  };
 
   const handleMouseMove = (e) => {
     if (dockRef.current) {
@@ -106,13 +168,10 @@ const Dock = ({ openWindows = [], minimizedWindows = [], activeWindow, bouncingA
     }
   };
 
-  const handleMouseLeave = () => {
-    setMouseX(null);
-  };
-
   const handleClick = (id) => {
     // Trigger macOS dock bounce animation on click
     setBouncingApp(id);
+    setIsDockVisible(true);
     setTimeout(() => {
       setBouncingApp(null);
     }, 900);
@@ -123,13 +182,26 @@ const Dock = ({ openWindows = [], minimizedWindows = [], activeWindow, bouncingA
   };
 
   return (
-    <div className="dock-container">
+    <>
+      {/* Invisible bottom edge sensor hotspot */}
       <div 
-        ref={dockRef}
-        className="dock"
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
+        className="dock-edge-sensor"
+        onMouseEnter={() => {
+          if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+          setIsDockVisible(true);
+        }}
+      />
+
+      <div 
+        className={`dock-container ${isDockVisible ? 'dock-visible' : 'dock-hidden'}`}
+        onMouseEnter={handleMouseEnterDock}
+        onMouseLeave={handleMouseLeaveDock}
       >
+        <div 
+          ref={dockRef}
+          className="dock"
+          onMouseMove={handleMouseMove}
+        >
         {DOCK_ITEMS.map((item, idx) => {
           if (item.isSeparator) {
             return <div key={`sep-${idx}`} className="dock-separator" />;
@@ -180,6 +252,7 @@ const Dock = ({ openWindows = [], minimizedWindows = [], activeWindow, bouncingA
         })}
       </div>
     </div>
+    </>
   );
 };
 

@@ -1900,7 +1900,7 @@
    -------------------------------------------------------------------------- */
 .lovable-workspace-bottom-nav {
   position: absolute;
-  bottom: 16px;
+  bottom: 22px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;
