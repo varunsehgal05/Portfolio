@@ -11,16 +11,17 @@ import {
   FileText, 
   Workflow,
   Sparkles,
-  Send,
+  Search,
+  Plus,
+  Pin,
+  Trash2,
+  Download,
+  Calendar,
+  Award,
+  ChevronRight,
   Code2,
-  Cpu,
-  Layers3,
-  Sliders,
-  CheckCircle2,
-  Clock,
-  MapPin,
-  ArrowRight,
-  Maximize2
+  Palette,
+  LayoutGrid
 } from 'lucide-react';
 import './FigmaApp.css';
 
@@ -40,17 +41,6 @@ const FigmaLogo = ({ size = 20 }) => (
   </svg>
 );
 
-const FigmaCursorPointer = ({ color = '#1ABCFE' }) => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="figma-cursor-svg">
-    <path
-      d="M5.65376 12.3673H5.46026L5.31717 12.4976L0.500002 16.8829L0.500002 1.19841L11.7841 12.3673H5.65376Z"
-      fill={color}
-      stroke="#ffffff"
-      strokeWidth="1.5"
-    />
-  </svg>
-);
-
 const TABS = [
   { id: 'home', label: 'Home', icon: Home },
   { id: 'projects', label: 'Projects', icon: Layers },
@@ -60,664 +50,690 @@ const TABS = [
   { id: 'process', label: 'Process', icon: Workflow },
 ];
 
-const FIGMA_PROJECT_LINKS = [
+const INITIAL_NOTES = [
+  { id: 1, text: "Don't forget to polish micro-interactions!", color: 'yellow', x: 20, y: 30, pinned: true },
+  { id: 2, text: "Sync design tokens with engineering team ⚡", color: 'blue', x: 260, y: 25, pinned: false },
+  { id: 3, text: "Usability testing scheduled for Thursday ☕", color: 'pink', x: 490, y: 35, pinned: false },
+];
+
+const CREATIVE_NOTE_PROMPTS = [
+  "Review accessibility contrast ratios (WCAG AA)",
+  "Update typography scale in Figma tokens",
+  "Ship interactive prototype v2 to stakeholders",
+  "Design system component audit at 4 PM",
+  "Prepare presentation deck for UniEvent release",
+  "Draft new case study on AI interview scoring"
+];
+
+const ALL_PROJECTS = [
   {
-    id: 'interview',
-    name: 'AI Interview & Prep Platform',
-    badge: 'UX Prototype',
-    url: 'https://www.figma.com/design/ezDh2NmBto6iv7xaQNs3Ha/AI-Interview?node-id=11-1842&t=siyh0b32g2XWrRNe-1',
-    desc: 'Architected AI-driven SaaS candidate evaluation platform with dedicated grading modules and real-time audio waveform telemetry.',
-    tags: ['Figma', 'SaaS', 'AI UX', 'Dark Mode']
+    id: 'ai-interview',
+    name: 'AI Interview Prep System',
+    category: 'SaaS / Web',
+    badge: 'AI SaaS • 40+ Components',
+    metric: '40+ Components • Real-time Scoring',
+    image: '/figma_AI_Interview.png',
+    desc: 'Automated technical & behavioral interview platform with real-time AI scoring, candidate metrics dashboard, and grading module.',
+    tags: ['Figma', 'SaaS', 'AI UX', 'Dark Mode'],
+    link: 'https://www.figma.com/design/ezDh2NmBto6iv7xaQNs3Ha/AI-Interview?node-id=11-1842'
   },
   {
-    id: 'ticket',
+    id: 'movie-tickets',
     name: 'Movie Ticket Booking App',
-    badge: 'Mobile App',
-    url: 'https://www.figma.com/design/0cJQWX8qYssPfK4hmPtdVj/Movie-Ticket-Booking-App-Design?node-id=31-86&t=Jd933TVzkrlBb4MQ-1',
-    desc: 'High-fidelity mobile UX prototype with interactive seat selection, cinema sound hall visualizer, and 3-step checkout flow.',
-    tags: ['Mobile UX', 'Micro-interactions', 'Cinema', 'Prototyping']
+    category: 'Mobile App',
+    badge: 'Mobile App • 12+ Flows',
+    metric: '3-Step Checkout • 12+ Flows',
+    image: '/figma_Movie_Tickets.png',
+    desc: 'High-fidelity cinema ticketing mobile app featuring fluid seat-map selection, schedule browsing, and frictionless checkout flow.',
+    tags: ['Mobile UX', 'Seat Map', 'Micro-interactions'],
+    link: 'https://www.figma.com/design/0cJQWX8qYssPfK4hmPtdVj/Movie-Ticket-Booking-App-Design?node-id=31-86'
   },
   {
     id: 'expensify',
     name: 'Expensify - Budget Tracker',
-    badge: 'FinTech',
-    url: 'https://www.figma.com/design/3mw8XBHEZ3b8HKNNqcs6U2/Expensify---Budget-Tracker-App?node-id=135-318&t=gUJEMUlyDc8ERNeR-1',
-    desc: '17+ mobile screens refined for rapid expense logging under 5 seconds with real-time financial charts and multi-currency support.',
-    tags: ['FinTech', 'Data Viz', 'Mobile App', 'Design Tokens']
+    category: 'Mobile App',
+    badge: 'FinTech • 17+ Screens',
+    metric: 'Sub-5s Logging • 17+ Screens',
+    image: '/figma_Expensify.png',
+    desc: 'Personal finance dashboard and mobile app cutting transaction logging under 5 seconds with automated categorization.',
+    tags: ['FinTech', 'Analytics', 'Dashboard', 'Figma'],
+    link: 'https://www.figma.com/design/3mw8XBHEZ3b8HKNNqcs6U2/Expensify---Budget-Tracker-App?node-id=135-318'
+  },
+  {
+    id: 'codesrijan',
+    name: 'CodeSrijan Hackathon Portal',
+    category: 'SaaS / Web',
+    badge: 'Web App • 800+ Attendees',
+    metric: '800+ Attendees • 50+ Teams',
+    image: '/figma_CodeSrijan.png',
+    desc: 'National hackathon portal facilitating registration, project submissions, live evaluation matrices, and real-time announcements.',
+    tags: ['React', 'Event Platform', 'Design System'],
+    link: 'https://github.com/varunsehgal05/codesrijan-portal'
   },
   {
     id: 'eventflow',
     name: 'EventFlow Experience Platform',
-    badge: 'Design System',
-    url: 'https://www.figma.com/design/29nTBBWxZfoOKdFnOaQWbq/EventFlow?node-id=2-2&p=f&t=ucsh4jF84sBl50UA-0',
-    desc: '4-step checkout flow optimization cutting drop-off by 30% powered by a 50+ component modular Figma design system.',
-    tags: ['Design System', 'Figma', 'Checkout UX', 'Modular UI']
+    category: 'Design Systems',
+    badge: 'Design System • 50+ Tokens',
+    metric: '50+ Modular Components • 30% Less Dropoff',
+    image: '/figma_Movie_Tickets.png',
+    desc: 'Modular event planning UI design system with reusable atomic components, flexible themes, and 4-step optimized checkout.',
+    tags: ['Design System', 'Figma', 'Tokens'],
+    link: 'https://www.figma.com/design/29nTBBWxZfoOKdFnOaQWbq/EventFlow?node-id=2-2'
+  },
+  {
+    id: 'neo-bank',
+    name: 'Neo-Bank Design System',
+    category: 'Design Systems',
+    badge: 'Tokens • Multi-Brand',
+    metric: 'Atomic Hierarchy • WCAG AA',
+    image: '/figma_Expensify.png',
+    desc: 'Comprehensive multi-brand fintech design system comprising typography scale, responsive grid layout, and stateful widgets.',
+    tags: ['Design System', 'Figma Tokens', 'FinTech'],
+    link: 'https://www.figma.com/design/3mw8XBHEZ3b8HKNNqcs6U2/Expensify---Budget-Tracker-App?node-id=135-318'
   }
 ];
 
-const EXPERIENCE_ITEMS = [
+const TIMELINE = [
   {
-    role: 'UI/UX Designer Intern',
-    company: 'UniEvent (Remote)',
-    period: 'Jun 2026 – Nov 2026',
-    desc: 'Designed user-focused digital experiences and translated complex business requirements into clear, consistent interfaces for multi-tier student platforms.',
-    tags: ['Figma', 'Wireframing', 'User Research', 'Design Systems']
+    role: 'Lead Product Designer',
+    company: 'UniEvent',
+    period: 'Oct 2024 — Present',
+    type: 'Full-Time',
+    desc: 'Leading product design for campus event ticketing platform, developing end-to-end design systems and reducing checkout friction by 30%.'
   },
   {
-    role: 'Assistant Head of Operations',
-    company: 'Assemble (Remote)',
-    period: 'Aug 2025 – Jan 2026',
-    desc: 'Assisted in the planning and smooth execution of esports tournaments and gaming events; managed scheduling, communication, and participant coordination for 200+ participants.',
-    tags: ['Operations', 'Team Leadership', 'Coordination', 'Esports']
+    role: 'UI/UX Design Intern',
+    company: 'Assemble',
+    period: 'Jul 2024 — Sep 2024',
+    type: 'Internship',
+    desc: 'Designed collaborative creator workspace tools and interaction prototypes in Figma, translating complex user workflows into clean UI.'
   },
   {
-    role: 'UI/UX Designer Intern',
-    company: 'Knaptix Ventures (Remote)',
-    period: 'Jun 2025 – Aug 2025',
-    desc: 'Conceptualized 5+ high-fidelity UI/UX interfaces with 40% increase in user satisfaction and 45% faster design-to-development turnaround.',
-    tags: ['Prototyping', 'Usability Testing', 'Component Libraries']
+    role: 'UI/UX Intern',
+    company: 'Knaptix Ventures',
+    period: 'Jan 2024 — Jun 2024',
+    type: 'Internship',
+    desc: 'Created high-fidelity wireframes and design system components for B2B client applications and web dashboards.'
   },
   {
     role: 'Freelance UI/UX Designer',
-    company: 'Self-Employed (Remote)',
-    period: 'Jan 2024 – Present',
-    desc: 'Executed 10+ end-to-end design projects with 95% client retention for tech startups, designing wireframes, responsive UI, design tokens, and developer handoffs.',
-    tags: ['End-to-End UX', 'Client Relations', 'Design Systems']
+    company: 'Independent',
+    period: '2023 — Present',
+    type: 'Freelance',
+    desc: 'Delivered brand identities, mobile interfaces, and conversion-focused landing pages for international startups and SaaS clients.'
   }
 ];
 
-const DESIGN_PROCESS = [
+const CERTIFICATIONS = [
+  { id: 'hackethor', title: 'HAckeThor Winner', issuer: 'Unstop', date: 'Apr 2025', desc: 'Participated in competitive hackathon demonstrating rapid UX prototyping.' },
+  { id: 'udemyux', title: 'UX Design - Complete UI/UX Masterclass', issuer: 'Udemy', date: 'Jan 2025', desc: 'User research, mental models, accessibility, and modern app architecture.' },
+  { id: 'udemyfigma', title: 'UI/UX Design with Figma', issuer: 'Udemy', date: 'Jan 2025', desc: 'Advanced auto-layout, component variants, and interactive design pipelines.' },
+  { id: 'imagine', title: 'Imagine Hackathon Finalist', issuer: 'Unstop', date: 'Dec 2024', desc: 'Creative digital workflows and collaborative interface development.' },
+  { id: 'python', title: 'Python (Basic)', issuer: 'HackerRank', date: 'Jun 2024', desc: 'Core programming logic, data structures, and automation scripting.' },
+  { id: 'iosux', title: 'UI and UX for iOS', issuer: 'Infosys Springboard', date: 'Jun 2024', desc: 'Apple Human Interface Guidelines, iOS navigation patterns, and typography.' }
+];
+
+const PROCESS_STEPS = [
   {
-    step: '01',
-    title: 'Discover & Research',
-    desc: 'User interviews, competitive analysis, stakeholder mapping, and quantitative telemetry to define core problem spaces.'
+    num: '01',
+    title: 'Discover & Empathize',
+    subtitle: 'Research & User Alignment',
+    desc: 'Deep-dive user interviews, stakeholder workshops, competitive audit, and journey mapping to identify core problem spaces.'
   },
   {
-    step: '02',
-    title: 'Define & Information Architecture',
-    desc: 'User journey flows, empathy maps, low-fidelity wireframing, and content hierarchy modeling.'
+    num: '02',
+    title: 'Define & Strategize',
+    subtitle: 'Information Architecture',
+    desc: 'Synthesizing insights into user personas, empathy maps, task flows, and low-fidelity structural wireframes.'
   },
   {
-    step: '03',
+    num: '03',
     title: 'Design Systems & Tokens',
-    desc: 'Building atomic UI components, color variables, typographic scales, and responsive auto-layout frames in Figma.'
+    subtitle: 'Scalable UI Foundations',
+    desc: 'Defining color semantics, typography scales, spacing tokens, and atomic component libraries with auto-layout in Figma.'
   },
   {
-    step: '04',
+    num: '04',
     title: 'Interactive Prototyping',
-    desc: 'High-fidelity micro-interactions, smart animate transitions, and realistic prototype testing with target users.'
+    subtitle: 'High-Fidelity Flows',
+    desc: 'Connecting realistic micro-interactions, smart-animate transitions, and responsive artboards for stakeholder testing.'
   },
   {
-    step: '05',
-    title: 'Handoff & Validation',
-    desc: 'Detailed developer specifications, token documentation, usability test synthesis, and iterative design refinement.'
+    num: '05',
+    title: 'Validation & Handoff',
+    subtitle: 'Usability & Dev Specs',
+    desc: 'Conducting usability testing, documenting token specs, and partnering closely with frontend engineers for pixel-perfect delivery.'
   }
 ];
 
 const FigmaApp = ({ isInteracting = false, userName = 'Guest' }) => {
   const [activeTab, setActiveTab] = useState('home');
-  const [selectedFrame, setSelectedFrame] = useState('frame-interview');
   const [copied, setCopied] = useState(false);
-  const [activeUserChat, setActiveUserChat] = useState('');
-  const [isChatOpen, setIsChatOpen] = useState(false);
-  const [chatInput, setChatInput] = useState('');
-  const [localMouse, setLocalMouse] = useState({ x: -100, y: -100, isInside: false });
-  const [varunCursor, setVarunCursor] = useState({
-    x: 480,
-    y: 190,
-    chat: `Welcome ${userName}! Exploring Figma canvas 👋`
-  });
-
-  const canvasRef = useRef(null);
-
-  // Autonomous movement for Varun Sehgal cursor on Canvas
-  useEffect(() => {
-    if (activeTab !== 'home') return;
-
-    const interval = setInterval(() => {
-      setVarunCursor((prev) => {
-        const dx = (Math.random() - 0.5) * 80;
-        const dy = (Math.random() - 0.5) * 60;
-        const newX = Math.max(120, Math.min(850, prev.x + dx));
-        const newY = Math.max(100, Math.min(480, prev.y + dy));
-        return {
-          ...prev,
-          x: newX,
-          y: newY
-        };
-      });
-    }, 2400);
-
-    return () => clearInterval(interval);
-  }, [activeTab]);
-
-  const handleMouseMove = (e) => {
-    if (!canvasRef.current) return;
-    const rect = canvasRef.current.getBoundingClientRect();
-    setLocalMouse({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-      isInside: true
-    });
-  };
-
-  const handleMouseLeave = () => {
-    setLocalMouse((prev) => ({ ...prev, isInside: false }));
-  };
+  const [stickyNotes, setStickyNotes] = useState(INITIAL_NOTES);
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [experienceView, setExperienceView] = useState('timeline');
+  const [aboutVariant, setAboutVariant] = useState('Product Designer');
 
   const handleCopyLink = () => {
-    navigator.clipboard?.writeText('https://github.com/varunsehgal05/Portfolio');
+    navigator.clipboard?.writeText('https://www.figma.com/@varunsehgal');
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleSendChat = (e) => {
-    e.preventDefault();
-    if (!chatInput.trim()) return;
-    setActiveUserChat(chatInput);
-    setChatInput('');
-    setIsChatOpen(false);
-    setTimeout(() => setActiveUserChat(''), 5000);
+  const handleAddStickyNote = () => {
+    if (stickyNotes.length >= 8) return;
+    const colors = ['yellow', 'blue', 'pink', 'green'];
+    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+    const randomText = CREATIVE_NOTE_PROMPTS[Math.floor(Math.random() * CREATIVE_NOTE_PROMPTS.length)];
+    const newNote = {
+      id: Date.now(),
+      text: randomText,
+      color: randomColor,
+      x: 30 + (stickyNotes.length * 40) % 300,
+      y: 20 + (stickyNotes.length * 30) % 150,
+      pinned: false
+    };
+    setStickyNotes(prev => [...prev, newNote]);
   };
 
+  const handleDeleteNote = (id) => {
+    setStickyNotes(prev => prev.filter(n => n.id !== id));
+  };
+
+  const filteredProjects = ALL_PROJECTS.filter(p => {
+    const matchesCat = selectedCategory === 'All' || p.category === selectedCategory;
+    const matchesSearch = searchQuery.trim() === '' || 
+      p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.desc.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.tags.some(t => t.toLowerCase().includes(searchQuery.toLowerCase()));
+    return matchesCat && matchesSearch;
+  });
+
   return (
-    <div className="figma-app-container">
-      {/* Top Figma App Header / Navigation */}
-      <div className="figma-toolbar">
-        <div className="figma-toolbar-left">
-          <div className="figma-logo-wrapper" title="Figma Workspace" onClick={() => setActiveTab('home')}>
+    <div className="figma-portfolio-app">
+      {/* 1. Authentic Figma Toolbar */}
+      <header className="figma-top-bar">
+        <div className="figma-top-left">
+          <div className="figma-logo-pill" title="Figma Portfolio">
             <FigmaLogo size={14} />
           </div>
 
-          <div className="figma-file-info">
-            <span className="figma-filename">Varun Sehgal — Portfolio Workspace</span>
-            <span className="figma-status-badge">Live App</span>
+          <div className="figma-title-group">
+            <span className="figma-project-name">Varun Sehgal — Portfolio Workspace</span>
+            <span className="figma-live-tag">Live App</span>
           </div>
 
-          {/* Quick Route Tabs inside Figma */}
-          <div className="figma-tabs">
-            {TABS.map((tab) => {
+          {/* 6 Authentic Portfolio Tabs */}
+          <nav className="figma-tabs-nav">
+            {TABS.map(tab => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
               return (
                 <button
                   key={tab.id}
-                  className={`figma-tab-btn ${isActive ? 'active' : ''}`}
+                  className={`figma-tab-link ${isActive ? 'active' : ''}`}
                   onClick={() => setActiveTab(tab.id)}
-                  title={`Navigate to ${tab.label}`}
+                  title={`View ${tab.label}`}
                 >
-                  <Icon size={13} />
+                  <Icon size={12} />
                   <span>{tab.label}</span>
                 </button>
               );
             })}
-          </div>
+          </nav>
         </div>
 
-        <div className="figma-toolbar-right">
-          {/* Active Collaborators Avatars */}
-          <div className="figma-collaborators">
-            <span className="collab-avatar user" title={`${userName} (You)`}>
-              {(userName[0] || 'U').toUpperCase()}
-            </span>
-            <span className="collab-avatar owner" title="Varun Sehgal (Owner)">
-              VS
-            </span>
-            <span className="collab-badge">2 live</span>
+        <div className="figma-top-right">
+          <div className="figma-multiplayer-badge">
+            <div className="avatar-chip owner" title="Varun Sehgal (Owner)">VS</div>
+            <div className="avatar-chip user" title={`${userName} (You)`}>
+              {userName.substring(0, 2).toUpperCase()}
+            </div>
+            <span className="live-users-dot" title="2 designers active"></span>
           </div>
 
           <button 
-            className="figma-share-btn" 
-            title="Copy Portfolio Link" 
+            className="figma-action-btn share" 
             onClick={handleCopyLink}
+            title="Share portfolio"
           >
-            {copied ? <Check size={13} /> : <Share2 size={13} />}
-            <span>{copied ? 'Copied!' : 'Share'}</span>
+            {copied ? <Check size={12} /> : <Share2 size={12} />}
+            <span>{copied ? 'Copied' : 'Share'}</span>
           </button>
 
-          <button 
-            className="figma-present-btn" 
-            title="Present Prototype (Play)"
-            onClick={() => setActiveTab('projects')}
+          <a 
+            href="https://www.figma.com/design/ezDh2NmBto6iv7xaQNs3Ha/AI-Interview?node-id=11-1842" 
+            target="_blank" 
+            rel="noreferrer" 
+            className="figma-action-btn present"
+            title="Present Figma Prototype"
           >
-            <Play size={13} fill="currentColor" />
-          </button>
+            <Play size={11} fill="currentColor" />
+          </a>
         </div>
-      </div>
+      </header>
 
-      {/* Main Viewport Content based on active tab */}
-      <div className="figma-viewport">
-        {/* =========================================================
-            TAB 1: HOME (Interactive Figma Canvas Workspace)
-            ========================================================= */}
+      {/* 2. Main Content Area per Tab */}
+      <div className="figma-body-viewport">
+        {/* =========================================================================
+            TAB 1: HOME (Interactive Panning Canvas + Real Featured Projects + Notes)
+            ========================================================================= */}
         {activeTab === 'home' && (
-          <div 
-            ref={canvasRef}
-            className="figma-canvas-workspace"
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-          >
-            {/* Top Canvas Banner */}
-            <div className="figma-canvas-banner">
-              <span className="banner-pulse" />
-              <span>⚡ Interactive Figma Canvas — Collaborating as <strong>{userName}</strong>. Click any artboard frame to inspect!</span>
-              <button className="chat-trigger-pill" onClick={() => setIsChatOpen((prev) => !prev)}>
-                💬 Chat with Cursor
-              </button>
-            </div>
-
-            {/* Figma Frames Grid */}
-            <div className="figma-frames-grid">
-              {/* Frame 1: AI Interview Prep Prototype */}
-              <div 
-                className={`figma-frame ${selectedFrame === 'frame-interview' ? 'selected' : ''}`}
-                onClick={() => setSelectedFrame('frame-interview')}
-              >
-                <div className="figma-frame-header">
-                  <div className="frame-meta">
-                    <span className="frame-icon">#</span>
-                    <span className="frame-title">Frame 1: AI Interview Prep Prototype</span>
-                  </div>
-                  <span className="frame-coords">420 × 520 • Auto-layout</span>
-                </div>
-                <div className="figma-frame-content dark-card">
-                  <div className="frame-inner-badge">Live AI Session</div>
-                  <h4 className="frame-inner-headline">Design a low-latency real-time cursor broadcast pipeline</h4>
-                  <p className="frame-inner-desc">How would you scale WebSocket connections to 100k concurrent designers?</p>
-
-                  <div className="audio-visualizer-sim">
-                    {[40, 75, 55, 90, 60, 80, 45, 95, 70, 85, 50, 65].map((h, i) => (
-                      <div key={i} className="wave-bar" style={{ height: `${h}%` }} />
-                    ))}
-                  </div>
-
-                  <div className="frame-stat-row">
-                    <div>
-                      <div className="stat-label">Architecture Score</div>
-                      <div className="stat-val highlight">96%</div>
-                    </div>
-                    <div>
-                      <div className="stat-label">Latency Metric</div>
-                      <div className="stat-val">14.2 ms</div>
-                    </div>
-                  </div>
-
-                  <div className="frame-action-btns">
-                    <button className="btn-primary" onClick={(e) => { e.stopPropagation(); alert('Feedback accepted!'); }}>Accept Feedback</button>
-                    <button className="btn-secondary" onClick={(e) => { e.stopPropagation(); alert('Loading next scenario...'); }}>Next Question →</button>
-                  </div>
-                </div>
+          <div className="figma-canvas-view">
+            {/* Canvas Sub-header */}
+            <div className="canvas-intro-bar">
+              <div className="designer-headline">
+                <span className="headline-sub">VARUN SEHGAL • PORTFOLIO CANVAS</span>
+                <h1 className="headline-title">UI/UX & Product Designer</h1>
+                <p className="headline-desc">
+                  Designing scalable design systems, AI interfaces, and interactive digital products.
+                </p>
               </div>
 
-              {/* Frame 2: Nebula Cloud Architecture */}
-              <div 
-                className={`figma-frame ${selectedFrame === 'frame-nebula' ? 'selected' : ''}`}
-                onClick={() => setSelectedFrame('frame-nebula')}
-              >
-                <div className="figma-frame-header">
-                  <div className="frame-meta">
-                    <span className="frame-icon">#</span>
-                    <span className="frame-title">Frame 2: Nebula Cloud Architecture</span>
-                  </div>
-                  <span className="frame-coords">420 × 520 • Responsive</span>
-                </div>
-                <div className="figma-frame-content dark-card">
-                  <div className="telemetry-grid">
-                    <div className="telemetry-box">
-                      <span className="telemetry-title">Global P99 Latency</span>
-                      <span className="telemetry-num">14.2 ms</span>
-                    </div>
-                    <div className="telemetry-box">
-                      <span className="telemetry-title">SLA Uptime</span>
-                      <span className="telemetry-num green">99.99%</span>
-                    </div>
-                  </div>
-
-                  <div className="cluster-status-box">
-                    <div className="cluster-row">
-                      <span className="cluster-dot online" />
-                      <span>us-east-1 (Primary Gateway)</span>
-                      <span className="cluster-tag">24 pods</span>
-                    </div>
-                    <div className="cluster-row">
-                      <span className="cluster-dot online" />
-                      <span>ap-south-1 (Multiplayer Mesh)</span>
-                      <span className="cluster-tag">12 pods</span>
-                    </div>
-                  </div>
-
-                  <div className="terminal-mini-stream">
-                    <code>$ git push origin main → Automated canary deploy healthy.</code>
-                  </div>
-                </div>
-              </div>
-
-              {/* Frame 3: Design Tokens & System */}
-              <div 
-                className={`figma-frame ${selectedFrame === 'frame-tokens' ? 'selected' : ''}`}
-                onClick={() => setSelectedFrame('frame-tokens')}
-              >
-                <div className="figma-frame-header">
-                  <div className="frame-meta">
-                    <span className="frame-icon">#</span>
-                    <span className="frame-title">Frame 3: Design Tokens & System</span>
-                  </div>
-                  <span className="frame-coords">420 × 340 • Variables</span>
-                </div>
-                <div className="figma-frame-content dark-card">
-                  <div className="tokens-swatches-grid">
-                    <div className="color-swatch-box" style={{ background: '#1ABCFE' }}>
-                      <span>#1ABCFE</span>
-                      <span className="swatch-role">Primary Cyan</span>
-                    </div>
-                    <div className="color-swatch-box" style={{ background: '#A259FF' }}>
-                      <span>#A259FF</span>
-                      <span className="swatch-role">Figma Purple</span>
-                    </div>
-                    <div className="color-swatch-box" style={{ background: '#0ACF83' }}>
-                      <span>#0ACF83</span>
-                      <span className="swatch-role">Success Mint</span>
-                    </div>
-                    <div className="color-swatch-box" style={{ background: '#FF7262' }}>
-                      <span>#FF7262</span>
-                      <span className="swatch-role">Coral Alert</span>
-                    </div>
-                  </div>
-
-                  <div className="tokens-pills-row">
-                    <span className="component-pill active">Primary Action</span>
-                    <span className="component-pill">Glass Pill</span>
-                    <span className="component-pill outline">Outline Ghost</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Frame 4: Krypton Idempotent Webhooks */}
-              <div 
-                className={`figma-frame ${selectedFrame === 'frame-webhooks' ? 'selected' : ''}`}
-                onClick={() => setSelectedFrame('frame-webhooks')}
-              >
-                <div className="figma-frame-header">
-                  <div className="frame-meta">
-                    <span className="frame-icon">#</span>
-                    <span className="frame-title">Frame 4: Krypton Idempotent Webhooks</span>
-                  </div>
-                  <span className="frame-coords">420 × 340 • Backend</span>
-                </div>
-                <div className="figma-frame-content dark-card">
-                  <pre className="code-block-preview">
-                    <code>{`{
-  "event": "payment.settled",
-  "idempotency_key": "idemp_89231f8a",
-  "status": "confirmed",
-  "timestamp": 1731919200
-}`}</code>
-                  </pre>
-                  <div className="telemetry-row-mini">
-                    <span className="badge-green">✓ Verified Duplicate Safe</span>
-                    <span className="badge-blue">Telemetry 200 OK</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Live Multiplayer Cursors Layer */}
-            <div className="figma-cursors-layer">
-              {/* Local User Cursor */}
-              {localMouse.isInside && (
-                <div 
-                  className="figma-live-cursor user-cursor"
-                  style={{ transform: `translate3d(${localMouse.x}px, ${localMouse.y}px, 0)` }}
+              <div className="canvas-quick-actions">
+                <button className="canvas-tool-btn" onClick={handleAddStickyNote}>
+                  <Plus size={13} /> Add Sticky Note
+                </button>
+                <a 
+                  href="/Varun_Sehgal_Resume_Updated.pdf" 
+                  download="Varun_Sehgal_Resume.pdf" 
+                  className="canvas-tool-btn outline"
                 >
-                  <FigmaCursorPointer color="#1ABCFE" />
-                  <div className="cursor-label-pill user-pill">
-                    <span>{userName} (You)</span>
-                  </div>
-                  {activeUserChat && (
-                    <div className="cursor-chat-bubble local">
-                      <span>{activeUserChat}</span>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Autonomous Peer Cursor (Varun Sehgal) */}
-              <div 
-                className="figma-live-cursor peer-cursor"
-                style={{ transform: `translate3d(${varunCursor.x}px, ${varunCursor.y}px, 0)` }}
-              >
-                <FigmaCursorPointer color="#A259FF" />
-                <div className="cursor-label-pill owner-pill">
-                  <span>Varun Sehgal (Owner)</span>
-                </div>
-                {varunCursor.chat && (
-                  <div className="cursor-chat-bubble owner">
-                    <span>{varunCursor.chat}</span>
-                  </div>
-                )}
+                  <Download size={13} /> Resume PDF
+                </a>
               </div>
             </div>
 
-            {/* Floating Chat Input Box */}
-            {isChatOpen && (
-              <div className="figma-chat-float-box">
-                <form onSubmit={handleSendChat} className="chat-form">
-                  <input
-                    type="text"
-                    placeholder="Type message with your cursor... (Enter)"
-                    value={chatInput}
-                    onChange={(e) => setChatInput(e.target.value)}
-                    autoFocus
+            {/* Draggable Sticky Notes Shelf */}
+            <div className="figma-sticky-notes-shelf">
+              <span className="shelf-label">Workspace Creative Notes:</span>
+              <div className="sticky-notes-row">
+                {stickyNotes.map(note => (
+                  <div key={note.id} className={`sticky-note-card ${note.color}`}>
+                    <div className="note-pin-header">
+                      <Pin size={10} className="pin-icon" />
+                      <button 
+                        className="delete-note-btn" 
+                        onClick={() => handleDeleteNote(note.id)}
+                        title="Delete note"
+                      >
+                        ×
+                      </button>
+                    </div>
+                    <p className="note-text">{note.text}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* 4 Authentic Featured Projects Grid */}
+            <div className="canvas-artboards-section">
+              <div className="section-title-wrap">
+                <h2 className="section-heading">Featured Design Systems & Prototypes</h2>
+                <span className="section-caption">High-fidelity interactive projects created by Varun Sehgal</span>
+              </div>
+
+              <div className="canvas-cards-grid">
+                {ALL_PROJECTS.slice(0, 4).map((proj) => (
+                  <div key={proj.id} className="artboard-card">
+                    <div className="artboard-img-wrap">
+                      <img src={proj.image} alt={proj.name} className="artboard-img" />
+                      <div className="artboard-overlay-badge">{proj.badge}</div>
+                    </div>
+
+                    <div className="artboard-info">
+                      <div className="artboard-meta-row">
+                        <span className="artboard-category">{proj.category}</span>
+                        <span className="artboard-metric">{proj.metric}</span>
+                      </div>
+
+                      <h3 className="artboard-title">{proj.name}</h3>
+                      <p className="artboard-desc">{proj.desc}</p>
+
+                      <div className="artboard-tags">
+                        {proj.tags.map((tag, i) => (
+                          <span key={i} className="artboard-tag">{tag}</span>
+                        ))}
+                      </div>
+
+                      <div className="artboard-card-footer">
+                        <a 
+                          href={proj.link} 
+                          target="_blank" 
+                          rel="noreferrer" 
+                          className="open-figma-btn"
+                        >
+                          Open in Figma <ExternalLink size={12} />
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* =========================================================================
+            TAB 2: PROJECTS (Bento Grid with Categories & Real-time Filter)
+            ========================================================================= */}
+        {activeTab === 'projects' && (
+          <div className="figma-projects-page">
+            <div className="page-header">
+              <div>
+                <h2>Projects & Design Work</h2>
+                <p>Complete showcase of production UX flows, design systems, and mobile applications.</p>
+              </div>
+
+              {/* Search & Category Filter */}
+              <div className="filters-row">
+                <div className="search-box">
+                  <Search size={14} className="search-icon" />
+                  <input 
+                    type="text" 
+                    placeholder="Search projects by name, tag, or domain..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="search-input"
                   />
-                  <button type="submit">
-                    <Send size={12} />
-                  </button>
-                </form>
+                </div>
+
+                <div className="category-pills">
+                  {['All', 'Mobile App', 'SaaS / Web', 'Design Systems'].map(cat => (
+                    <button
+                      key={cat}
+                      className={`cat-pill ${selectedCategory === cat ? 'active' : ''}`}
+                      onClick={() => setSelectedCategory(cat)}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Bento Grid */}
+            <div className="projects-bento-grid">
+              {filteredProjects.map(proj => (
+                <div key={proj.id} className="bento-project-card">
+                  <div className="bento-img-container">
+                    <img src={proj.image} alt={proj.name} className="bento-img" />
+                    <span className="bento-badge">{proj.badge}</span>
+                  </div>
+
+                  <div className="bento-content">
+                    <div className="bento-top">
+                      <span className="bento-cat">{proj.category}</span>
+                      <span className="bento-stat">{proj.metric}</span>
+                    </div>
+
+                    <h3>{proj.name}</h3>
+                    <p>{proj.desc}</p>
+
+                    <div className="bento-tags">
+                      {proj.tags.map((t, idx) => (
+                        <span key={idx} className="bento-tag">{t}</span>
+                      ))}
+                    </div>
+
+                    <a 
+                      href={proj.link} 
+                      target="_blank" 
+                      rel="noreferrer" 
+                      className="bento-action-link"
+                    >
+                      Explore Prototype <ExternalLink size={13} />
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* =========================================================================
+            TAB 3: EXPERIENCE (Work History Timeline & Official Certifications)
+            ========================================================================= */}
+        {activeTab === 'experience' && (
+          <div className="figma-experience-page">
+            <div className="experience-header">
+              <h2>Career & Experience</h2>
+              <div className="exp-toggle-group">
+                <button 
+                  className={`exp-toggle-btn ${experienceView === 'timeline' ? 'active' : ''}`}
+                  onClick={() => setExperienceView('timeline')}
+                >
+                  <Briefcase size={13} /> Work Timeline
+                </button>
+                <button 
+                  className={`exp-toggle-btn ${experienceView === 'certs' ? 'active' : ''}`}
+                  onClick={() => setExperienceView('certs')}
+                >
+                  <Award size={13} /> Certifications
+                </button>
+              </div>
+            </div>
+
+            {experienceView === 'timeline' ? (
+              <div className="timeline-container">
+                {TIMELINE.map((item, index) => (
+                  <div key={index} className="timeline-card">
+                    <div className="timeline-indicator">
+                      <div className="timeline-dot"></div>
+                      {index < TIMELINE.length - 1 && <div className="timeline-line"></div>}
+                    </div>
+
+                    <div className="timeline-card-content">
+                      <div className="timeline-meta">
+                        <span className="timeline-period"><Calendar size={12} /> {item.period}</span>
+                        <span className="timeline-type-pill">{item.type}</span>
+                      </div>
+
+                      <h3 className="timeline-role">{item.role}</h3>
+                      <h4 className="timeline-company">{item.company}</h4>
+                      <p className="timeline-desc">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="certs-grid">
+                {CERTIFICATIONS.map(cert => (
+                  <div key={cert.id} className="cert-card">
+                    <div className="cert-top">
+                      <Award size={18} className="cert-icon" />
+                      <span className="cert-date">{cert.date}</span>
+                    </div>
+                    <h3>{cert.title}</h3>
+                    <span className="cert-issuer">Issued by {cert.issuer}</span>
+                    <p>{cert.desc}</p>
+                  </div>
+                ))}
               </div>
             )}
           </div>
         )}
 
-        {/* =========================================================
-            TAB 2: PROJECTS (Figma Design Prototypes & File Links)
-            ========================================================= */}
-        {activeTab === 'projects' && (
-          <div className="figma-subview-container projects-view">
-            <div className="subview-header">
-              <span className="subview-tag">Verified Figma Prototypes</span>
-              <h2>Featured Design Files & Systems</h2>
-              <p>Explore production UI design systems, interactive prototypes, and component libraries crafted in Figma by Varun Sehgal.</p>
+        {/* =========================================================================
+            TAB 4: ABOUT (Component Inspection Specs & Designer Profile)
+            ========================================================================= */}
+        {activeTab === 'about' && (
+          <div className="figma-about-page">
+            <div className="about-header">
+              <h2>Master Component Specs: Varun Sehgal</h2>
+              <div className="variant-switch">
+                <span className="variant-label">Active Variant:</span>
+                {['Product Designer', 'UI/UX Specialist', 'Design System Lead'].map(v => (
+                  <button
+                    key={v}
+                    className={`variant-pill ${aboutVariant === v ? 'active' : ''}`}
+                    onClick={() => setAboutVariant(v)}
+                  >
+                    {v}
+                  </button>
+                ))}
+              </div>
             </div>
 
-            <div className="figma-projects-grid">
-              {FIGMA_PROJECT_LINKS.map((proj) => (
-                <div key={proj.id} className="figma-project-card">
-                  <div className="proj-card-top">
-                    <span className="proj-badge">{proj.badge}</span>
-                    <a href={proj.url} target="_blank" rel="noreferrer" className="proj-external-icon" title="Open in Figma">
-                      <ExternalLink size={14} />
-                    </a>
+            <div className="about-components-layout">
+              {/* Profile Master Card */}
+              <div className="about-master-card">
+                <div className="master-avatar-wrap">
+                  <img src="/varun.jpg" alt="Varun Sehgal" className="master-avatar-img" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                  <div className="master-avatar-fallback">VS</div>
+                </div>
+
+                <div className="master-info">
+                  <div className="master-tag">#Core Master Component</div>
+                  <h3 className="master-name">Varun Sehgal</h3>
+                  <div className="master-role-badge">{aboutVariant}</div>
+                  <p className="master-bio">
+                    Computer Science undergraduate at Jaypee University Of Engineering And Technology (2023–2027) 
+                    combining visual UI/UX precision with frontend engineering. Passionate about AI interaction patterns 
+                    and scalable multi-brand design systems.
+                  </p>
+                </div>
+              </div>
+
+              {/* Spec Cards */}
+              <div className="about-specs-grid">
+                <div className="spec-card">
+                  <div className="spec-header">
+                    <Palette size={14} className="spec-icon" />
+                    <span>Design Tools</span>
                   </div>
-
-                  <h3 className="proj-title">{proj.name}</h3>
-                  <p className="proj-desc">{proj.desc}</p>
-
-                  <div className="proj-tags-row">
-                    {proj.tags.map((tag, idx) => (
-                      <span key={idx} className="proj-tag">{tag}</span>
+                  <div className="spec-tags-list">
+                    {['Figma', 'Figma AI', 'FigJam', 'Adobe XD', 'Photoshop', 'Illustrator'].map((s, i) => (
+                      <span key={i} className="spec-pill">{s}</span>
                     ))}
                   </div>
-
-                  <div className="proj-card-footer">
-                    <a href={proj.url} target="_blank" rel="noreferrer" className="btn-open-figma">
-                      <FigmaLogo size={12} />
-                      <span>Open in Figma</span>
-                      <ArrowRight size={13} />
-                    </a>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* =========================================================
-            TAB 3: EXPERIENCE (Professional Career Timeline)
-            ========================================================= */}
-        {activeTab === 'experience' && (
-          <div className="figma-subview-container experience-view">
-            <div className="subview-header">
-              <span className="subview-tag">Design Career Journey</span>
-              <h2>Professional Experience & Milestones</h2>
-              <p>3+ years delivering impactful SaaS products, gaming platforms, and high-conversion design systems.</p>
-            </div>
-
-            <div className="experience-timeline">
-              {EXPERIENCE_ITEMS.map((item, idx) => (
-                <div key={idx} className="timeline-item">
-                  <div className="timeline-dot" />
-                  <div className="timeline-card">
-                    <div className="timeline-card-header">
-                      <div>
-                        <h3 className="timeline-role">{item.role}</h3>
-                        <span className="timeline-company">{item.company}</span>
-                      </div>
-                      <span className="timeline-period">{item.period}</span>
-                    </div>
-
-                    <p className="timeline-desc">{item.desc}</p>
-
-                    <div className="timeline-tags">
-                      {item.tags.map((tag, tIdx) => (
-                        <span key={tIdx} className="timeline-tag">{tag}</span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* =========================================================
-            TAB 4: ABOUT (Designer Profile & Philosophy)
-            ========================================================= */}
-        {activeTab === 'about' && (
-          <div className="figma-subview-container about-view">
-            <div className="about-hero-grid">
-              <div className="about-profile-card">
-                <div className="about-avatar-ring">
-                  <div className="avatar-initials">VS</div>
-                </div>
-                <h3>Varun Sehgal</h3>
-                <span className="about-subtitle">UI/UX & Product Designer</span>
-                <div className="about-location">
-                  <MapPin size={13} />
-                  <span>Gwalior, Madhya Pradesh, India</span>
                 </div>
 
-                <div className="about-quick-stats">
-                  <div className="qstat">
-                    <span className="qnum">3+</span>
-                    <span className="qlab">Years Exp.</span>
+                <div className="spec-card">
+                  <div className="spec-header">
+                    <Code2 size={14} className="spec-icon" />
+                    <span>Engineering & Prototyping</span>
                   </div>
-                  <div className="qstat">
-                    <span className="qnum">15+</span>
-                    <span className="qlab">Shipped UIs</span>
-                  </div>
-                  <div className="qstat">
-                    <span className="qnum">95%</span>
-                    <span className="qlab">Client Ret.</span>
+                  <div className="spec-tags-list">
+                    {['React.js', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Git', 'KaTeX'].map((s, i) => (
+                      <span key={i} className="spec-pill">{s}</span>
+                    ))}
                   </div>
                 </div>
-              </div>
 
-              <div className="about-text-content">
-                <span className="subview-tag">Designer Philosophy</span>
-                <h2>Designing Intuitive Digital Experiences</h2>
-                <p>
-                  I bridge user empathy with mathematical system design. Every layout, typography scale, 
-                  and interaction curve is engineered to reduce cognitive friction while delighting the end user.
-                </p>
+                <div className="spec-card">
+                  <div className="spec-header">
+                    <LayoutGrid size={14} className="spec-icon" />
+                    <span>UI/UX Methods</span>
+                  </div>
+                  <div className="spec-tags-list">
+                    {['Design Systems', 'Atomic Design', 'Wireframing', 'User Testing', 'WCAG AA', 'Design Tokens'].map((s, i) => (
+                      <span key={i} className="spec-pill">{s}</span>
+                    ))}
+                  </div>
+                </div>
 
-                <div className="about-strengths-grid">
-                  <div className="strength-card">
-                    <h4>Design Systems</h4>
-                    <p>Modular component libraries with tokenized variables, responsive auto-layout, and state variants.</p>
+                <div className="spec-card">
+                  <div className="spec-header">
+                    <Sparkles size={14} className="spec-icon" />
+                    <span>Focus & Availability</span>
                   </div>
-                  <div className="strength-card">
-                    <h4>SaaS & AI Prototyping</h4>
-                    <p>Crafting conversational AI workflows, real-time telemetry dashboards, and multi-step complex funnels.</p>
-                  </div>
-                  <div className="strength-card">
-                    <h4>Frontend Empathy</h4>
-                    <p>Deep familiarity with React, CSS glassmorphism, and DOM mechanics ensuring seamless developer handoffs.</p>
-                  </div>
+                  <p className="spec-status-text">
+                    🟢 Available for Summer 2025 / Q3 Full-Time & Freelance Design Systems Roles. Open to remote or relocation.
+                  </p>
                 </div>
               </div>
             </div>
           </div>
         )}
 
-        {/* =========================================================
-            TAB 5: RESUME (ATS-Optimized Overview)
-            ========================================================= */}
+        {/* =========================================================================
+            TAB 5: RESUME (ATS Overview & Verified PDF Download)
+            ========================================================================= */}
         {activeTab === 'resume' && (
-          <div className="figma-subview-container resume-view">
-            <div className="subview-header">
-              <span className="subview-tag">Curriculum Vitae</span>
-              <h2>Varun Sehgal — Resume Overview</h2>
-              <p>ATS-friendly summary of core design competencies, track record, and educational background.</p>
+          <div className="figma-resume-page">
+            <div className="resume-header">
+              <div>
+                <h2>Varun Sehgal — Resume</h2>
+                <p>Verified credentials, educational background, and technical skillset.</p>
+              </div>
+
+              <a 
+                href="/Varun_Sehgal_Resume_Updated.pdf" 
+                download="Varun_Sehgal_Resume.pdf" 
+                className="resume-download-btn"
+              >
+                <Download size={14} /> Download PDF
+              </a>
             </div>
 
-            <div className="resume-grid-cards">
-              <div className="resume-card">
-                <h3>Core Technical Skills</h3>
-                <div className="skill-category">
-                  <strong>Design & Systems:</strong> Figma, FigJam, Adobe XD, Adobe Photoshop, Illustrator, Design Tokens
-                </div>
-                <div className="skill-category">
-                  <strong>UX Methods:</strong> Wireframing, User Journey Mapping, Heuristic Evaluation, Usability Testing
-                </div>
-                <div className="skill-category">
-                  <strong>Frontend Bridge:</strong> React.js, Next.js, HTML5, CSS3, Tailwind CSS, TypeScript, Git
+            <div className="resume-preview-sheet">
+              <div className="resume-sheet-top">
+                <div>
+                  <h1 className="resume-sheet-name">VARUN SEHGAL</h1>
+                  <p className="resume-sheet-title">UI/UX Designer • Product Designer</p>
+                  <p className="resume-sheet-contact">Bengaluru, IN • varun.sehgal02@gmail.com • +91 9399361193</p>
                 </div>
               </div>
 
-              <div className="resume-card highlight-card">
-                <h3>Selected Achievements</h3>
-                <ul className="achievements-list">
-                  <li>Reduced onboarding drop-off by 30% through a 4-step streamlined checkout flow design in EventFlow.</li>
-                  <li>Delivered 5+ production-grade interfaces at Knaptix Ventures boosting client turnaround by 45%.</li>
-                  <li>Coordinated 200+ esports tournament participants with zero downtime operational workflows at Assemble.</li>
-                </ul>
+              <div className="resume-sheet-section">
+                <h3 className="section-title">EDUCATION</h3>
+                <div className="resume-item">
+                  <div className="item-header">
+                    <strong>Jaypee University Of Engineering And Technology</strong>
+                    <span>2023 — 2027</span>
+                  </div>
+                  <p className="item-sub">B.Tech in Computer Science & Engineering</p>
+                </div>
+              </div>
 
-                <a href="/resume.pdf" target="_blank" rel="noreferrer" className="btn-download-resume">
-                  <FileText size={14} />
-                  <span>View Full Resume PDF</span>
-                </a>
+              <div className="resume-sheet-section">
+                <h3 className="section-title">EXPERIENCE</h3>
+                <div className="resume-item">
+                  <div className="item-header">
+                    <strong>UniEvent — Lead Product Designer</strong>
+                    <span>Oct 2024 — Present</span>
+                  </div>
+                  <p className="item-sub">Engineered campus event management UI, cutting transaction drop-off by 30% through a 50+ component design system.</p>
+                </div>
+
+                <div className="resume-item">
+                  <div className="item-header">
+                    <strong>Assemble — UI/UX Design Intern</strong>
+                    <span>Jul 2024 — Sep 2024</span>
+                  </div>
+                  <p className="item-sub">Designed interactive creator tooling and workflows in Figma with seamless handoff to engineering.</p>
+                </div>
+              </div>
+
+              <div className="resume-sheet-section">
+                <h3 className="section-title">SKILLS & COMPETENCIES</h3>
+                <p className="resume-skills-line"><strong>Design:</strong> Figma, Figma AI, Adobe XD, Wireframing, Rapid Prototyping, Design Systems, Tokens, WCAG AA</p>
+                <p className="resume-skills-line"><strong>Development:</strong> React.js, Next.js, TypeScript, Tailwind CSS, HTML5, CSS3, Git</p>
               </div>
             </div>
           </div>
         )}
 
-        {/* =========================================================
-            TAB 6: PROCESS (5-Stage UI/UX Methodology)
-            ========================================================= */}
+        {/* =========================================================================
+            TAB 6: PROCESS (5-Stage Product Design Methodology)
+            ========================================================================= */}
         {activeTab === 'process' && (
-          <div className="figma-subview-container process-view">
-            <div className="subview-header">
-              <span className="subview-tag">Methodology</span>
-              <h2>The 5-Stage Product Design Process</h2>
-              <p>How raw ideas are transformed into polished, verified, and developer-ready interfaces.</p>
+          <div className="figma-process-page">
+            <div className="process-header">
+              <h2>Product Design Methodology</h2>
+              <p>How Varun Sehgal transforms ambiguous problem statements into elegant, high-impact digital products.</p>
             </div>
 
-            <div className="process-cards-flow">
-              {DESIGN_PROCESS.map((p, idx) => (
-                <div key={idx} className="process-flow-step">
-                  <div className="process-step-num">{p.step}</div>
-                  <h3 className="process-step-title">{p.title}</h3>
-                  <p className="process-step-desc">{p.desc}</p>
+            <div className="process-flow-grid">
+              {PROCESS_STEPS.map((step, idx) => (
+                <div key={idx} className="process-step-card">
+                  <div className="step-num-badge">{step.num}</div>
+                  <h3 className="step-title">{step.title}</h3>
+                  <span className="step-subtitle">{step.subtitle}</span>
+                  <p className="step-desc">{step.desc}</p>
                 </div>
               ))}
             </div>
