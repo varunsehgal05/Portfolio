@@ -38,9 +38,18 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
   }, [isFullScreenActive]);
 
   // Apps that should open in full screen by default
-  const FULLSCREEN_APPS = ['figma', 'vscode'];
+  const FULLSCREEN_APPS = ['figma', 'vscode', 'safari'];
+  const [bouncingApp, setBouncingApp] = useState(null);
+
+  const triggerAppBounce = (appId) => {
+    setBouncingApp(appId);
+    setTimeout(() => {
+      setBouncingApp((curr) => (curr === appId ? null : curr));
+    }, 1100);
+  };
 
   const openApp = (appId) => {
+    triggerAppBounce(appId);
     if (!openWindows.includes(appId)) {
       setOpenWindows(prev => [...prev, appId]);
       if (FULLSCREEN_APPS.includes(appId)) {
@@ -178,6 +187,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
             openWindows={openWindows}
             minimizedWindows={minimizedWindows}
             activeWindow={activeWindow}
+            bouncingAppProp={bouncingApp}
             onAppClick={handleDockClick}
           />
         </div>

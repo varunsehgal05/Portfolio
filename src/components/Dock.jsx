@@ -94,7 +94,7 @@ const DOCK_ITEMS = [
   { id: 'trash', name: 'Trash', icon: TrashDockIcon }
 ];
 
-const Dock = ({ openWindows = [], minimizedWindows = [], activeWindow, onAppClick }) => {
+const Dock = ({ openWindows = [], minimizedWindows = [], activeWindow, bouncingAppProp = null, onAppClick }) => {
   const [mouseX, setMouseX] = useState(null);
   const [bouncingApp, setBouncingApp] = useState(null);
   const dockRef = useRef(null);
@@ -139,7 +139,7 @@ const Dock = ({ openWindows = [], minimizedWindows = [], activeWindow, onAppClic
           const isOpen = openWindows.includes(item.id);
           const isMin = minimizedWindows.includes(item.id);
           const isActive = activeWindow === item.id && !isMin;
-          const isBouncing = bouncingApp === item.id;
+          const isBouncing = bouncingApp === item.id || bouncingAppProp === item.id;
 
           // Compute magnification scale using smooth cosine curve
           let scale = 1;

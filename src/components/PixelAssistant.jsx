@@ -1,122 +1,183 @@
 import { useState, useEffect, useRef } from 'react';
 import { initAgent } from "clippyjs";
 import { Clippy } from "clippyjs/agents";
-import { Send, X, ExternalLink, Download, Folder, Sparkles, Volume2, VolumeX } from 'lucide-react';
+import { Send, X, ExternalLink, Download, Folder, Sparkles, Volume2, VolumeX, Terminal, Code2, Compass, Mail, FileText, User } from 'lucide-react';
 import './PixelAssistant.css';
 
-const hints = [
-  "Click me to ask anything about Varun! 💬",
+const HINTS = [
+  "Click me to ask anything about Varun's UI/UX work! 💬",
   "Press ALT + 1, 2, or 3 to change desktop wallpapers.",
-  "Check out my resume or projects!",
+  "Check out the interactive VS Code or Figma apps!",
   "Double click any desktop icon to open apps."
 ];
 
-const suggestionChips = [
-  { label: "🛠️ Tech Skills", query: "What are Varun's technical skills and stack?" },
-  { label: "💼 Work Experience", query: "Tell me about Varun's work experience" },
-  { label: "🚀 Projects", query: "What projects has Varun built?" },
+const SUGGESTION_CHIPS = [
+  { label: "⚡ Vibecoding", query: "What vibecoded AI projects has Varun built?" },
+  { label: "🛠️ Tech Skills", query: "What are Varun's design tools and tech stack?" },
+  { label: "🚀 Projects", query: "Show me Varun's featured product design case studies" },
+  { label: "💼 Experience", query: "Tell me about Varun's work experience and internships" },
+  { label: "⭐ Why Hire Varun?", query: "Why should a company hire Varun Sehgal?" },
   { label: "🎓 Education", query: "Where did Varun study?" },
   { label: "📬 Contact & Hire", query: "How can I contact or hire Varun?" },
   { label: "📄 Resume PDF", query: "Can I download Varun's resume?" }
 ];
 
-const getAnswerForQuery = (query) => {
+const getAIResponse = (query) => {
   const q = query.toLowerCase().trim();
 
-  if (/skill|tech|stack|language|figma|design|ui|ux|prototype|react|next|typescript|tailwind/.test(q)) {
+  // 1. Greetings & Bot Identity
+  if (/^(hi|hello|hey|yo|sup|greetings|good morning|good evening|howdy)/.test(q) || /who are you|what are you|what is clippy/.test(q)) {
     return {
-      topic: "Skills & Design Stack",
-      answer: "Varun specializes in UI/UX & Product Design with modern prototyping workflows:\n• **Design Tools:** Figma, Figma AI, Adobe XD, Photoshop, Illustrator, FigJam\n• **AI Tools:** Uizard, Galileo AI, Visily, Figma Magician, Figma Automator\n• **Core UX:** Wireframing, Rapid Prototyping, User Research, Usability Testing, Design Systems\n• **Frontend & Tech:** React.js, Next.js, TypeScript, Tailwind CSS, HTML5/CSS3, Git",
-      path: "Resume > SKILLS",
-      appId: "resume",
-      appName: "Resume App",
-      actionText: "Open Resume App",
+      topic: "Clippy • Varun's AI Guide",
+      answer: "Hey there! I am **Clippy**, your interactive AI assistant in VarunOS. I can answer any questions about Varun Sehgal's UI/UX design case studies, frontend engineering, vibecoded AI systems, work experience, or help you launch desktop apps directly.\n\nWhat would you like to explore?",
+      path: "VarunOS > Interactive Assistant",
+      suggestions: ["Show me featured projects", "What are Varun's skills?", "Open VS Code", "Why hire Varun?"],
+      animation: "Greeting"
+    };
+  }
+
+  // 2. Vibecoding & Generative AI Systems
+  if (/vibe|vibecod|generative|agent|swarm|ast|prompt|ai-core/.test(q)) {
+    return {
+      topic: "Vibecoded Projects & AI Systems",
+      answer: "Varun actively builds **vibecoded product ecosystems** leveraging autonomous LLMs, generative UI AST transformers, and cursor swarm engines:\n• **AI Interview & Prep Platform:** Automated grading modules and live audio telemetry.\n• **Prompt-to-UI Prototyping Engine:** Compiles natural language prompts into production React components and design tokens.\n• **Autonomous Multiplayer Swarm:** Multi-agent cursor collaboration synchronized across the desktop.\n• **Ollama Local LLM Microservice:** Offline quantized streaming inferences.",
+      path: "VS Code App > vibecoded-projects",
+      appId: "vscode",
+      appName: "VS Code Workspace",
+      actionText: "Open VS Code Projects",
+      secondaryPath: "Figma App",
+      secondaryAppId: "figma",
+      suggestions: ["Show me frontend projects", "How can I hire Varun?", "Open Terminal"],
       animation: "GetTechy"
     };
   }
 
-  if (/experience|work|job|intern|unievent|assemble|knaptix|career|freelance/.test(q)) {
+  // 3. Why Hire Varun
+  if (/why hire|why should|value|strengths|hire you|hire varun|superpower|what sets you apart/.test(q)) {
     return {
-      topic: "Work Experience",
-      answer: "Varun has 3+ years experience delivering SaaS and AI products:\n• **UI/UX Designer Intern** at **UniEvent** (Jun 2026 – Nov 2026): Designed user-centric experiences.\n• **Assistant Head of Operations** at **Assemble** (Aug 2025 – Jan 2026): Esports tournament execution.\n• **UI/UX Designer Intern** at **Knaptix Ventures** (Jun 2025 – Aug 2025): 5+ UI/UX interfaces with 40% user satisfaction increase.\n• **Freelance UI/UX Designer** (Jan 2024 – Present): 10+ projects with 95% retention.",
-      path: "Resume > PROFESSIONAL EXPERIENCE",
-      appId: "resume",
-      appName: "Resume App",
-      actionText: "Open Resume App",
-      animation: "Explain"
-    };
-  }
-
-  if (/project|built|portfolio|app|figma|interview|eventflow|expensify|codesrijan/.test(q)) {
-    return {
-      topic: "Featured Projects",
-      answer: "Varun has designed several high-impact product interfaces:\n• **AI Interview & Prep Platform:** AI SaaS with security & evaluation grading modules.\n• **EventFlow (Event Ticketing SaaS):** 4-step flow reducing drop-off by 30% with 50+ component design system.\n• **Expensify (Budget Tracker):** 17+ screens optimized for under-5-second transaction logging.\n• **CodeSrijan Hackathon:** Complete digital platform and branding for 200+ participants.",
-      path: "Figma App & Finder App",
-      appId: "figma",
-      appName: "Figma App",
-      actionText: "Open Figma Showcase",
-      secondaryPath: "Resume > DESIGN PROJECTS",
+      topic: "Why Hire Varun Sehgal?",
+      answer: "Here is why Varun is a high-leverage addition to any high-growth product or design team:\n• **End-to-End Product Design:** From initial user research and wireframing to high-fidelity Figma components and design systems.\n• **Technical Fluency (Design Engineering):** Can build what he designs using React, Next.js, TypeScript, and Tailwind CSS.\n• **Measurable Business Impact:** Reduced checkout drop-off by 30% on EventFlow, and boosted user satisfaction by 40% at Knaptix.\n• **Vibecoding Speed:** Uses AI workflows (Uizard, Galileo, Figma Automator) to accelerate prototype cycles by 3-5x.",
+      path: "Contact App & Resume App",
+      appId: "contact",
+      appName: "Contact App",
+      actionText: "Hire / Contact Varun",
       secondaryAppId: "resume",
+      suggestions: ["What projects has Varun built?", "Download Resume PDF", "Tell me about work experience"],
       animation: "Congratulate"
     };
   }
 
-  if (/education|college|degree|juet|jaypee|study|university|school|btech|graduat/.test(q)) {
+  // 4. Skills & Design Stack
+  if (/skill|tech|stack|language|tool|figma|adobe|photoshop|illustrator|prototype|react|next|typescript|tailwind|wireframe/.test(q)) {
     return {
-      topic: "Education",
-      answer: "Varun is pursuing his **Bachelor of Technology in Computer Science & Engineering (CSE)** at **Jaypee University of Engineering and Technology (JUET)** (Aug 2023 – May 2027) in Guna, India.",
-      path: "Resume > EDUCATION",
+      topic: "Design Tools & Technical Stack",
+      answer: "Varun bridges the gap between high-fidelity UI/UX design and frontend engineering:\n• **Design Tools:** Figma, Figma AI, Adobe XD, Photoshop, Illustrator, FigJam\n• **AI Prototyping:** Uizard, Galileo AI, Visily, Figma Magician, Figma Automator\n• **Core UX:** Wireframing, Rapid Prototyping, User Research, Usability Testing, Design Systems\n• **Frontend & Tech:** React.js, Next.js, TypeScript, Tailwind CSS, HTML5/CSS3, Git",
+      path: "Finder App > Tech Stack (or Resume App)",
+      appId: "finder",
+      appName: "Finder App",
+      actionText: "Explore in Finder",
+      secondaryAppId: "resume",
+      suggestions: ["Show me featured projects", "View work experience", "Open Figma"],
+      animation: "GetTechy"
+    };
+  }
+
+  // 5. Work Experience
+  if (/experience|work|job|intern|career|unievent|assemble|knaptix|freelance|company|role/.test(q)) {
+    return {
+      topic: "Professional Work Experience",
+      answer: "Varun has 3+ years experience delivering SaaS and AI products:\n• **UI/UX Designer Intern** at **UniEvent** (Jun 2026 – Nov 2026): Designed user-centric experiences.\n• **Assistant Head of Operations** at **Assemble** (Aug 2025 – Jan 2026): Esports tournament execution.\n• **UI/UX Designer Intern** at **Knaptix Ventures** (Jun 2025 – Aug 2025): 5+ UI/UX interfaces with 40% user satisfaction increase.\n• **Freelance UI/UX Designer** (Jan 2024 – Present): 10+ projects with 95% client retention.",
+      path: "Resume App > PROFESSIONAL EXPERIENCE",
       appId: "resume",
       appName: "Resume App",
       actionText: "Open Resume App",
+      suggestions: ["Show me projects", "How to contact Varun?", "Download Resume"],
+      animation: "Explain"
+    };
+  }
+
+  // 6. Projects & Case Studies
+  if (/project|built|case study|eventflow|expensify|interview|codesrijan|portfolio|apps/.test(q)) {
+    return {
+      topic: "Featured Projects & Case Studies",
+      answer: "Varun has architected high-impact web and mobile product designs:\n• **AI Interview & Prep Platform:** AI SaaS with security & grading modules.\n• **EventFlow (Event Ticketing SaaS):** 4-step flow reducing drop-off by 30% with 50+ component design system.\n• **Expensify (Budget Tracker):** 17+ screens optimized for under-5-second transaction logging.\n• **CodeSrijan Hackathon:** Complete digital platform and branding for 200+ participants.",
+      path: "Figma App & VS Code App",
+      appId: "figma",
+      appName: "Figma App",
+      actionText: "Open Figma Showcase",
+      secondaryAppId: "vscode",
+      suggestions: ["What are Varun's skills?", "Open VS Code", "Download Resume"],
+      animation: "Congratulate"
+    };
+  }
+
+  // 7. Education
+  if (/education|college|university|degree|juet|jaypee|guna|school|study|btech|cse|graduat/.test(q)) {
+    return {
+      topic: "Education & Academics",
+      answer: "Varun is pursuing his **Bachelor of Technology in Computer Science & Engineering (CSE)** at **Jaypee University of Engineering and Technology (JUET)** (Aug 2023 – May 2027) in Guna, India.",
+      path: "Resume App > EDUCATION",
+      appId: "resume",
+      appName: "Resume App",
+      actionText: "Open Resume App",
+      suggestions: ["Show me skills", "What projects has Varun built?", "Why hire Varun?"],
       animation: "Writing"
     };
   }
 
-  if (/contact|email|phone|hire|call|reach|message|linkedin|github|behance|social|freelance|collaborat/.test(q)) {
+  // 8. Contact & Hiring
+  if (/contact|email|phone|hire|call|reach|message|linkedin|github|behance|rate|social|connect/.test(q)) {
     return {
       topic: "Contact & Connect",
       answer: "You can reach Varun directly:\n• **Email:** varun.sehgal02@gmail.com\n• **Phone:** +91 9399361193\n• **Location:** Gwalior, Madhya Pradesh, India\n• **GitHub:** github.com/varunsehgal05\n• **LinkedIn:** linkedin.com/in/varunsehgal02\n• **Behance:** behance.net/varunsehgal3\n• **Portfolio:** varunsehgal.runs-on.dev\nVarun is open for **Full-time UI/UX roles** and **Freelance projects**!",
-      path: "Contact > compose_message.exe",
+      path: "Contact App (Mail compose client)",
       appId: "contact",
       appName: "Contact App",
       actionText: "Open Contact Form",
+      suggestions: ["Download Resume PDF", "Tell me about experience", "Show featured projects"],
       animation: "SendMail"
     };
   }
 
-  if (/resume|cv|pdf|download/.test(q)) {
+  // 9. Resume & PDF
+  if (/resume|cv|pdf|download|document/.test(q)) {
     return {
       topic: "Resume & CV",
-      answer: "You can view Varun's complete interactive ATS-optimized resume right here, or download the official PDF directly.",
+      answer: "You can view Varun's complete interactive ATS-optimized resume right here on desktop, or download the official PDF directly.",
       path: "Resume > Varun_Sehgal_Resume.pdf",
       appId: "resume",
       appName: "Resume App",
       actionText: "Open Resume App",
       downloadUrl: "/Varun_Sehgal_Resume_Updated.pdf",
+      suggestions: ["Show me tech skills", "How to contact Varun?", "Open Figma"],
       animation: "Save"
     };
   }
 
-  if (/wallpaper|theme|shortcut|background|alt/.test(q)) {
+  // 10. Desktop Navigation & Shortcuts
+  if (/wallpaper|theme|shortcut|background|alt|how to use|desktop|safari|terminal|vscode|finder/.test(q)) {
     return {
-      topic: "Desktop Shortcuts & Wallpapers",
-      answer: "Here are some cool shortcuts in VarunOS:\n• **Alt + 1**: macOS Monterey Wallpaper\n• **Alt + 2**: Abstract Blue Wallpaper\n• **Alt + 3**: Big Sur Abstract Wallpaper\n• **Clippy Assistant**: Click my avatar anytime to ask questions or explore apps!",
-      path: "VarunOS > Desktop Settings (Alt + 1 / 2 / 3)",
+      topic: "VarunOS Desktop Navigation & Shortcuts",
+      answer: "Here are some awesome tips for navigating VarunOS:\n• **Alt + 1 / 2 / 3**: Switch between macOS Monterey, Blue Abstract, and Big Sur wallpapers.\n• **Double-Click Titlebars**: Toggle full screen with native macOS zoom animations.\n• **Dock Click**: Bounces the app icon into view with genuine macOS physics.\n• **Apps:** VS Code, Figma, Safari, Terminal, Resume, Contact, and Settings.",
+      path: "VarunOS > System Settings",
+      appId: "settings",
+      appName: "Settings App",
+      actionText: "Open Settings",
+      suggestions: ["Open Terminal", "Open Safari", "What are Varun's skills?"],
       animation: "GetWizardy"
     };
   }
 
-  // Default / About Varun
+  // 11. Intelligent Fallback
   return {
-    topic: "About Varun",
-    answer: "Varun Sehgal is a **UI/UX Designer & Product Designer** with 3+ years experience delivering SaaS and AI product experiences. He studies CSE at Jaypee University of Engineering and Technology (JUET) and has designed platforms including AI Interview Prep, EventFlow, and Expensify.\n\nWhat would you like to explore?",
-    path: "Resume App & Contact App",
-    appId: "resume",
-    appName: "Resume App",
-    actionText: "Explore Resume",
-    secondaryAppId: "contact",
-    animation: "Greeting"
+    topic: `VarunOS AI Guide: "${query}"`,
+    answer: `Varun Sehgal is a **Lead UI/UX Designer & Product Designer** with 3+ years experience delivering SaaS platforms, design systems, and vibecoded AI tools. He is pursuing CSE at Jaypee University (JUET) and is open for **Full-Time Design Roles** and **Freelance Collaborations**.\n\nClick any topic below to dive deeper:`,
+    path: "VarunOS > Navigation Hub",
+    suggestions: ["Show me featured projects", "What are Varun's skills?", "Tell me about work experience", "How to contact Varun?"],
+    appId: "finder",
+    appName: "Finder App",
+    actionText: "Browse Finder Portfolio",
+    animation: "Explain"
   };
 };
 
@@ -148,10 +209,11 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
   const [isMuted, setIsMuted] = useState(true);
   const isMutedRef = useRef(true);
 
-  // Dialog State
+  // Dialog State & Multi-turn Message History
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [inputText, setInputText] = useState("");
-  const [activeQnA, setActiveQnA] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [isThinking, setIsThinking] = useState(false);
 
   useEffect(() => {
     isChatOpenRef.current = isChatOpen;
@@ -209,46 +271,58 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
     });
   };
 
-  // Auto-scroll dialog body when an answer appears
+  // Auto-scroll dialog body when messages appear
   useEffect(() => {
-    if (activeQnA && bodyRef.current) {
+    if (bodyRef.current) {
       setTimeout(() => {
         if (bodyRef.current) {
           bodyRef.current.scrollTo({ top: bodyRef.current.scrollHeight, behavior: 'smooth' });
         }
       }, 50);
     }
-  }, [activeQnA]);
+  }, [messages, isThinking]);
 
-  // Handle asking question
+  // Handle asking question with thinking simulation & animation
   const handleAsk = (queryText) => {
     if (!queryText || !queryText.trim()) return;
     const q = queryText.trim();
-    const result = getAnswerForQuery(q);
-    setActiveQnA({
-      query: q,
-      ...result
-    });
+    
+    // Append User Message
+    const userMsgId = `user-${Date.now()}`;
+    setMessages(prev => [...prev, { id: userMsgId, role: 'user', content: q }]);
     setInputText("");
+    setIsThinking(true);
 
-    // Trigger Clippy's corresponding animation
+    // Trigger Clippy's animation
     if (agentRef.current) {
       if (agentRef.current._balloon) {
         agentRef.current._balloon.hide(true);
       }
-      if (result.animation) {
-        agentRef.current.play(result.animation);
-      } else {
-        agentRef.current.animate();
-      }
+      agentRef.current.play("Thinking");
     }
+
+    // Simulate smart thinking delay
+    setTimeout(() => {
+      const result = getAIResponse(q);
+      const aiMsgId = `ai-${Date.now()}`;
+      setMessages(prev => [...prev, { id: aiMsgId, role: 'assistant', data: result }]);
+      setIsThinking(false);
+
+      if (agentRef.current) {
+        if (result.animation) {
+          agentRef.current.play(result.animation);
+        } else {
+          agentRef.current.animate();
+        }
+      }
+    }, 380);
   };
 
   useEffect(() => {
     let hintInterval = null;
     let isMounted = true;
 
-    // Clean up any rogue clippy elements left in body from previous mounts or HMR
+    // Clean up any rogue clippy elements left in body
     document.querySelectorAll('.pixel-clippy, .clippy').forEach(el => el.remove());
 
     const loadClippy = async () => {
@@ -261,7 +335,7 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
 
         agentRef.current = agent;
 
-        // Immediately mute all sounds by default
+        // Mute all sounds by default
         if (agent._animator) {
           const originalPlaySound = agent._animator._playSound;
           agent._animator._playSound = function() {
@@ -282,12 +356,10 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
         if (agent._el) {
           agent._el.classList.add('pixel-clippy');
 
-          // Detach clippyjs's built-in mousedown/drag handler to avoid drifting/stranding
           if (agent._mouseDownHandle) {
             agent._el.removeEventListener('mousedown', agent._mouseDownHandle);
           }
 
-          // Single click toggles chat assistant dialog
           agent._el.addEventListener('click', (e) => {
             e.stopPropagation();
             setIsChatOpen((prev) => {
@@ -305,29 +377,23 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
 
         agent.show(true);
 
-        // Reposition balloon after load so it sits directly above Clippy
         setTimeout(() => {
-          if (agent._balloon) {
-            agent._balloon.reposition();
-          }
+          if (agent._balloon) agent._balloon.reposition();
         }, 400);
 
-        // Friendly greeting after short delay
         setTimeout(() => {
           if (!isMounted) return;
           agent.play("Greeting");
           agent.speak("Click me to ask anything about Varun! 💬");
         }, 1200);
 
-        // Periodic hints when active and dialog closed
         hintInterval = setInterval(() => {
           if (document.body.classList.contains('is-idle') || isChatOpenRef.current) return;
-
           if (Math.random() > 0.5) {
             agent.animate();
           } else {
             agent.play("GetAttention");
-            agent.speak(hints[Math.floor(Math.random() * hints.length)]);
+            agent.speak(HINTS[Math.floor(Math.random() * HINTS.length)]);
           }
         }, 25000);
 
@@ -361,7 +427,7 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
 
     if (isIdle) {
       document.body.classList.add('is-idle');
-      setIsChatOpen(false); // Close dialog on idle
+      setIsChatOpen(false);
       agent.play("Searching");
       agent.speak("Are you still there? When are you coming back?");
     } else {
@@ -393,8 +459,8 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
           <div className="clippy-dialog-header">
             <div className="clippy-dialog-title">
               <span className="clippy-title-emoji">📎</span>
-              <span className="clippy-title-text">Clippy • Varun's Guide</span>
-              <span className="clippy-dialog-badge">Online</span>
+              <span className="clippy-title-text">Clippy • Varun's AI Guide</span>
+              <span className="clippy-dialog-badge">AI Online</span>
             </div>
 
             <div className="clippy-header-actions">
@@ -419,7 +485,7 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
 
           {/* Quick Suggestion Chips */}
           <div className="clippy-chips-scroll">
-            {suggestionChips.map((chip, idx) => (
+            {SUGGESTION_CHIPS.map((chip, idx) => (
               <button
                 key={idx}
                 type="button"
@@ -431,94 +497,128 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
             ))}
           </div>
 
-          {/* Body / Answer Area */}
+          {/* Body / Answer Area with Multi-turn history */}
           <div className="clippy-dialog-body" ref={bodyRef}>
-            {!activeQnA ? (
+            {messages.length === 0 ? (
               <div className="clippy-welcome-msg">
                 <div className="clippy-welcome-header">
                   <span className="clippy-welcome-avatar">👋</span>
                   <div className="clippy-welcome-heading">
                     <h4>What do you want to know about Varun?</h4>
-                    <p>Interactive Assistant & System Navigator</p>
+                    <p>AI Assistant & System Navigator</p>
                   </div>
                 </div>
                 <p className="clippy-welcome-desc">
-                  Ask about skills, work experience, featured projects, education, or how to contact. I will answer and show you the exact desktop path to explore more!
+                  Ask about UI/UX skills, vibecoded AI projects, work experience, or how to contact him. I will answer and launch the exact desktop app for you!
                 </p>
                 <div className="clippy-welcome-hint">
                   <span>💡</span>
-                  <span>Tap any suggestion chip above or type your question below.</span>
+                  <span>Tap any suggestion chip above or ask anything below.</span>
                 </div>
               </div>
             ) : (
-              <div className="clippy-qa-card">
-                {/* User Query Bubble */}
-                <div className="clippy-user-query">
-                  {activeQnA.query}
-                </div>
+              <div className="clippy-chat-thread">
+                {messages.map((msg) => {
+                  if (msg.role === 'user') {
+                    return (
+                      <div key={msg.id} className="clippy-user-query">
+                        {msg.content}
+                      </div>
+                    );
+                  }
 
-                {/* Clippy Answer Box */}
-                <div className="clippy-ans-box">
-                  <div className="clippy-ans-header">
-                    <Sparkles size={13} />
-                    <span>{activeQnA.topic}</span>
-                  </div>
+                  const data = msg.data;
+                  return (
+                    <div key={msg.id} className="clippy-ans-box">
+                      <div className="clippy-ans-header">
+                        <Sparkles size={13} />
+                        <span>{data.topic}</span>
+                      </div>
 
-                  <div className="clippy-ans-text">
-                    {renderFormattedText(activeQnA.answer)}
-                  </div>
+                      <div className="clippy-ans-text">
+                        {renderFormattedText(data.answer)}
+                      </div>
 
-                  {/* Path Recommendation Box */}
-                  <div className="clippy-path-card">
-                    <div className="clippy-path-label">
-                      <Folder size={12} />
-                      <span>Where to find more on VarunOS:</span>
-                    </div>
-                    <div className="clippy-path-val">
-                      {activeQnA.path}
-                    </div>
+                      {/* Path Recommendation Box */}
+                      {data.path && (
+                        <div className="clippy-path-card">
+                          <div className="clippy-path-label">
+                            <Folder size={12} />
+                            <span>Recommended App on VarunOS:</span>
+                          </div>
+                          <div className="clippy-path-val">
+                            {data.path}
+                          </div>
 
-                    {/* Action Buttons to open the related app directly */}
-                    <div className="clippy-actions-row">
-                      {activeQnA.appId && onOpenApp && (
-                        <button
-                          className="clippy-action-btn"
-                          onClick={() => {
-                            onOpenApp(activeQnA.appId);
-                            setIsChatOpen(false);
-                          }}
-                        >
-                          <ExternalLink size={12} />
-                          {activeQnA.actionText || `Open ${activeQnA.appName}`}
-                        </button>
+                          <div className="clippy-actions-row">
+                            {data.appId && onOpenApp && (
+                              <button
+                                className="clippy-action-btn"
+                                onClick={() => {
+                                  onOpenApp(data.appId);
+                                  setIsChatOpen(false);
+                                }}
+                              >
+                                <ExternalLink size={12} />
+                                {data.actionText || `Open ${data.appName}`}
+                              </button>
+                            )}
+
+                            {data.secondaryAppId && onOpenApp && (
+                              <button
+                                className="clippy-action-btn secondary"
+                                onClick={() => {
+                                  onOpenApp(data.secondaryAppId);
+                                  setIsChatOpen(false);
+                                }}
+                              >
+                                <ExternalLink size={12} />
+                                Open Related App
+                              </button>
+                            )}
+
+                            {data.downloadUrl && (
+                              <a
+                                href={data.downloadUrl}
+                                download
+                                className="clippy-action-btn"
+                              >
+                                <Download size={12} />
+                                Download PDF
+                              </a>
+                            )}
+                          </div>
+                        </div>
                       )}
 
-                      {activeQnA.secondaryAppId && onOpenApp && (
-                        <button
-                          className="clippy-action-btn secondary"
-                          onClick={() => {
-                            onOpenApp(activeQnA.secondaryAppId);
-                            setIsChatOpen(false);
-                          }}
-                        >
-                          <ExternalLink size={12} />
-                          Open App
-                        </button>
-                      )}
-
-                      {activeQnA.downloadUrl && (
-                        <a
-                          href={activeQnA.downloadUrl}
-                          download
-                          className="clippy-action-btn"
-                        >
-                          <Download size={12} />
-                          Download PDF
-                        </a>
+                      {/* Follow-up question chips */}
+                      {data.suggestions && (
+                        <div className="clippy-followups-row">
+                          <span className="followup-label">Follow-up:</span>
+                          {data.suggestions.map((sug, sIdx) => (
+                            <button
+                              key={sIdx}
+                              className="clippy-followup-chip"
+                              onClick={() => handleAsk(sug)}
+                            >
+                              {sug}
+                            </button>
+                          ))}
+                        </div>
                       )}
                     </div>
+                  );
+                })}
+
+                {/* Thinking indicator */}
+                {isThinking && (
+                  <div className="clippy-thinking-bubble">
+                    <span className="thinking-text">Clippy is thinking</span>
+                    <span className="thinking-dot"></span>
+                    <span className="thinking-dot"></span>
+                    <span className="thinking-dot"></span>
                   </div>
-                </div>
+                )}
               </div>
             )}
           </div>
@@ -536,13 +636,13 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
               className="clippy-text-input"
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
-              placeholder="Ask anything about Varun..."
+              placeholder="Ask anything about Varun or type a command..."
               autoFocus
             />
             <button 
               type="submit" 
               className="clippy-send-btn" 
-              disabled={!inputText.trim()}
+              disabled={!inputText.trim() || isThinking}
               title="Send question"
             >
               <Send size={14} />

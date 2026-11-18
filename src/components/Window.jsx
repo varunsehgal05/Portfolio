@@ -1,5 +1,5 @@
 import { Rnd } from 'react-rnd';
-import { Folder, LayoutGrid, List } from 'lucide-react';
+import { Folder } from 'lucide-react';
 import './Window.css';
 import { useState, useEffect, useRef } from 'react';
 import ResumeApp from './ResumeApp';
@@ -9,6 +9,7 @@ import FinderApp from './FinderApp';
 import SafariApp from './SafariApp';
 import TerminalApp from './TerminalApp';
 import SettingsApp from './SettingsApp';
+import VsCodeApp from './VsCodeApp';
 
 const Window = ({ 
   app, 
@@ -147,41 +148,7 @@ const Window = ({
       case 'settings':
         return <SettingsApp userName={userName} onReplaySwarm={onReplaySwarm} />;
       case 'vscode':
-        return (
-          <div className="window-content-inner vscode-content">
-            <div className="sidebar">
-              <h3>EXPLORER</h3>
-              <ul>
-                <li>Portfolio</li>
-                <li>Projects</li>
-                <li>Experiments</li>
-                <li>GitHub</li>
-                <li className="active-file">README.md</li>
-              </ul>
-            </div>
-            <div className="editor">
-              <div className="editor-tab">README.md</div>
-              <div className="editor-code">
-                <pre>
-                  <code>
-                    {`# Varun Sehgal
-
-UI/UX Designer & Software Engineer
-Graphic Designer
-Motion Graphics Artist
-
-> Designing digital experiences...
-`}
-                  </code>
-                </pre>
-                <br />
-                <a href={app.url || 'https://github.com/varunsehgal05'} target="_blank" rel="noreferrer" className="action-button">
-                  Open GitHub
-                </a>
-              </div>
-            </div>
-          </div>
-        );
+        return <VsCodeApp />;
       case 'resume':
         return <ResumeApp />;
       case 'contact':
@@ -209,7 +176,7 @@ Motion Graphics Artist
 
   return (
     <Rnd
-      className={`app-window ${isActive ? 'active' : ''} ${isMaximized ? 'maximized' : ''} ${getAnimClass()}`}
+      className={`app-window ${isActive ? 'active' : ''} ${isMaximized ? 'maximized' : ''} ${isInteracting ? 'interacting' : ''} ${getAnimClass()}`}
       size={isMaximized ? { width: maximizedWidth, height: maximizedHeight } : size}
       position={isMaximized ? { x: 0, y: 0 } : position}
       onDragStart={() => setIsInteracting(true)}
@@ -227,7 +194,7 @@ Motion Graphics Artist
       }}
       onMouseDown={onFocus}
       dragHandleClassName="window-titlebar"
-      cancel=".mac-traffic-lights, .mac-btn, .titlebar-view-toggles, button, a, input"
+      cancel=".mac-traffic-lights, .mac-btn, button, a, input"
       disableDragging={isMaximized || animState !== 'visible'}
       enableResizing={!isMaximized && animState === 'visible'}
       minWidth={320}
@@ -236,8 +203,12 @@ Motion Graphics Artist
       style={{ zIndex: isMaximized ? (isActive ? 300 : 150) : (isActive ? 100 : 10) }}
     >
       <div ref={windowInnerRef} className={`window-inner glass-dark ${getAnimClass()}`}>
-        {/* macOS Style Titlebar */}
-        <div className="window-titlebar" onDoubleClick={handleMaximize}>
+        {/* macOS Style Titlebar - double-click to toggle fullscreen */}
+        <div 
+          className="window-titlebar" 
+          onDoubleClick={handleMaximize}
+          title="Double-click to toggle full screen"
+        >
           <div className="mac-traffic-lights">
             <button
               className="mac-btn close"
@@ -271,7 +242,7 @@ Motion Graphics Artist
                 e.stopPropagation();
                 handleMaximize();
               }}
-              title={isMaximized ? "Restore" : "Zoom"}
+              title={isMaximized ? "Restore Window" : "Full Screen"}
             >
               <span className="mac-symbol">+</span>
             </button>
@@ -282,19 +253,10 @@ Motion Graphics Artist
             <span>{app.title || (app.id === 'finder' ? 'VarunOS — Portfolio & Projects' : app.name)}</span>
           </div>
 
-          <div className="titlebar-view-toggles">
-            <div className="view-toggle-group">
-              <button className="view-toggle-btn active" title="Grid View">
-                <LayoutGrid size={12} />
-              </button>
-              <button className="view-toggle-btn" title="List View">
-                <List size={12} />
-              </button>
-            </div>
-          </div>
+          <div className="titlebar-right-spacer" />
         </div>
 
-        <div className={`window-content ${app.id === 'resume' || app.id === 'contact' || app.id === 'figma' || app.id === 'finder' || app.id === 'safari' || app.id === 'settings' ? 'no-padding' : ''}`}>
+        <div className={`window-content ${app.id === 'resume' || app.id === 'contact' || app.id === 'figma' || app.id === 'finder' || app.id === 'safari' || app.id === 'settings' || app.id === 'vscode' || app.id === 'terminal' ? 'no-padding' : ''}`}>
           {renderContent()}
         </div>
       </div>

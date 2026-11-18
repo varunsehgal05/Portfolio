@@ -94,7 +94,17 @@ const ContactApp = () => {
         {/* Profile Card */}
         <div className="contact-profile-card">
           <div className="profile-avatar-wrap">
-            <div className="profile-avatar-gradient">VS</div>
+            <img 
+              src="/varun.jpg" 
+              alt="Varun Sehgal" 
+              className="profile-avatar-img"
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+                const fallback = e.currentTarget.parentElement?.querySelector('.profile-avatar-gradient');
+                if (fallback) fallback.style.display = 'flex';
+              }}
+            />
+            <div className="profile-avatar-gradient" style={{ display: 'none' }}>VS</div>
             <span className="profile-status-indicator" title="Available for opportunities"></span>
           </div>
           <div className="profile-info">
