@@ -11,21 +11,25 @@
 }
 
 .app-window.maximized {
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   border-radius: 8px 8px 0 0;
-  top: 28px !important;
-  height: calc(100vh - 104px) !important;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
 }
 
 .app-window.minimized {
   display: none !important;
 }
 
-.app-window.minimizing,
-.app-window.restoring {
+.app-window.minimizing {
   overflow: visible !important;
   box-shadow: none !important;
   pointer-events: none;
+}
+
+.app-window.restoring {
+  overflow: visible !important;
+  box-shadow: none !important;
+  pointer-events: auto;
 }
 
 .window-inner {
@@ -163,6 +167,14 @@
   padding: 0;
   position: relative;
   transition: all 0.15s ease;
+}
+
+.mac-btn::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  cursor: pointer;
 }
 
 .mac-btn.close {

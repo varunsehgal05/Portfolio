@@ -49,8 +49,9 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
   const closeApp = (appId) => {
     setOpenWindows(prev => prev.filter(id => id !== appId));
     setMinimizedWindows(prev => prev.filter(id => id !== appId));
+    setMaximizedWindows(prev => prev.filter(id => id !== appId));
     if (activeWindow === appId) {
-      const remaining = openWindows.filter(id => id !== appId);
+      const remaining = openWindows.filter(id => id !== appId && !minimizedWindows.includes(id));
       setActiveWindow(remaining.length > 0 ? remaining[remaining.length - 1] : null);
     }
   };

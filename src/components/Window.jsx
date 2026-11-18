@@ -28,10 +28,14 @@ const Window = ({
   const isMaximized = controlledMaximized !== undefined ? controlledMaximized : localMaximized;
   const [isInteracting, setIsInteracting] = useState(false);
   const [animState, setAnimState] = useState(isMinimized ? 'hidden' : 'visible');
-  const prevMinimized = useRef(isMinimized);
+  const isInitialMount = useRef(true);
   const windowInnerRef = useRef(null);
+  const preMaxRef = useRef(null);
 
   const handleMaximize = () => {
+    if (!isMaximized) {
+      preMaxRef.current = { size, position };
+    }
     if (onToggleMaximize) {
       onToggleMaximize();
     } else {
@@ -68,26 +72,28 @@ const Window = ({
   };
 
   useEffect(() => {
-    if (prevMinimized.current !== isMinimized) {
-      if (isMinimized) {
-        updateGenieCoords();
-        setAnimState('minimizing');
-        const timer = setTimeout(() => {
-          setAnimState('hidden');
-        }, 460);
-        return () => clearTimeout(timer);
-      } else {
-        setAnimState('restoring');
-        requestAnimationFrame(() => {
-          updateGenieCoords();
-        });
-        const timer = setTimeout(() => {
-          setAnimState('visible');
-        }, 420);
-        return () => clearTimeout(timer);
-      }
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
     }
-    prevMinimized.current = isMinimized;
+
+    if (isMinimized) {
+      updateGenieCoords();
+      setAnimState('minimizing');
+      const timer = setTimeout(() => {
+        setAnimState('hidden');
+      }, 460);
+      return () => clearTimeout(timer);
+    } else {
+      setAnimState('restoring');
+      requestAnimationFrame(() => {
+        updateGenieCoords();
+      });
+      const timer = setTimeout(() => {
+        setAnimState('visible');
+      }, 420);
+      return () => clearTimeout(timer);
+    }
   }, [isMinimized]);
 
   // Default bounds and position based on app type
@@ -191,13 +197,21 @@ Motion Graphics Artist
     }
   };
 
-  const maximizedHeight = typeof window !== 'undefined' ? Math.max(300, window.innerHeight - 28 - 76) : 600;
+  const maximizedHeight = typeof window !== 'undefined' ? Math.max(300, window.innerHeight - 28 - 72) : 600;
+  const maximizedWidth = typeof window !== 'undefined' ? window.innerWidth : 1200;
+
+  useEffect(() => {
+    if (!isMaximized && preMaxRef.current) {
+      setSize(preMaxRef.current.size);
+      setPosition(preMaxRef.current.position);
+    }
+  }, [isMaximized]);
 
   return (
     <Rnd
       className={`app-window ${isActive ? 'active' : ''} ${isMaximized ? 'maximized' : ''} ${getAnimClass()}`}
-      size={isMaximized ? { width: '100%', height: maximizedHeight } : size}
-      position={isMaximized ? { x: 0, y: 28 } : position}
+      size={isMaximized ? { width: maximizedWidth, height: maximizedHeight } : size}
+      position={isMaximized ? { x: 0, y: 0 } : position}
       onDragStart={() => setIsInteracting(true)}
       onDragStop={(e, d) => {
         setIsInteracting(false);
@@ -213,6 +227,7 @@ Motion Graphics Artist
       }}
       onMouseDown={onFocus}
       dragHandleClassName="window-titlebar"
+      cancel=".mac-traffic-lights, .mac-btn, .titlebar-view-toggles, button, a, input"
       disableDragging={isMaximized || animState !== 'visible'}
       enableResizing={!isMaximized && animState === 'visible'}
       minWidth={320}
@@ -226,6 +241,8 @@ Motion Graphics Artist
           <div className="mac-traffic-lights">
             <button
               className="mac-btn close"
+              onMouseDown={(e) => e.stopPropagation()}
+              onTouchStart={(e) => e.stopPropagation()}
               onClick={(e) => {
                 e.stopPropagation();
                 onClose();
@@ -236,6 +253,8 @@ Motion Graphics Artist
             </button>
             <button
               className="mac-btn minimize"
+              onMouseDown={(e) => e.stopPropagation()}
+              onTouchStart={(e) => e.stopPropagation()}
               onClick={(e) => {
                 e.stopPropagation();
                 onMinimize?.();
@@ -246,6 +265,8 @@ Motion Graphics Artist
             </button>
             <button
               className="mac-btn maximize"
+              onMouseDown={(e) => e.stopPropagation()}
+              onTouchStart={(e) => e.stopPropagation()}
               onClick={(e) => {
                 e.stopPropagation();
                 handleMaximize();
