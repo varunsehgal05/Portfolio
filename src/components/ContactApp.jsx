@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import FirebaseImage from './FirebaseImage';
 import { 
   Send, 
   Check, 
@@ -112,8 +113,9 @@ const ContactApp = () => {
         {/* Profile Card */}
         <div className="contact-profile-card">
           <div className="profile-avatar-wrap">
-            <img 
-              src="/varun.jpg" 
+            <FirebaseImage 
+              storagePath="profile/varun.jpg"
+              fallbackSrc="/varun.jpg" 
               alt="Varun Sehgal" 
               className="profile-avatar-img"
               onError={(e) => {

@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import FirebaseImage from './FirebaseImage';
 import './FigmaApp.css';
 
 const CREATIVE_NOTES = [
@@ -277,8 +278,9 @@ const FigmaApp = () => {
           {/* Varun Profile Link */}
           <div className="nav-profile-link" onClick={() => setActiveTab('home')}>
             <div className="nav-avatar-circle">
-              <img 
-                src="/varun.jpg" 
+              <FirebaseImage 
+                storagePath="profile/varun.jpg"
+                fallbackSrc="/varun.jpg"
                 alt="Varun Sehgal" 
                 className="nav-avatar-img"
                 onError={(e) => { e.currentTarget.style.display = 'none'; }}
@@ -354,7 +356,13 @@ const FigmaApp = () => {
             title="Varun Sehgal on LinkedIn"
           >
             <div className="nav-linkedin-avatar">
-              <img src="/varun.jpg" alt="VS" className="nav-avatar-img" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+              <FirebaseImage 
+                storagePath="profile/varun.jpg"
+                fallbackSrc="/varun.jpg" 
+                alt="VS" 
+                className="nav-avatar-img" 
+                onError={(e) => { e.currentTarget.style.display = 'none'; }} 
+              />
               <span className="nav-avatar-fallback">VS</span>
             </div>
           </a>
@@ -569,7 +577,12 @@ const FigmaApp = () => {
                     <div className="hero-badge-row">
                       <div className="hero-author-pill">
                         <div className="author-thumb">
-                          <img src="/varun.jpg" alt="Varun" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                          <FirebaseImage 
+                            storagePath="profile/varun.jpg"
+                            fallbackSrc="/varun.jpg" 
+                            alt="Varun" 
+                            onError={(e) => { e.currentTarget.style.display = 'none'; }} 
+                          />
                           <span className="author-fallback">VS</span>
                         </div>
                         <span>Varun Sehgal</span>
@@ -825,7 +838,12 @@ const FigmaApp = () => {
                   {/* Master Card */}
                   <div className="about-profile-card">
                     <div className="profile-photo-circle">
-                      <img src="/varun.jpg" alt="Varun Sehgal" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                      <FirebaseImage 
+                        storagePath="profile/varun.jpg"
+                        fallbackSrc="/varun.jpg" 
+                        alt="Varun Sehgal" 
+                        onError={(e) => { e.currentTarget.style.display = 'none'; }} 
+                      />
                       <span className="photo-fallback">VS</span>
                     </div>
 
