@@ -207,6 +207,12 @@ const easeOutBack = (t) => {
 const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
 const lerp = (a, b, t) => a + (b - a) * t;
 
+// C² continuous Ken Perlin smootherstep (zero acceleration jerk & kick at boundaries)
+const smootherstep = (t) => {
+  const c = Math.max(0, Math.min(1, t));
+  return c * c * c * (c * (c * 6 - 15) + 10);
+};
+
 const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) => {
   const [statusMessage, setStatusMessage] = useState('Initializing swarm agents...');
   const [speedMultiplier, setSpeedMultiplier] = useState(1); // 1x or 2x
@@ -240,12 +246,13 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // 4 Cursors State
+  // 5 Collaborative Multiplayer Cursors (Figma / Swarm Rebuild Style)
   const [cursors, setCursors] = useState({
-    varun: { x: 40, y: 40, color: '#A259FF', label: 'Varun Sehgal', action: 'Lead Architect', isDrawing: false, boxBounds: null },
-    user: { x: dims.w - 100, y: 60, color: '#1ABCFE', label: userName || 'You', action: 'Joining...', isDrawing: false, boxBounds: null },
+    varun: { x: 40, y: 18, color: '#A259FF', label: 'Varun Sehgal', action: 'Lead Architect', isDrawing: false, boxBounds: null },
+    user: { x: dims.w - 100, y: 18, color: '#1ABCFE', label: userName || 'You', action: 'Joining...', isDrawing: false, boxBounds: null },
     sarah: { x: 80, y: dims.h - 120, color: '#FF7262', label: 'Sarah Lin', action: 'UI Systems', isDrawing: false, boxBounds: null },
-    alex: { x: dims.w - 120, y: dims.h - 80, color: '#0ACF83', label: 'Alex Chen', action: 'Systems & Dock', isDrawing: false, boxBounds: null }
+    alex: { x: dims.w - 120, y: dims.h - 80, color: '#0ACF83', label: 'Alex Chen', action: 'Systems & Dock', isDrawing: false, boxBounds: null },
+    elena: { x: dims.w / 2, y: dims.h / 2, color: '#F59E0B', label: 'Elena Rostova', action: 'Design Systems', isDrawing: false, boxBounds: null }
   });
 
   const finishSwarm = () => {
@@ -337,7 +344,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           varun: { x: 30, y: 18, trail: [] },
           user: { x: w - 80, y: 18, trail: [] },
           sarah: { x: 60, y: 60, trail: [] },
-          alex: { x: w - 120, y: 180, trail: [] }
+          alex: { x: w - 120, y: 180, trail: [] },
+          elena: { x: w / 2, y: 28, trail: [] }
         };
       }
 
@@ -351,27 +359,28 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
       const dockTargetX = (w - dockTargetW) / 2;
       const dockTargetY = h - 68;
 
+      const microFloat = (phase) => Math.sin(now * 0.003 + phase) * 0.9;
       let agentTargets = {};
 
       // =====================================================================
-      // Phase 1: Top MenuBar Drafting & Alignment (0.0s - 1.3s)
+      // Phase 1: Top MenuBar Drafting & Alignment (0.0s - 1.4s)
       // =====================================================================
-      if (elapsed < 1.3) {
+      if (elapsed < 1.4) {
         setStatusMessage('[1/5] Drafting macOS MenuBar wireframe...');
-        const t = Math.min(1, Math.max(0, elapsed / 1.3));
-        const eased = easeInOutCubic(t);
+        const t = Math.min(1, Math.max(0, elapsed / 1.4));
+        const eased = smootherstep(t);
 
         const menuX = lerp(20, w - 20, eased);
-        const userX = lerp(w - 60, w - 210, eased);
+        const userX = lerp(w - 40, w - 220, eased);
 
-        if (t > 0.68) {
+        if (t > 0.65) {
           updateStage(1, 680); // Reveal MenuBar
         }
 
         agentTargets = {
           varun: {
             x: menuX,
-            y: 18,
+            y: 14,
             color: '#A259FF',
             label: 'Varun Sehgal',
             action: 'Drafting MenuBar',
@@ -381,25 +390,32 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           },
           user: {
             x: userX,
-            y: 18,
+            y: 14,
             color: '#1ABCFE',
             label: userName || 'You',
             action: 'Aligning Status Tray',
             isDrawing: false
           },
           sarah: {
-            x: lerp(60, 56, eased),
-            y: lerp(160, 48, eased),
+            x: lerp(40, 56, eased),
+            y: lerp(200, 48, eased),
             color: '#FF7262',
             label: 'Sarah Lin',
             action: 'Grid Setup: 20px Margin'
           },
           alex: {
-            x: lerp(w - 140, winTargetX, eased),
-            y: lerp(h - 120, winTargetY, eased),
+            x: lerp(w - 120, winTargetX, eased),
+            y: lerp(h - 140, winTargetY, eased),
             color: '#0ACF83',
             label: 'Alex Chen',
-            action: 'Window Origin Snap'
+            action: 'Snapping Window Origin'
+          },
+          elena: {
+            x: lerp(w / 2 - 80, w / 2, eased),
+            y: lerp(80, 28, eased),
+            color: '#F59E0B',
+            label: 'Elena Rostova',
+            action: 'Smart Guide: Y: 28px'
           }
         };
 
@@ -411,17 +427,29 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         });
 
         setActiveGuides([
-          { type: 'h', x1: 0, y1: 28, x2: menuX, y2: 28, label: 'Y: 28px (Top Bar)' }
+          {
+            type: 'h',
+            x1: 0,
+            y1: 28,
+            x2: menuX,
+            y2: 28,
+            color: '#ec4899',
+            dashed: true,
+            label: 'Y: 28px (Top Bar)',
+            pillText: 'Y: 28px',
+            pillX: menuX / 2,
+            pillY: 28
+          }
         ]);
       }
       // =====================================================================
-      // Phase 2: Desktop App Icons Continuous Stamping (1.3s - 2.6s)
+      // Phase 2: Desktop App Icons Continuous Stamping (1.4s - 2.8s)
       // =====================================================================
-      else if (elapsed < 2.6) {
+      else if (elapsed < 2.8) {
         setStatusMessage('[2/5] Stamping & Duplicating Desktop Apps...');
-        const t = Math.min(1, Math.max(0, (elapsed - 1.3) / 1.3));
-        const eased = easeInOutCubic(t);
-        const arcOffset = Math.sin(t * Math.PI) * 40;
+        const t = Math.min(1, Math.max(0, (elapsed - 1.4) / 1.4));
+        const eased = smootherstep(t);
+        const arcOffset = Math.sin(t * Math.PI) * 45;
 
         if (t > 0.65) {
           updateStage(2, 740); // Reveal Desktop Icons
@@ -430,7 +458,6 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         const iconNames = ['Figma', 'VS Code', 'Resume.pdf', 'Contact', 'Trash'];
         const iconYPositions = [48, 126, 204, 282, 360];
         const iconIndex = Math.min(4, Math.floor(t * 5));
-        const currentIconY = iconYPositions[iconIndex];
 
         // Sarah glides down smoothly without teleporting
         const sarahY = lerp(48, 360, eased);
@@ -439,7 +466,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         if (lastStampedIndexRef.current !== iconIndex) {
           lastStampedIndexRef.current = iconIndex;
           soundSynth.playDropThump(220 + iconIndex * 40);
-          triggerRipple(56, currentIconY + 35, '#FF7262');
+          triggerRipple(56, iconYPositions[iconIndex] + 35, '#FF7262');
         }
 
         agentTargets = {
@@ -454,56 +481,74 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             dupBadge: `⌥ Duplicate +${iconIndex + 1}`,
             boxBounds: {
               x: 20,
-              y: currentIconY,
+              y: iconYPositions[iconIndex],
               w: 72,
               h: 70,
               label: `${iconNames[iconIndex]} (72 × 70px)`
             }
           },
+          elena: {
+            x: 92,
+            y: sarahY + 35,
+            color: '#F59E0B',
+            label: 'Elena Rostova',
+            action: 'Smart Guides: 78px Gap',
+            isDrawing: false
+          },
           varun: {
             x: lerp(w - 20, winTargetX + 220, eased),
-            y: lerp(18, winTargetY + 98, eased) + arcOffset,
+            y: lerp(14, winTargetY + 98, eased) + arcOffset,
             color: '#A259FF',
             label: 'Varun Sehgal',
             action: 'Preparing Headline'
           },
           user: {
-            x: lerp(w - 210, winTargetX + winTargetW, eased),
-            y: lerp(18, winTargetY + winTargetH, eased) + arcOffset,
+            x: lerp(w - 220, winTargetX + 80, eased),
+            y: lerp(14, winTargetY + 60, eased) + arcOffset * 1.2,
             color: '#1ABCFE',
             label: userName || 'You',
-            action: 'Extrude Target Ready'
+            action: 'Extrude Handle Ready'
           },
           alex: {
             x: winTargetX,
             y: winTargetY,
             color: '#0ACF83',
             label: 'Alex Chen',
-            action: 'Holding Top-Left Origin'
+            action: 'Holding Top-Left Pivot'
           }
         };
 
         setWireframeData(null);
 
         setActiveGuides([
-          { type: 'v', x1: 20, y1: 40, x2: 20, y2: 440, label: 'X: 20px (Margin)' },
-          { type: 'v', x1: 92, y1: 40, x2: 92, y2: 440, label: 'X: 92px (Column)' }
+          { type: 'v', x1: 20, y1: 40, x2: 20, y2: 440, color: '#ec4899', dashed: true, label: 'X: 20px (Margin)' },
+          {
+            type: 'v',
+            x1: 92,
+            y1: 40,
+            x2: 92,
+            y2: 440,
+            color: '#ec4899',
+            dashed: true,
+            label: 'X: 92px (Column)',
+            pillText: 'ΔY: 78px Equal Spacing',
+            pillX: 132,
+            pillY: sarahY + 35
+          }
         ]);
       }
       // =====================================================================
-      // Phase 3: Center Finder Window & Live Headline Typing (2.6s - 4.4s)
+      // Phase 3: Center Finder Window & Live Headline Typing (2.8s - 4.8s)
       // =====================================================================
-      else if (elapsed < 4.4) {
+      else if (elapsed < 4.8) {
         setStatusMessage('[3/5] Constructing Finder Window & Typing Content...');
-        const t = Math.min(1, Math.max(0, (elapsed - 2.6) / 1.8));
-        const eased = easeInOutCubic(t);
+        const t = Math.min(1, Math.max(0, (elapsed - 2.8) / 2.0));
+        const eased = smootherstep(t);
 
-        const startW = Math.min(440, winTargetW * 0.55);
-        const startH = Math.min(290, winTargetH * 0.55);
-        const curW = lerp(startW, winTargetW, eased);
-        const curH = lerp(startH, winTargetH, eased);
-        const curX = lerp(winTargetX + (winTargetW - startW) / 2, winTargetX, eased);
-        const curY = lerp(winTargetY + (winTargetH - startH) / 2, winTargetY, eased);
+        const curW = lerp(80, winTargetW, eased);
+        const curH = lerp(60, winTargetH, eased);
+        const curX = winTargetX;
+        const curY = winTargetY;
 
         // Smoothly reveal the real window as it reaches 82% completion
         if (t > 0.82) {
@@ -550,19 +595,26 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             caretText: currentTyped
           },
           sarah: {
-            x: lerp(56, curX + curW - 65, eased),
-            y: lerp(360, curY + 50, eased) - Math.sin(t * Math.PI) * 35,
+            x: lerp(56, curX + curW - 80, eased),
+            y: lerp(360, curY + 50, eased) - Math.sin(t * Math.PI) * 40,
             color: '#FF7262',
             label: 'Sarah Lin',
-            action: t > 0.6 ? '4 Projects Grid Auto-Layout' : 'Top-Right Anchor',
-            dupBadge: t > 0.6 ? '4 Projects Grid' : null
+            action: t > 0.5 ? '4 Projects Grid Auto-Layout' : 'Arranging Layout Grid',
+            dupBadge: t > 0.5 ? 'Auto-Layout 2×2' : null
           },
           alex: {
             x: curX,
             y: curY,
             color: '#0ACF83',
             label: 'Alex Chen',
-            action: 'Top-Left Anchor (Snap)'
+            action: 'Top-Left Pivot (0, 0)'
+          },
+          elena: {
+            x: lerp(92, curX + curW / 2, eased),
+            y: lerp(360, curY + curH + 24, eased),
+            color: '#F59E0B',
+            label: 'Elena Rostova',
+            action: 'Smart Guide: Centered Alignment'
           }
         };
 
@@ -579,22 +631,43 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         });
 
         setActiveGuides([
-          { type: 'h', x1: curX - 30, y1: curY, x2: curX + curW + 30, y2: curY, label: 'Y: Window Top' },
-          { type: 'v', x1: curX, y1: curY - 30, x2: curX, y2: curY + curH + 30, label: 'X: Left' }
+          {
+            type: 'v',
+            x1: curX + curW / 2,
+            y1: curY - 20,
+            x2: curX + curW / 2,
+            y2: curY + curH + 24,
+            color: '#ec4899',
+            dashed: true,
+            label: 'Center Alignment',
+            pillText: `Center: ${Math.round(curW)}px`,
+            pillX: curX + curW / 2,
+            pillY: curY + curH + 24
+          },
+          {
+            type: 'diag',
+            x1: curX,
+            y1: curY,
+            x2: curX + curW,
+            y2: curY + curH,
+            color: '#ec4899',
+            dashed: true,
+            diamond: true,
+            opacity: 0.65
+          }
         ]);
       }
       // =====================================================================
-      // Phase 4: Bottom macOS Dock Capsule (4.4s - 5.4s)
+      // Phase 4: Bottom macOS Dock Capsule (4.8s - 5.8s)
       // =====================================================================
-      else if (elapsed < 5.4) {
+      else if (elapsed < 5.8) {
         setStatusMessage('[4/5] Extruding Glass Dock Capsule...');
-        const t = Math.min(1, Math.max(0, (elapsed - 4.4) / 1.0));
-        const easedDock = easeOutBack(t);
-        const easedMove = easeInOutCubic(t);
-        const arcSwoop = Math.sin(t * Math.PI) * 30;
+        const t = Math.min(1, Math.max(0, (elapsed - 4.8) / 1.0));
+        const easedMove = smootherstep(t);
 
-        const curDockW = lerp(180, dockTargetW, Math.min(1, easedDock));
-        const curDockX = (w - curDockW) / 2;
+        const dockSpan = lerp(60, dockTargetW, easedMove);
+        const curLeft = (w - dockSpan) / 2;
+        const curRight = (w + dockSpan) / 2;
         const curDockY = dockTargetY;
 
         if (t > 0.45) {
@@ -603,31 +676,31 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
 
         agentTargets = {
           alex: {
-            x: lerp(winTargetX, curDockX + curDockW, easedMove),
-            y: lerp(winTargetY, curDockY + 28, easedMove) + arcSwoop,
+            x: lerp(winTargetX, curRight, easedMove),
+            y: lerp(winTargetY, curDockY + 28, easedMove),
             color: '#0ACF83',
             label: 'Alex Chen',
             action: 'Extruding Glass Capsule',
             isDrawing: true,
             isCrosshair: true,
             boxBounds: {
-              x: curDockX,
+              x: curLeft,
               y: curDockY,
-              w: curDockW,
+              w: dockSpan,
               h: 56,
-              label: 'macOS Glass Dock • 480 × 56px'
+              label: `macOS Glass Dock • ${Math.round(dockSpan)} × 56px`
             }
           },
           sarah: {
-            x: lerp(winTargetX + winTargetW - 65, curDockX, easedMove),
-            y: lerp(winTargetY + 50, curDockY + 28, easedMove) + arcSwoop,
+            x: lerp(winTargetX + winTargetW - 80, curLeft, easedMove),
+            y: lerp(winTargetY + 50, curDockY + 28, easedMove),
             color: '#FF7262',
             label: 'Sarah Lin',
-            action: 'Capsule Left Edge'
+            action: 'Left Capsule Edge (r: 18px)'
           },
           user: {
             x: lerp(winTargetX + winTargetW, w / 2, easedMove),
-            y: lerp(winTargetY + winTargetH, curDockY - 15, easedMove),
+            y: lerp(winTargetY + winTargetH, curDockY - 16, easedMove),
             color: '#1ABCFE',
             label: userName || 'You',
             action: 'Deploying Dock Apps'
@@ -638,58 +711,101 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             color: '#A259FF',
             label: 'Varun Sehgal',
             action: 'Assistant Bot Setup'
+          },
+          elena: {
+            x: lerp(winTargetX + winTargetW / 2, w / 2, easedMove),
+            y: lerp(winTargetY + winTargetH + 24, curDockY, easedMove),
+            color: '#F59E0B',
+            label: 'Elena Rostova',
+            action: 'Smart Guide: Dock Baseline'
           }
         };
 
         setWireframeData(null);
 
         setActiveGuides([
-          { type: 'h', x1: curDockX - 40, y1: curDockY, x2: curDockX + curDockW + 40, y2: curDockY, label: 'Y: Dock Baseline' }
+          {
+            type: 'h',
+            x1: curLeft - 30,
+            y1: curDockY,
+            x2: curRight + 30,
+            y2: curDockY,
+            color: '#ec4899',
+            dashed: true,
+            label: 'Y: Dock Baseline',
+            pillText: `Y: ${Math.round(curDockY)}px Baseline`,
+            pillX: w / 2,
+            pillY: curDockY - 12
+          }
         ]);
       }
       // =====================================================================
-      // Phase 5: Assistant Bot & Grand Harmonic Convergence (5.4s - 6.2s)
+      // Phase 5: Assistant Bot & Grand Harmonic Convergence (5.8s - 6.8s)
       // =====================================================================
-      else if (elapsed < 6.2) {
+      else if (elapsed < 6.8) {
         setStatusMessage('[5/5] Deploying Assistant Bot & Convergence...');
-        const t = Math.min(1, Math.max(0, (elapsed - 5.4) / 0.8));
-        const eased = easeInOutCubic(t);
+        const t = Math.min(1, Math.max(0, (elapsed - 5.8) / 1.0));
+        const eased = smootherstep(t);
         const centerX = w / 2;
         const centerY = h / 2;
 
         updateStage(5, 960); // Everything unlocked!
 
-        const r = lerp(240, 110, eased);
+        const r = lerp(230, 115, eased);
         const angleBase = t * Math.PI * 0.9;
+        const blend = smootherstep(Math.min(1, t * 1.6));
+
+        // 5 agents smoothly spiral into a golden orbit with celebratory actions
+        const getAgentSpiral = (angleOffset, startX, startY) => {
+          const orbitX = centerX + Math.cos(angleBase + angleOffset) * r;
+          const orbitY = centerY + Math.sin(angleBase + angleOffset) * r * 0.65;
+          return {
+            x: lerp(startX, orbitX, blend),
+            y: lerp(startY, orbitY, blend)
+          };
+        };
+
+        const varunPos = getAgentSpiral(0, w - 75, h - 85);
+        const userPos = getAgentSpiral(1.256, w / 2, dockTargetY - 16);
+        const sarahPos = getAgentSpiral(2.513, (w - dockTargetW) / 2, dockTargetY + 28);
+        const alexPos = getAgentSpiral(3.769, (w + dockTargetW) / 2, dockTargetY + 28);
+        const elenaPos = getAgentSpiral(5.026, w / 2, dockTargetY);
 
         agentTargets = {
-          user: {
-            x: centerX + Math.cos(angleBase + Math.PI) * r,
-            y: centerY + Math.sin(angleBase + Math.PI) * r * 0.65,
-            color: '#1ABCFE',
-            label: userName || 'You',
-            action: 'Approved ✓'
-          },
           varun: {
-            x: centerX + Math.cos(angleBase) * r,
-            y: centerY + Math.sin(angleBase) * r * 0.65,
+            x: varunPos.x,
+            y: varunPos.y,
             color: '#A259FF',
             label: 'Varun Sehgal',
             action: 'System Ready 🚀'
           },
+          user: {
+            x: userPos.x,
+            y: userPos.y,
+            color: '#1ABCFE',
+            label: userName || 'You',
+            action: 'Approved ✓'
+          },
           sarah: {
-            x: centerX + Math.cos(angleBase + Math.PI * 0.5) * r,
-            y: centerY + Math.sin(angleBase + Math.PI * 0.5) * r * 0.65,
+            x: sarahPos.x,
+            y: sarahPos.y,
             color: '#FF7262',
             label: 'Sarah Lin',
             action: 'UI Verified ✨'
           },
           alex: {
-            x: centerX + Math.cos(angleBase - Math.PI * 0.5) * r,
-            y: centerY + Math.sin(angleBase - Math.PI * 0.5) * r * 0.65,
+            x: alexPos.x,
+            y: alexPos.y,
             color: '#0ACF83',
             label: 'Alex Chen',
             action: '100% Operational ⚡'
+          },
+          elena: {
+            x: elenaPos.x,
+            y: elenaPos.y,
+            color: '#F59E0B',
+            label: 'Elena Rostova',
+            action: 'Pixel Perfect 💎'
           }
         };
 
@@ -701,8 +817,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         return;
       }
 
-      // Critically-damped exponential spring pursuit for liquid-smooth cursor motion
-      const followAlpha = 1 - Math.exp(-15 * dt);
+      // 100% pixel-lockstep positioning with continuous C² splines & fluid trails
       const updatedCursors = {};
 
       Object.entries(agentTargets).forEach(([key, target]) => {
@@ -712,20 +827,20 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           physicsRef.current[key] = p;
         }
 
-        // Apply smooth continuous spring pursuit
-        p.x += (target.x - p.x) * followAlpha;
-        p.y += (target.y - p.y) * followAlpha;
+        // Direct lockstep: Target is already mathematically C² continuous, guaranteeing zero lag distortion
+        p.x = target.x;
+        p.y = target.y;
 
         // Update fluid motion trail
         if (!p.trail) p.trail = [];
         p.trail.unshift({ x: p.x, y: p.y });
-        if (p.trail.length > 5) p.trail.pop();
+        if (p.trail.length > 7) p.trail.pop();
 
         updatedCursors[key] = {
           ...target,
           x: p.x,
           y: p.y,
-          trail: p.trail.map((pt, idx) => ({ ...pt, opacity: Math.max(0, (1 - idx / 5) * 0.4) }))
+          trail: p.trail.map((pt, idx) => ({ ...pt, opacity: Math.max(0, (1 - idx / 7) * 0.45) }))
         };
       });
 
@@ -785,7 +900,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
       {/* Blueprint Coordinates Indicator (Bottom-Left) */}
       <div className="swarm-blueprint-indicator">
         <span className="blueprint-tag">⚡ SWARM REBUILD ENGINE v3.5</span>
-        <span className="blueprint-coords">AUTONOMOUS MULTIPLAYER RECONSTRUCTION • 4 AGENTS</span>
+        <span className="blueprint-coords">AUTONOMOUS MULTIPLAYER RECONSTRUCTION • 5 AGENTS</span>
       </div>
 
       {/* Viewport Info Readout (Bottom-Right) */}
@@ -802,16 +917,40 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
               y1={g.y1}
               x2={g.x2}
               y2={g.y2}
-              stroke="#06b6d4"
-              strokeDasharray="4 4"
-              strokeWidth="1.2"
-              opacity="0.85"
+              stroke={g.color || '#ec4899'}
+              strokeDasharray={g.dashed ? '4 4' : undefined}
+              strokeWidth={g.strokeWidth || 1.2}
+              opacity={g.opacity !== undefined ? g.opacity : 0.85}
             />
-            {g.label && (
+            {g.diamond && (
+              <>
+                <rect
+                  x={g.x1 - 3.5}
+                  y={g.y1 - 3.5}
+                  width="7"
+                  height="7"
+                  fill="#ffffff"
+                  stroke={g.color || '#ec4899'}
+                  strokeWidth="1.5"
+                  className="swarm-pen-diamond"
+                />
+                <rect
+                  x={g.x2 - 3.5}
+                  y={g.y2 - 3.5}
+                  width="7"
+                  height="7"
+                  fill="#ffffff"
+                  stroke={g.color || '#ec4899'}
+                  strokeWidth="1.5"
+                  className="swarm-pen-diamond"
+                />
+              </>
+            )}
+            {g.label && !g.pillText && (
               <text
                 x={g.x1 + 10}
                 y={g.y1 - 6}
-                fill="#06b6d4"
+                fill={g.color || '#ec4899'}
                 fontSize="9.5"
                 fontFamily="-apple-system, BlinkMacSystemFont, monospace"
                 fontWeight="600"
@@ -822,6 +961,23 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           </g>
         ))}
       </svg>
+
+      {/* Smart Guide Distance Measurement Pills (Figma / Swarm Style) */}
+      {activeGuides.map((g, idx) => (
+        g.pillText ? (
+          <div
+            key={`guide-pill-${idx}`}
+            className="swarm-smart-guide-pill"
+            style={{
+              left: `${g.pillX !== undefined ? g.pillX : (g.x1 + g.x2) / 2}px`,
+              top: `${g.pillY !== undefined ? g.pillY : (g.y1 + g.y2) / 2}px`,
+              backgroundColor: g.pillColor || '#ec4899'
+            }}
+          >
+            {g.pillText}
+          </div>
+        ) : null
+      ))}
 
       {/* Click Ripples */}
       {ripples.map((r) => (
