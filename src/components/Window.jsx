@@ -24,6 +24,33 @@ const Window = ({
   onReplaySwarm,
   defaultMaximized = false
 }) => {
+  // Default bounds and position based on app type
+  const getDefaultSize = () => {
+    if (typeof window === 'undefined') return { width: 800, height: 500 };
+    if (app.id === 'trash') return { width: 440, height: 320 };
+    if (app.id === 'terminal') return { width: Math.min(window.innerWidth - 80, 720), height: Math.min(window.innerHeight - 120, 460) };
+    if (app.id === 'settings') return { width: Math.min(window.innerWidth - 80, 680), height: Math.min(window.innerHeight - 120, 500) };
+    if (app.id === 'safari') return { width: Math.min(window.innerWidth - 80, 960), height: Math.min(window.innerHeight - 100, 580) };
+    if (app.id === 'finder') return { width: Math.min(window.innerWidth - 80, 920), height: Math.min(window.innerHeight - 100, 560) };
+    if (app.id === 'figma') return { width: Math.min(window.innerWidth - 60, 1100), height: Math.min(window.innerHeight - 80, 720) };
+    if (app.id === 'vscode') return { width: Math.min(window.innerWidth - 80, 1000), height: Math.min(window.innerHeight - 90, 640) };
+    if (app.id === 'contact') return { width: Math.min(window.innerWidth - 80, 840), height: Math.min(window.innerHeight - 100, 560) };
+    return { width: 800, height: 500 };
+  };
+
+  const getInitialPosition = () => {
+    if (typeof window === 'undefined') return { x: 40, y: 40 };
+    const size = getDefaultSize();
+    const centerX = Math.max(20, (window.innerWidth - size.width) / 2);
+    const centerY = Math.max(36, (window.innerHeight - size.height) / 2 - 15);
+    if (app.id === 'finder' || app.id === 'figma' || app.id === 'vscode') {
+      return { x: centerX, y: centerY };
+    }
+    return { x: Math.max(30, centerX + (Math.random() * 60 - 30)), y: Math.max(40, centerY + (Math.random() * 40 - 20)) };
+  };
+
+  const [position, setPosition] = useState(getInitialPosition());
+  const [size, setSize] = useState(getDefaultSize());
   const [localMaximized, setLocalMaximized] = useState(defaultMaximized);
   const isMaximized = controlledMaximized !== undefined ? controlledMaximized : localMaximized;
   const [isInteracting, setIsInteracting] = useState(false);
@@ -95,34 +122,6 @@ const Window = ({
       return () => clearTimeout(timer);
     }
   }, [isMinimized]);
-
-  // Default bounds and position based on app type
-  const getDefaultSize = () => {
-    if (typeof window === 'undefined') return { width: 800, height: 500 };
-    if (app.id === 'trash') return { width: 440, height: 320 };
-    if (app.id === 'terminal') return { width: Math.min(window.innerWidth - 80, 720), height: Math.min(window.innerHeight - 120, 460) };
-    if (app.id === 'settings') return { width: Math.min(window.innerWidth - 80, 680), height: Math.min(window.innerHeight - 120, 500) };
-    if (app.id === 'safari') return { width: Math.min(window.innerWidth - 80, 960), height: Math.min(window.innerHeight - 100, 580) };
-    if (app.id === 'finder') return { width: Math.min(window.innerWidth - 80, 920), height: Math.min(window.innerHeight - 100, 560) };
-    if (app.id === 'figma') return { width: Math.min(window.innerWidth - 60, 1100), height: Math.min(window.innerHeight - 80, 720) };
-    if (app.id === 'vscode') return { width: Math.min(window.innerWidth - 80, 1000), height: Math.min(window.innerHeight - 90, 640) };
-    if (app.id === 'contact') return { width: Math.min(window.innerWidth - 80, 840), height: Math.min(window.innerHeight - 100, 560) };
-    return { width: 800, height: 500 };
-  };
-
-  const getInitialPosition = () => {
-    if (typeof window === 'undefined') return { x: 40, y: 40 };
-    const size = getDefaultSize();
-    const centerX = Math.max(20, (window.innerWidth - size.width) / 2);
-    const centerY = Math.max(36, (window.innerHeight - size.height) / 2 - 15);
-    if (app.id === 'finder' || app.id === 'figma' || app.id === 'vscode') {
-      return { x: centerX, y: centerY };
-    }
-    return { x: Math.max(30, centerX + (Math.random() * 60 - 30)), y: Math.max(40, centerY + (Math.random() * 40 - 20)) };
-  };
-
-  const [position, setPosition] = useState(getInitialPosition());
-  const [size, setSize] = useState(getDefaultSize());
 
   useEffect(() => {
     updateGenieCoords();

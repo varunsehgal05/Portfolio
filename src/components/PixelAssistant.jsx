@@ -6,7 +6,7 @@ import './PixelAssistant.css';
 
 const hints = [
   "Click me to ask anything about Varun! 💬",
-  "Press ALT + 1, 2, or 3 to change the wallpaper.",
+  "Press ALT + 1, 2, or 3 to change desktop wallpapers.",
   "Check out my resume or projects!",
   "Double click any desktop icon to open apps."
 ];
@@ -101,7 +101,7 @@ const getAnswerForQuery = (query) => {
   if (/wallpaper|theme|shortcut|background|alt/.test(q)) {
     return {
       topic: "Desktop Shortcuts & Wallpapers",
-      answer: "Here are some cool shortcuts in VarunOS:\n• **Alt + 1**: macOS Monterey Wallpaper\n• **Alt + 2**: Abstract Blue Wallpaper\n• **Alt + 3**: Big Sur Abstract Wallpaper\n• **Drag Clippy**: Click & drag me anywhere on the screen!",
+      answer: "Here are some cool shortcuts in VarunOS:\n• **Alt + 1**: macOS Monterey Wallpaper\n• **Alt + 2**: Abstract Blue Wallpaper\n• **Alt + 3**: Big Sur Abstract Wallpaper\n• **Clippy Assistant**: Click my avatar anytime to ask questions or explore apps!",
       path: "VarunOS > Desktop Settings (Alt + 1 / 2 / 3)",
       animation: "GetWizardy"
     };
@@ -141,6 +141,7 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
   const agentRef = useRef(null);
   const isFirstMount = useRef(true);
   const bodyRef = useRef(null);
+  const dialogRef = useRef(null);
   const isChatOpenRef = useRef(false);
 
   // Sound State (Muted by default)
@@ -154,6 +155,34 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
 
   useEffect(() => {
     isChatOpenRef.current = isChatOpen;
+  }, [isChatOpen]);
+
+  // Keyboard (Escape) and Outside Click to close dialog smoothly
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isChatOpen) {
+        setIsChatOpen(false);
+      }
+    };
+
+    const handleClickOutside = (e) => {
+      if (
+        isChatOpen &&
+        dialogRef.current &&
+        !dialogRef.current.contains(e.target) &&
+        !e.target.closest('.pixel-clippy') &&
+        !e.target.closest('.clippy')
+      ) {
+        setIsChatOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('mousedown', handleClickOutside);
+    };
   }, [isChatOpen]);
 
   const toggleMute = (e) => {
@@ -345,24 +374,26 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
 
   return (
     <>
-      {/* Quick Sound Option Pill directly above Clippy */}
-      <div 
-        className={`clippy-quick-sound-pill ${isMuted ? 'muted' : 'unmuted'}`} 
-        onClick={toggleMute}
-        title={isMuted ? "Bot Sound is Muted. Click to Unmute" : "Bot Sound is On. Click to Mute"}
-      >
-        {isMuted ? <VolumeX size={12} color="#f87171" /> : <Volume2 size={12} color="#34d399" />}
-        <span>{isMuted ? "Sound: Muted" : "Sound: On"}</span>
-      </div>
+      {/* Quick Sound Option Pill directly above Clippy - only when chat dialog is closed */}
+      {!isChatOpen && (
+        <div 
+          className={`clippy-quick-sound-pill ${isMuted ? 'muted' : 'unmuted'}`} 
+          onClick={toggleMute}
+          title={isMuted ? "Bot Sound is Muted. Click to Unmute" : "Bot Sound is On. Click to Mute"}
+        >
+          {isMuted ? <VolumeX size={12} color="#f87171" /> : <Volume2 size={12} color="#34d399" />}
+          <span>{isMuted ? "Sound: Muted" : "Sound: On"}</span>
+        </div>
+      )}
 
       {/* Interactive Clippy Ask Dialog */}
       {isChatOpen && (
-        <div className="clippy-dialog-container">
+        <div className="clippy-dialog-container" ref={dialogRef}>
           {/* Header */}
           <div className="clippy-dialog-header">
             <div className="clippy-dialog-title">
-              <span>📎</span>
-              <span>Clippy • Varun's Guide</span>
+              <span className="clippy-title-emoji">📎</span>
+              <span className="clippy-title-text">Clippy • Varun's Guide</span>
               <span className="clippy-dialog-badge">Online</span>
             </div>
 
@@ -379,7 +410,7 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
               <button 
                 className="clippy-close-btn" 
                 onClick={() => setIsChatOpen(false)}
-                title="Close Assistant"
+                title="Close Assistant (Esc)"
               >
                 <X size={16} />
               </button>
@@ -391,6 +422,7 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
             {suggestionChips.map((chip, idx) => (
               <button
                 key={idx}
+                type="button"
                 className="clippy-chip"
                 onClick={() => handleAsk(chip.query)}
               >
@@ -403,12 +435,20 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
           <div className="clippy-dialog-body" ref={bodyRef}>
             {!activeQnA ? (
               <div className="clippy-welcome-msg">
-                <p>
-                  <strong>What do you want to know about Varun?</strong>
+                <div className="clippy-welcome-header">
+                  <span className="clippy-welcome-avatar">👋</span>
+                  <div className="clippy-welcome-heading">
+                    <h4>What do you want to know about Varun?</h4>
+                    <p>Interactive Assistant & System Navigator</p>
+                  </div>
+                </div>
+                <p className="clippy-welcome-desc">
+                  Ask about skills, work experience, featured projects, education, or how to contact. I will answer and show you the exact desktop path to explore more!
                 </p>
-                <p style={{ marginTop: '6px' }}>
-                  Ask about skills, projects, work experience, education, or how to reach out. I will answer and show you the exact desktop path to explore more!
-                </p>
+                <div className="clippy-welcome-hint">
+                  <span>💡</span>
+                  <span>Tap any suggestion chip above or type your question below.</span>
+                </div>
               </div>
             ) : (
               <div className="clippy-qa-card">
