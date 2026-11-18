@@ -7,8 +7,8 @@ import './index.css';
 const IDLE_TIMEOUT = 180000; // 3 minutes
 
 function App() {
-  const [bootState, setBootState] = useState('ready'); // 'swarm' | 'ready'
-  const [swarmStage, setSwarmStage] = useState(5); // 0 (blank/blueprint) to 5 (complete)
+  const [bootState, setBootState] = useState('swarm'); // starts in swarm mode on reload
+  const [swarmStage, setSwarmStage] = useState(0); // 0 (blank/blueprint) to 5 (complete)
   const [userName, setUserName] = useState(() => {
     try {
       return localStorage.getItem('varunos_user_name') || 'Varun';

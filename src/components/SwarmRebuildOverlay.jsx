@@ -458,20 +458,22 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         const iconYPositions = [48, 126, 204, 282, 360];
         const iconIndex = Math.min(4, Math.floor(t * 5));
 
-        // Sarah glides down smoothly without teleporting
+        // Sarah glides down smoothly starting from exact Phase 1 position (56, 48) to (56, 360)
         const sarahY = lerp(48, 360, eased);
+        const elenaX = lerp(w / 2, 92, eased);
+        const elenaY = lerp(28, 360, eased);
 
         // Stamp audio & ripple trigger when reaching each icon
         if (lastStampedIndexRef.current !== iconIndex) {
           lastStampedIndexRef.current = iconIndex;
           soundSynth.playDropThump(220 + iconIndex * 40);
-          triggerRipple(56, iconYPositions[iconIndex] + 35, '#FF7262');
+          triggerRipple(56, iconYPositions[iconIndex] + 20, '#FF7262');
         }
 
         agentTargets = {
           sarah: {
             x: 56,
-            y: sarahY + 35,
+            y: sarahY,
             color: '#FF7262',
             label: 'Sarah Lin',
             action: `Stamping: ${iconNames[iconIndex]}`,
@@ -487,8 +489,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             }
           },
           elena: {
-            x: 92,
-            y: sarahY + 35,
+            x: elenaX,
+            y: elenaY,
             color: '#F59E0B',
             label: 'Elena Rostova',
             action: 'Smart Guides: 78px Gap',
@@ -816,8 +818,10 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         return;
       }
 
-      // 100% pixel-lockstep positioning with continuous C² splines & fluid trails
+      // Silky-smooth organic physics dampening with fluid particle trails
       const updatedCursors = {};
+      const smoothRate = 18.0; // natural fluid inertia
+      const smoothingFactor = 1 - Math.exp(-smoothRate * dt);
 
       Object.entries(agentTargets).forEach(([key, target]) => {
         let p = physicsRef.current[key];
@@ -826,20 +830,24 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           physicsRef.current[key] = p;
         }
 
-        // Direct lockstep: Target is already mathematically C² continuous, guaranteeing zero lag distortion
-        p.x = target.x;
-        p.y = target.y;
+        // Fluid spring interpolation ensures zero jump or stutter
+        p.x += (target.x - p.x) * smoothingFactor;
+        p.y += (target.y - p.y) * smoothingFactor;
 
-        // Update fluid motion trail
+        // Update fluid motion trail with distance check to avoid clustered dots
         if (!p.trail) p.trail = [];
-        p.trail.unshift({ x: p.x, y: p.y });
-        if (p.trail.length > 7) p.trail.pop();
+        const lastPt = p.trail[0];
+        const distSq = lastPt ? (p.x - lastPt.x) ** 2 + (p.y - lastPt.y) ** 2 : 999;
+        if (distSq > 3) {
+          p.trail.unshift({ x: p.x, y: p.y });
+          if (p.trail.length > 8) p.trail.pop();
+        }
 
         updatedCursors[key] = {
           ...target,
           x: p.x,
           y: p.y,
-          trail: p.trail.map((pt, idx) => ({ ...pt, opacity: Math.max(0, (1 - idx / 7) * 0.45) }))
+          trail: p.trail.map((pt, idx) => ({ ...pt, opacity: Math.max(0, (1 - idx / 8) * 0.5) }))
         };
       });
 

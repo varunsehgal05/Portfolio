@@ -11,11 +11,11 @@ import TerminalApp from './TerminalApp';
 import SettingsApp from './SettingsApp';
 import VsCodeApp from './VsCodeApp';
 
-const Window = ({ 
-  app, 
+const Window = ({
+  app,
   userName,
-  isActive, 
-  isMinimized, 
+  isActive,
+  isMinimized,
   isMaximized: controlledMaximized,
   onClose,
   onMinimize,
@@ -55,15 +55,35 @@ const Window = ({
   const [localMaximized, setLocalMaximized] = useState(defaultMaximized);
   const isMaximized = controlledMaximized !== undefined ? controlledMaximized : localMaximized;
   const [isInteracting, setIsInteracting] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+  const [isZooming, setIsZooming] = useState(false);
   const [animState, setAnimState] = useState(isMinimized ? 'hidden' : 'visible');
   const isInitialMount = useRef(true);
   const windowInnerRef = useRef(null);
   const preMaxRef = useRef({ size: getDefaultSize(), position: getInitialPosition() });
 
+  const handleClose = (e) => {
+    if (e) e.stopPropagation();
+    if (isClosing) return;
+    setIsClosing(true);
+    setTimeout(() => {
+      onClose();
+    }, 220); // 220ms smooth macOS dismiss animation
+  };
+
   const handleMaximize = () => {
+    setIsZooming(true);
+    setTimeout(() => setIsZooming(false), 380);
+
     if (!isMaximized) {
       preMaxRef.current = { size, position };
+    } else {
+      if (preMaxRef.current) {
+        setSize(preMaxRef.current.size);
+        setPosition(preMaxRef.current.position);
+      }
     }
+
     if (onToggleMaximize) {
       onToggleMaximize();
     } else {
@@ -129,6 +149,7 @@ const Window = ({
   }, [position, size, isMaximized]);
 
   const getAnimClass = () => {
+    if (isClosing) return 'closing';
     if (animState === 'minimizing') return 'minimizing';
     if (animState === 'hidden') return 'minimized';
     if (animState === 'restoring') return 'restoring';
@@ -164,7 +185,7 @@ const Window = ({
     }
   };
 
-  const maximizedHeight = typeof window !== 'undefined' ? Math.max(300, window.innerHeight - 28 - 72) : 600;
+  const maximizedHeight = typeof window !== 'undefined' ? window.innerHeight - 28 : 800;
   const maximizedWidth = typeof window !== 'undefined' ? window.innerWidth : 1200;
 
   useEffect(() => {
@@ -176,7 +197,7 @@ const Window = ({
 
   return (
     <Rnd
-      className={`app-window ${isActive ? 'active' : ''} ${isMaximized ? 'maximized' : ''} ${isInteracting ? 'interacting' : ''} ${getAnimClass()}`}
+      className={`app-window ${isActive ? 'active' : ''} ${isMaximized ? 'maximized' : ''} ${isZooming ? 'zooming' : ''} ${isInteracting ? 'interacting' : ''} ${getAnimClass()}`}
       size={isMaximized ? { width: maximizedWidth, height: maximizedHeight } : size}
       position={isMaximized ? { x: 0, y: 0 } : position}
       onDragStart={() => setIsInteracting(true)}
@@ -204,8 +225,8 @@ const Window = ({
     >
       <div ref={windowInnerRef} className={`window-inner glass-dark ${getAnimClass()}`}>
         {/* macOS Style Titlebar - double-click to toggle fullscreen */}
-        <div 
-          className="window-titlebar" 
+        <div
+          className="window-titlebar"
           onDoubleClick={handleMaximize}
           title="Double-click to toggle full screen"
         >
@@ -214,10 +235,7 @@ const Window = ({
               className="mac-btn close"
               onMouseDown={(e) => e.stopPropagation()}
               onTouchStart={(e) => e.stopPropagation()}
-              onClick={(e) => {
-                e.stopPropagation();
-                onClose();
-              }}
+              onClick={handleClose}
               title="Close"
             >
               <span className="mac-symbol">×</span>

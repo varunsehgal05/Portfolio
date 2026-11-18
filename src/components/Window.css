@@ -3,14 +3,63 @@
   overflow: hidden;
   box-shadow: 0 12px 40px rgba(0,0,0,0.4);
   display: flex;
+  transform-origin: center center;
+}
+
+/* Subtle macOS Window Open Animation */
+.app-window:not(.minimized):not(.closing):not(.minimizing):not(.restoring):not(.maximized) {
+  animation: macWindowOpen 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes macWindowOpen {
+  0% {
+    opacity: 0;
+    transform: scale(0.92);
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0px);
+  }
+}
+
+/* Smooth macOS Window Dismiss/Close Animation */
+.app-window.closing {
+  pointer-events: none !important;
+  animation: macWindowClose 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+  will-change: transform, opacity, filter;
+}
+
+@keyframes macWindowClose {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.88);
+    filter: blur(4px);
+  }
 }
 
 .app-window:not(.interacting) {
-  transition: width 0.32s cubic-bezier(0.16, 1, 0.3, 1),
-              height 0.32s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+  transition: width 0.36s cubic-bezier(0.16, 1, 0.3, 1),
+              height 0.36s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.36s cubic-bezier(0.16, 1, 0.3, 1),
               border-radius 0.28s ease,
-              box-shadow 0.25s ease;
+              box-shadow 0.28s ease;
+}
+
+/* Smooth macOS Zoom-in/Zoom-out Transition during Full Screen Toggle */
+.app-window.zooming {
+  transition: width 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+              height 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+              border-radius 0.3s ease,
+              box-shadow 0.3s ease !important;
+  will-change: width, height, transform, border-radius;
 }
 
 .app-window.active {
@@ -58,6 +107,7 @@
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  transition: border-radius 0.3s ease;
 }
 
 .app-window.maximized .window-inner {
@@ -66,18 +116,18 @@
 
 .window-inner.minimizing {
   transform-origin: 50% 100%;
-  animation: macMinimize 0.36s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+  animation: macMinimizeGenie 0.38s cubic-bezier(0.25, 0.85, 0.35, 1) forwards;
   pointer-events: none;
   will-change: transform, opacity, filter, border-radius;
 }
 
 .window-inner.restoring {
   transform-origin: 50% 100%;
-  animation: macRestore 0.34s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: macRestoreGenie 0.36s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   will-change: transform, opacity, filter, border-radius;
 }
 
-@keyframes macMinimize {
+@keyframes macMinimizeGenie {
   0% {
     opacity: 1;
     transform: translate3d(0, 0, 0) scale(1, 1);
@@ -86,50 +136,50 @@
   }
   30% {
     opacity: 0.96;
-    transform: translate3d(calc(var(--genie-target-x, 0px) * 0.22), calc(var(--genie-target-y, 350px) * 0.25), 0) scale(0.82, 0.82);
+    transform: translate3d(calc(var(--genie-target-x, 0px) * 0.18), calc(var(--genie-target-y, 350px) * 0.22), 0) scale(0.84, 0.82);
     border-radius: 14px;
-    filter: drop-shadow(0 14px 35px rgba(0, 0, 0, 0.4));
+    filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.42));
   }
   65% {
-    opacity: 0.8;
-    transform: translate3d(calc(var(--genie-target-x, 0px) * 0.65), calc(var(--genie-target-y, 350px) * 0.70), 0) scale(0.42, 0.38);
+    opacity: 0.85;
+    transform: translate3d(calc(var(--genie-target-x, 0px) * 0.58), calc(var(--genie-target-y, 350px) * 0.64), 0) scale(0.50, 0.44);
     border-radius: 18px;
     filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.3));
   }
   88% {
-    opacity: 0.4;
-    transform: translate3d(calc(var(--genie-target-x, 0px) * 0.92), calc(var(--genie-target-y, 350px) * 0.92), 0) scale(0.15, 0.12);
+    opacity: 0.45;
+    transform: translate3d(calc(var(--genie-target-x, 0px) * 0.88), calc(var(--genie-target-y, 350px) * 0.90), 0) scale(0.20, 0.16);
     border-radius: 22px;
   }
   100% {
     opacity: 0;
-    transform: translate3d(var(--genie-target-x, 0px), var(--genie-target-y, 350px), 0) scale(0.02, 0.02);
+    transform: translate3d(var(--genie-target-x, 0px), var(--genie-target-y, 350px), 0) scale(0.03, 0.03);
     border-radius: 24px;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
   }
 }
 
-@keyframes macRestore {
+@keyframes macRestoreGenie {
   0% {
     opacity: 0;
-    transform: translate3d(var(--genie-target-x, 0px), var(--genie-target-y, 350px), 0) scale(0.02, 0.02);
+    transform: translate3d(var(--genie-target-x, 0px), var(--genie-target-y, 350px), 0) scale(0.03, 0.03);
     border-radius: 24px;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
   }
   25% {
-    opacity: 0.5;
-    transform: translate3d(calc(var(--genie-target-x, 0px) * 0.85), calc(var(--genie-target-y, 350px) * 0.85), 0) scale(0.25, 0.22);
+    opacity: 0.55;
+    transform: translate3d(calc(var(--genie-target-x, 0px) * 0.82), calc(var(--genie-target-y, 350px) * 0.84), 0) scale(0.26, 0.22);
     border-radius: 22px;
   }
   60% {
-    opacity: 0.88;
-    transform: translate3d(calc(var(--genie-target-x, 0px) * 0.35), calc(var(--genie-target-y, 350px) * 0.32), 0) scale(0.75, 0.75);
+    opacity: 0.90;
+    transform: translate3d(calc(var(--genie-target-x, 0px) * 0.32), calc(var(--genie-target-y, 350px) * 0.30), 0) scale(0.76, 0.74);
     border-radius: 16px;
-    filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.35));
+    filter: drop-shadow(0 14px 35px rgba(0, 0, 0, 0.35));
   }
   85% {
     opacity: 0.98;
-    transform: translate3d(calc(var(--genie-target-x, 0px) * 0.08), calc(var(--genie-target-y, 350px) * 0.06), 0) scale(0.96, 0.96);
+    transform: translate3d(calc(var(--genie-target-x, 0px) * 0.06), calc(var(--genie-target-y, 350px) * 0.05), 0) scale(0.97, 0.97);
     border-radius: 13px;
   }
   100% {
