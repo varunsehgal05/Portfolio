@@ -106,13 +106,13 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
   return (
     <div className={`desktop ${swarmStage < 5 ? 'desktop-in-rebuild' : ''}`}>
       {/* Top MenuBar wrapper */}
-      <div className={`desktop-menubar-wrap ${swarmStage >= 1 ? 'stage-revealed' : 'stage-hidden'}`}>
+      <div className={`desktop-menubar-wrap ${swarmStage < 5 ? (swarmStage >= 1 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
         <MenuBar userName={userName} onReplaySwarm={onReplaySwarm} />
       </div>
       
       <div className="desktop-content">
         {/* Left Column Desktop Icons */}
-        <div className={`desktop-icons ${swarmStage >= 2 ? 'stage-revealed' : 'stage-hidden'}`}>
+        <div className={`desktop-icons ${swarmStage < 5 ? (swarmStage >= 2 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
           {displayedIcons.map((id, index) => {
             const app = portfolioApps[id];
             if (!app) return null;
@@ -130,7 +130,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
         </div>
 
         {/* Windows Layer */}
-        <div className={`desktop-windows-layer ${swarmStage >= 3 ? 'stage-revealed' : 'stage-hidden'}`}>
+        <div className={`desktop-windows-layer ${swarmStage < 5 ? (swarmStage >= 3 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
           {openWindows.map((appId) => {
             const app = portfolioApps[appId] || { id: appId, name: appId };
             return (
@@ -152,12 +152,12 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
         </div>
         
         {/* PixelAssistant / Clippy bot remains untouched on the right/bottom */}
-        <div className={`desktop-bot-wrap ${swarmStage >= 5 ? 'stage-revealed' : 'stage-hidden'}`}>
+        <div className={`desktop-bot-wrap ${swarmStage < 5 ? (swarmStage >= 5 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
           <PixelAssistant isIdle={isIdle} onOpenApp={openApp} />
         </div>
 
         {/* Bottom macOS Dock */}
-        <div className={`desktop-dock-wrap ${swarmStage >= 4 ? 'stage-revealed' : 'stage-hidden'}`}>
+        <div className={`desktop-dock-wrap ${swarmStage < 5 ? (swarmStage >= 4 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
           <Dock 
             openWindows={openWindows}
             minimizedWindows={minimizedWindows}

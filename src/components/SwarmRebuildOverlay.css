@@ -313,12 +313,14 @@
    Active Selection Bounding Box while drawing
    ============================================================ */
 .swarm-active-box {
-  position: fixed;
+  position: absolute;
   border: 1.5px dashed var(--cursor-color, #38bdf8);
   background: rgba(56, 189, 248, 0.08);
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.14);
   border-radius: 6px;
   box-sizing: border-box;
   pointer-events: none;
+  z-index: 999998;
 }
 
 .box-handle {

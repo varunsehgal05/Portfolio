@@ -60,28 +60,6 @@ const SwarmCursor = ({
           <span className="typing-caret" />
         </div>
       )}
-
-      {/* Dynamic selection bounding box while drawing */}
-      {isDrawing && boxBounds && (
-        <div
-          className="swarm-active-box"
-          style={{
-            left: `${boxBounds.x}px`,
-            top: `${boxBounds.y}px`,
-            width: `${boxBounds.w}px`,
-            height: `${boxBounds.h}px`,
-            borderColor: color
-          }}
-        >
-          <div className="box-handle top-left" style={{ borderColor: color }} />
-          <div className="box-handle top-right" style={{ borderColor: color }} />
-          <div className="box-handle bottom-left" style={{ borderColor: color }} />
-          <div className="box-handle bottom-right" style={{ borderColor: color }} />
-          <div className="box-dimension-label" style={{ backgroundColor: color }}>
-            {boxBounds.label || `${Math.round(boxBounds.w)} × ${Math.round(boxBounds.h)}`}
-          </div>
-        </div>
-      )}
     </div>
   );
 };
@@ -726,6 +704,34 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           </g>
         ))}
       </svg>
+
+      {/* Active Selection Bounding Boxes Layer (Anchored to Root Overlay Canvas) */}
+      {Object.entries(cursors).map(([key, cursor]) => {
+        if (!cursor.isDrawing || !cursor.boxBounds) return null;
+        const b = cursor.boxBounds;
+        return (
+          <div
+            key={`box-${key}`}
+            className="swarm-active-box"
+            style={{
+              left: `${b.x}px`,
+              top: `${b.y}px`,
+              width: `${b.w}px`,
+              height: `${b.h}px`,
+              borderColor: cursor.color,
+              '--cursor-color': cursor.color
+            }}
+          >
+            <div className="box-handle top-left" style={{ borderColor: cursor.color }} />
+            <div className="box-handle top-right" style={{ borderColor: cursor.color }} />
+            <div className="box-handle bottom-left" style={{ borderColor: cursor.color }} />
+            <div className="box-handle bottom-right" style={{ borderColor: cursor.color }} />
+            <div className="box-dimension-label" style={{ backgroundColor: cursor.color }}>
+              {b.label || `${Math.round(b.w)} × ${Math.round(b.h)}`}
+            </div>
+          </div>
+        );
+      })}
 
       {/* Active Multiplayer Cursors */}
       {Object.entries(cursors).map(([key, cursor]) => (
