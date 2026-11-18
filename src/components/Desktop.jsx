@@ -37,9 +37,15 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
     };
   }, [isFullScreenActive]);
 
+  // Apps that should open in full screen by default
+  const FULLSCREEN_APPS = ['figma', 'vscode'];
+
   const openApp = (appId) => {
     if (!openWindows.includes(appId)) {
       setOpenWindows(prev => [...prev, appId]);
+      if (FULLSCREEN_APPS.includes(appId)) {
+        setMaximizedWindows(prev => prev.includes(appId) ? prev : [...prev, appId]);
+      }
     }
     // Unminimize if it was minimized
     setMinimizedWindows(prev => prev.filter(id => id !== appId));
