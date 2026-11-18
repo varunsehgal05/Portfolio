@@ -246,3 +246,216 @@
 .apple-dropdown-item:hover .dropdown-shortcut {
   color: rgba(255, 255, 255, 0.7);
 }
+
+.menu-item-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.menu-icon-btn {
+  background: transparent;
+  border: none;
+  color: #d4d4d8;
+  padding: 3px 5px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.menu-icon-btn:hover,
+.menu-icon-btn.active {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.apple-dropdown-menu.sub-menu {
+  top: 28px;
+  left: 0;
+  width: 200px;
+}
+
+.apple-dropdown-menu.right-aligned {
+  left: auto;
+  right: 0;
+  top: 28px;
+}
+
+/* Sound Popup */
+.sound-popup {
+  width: 240px;
+}
+
+.sound-popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #ffffff;
+  padding: 4px 8px;
+}
+
+.sound-vol-label {
+  font-family: monospace;
+  color: #38bdf8;
+}
+
+.sound-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+}
+
+.sound-mute-toggle {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 2px;
+}
+
+.sound-mute-toggle:hover {
+  color: #ffffff;
+}
+
+.sound-range-slider {
+  flex: 1;
+  accent-color: #38bdf8;
+  cursor: pointer;
+  height: 4px;
+}
+
+.sound-device-row {
+  padding: 4px 8px;
+  font-size: 11px;
+  color: #94a3b8;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin-top: 4px;
+}
+
+/* Wi-Fi Popup */
+.wifi-popup {
+  width: 260px;
+  padding: 10px;
+}
+
+.wifi-status-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.wifi-network-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.wifi-network-info strong {
+  font-size: 12px;
+  color: #ffffff;
+}
+
+.wifi-meta {
+  font-size: 10.5px;
+  color: #94a3b8;
+}
+
+.wifi-connected-pill {
+  font-size: 10px;
+  font-weight: 600;
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+.wifi-details-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  padding: 3px 0;
+  color: #e2e8f0;
+}
+
+/* Battery Popup */
+.battery-popup {
+  width: 250px;
+  padding: 10px;
+}
+
+.battery-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.battery-charged-pill {
+  font-size: 10px;
+  font-weight: 600;
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+.battery-meta-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  padding: 3px 0;
+  color: #94a3b8;
+}
+
+/* Calendar Popup */
+.calendar-popup {
+  width: 250px;
+  padding: 12px;
+}
+
+.calendar-popup-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #ffffff;
+  margin-bottom: 6px;
+}
+
+.calendar-day-headline {
+  font-size: 13px;
+  font-weight: 700;
+  color: #38bdf8;
+  margin-bottom: 2px;
+}
+
+.calendar-clock-digital {
+  font-size: 18px;
+  font-weight: 700;
+  font-family: monospace;
+  color: #f1f5f9;
+  letter-spacing: 0.5px;
+}
+
+.calendar-event-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #cbd5e1;
+}
+
+.event-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+}
+
