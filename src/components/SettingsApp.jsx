@@ -174,7 +174,7 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
             <p className="settings-panel-desc">Hardware telemetry & system specifications.</p>
 
             <div className="about-specs-card">
-              <div className="about-apple-badge"></div>
+              <div className="about-apple-badge">⚡</div>
               <h3 className="about-os-name">VarunOS Sequoia</h3>
               <span className="about-os-version">Version 15.0 (Build 24A348)</span>
 

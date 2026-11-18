@@ -1,89 +1,211 @@
+/* ========================================================
+   macOS Preview — ATS Resume Viewer
+   Centered Document Canvas, Balanced 2-Column Grid & Crisp Typography
+   ======================================================== */
+
 .resume-container {
   display: flex;
   flex-direction: column;
   width: 100%;
   height: 100%;
-  background-color: #ffffff;
-  color: #333333;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: #f1f3f6;
+  color: #1e293b;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', 'Segoe UI', Roboto, sans-serif;
   overflow: hidden;
 }
 
+/* 1. Preview Top Action Bar */
 .resume-top-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 8px 16px;
-  background-color: #f8f9fa;
-  border-bottom: 1px solid #eaeaea;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 12px;
+  flex-shrink: 0;
+  z-index: 10;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.resume-top-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.preview-doc-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.doc-icon {
+  color: #0284c7;
+}
+
+.doc-name {
+  font-size: 12.5px;
+}
+
+.page-pill {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.resume-top-center {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 12px;
 }
 
 .format-label {
-  color: #888;
-  margin-right: 8px;
+  color: #64748b;
 }
 
 .format-value {
-  color: #333;
-  font-weight: 500;
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.resume-top-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.resume-zoom-controls {
+  display: flex;
+  align-items: center;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 5px;
+  padding: 1px;
+}
+
+.zoom-btn {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.12s ease;
+}
+
+.zoom-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.zoom-text {
+  font-size: 11px;
+  font-weight: 600;
+  color: #334155;
+  padding: 0 6px;
+  cursor: pointer;
+  min-width: 36px;
+  text-align: center;
+}
+
+.zoom-text:hover {
+  color: #0284c7;
 }
 
 .resume-btn {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 12px;
-  border-radius: 4px;
+  padding: 5px 12px;
+  border-radius: 5px;
   font-size: 12px;
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.15s ease;
   border: none;
 }
 
 .resume-btn.primary {
-  background-color: #0066cc;
-  color: white;
+  background-color: #0284c7;
+  color: #ffffff;
 }
 
 .resume-btn.primary:hover {
-  background-color: #0052a3;
+  background-color: #0369a1;
 }
 
-.resume-content-wrapper {
-  display: flex;
+/* 2. Document Canvas Viewport */
+.resume-canvas-viewport {
   flex: 1;
   overflow-y: auto;
+  overflow-x: auto;
+  padding: 28px 24px 60px 24px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background-color: #f1f3f6;
+  scroll-behavior: smooth;
 }
 
-.resume-sidebar {
-  width: 250px;
-  background-color: #fcfcfc;
-  border-right: 1px solid #eaeaea;
-  padding: 24px;
+/* 3. The ATS Resume Document Sheet */
+.resume-document-sheet {
+  display: flex;
+  width: 100%;
+  max-width: 1020px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.07), 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: transform 0.18s ease-out;
   flex-shrink: 0;
 }
 
+/* 4. Left Sidebar (Fixed 280px) */
+.resume-sidebar {
+  width: 280px;
+  background-color: #fafbfc;
+  border-right: 1px solid #eef2f6;
+  padding: 32px 24px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
 .sidebar-section {
-  margin-bottom: 32px;
+  margin-bottom: 28px;
+}
+
+.sidebar-section:last-child {
+  margin-bottom: 0;
 }
 
 .sidebar-title {
   font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  color: #555;
-  margin-bottom: 16px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  color: #475569;
+  margin: 0 0 14px 0;
   text-transform: uppercase;
   display: flex;
   align-items: center;
 }
 
 .sidebar-title .hash {
-  color: #0066cc;
+  color: #0284c7;
   margin-right: 6px;
+  font-weight: 900;
 }
 
 .contact-list {
@@ -92,7 +214,7 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .contact-list li {
@@ -100,154 +222,253 @@
   align-items: center;
   gap: 8px;
   font-size: 12px;
-  color: #555;
+  color: #334155;
+  word-break: break-word;
+}
+
+.contact-icon {
+  color: #0284c7;
+  flex-shrink: 0;
 }
 
 .contact-list a {
-  color: #555;
+  color: #334155;
   text-decoration: none;
-  transition: color 0.2s;
+  transition: color 0.15s ease;
 }
 
 .contact-list a:hover {
-  color: #0066cc;
+  color: #0284c7;
+  text-decoration: underline;
 }
 
 .education-item {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
 }
 
 .edu-school {
-  font-weight: 600;
-  font-size: 13px;
-  color: #333;
+  font-weight: 700;
+  font-size: 12.5px;
+  color: #0f172a;
+  line-height: 1.35;
 }
 
 .edu-degree {
   font-size: 12px;
-  color: #555;
+  color: #475569;
 }
 
 .edu-date {
   font-size: 11px;
-  color: #888;
+  color: #64748b;
+  margin-top: 2px;
 }
 
 .skill-category {
-  margin-bottom: 16px;
+  margin-bottom: 14px;
+}
+
+.skill-category:last-child {
+  margin-bottom: 0;
 }
 
 .skill-title {
-  font-size: 12px;
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: #333;
+  font-size: 11.5px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #1e293b;
 }
 
 .skill-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 5px;
 }
 
 .skill-tags span {
   font-size: 11px;
-  padding: 3px 8px;
-  background-color: #f0f0f0;
-  border: 1px solid #e0e0e0;
+  padding: 3px 7px;
+  background-color: #f1f5f9;
+  border: 1px solid #e2e8f0;
   border-radius: 4px;
-  color: #555;
+  color: #334155;
+  line-height: 1.3;
 }
 
+/* 5. Right Main Content Area */
 .resume-main {
   flex: 1;
-  padding: 32px 48px;
-  max-width: 900px;
+  padding: 36px 40px;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 .resume-header {
-  margin-bottom: 40px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid #eef2f6;
+  padding-bottom: 20px;
+}
+
+.header-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .resume-name {
-  font-size: 32px;
+  font-size: 28px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.4px;
+}
+
+.ats-badge {
+  background: rgba(2, 132, 199, 0.08);
+  border: 1px solid rgba(2, 132, 199, 0.25);
+  color: #0284c7;
+  font-size: 10px;
   font-weight: 700;
-  color: #111;
-  margin: 0 0 8px 0;
+  padding: 2px 8px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .resume-roles {
-  font-size: 14px;
-  font-weight: 500;
-  color: #0066cc;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #0284c7;
+  margin: 4px 0 10px 0;
+}
+
+.resume-summary {
+  font-size: 12.5px;
+  color: #475569;
   margin: 0;
+  line-height: 1.6;
 }
 
 .main-section {
-  margin-bottom: 32px;
+  margin-bottom: 28px;
+}
+
+.main-section:last-child {
+  margin-bottom: 0;
 }
 
 .section-heading {
-  font-size: 14px;
-  font-weight: 600;
-  color: #888;
-  letter-spacing: 1px;
-  margin-bottom: 24px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #475569;
+  letter-spacing: 0.8px;
+  margin: 0 0 18px 0;
   text-transform: uppercase;
   display: flex;
   align-items: center;
   gap: 8px;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 8px;
+  border-bottom: 1.5px solid #e2e8f0;
+  padding-bottom: 6px;
 }
 
-.experience-item, .project-item {
-  margin-bottom: 24px;
+.section-heading .icon {
+  font-size: 13px;
 }
 
-.exp-header, .proj-header {
+.experience-item, 
+.project-item {
+  margin-bottom: 20px;
+}
+
+.experience-item:last-child,
+.project-item:last-child {
+  margin-bottom: 0;
+}
+
+.exp-header, 
+.proj-header {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  margin-bottom: 8px;
+  margin-bottom: 5px;
 }
 
-.exp-title-company, .proj-title {
-  font-size: 15px;
-  color: #222;
+.exp-title-company, 
+.proj-title {
+  font-size: 14px;
+  color: #0f172a;
 }
 
-.exp-title-company strong, .proj-title {
-  font-weight: 600;
+.exp-title-company strong, 
+.proj-title {
+  font-weight: 700;
 }
 
 .separator {
-  color: #aaa;
-  margin: 0 6px;
+  color: #94a3b8;
+  margin: 0 4px;
 }
 
-.exp-date, .proj-status {
-  font-size: 12px;
-  color: #888;
+.exp-date, 
+.proj-status {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+.figma-link-btn {
+  color: #0284c7;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11.5px;
+  font-weight: 600;
+  text-decoration: none;
+  background: rgba(2, 132, 199, 0.08);
+  padding: 2px 7px;
+  border-radius: 4px;
+  transition: all 0.12s ease;
+}
+
+.figma-link-btn:hover {
+  background: rgba(2, 132, 199, 0.16);
+  color: #0369a1;
 }
 
 .proj-stack {
-  font-size: 12px;
-  color: #0066cc;
-  margin-bottom: 8px;
-  font-weight: 500;
+  font-size: 11.5px;
+  color: #0284c7;
+  margin-bottom: 6px;
+  font-weight: 600;
 }
 
 .exp-bullets {
   margin: 0;
-  padding-left: 16px;
+  padding-left: 18px;
 }
 
 .exp-bullets li {
-  font-size: 13.5px;
+  font-size: 12.5px;
   line-height: 1.6;
-  color: #444;
-  margin-bottom: 6px;
+  color: #334155;
+  margin-bottom: 5px;
+}
+
+.exp-bullets li:last-child {
+  margin-bottom: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 820px) {
+  .resume-document-sheet {
+    flex-direction: column;
+  }
+  .resume-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #eef2f6;
+  }
 }

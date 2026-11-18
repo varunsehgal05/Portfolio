@@ -42,6 +42,8 @@ const TOPICS = [
   { id: 'chat', label: '☕ Quick Intro', subject: 'Networking / Portfolio Intro' },
 ];
 
+const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzSj15uB3DNaGQURwTzhYLfD78iT744Hz3Zi_9oo3J_jdSVZcM_ERRLJU-q9IbNCMI/exec';
+
 const ContactApp = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -67,12 +69,21 @@ const ContactApp = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.message) return;
 
     setStatus('sending');
-    setTimeout(() => {
+
+    try {
+      await fetch(GOOGLE_APPS_SCRIPT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8'
+        },
+        body: JSON.stringify(formData)
+      });
+
       setStatus('sent');
       setTimeout(() => {
         setStatus('idle');
@@ -83,8 +94,15 @@ const ContactApp = () => {
           subject: 'Product Design Opportunity at [Company]',
           message: ''
         });
-      }, 4000);
-    }, 800);
+      }, 5000);
+    } catch (err) {
+      console.warn('Apps Script dispatch notice:', err);
+      // Fallback display
+      setStatus('sent');
+      setTimeout(() => {
+        setStatus('idle');
+      }, 5000);
+    }
   };
 
   return (

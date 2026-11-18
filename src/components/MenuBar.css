@@ -22,21 +22,24 @@
   gap: 14px;
 }
 
-.menu-apple-logo {
+.menu-brand-trigger {
   display: flex;
   align-items: center;
   justify-content: center;
   color: #ffffff;
+  font-weight: 700;
   cursor: pointer;
-  margin-right: 2px;
-  padding: 2px 4px;
+  margin-right: 4px;
+  padding: 3px 7px;
   border-radius: 4px;
-  transition: background-color 0.15s ease;
+  transition: all 0.15s ease;
+  letter-spacing: -0.2px;
 }
 
-.menu-apple-logo:hover,
-.menu-apple-logo.active {
+.menu-brand-trigger:hover,
+.menu-brand-trigger.active {
   background: rgba(255, 255, 255, 0.15);
+  color: #38bdf8;
 }
 
 .menu-item {
