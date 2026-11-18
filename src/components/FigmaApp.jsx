@@ -63,12 +63,12 @@ const ALL_PROJECTS = [
   {
     id: 'eventflow',
     name: 'EventFlow Experience Platform',
-    category: 'Design Systems',
-    badge: '50+ Tokens',
-    metric: '50+ Modular Components • 30% Less Dropoff',
+    category: 'SaaS / Web',
+    badge: '30% Less Dropoff',
+    metric: '4-Step Checkout • 30% Less Dropoff',
     image: '/figma_EventFlow.png',
-    desc: 'Modular event planning UI design system with reusable atomic components, flexible themes, and 4-step optimized checkout.',
-    tags: ['Design System', 'Figma', 'Tokens'],
+    desc: 'Campus event ticketing & management platform streamlining booking workflows with 30% reduced drop-off.',
+    tags: ['SaaS', 'Figma', 'Event Platform'],
     link: 'https://www.figma.com/design/29nTBBWxZfoOKdFnOaQWbq/EventFlow?node-id=2-2&p=f&t=ucsh4jF84sBl50UA-0'
   },
   {
@@ -699,7 +699,7 @@ const FigmaApp = () => {
               <div className="view-content-wrapper">
                 <header className="view-page-header">
                   <h1 className="view-page-title">Work & Case Studies</h1>
-                  <p className="view-page-desc">Complete showcase of production UX flows, design systems, and mobile applications.</p>
+                  <p className="view-page-desc">Complete showcase of production UX flows, SaaS platforms, and mobile applications.</p>
                 </header>
 
                 {/* Filter and Search Bar */}
@@ -716,7 +716,7 @@ const FigmaApp = () => {
                   </div>
 
                   <div className="category-filter-pills">
-                    {['All', 'Mobile App', 'SaaS / Web', 'Design Systems'].map(cat => (
+                    {['All', 'Mobile App', 'SaaS / Web'].map(cat => (
                       <button 
                         key={cat} 
                         className={`cat-filter-btn ${projectFilter === cat ? 'active' : ''}`}
