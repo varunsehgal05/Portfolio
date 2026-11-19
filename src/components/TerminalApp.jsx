@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Terminal, Sparkles, Folder, Play, Check, Copy, Image } from 'lucide-react';
+import { Terminal, Sparkles, Folder, Play, Check, Copy, Image, Eye, EyeOff } from 'lucide-react';
 import { terminalWallpapers } from '../config/wallpapers';
 import './TerminalApp.css';
 
@@ -58,6 +58,23 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
   const [historyIdx, setHistoryIdx] = useState(-1);
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
+
+  // Quick Bar Visibility & Wallpaper Tint Opacity State
+  const [isQuickBarVisible, setIsQuickBarVisible] = useState(true);
+  const [tintLevel, setTintLevel] = useState(() => {
+    try {
+      return localStorage.getItem('varunos_terminal_tint_val') || 'vivid';
+    } catch {
+      return 'vivid';
+    }
+  });
+
+  const handleSelectTint = (level) => {
+    setTintLevel(level);
+    try {
+      localStorage.setItem('varunos_terminal_tint_val', level);
+    } catch {}
+  };
 
   // Active terminal wallpaper state (persists in localStorage)
   const [activeWallpaperId, setActiveWallpaperId] = useState(() => {
@@ -336,80 +353,155 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
 
   const currentWp = terminalWallpapers.find(w => w.id === activeWallpaperId) || terminalWallpapers[0];
 
+  // Dynamic calibrated wallpaper background style
+  const getDynamicBgStyle = () => {
+    if (!currentWp.image) return currentWp.bgStyle;
+    
+    // Tint opacities: vivid (0.18 / 0.28) - crystal clear artwork without blue hue!
+    // balanced (0.36 / 0.46), norm (0.58 / 0.68)
+    const [topAlpha, bottomAlpha] = tintLevel === 'vivid' 
+      ? ['0.18', '0.28'] 
+      : tintLevel === 'balanced' 
+      ? ['0.36', '0.46'] 
+      : ['0.58', '0.68'];
+      
+    return {
+      backgroundImage: `linear-gradient(rgba(0, 0, 0, ${topAlpha}), rgba(0, 0, 0, ${bottomAlpha})), url(${currentWp.image})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      imageRendering: '-webkit-optimize-contrast'
+    };
+  };
+
   return (
     <div 
       className="terminal-wrapper" 
       onClick={handleContainerClick}
-      style={currentWp.bgStyle}
+      style={getDynamicBgStyle()}
     >
       {/* Top Quick Command Bar */}
-      <div className="terminal-quick-bar">
-        <span className="quick-bar-label">Commands:</span>
-        {['neofetch', 'skills', 'projects', 'vibecoding', 'experience', 'contact', 'clear'].map((cmd) => (
+      {isQuickBarVisible ? (
+        <div className="terminal-quick-bar">
+          <div className="quick-bar-cmds">
+            <span className="quick-bar-label">⚡ Cmds:</span>
+            {['neofetch', 'skills', 'projects', 'vibecoding', 'experience', 'contact', 'clear'].map((cmd) => (
+              <button
+                key={cmd}
+                type="button"
+                className="terminal-pill-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  executeCommand(cmd);
+                }}
+              >
+                {cmd}
+              </button>
+            ))}
+          </div>
+
+          <div className="terminal-quick-divider" />
+
+          <div className="quick-bar-wallpapers">
+            <span className="quick-bar-label">🖼️ Wallpaper:</span>
+            <button
+              type="button"
+              className={`terminal-pill-btn terminal-wp-pill ${activeWallpaperId === 'roxy-calendar' ? 'active' : ''}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                setTerminalWallpaper('roxy-calendar');
+              }}
+              title="Roxy Ifrita (Teal Calendar)"
+            >
+              Roxy
+            </button>
+            <button
+              type="button"
+              className={`terminal-pill-btn terminal-wp-pill ${activeWallpaperId === 'neon-crimson-cyber' ? 'active' : ''}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                setTerminalWallpaper('neon-crimson-cyber');
+              }}
+              title="Neon Crimson Cyberpunk"
+            >
+              Cyber
+            </button>
+            <button
+              type="button"
+              className={`terminal-pill-btn terminal-wp-pill ${activeWallpaperId === 'monterey' ? 'active' : ''}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                setTerminalWallpaper('monterey');
+              }}
+              title="Monterey"
+            >
+              Monterey
+            </button>
+            <button
+              type="button"
+              className={`terminal-pill-btn terminal-wp-pill ${activeWallpaperId === 'default' ? 'active' : ''}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                setTerminalWallpaper('default');
+              }}
+              title="Solid Dark"
+            >
+              Dark
+            </button>
+          </div>
+
+          <div className="terminal-quick-divider" />
+
+          {/* Wallpaper Tint Controller */}
+          <div className="quick-bar-tint">
+            <span className="quick-bar-label">Vivid:</span>
+            <button
+              type="button"
+              className={`terminal-tint-btn ${tintLevel === 'vivid' ? 'active' : ''}`}
+              onClick={(e) => { e.stopPropagation(); handleSelectTint('vivid'); }}
+              title="Maximum Wallpaper Visibility (Clear Art)"
+            >
+              Vivid
+            </button>
+            <button
+              type="button"
+              className={`terminal-tint-btn ${tintLevel === 'balanced' ? 'active' : ''}`}
+              onClick={(e) => { e.stopPropagation(); handleSelectTint('balanced'); }}
+              title="Balanced Contrast"
+            >
+              Norm
+            </button>
+          </div>
+
+          {/* Hide Bar Button (lets user see full unblocked wallpaper) */}
           <button
-            key={cmd}
             type="button"
-            className="terminal-pill-btn"
+            className="terminal-bar-toggle-btn"
             onClick={(e) => {
               e.stopPropagation();
-              executeCommand(cmd);
+              setIsQuickBarVisible(false);
             }}
+            title="Hide top bar to view full unblocked wallpaper"
           >
-            {cmd}
+            <EyeOff size={11} />
+            <span>Hide Bar</span>
           </button>
-        ))}
-
-        <div className="terminal-quick-divider" />
-
-        <span className="quick-bar-label">Wallpaper:</span>
+        </div>
+      ) : (
+        /* Floating Unhide Pill Button */
         <button
           type="button"
-          className={`terminal-pill-btn terminal-wp-pill ${activeWallpaperId === 'roxy-calendar' ? 'active' : ''}`}
+          className="terminal-floating-show-btn"
           onClick={(e) => {
             e.stopPropagation();
-            setTerminalWallpaper('roxy-calendar');
+            setIsQuickBarVisible(true);
           }}
-          title="Roxy Ifrita (Teal Calendar)"
+          title="Show terminal shortcut bar"
         >
-          🖼️ Roxy
+          <Eye size={12} />
+          <span>Show Bar</span>
         </button>
-
-        <button
-          type="button"
-          className={`terminal-pill-btn terminal-wp-pill ${activeWallpaperId === 'neon-crimson-cyber' ? 'active' : ''}`}
-          onClick={(e) => {
-            e.stopPropagation();
-            setTerminalWallpaper('neon-crimson-cyber');
-          }}
-          title="Neon Crimson Cyberpunk"
-        >
-          🖼️ Cyber
-        </button>
-
-        <button
-          type="button"
-          className={`terminal-pill-btn terminal-wp-pill ${activeWallpaperId === 'monterey' ? 'active' : ''}`}
-          onClick={(e) => {
-            e.stopPropagation();
-            setTerminalWallpaper('monterey');
-          }}
-          title="Monterey (inspired by macOS)"
-        >
-          🖼️ Monterey
-        </button>
-
-        <button
-          type="button"
-          className={`terminal-pill-btn terminal-wp-pill ${activeWallpaperId === 'default' ? 'active' : ''}`}
-          onClick={(e) => {
-            e.stopPropagation();
-            setTerminalWallpaper('default');
-          }}
-          title="Solid Dark (Default)"
-        >
-          ⬛ Dark
-        </button>
-      </div>
+      )}
 
       {/* Terminal Viewport */}
       <div className="terminal-container">

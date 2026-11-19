@@ -9,7 +9,8 @@ export const desktopWallpapers = [
       backgroundImage: 'url(/wallpapers/roxy-calendar.jpg)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
+      backgroundRepeat: 'no-repeat',
+      imageRendering: '-webkit-optimize-contrast'
     }
   },
   {
@@ -22,7 +23,8 @@ export const desktopWallpapers = [
       backgroundImage: 'url(/wallpapers/neon-crimson-cyber.jpg)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
+      backgroundRepeat: 'no-repeat',
+      imageRendering: '-webkit-optimize-contrast'
     }
   },
   {
@@ -107,12 +109,13 @@ export const terminalWallpapers = [
     name: 'Roxy Ifrita (Teal Calendar)',
     tag: 'Anime Calendar',
     image: '/wallpapers/roxy-calendar.jpg',
-    overlayColor: 'rgba(10, 16, 18, 0.78)',
+    overlayColor: 'rgba(0, 0, 0, 0.22)',
     bgStyle: {
-      backgroundImage: 'linear-gradient(rgba(10, 16, 18, 0.82), rgba(10, 16, 18, 0.86)), url(/wallpapers/roxy-calendar.jpg)',
+      backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.22), rgba(0, 0, 0, 0.32)), url(/wallpapers/roxy-calendar.jpg)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
+      backgroundRepeat: 'no-repeat',
+      imageRendering: '-webkit-optimize-contrast'
     }
   },
   {
@@ -120,12 +123,13 @@ export const terminalWallpapers = [
     name: 'Neon Crimson Cyberpunk',
     tag: 'Cyberpunk Neon',
     image: '/wallpapers/neon-crimson-cyber.jpg',
-    overlayColor: 'rgba(16, 6, 10, 0.76)',
+    overlayColor: 'rgba(16, 6, 10, 0.40)',
     bgStyle: {
-      backgroundImage: 'linear-gradient(rgba(16, 6, 10, 0.78), rgba(16, 6, 10, 0.84)), url(/wallpapers/neon-crimson-cyber.jpg)',
+      backgroundImage: 'linear-gradient(rgba(16, 6, 10, 0.40), rgba(16, 6, 10, 0.50)), url(/wallpapers/neon-crimson-cyber.jpg)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
+      backgroundRepeat: 'no-repeat',
+      imageRendering: '-webkit-optimize-contrast'
     }
   },
   {
@@ -133,12 +137,13 @@ export const terminalWallpapers = [
     name: 'Monterey (inspired by macOS)',
     tag: 'macOS-inspired',
     image: '/monterey.jpg',
-    overlayColor: 'rgba(13, 17, 23, 0.82)',
+    overlayColor: 'rgba(13, 17, 23, 0.45)',
     bgStyle: {
-      backgroundImage: 'linear-gradient(rgba(13, 17, 23, 0.82), rgba(13, 17, 23, 0.88)), url(/monterey.jpg)',
+      backgroundImage: 'linear-gradient(rgba(13, 17, 23, 0.45), rgba(13, 17, 23, 0.55)), url(/monterey.jpg)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
+      backgroundRepeat: 'no-repeat',
+      imageRendering: '-webkit-optimize-contrast'
     }
   }
 ];
