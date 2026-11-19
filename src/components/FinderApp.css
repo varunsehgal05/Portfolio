@@ -482,3 +482,145 @@
 .status-sep {
   color: #3f3f46;
 }
+
+/* ========================================================
+   LIGHT MODE FINDER ENGINE [data-theme="light"]
+   macOS Sequoia clean bright porcelain aesthetics
+   ======================================================== */
+[data-theme="light"] .finder-container {
+  background: #ffffff !important;
+  color: #1e293b;
+}
+
+[data-theme="light"] .finder-sidebar {
+  background: #f5f5f7 !important;
+  border-right: 1px solid #e5e7eb;
+}
+
+[data-theme="light"] .finder-section-title {
+  color: #64748b;
+}
+
+[data-theme="light"] .finder-nav-item {
+  color: #334155;
+}
+
+[data-theme="light"] .finder-nav-item:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #0284c7;
+}
+
+[data-theme="light"] .finder-nav-item.active {
+  background: #0284c7 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="light"] .finder-nav-item.active .finder-nav-icon * {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+[data-theme="light"] .finder-profile-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .finder-profile-name {
+  color: #0f172a;
+}
+
+[data-theme="light"] .finder-profile-bio {
+  color: #64748b;
+}
+
+[data-theme="light"] .finder-main {
+  background: #ffffff !important;
+}
+
+[data-theme="light"] .finder-toolbar {
+  background: #f8fafc !important;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+[data-theme="light"] .finder-nav-arrow {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+}
+
+[data-theme="light"] .finder-view-toggle {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+}
+
+[data-theme="light"] .finder-view-btn {
+  color: #64748b;
+}
+
+[data-theme="light"] .finder-view-btn.active {
+  background: #ffffff;
+  color: #0284c7;
+}
+
+[data-theme="light"] .finder-search-box {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+}
+
+[data-theme="light"] .finder-search-input {
+  color: #0f172a;
+}
+
+[data-theme="light"] .finder-hero-banner {
+  background: linear-gradient(135deg, #f0fdf4 0%, #f8fafc 100%);
+  border: 1px solid #e2e8f0;
+}
+
+[data-theme="light"] .finder-hero-title {
+  color: #0f172a;
+}
+
+[data-theme="light"] .finder-hero-subtitle {
+  color: #475569;
+}
+
+[data-theme="light"] .finder-project-card {
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .finder-card-title {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .finder-card-desc {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .finder-card-tags .finder-card-tag {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+[data-theme="light"] .finder-table-header {
+  background: #f1f5f9;
+  color: #64748b;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+[data-theme="light"] .finder-table-row {
+  border-bottom: 1px solid #f1f5f9;
+  color: #334155;
+}
+
+[data-theme="light"] .finder-table-row:hover {
+  background: #f8fafc;
+}
+
+[data-theme="light"] .finder-status-bar {
+  background: #f8fafc !important;
+  border-top: 1px solid #e2e8f0;
+  color: #64748b;
+}

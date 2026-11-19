@@ -123,11 +123,19 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
       }
     };
 
+    const handleGlobalOpenApp = (e) => {
+      if (e.detail && e.detail.appId) {
+        openApp(e.detail.appId);
+      }
+    };
+
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('varunos-set-desktop-wallpaper', handleCustomWallpaperChange);
+    window.addEventListener('varunos-open-app', handleGlobalOpenApp);
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('varunos-set-desktop-wallpaper', handleCustomWallpaperChange);
+      window.removeEventListener('varunos-open-app', handleGlobalOpenApp);
     };
   }, []);
 
@@ -149,6 +157,15 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
     // Unminimize if it was minimized
     setMinimizedWindows(prev => prev.filter(id => id !== appId));
     setActiveWindow(appId);
+
+    // Notify Swarm Agents to assemble this app window collaboratively
+    const appInfo = portfolioApps[appId];
+    window.dispatchEvent(new CustomEvent('varunos-app-assembling', {
+      detail: {
+        appId,
+        appName: appInfo?.name || appId
+      }
+    }));
   };
 
   const closeApp = (appId) => {
@@ -231,8 +248,8 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
         </div>
       )}
 
-      {/* Califa Swarm Site Live Mouse Flocking Layer (48 agents) */}
-      <LiveMouseSwarm isEnabled={isSwarmFollowEnabled && swarmStage >= 5} agentCount={48} />
+      {/* Collaborative Swarm Live Mouse Flocking & App Assembly Engine (5 Elite Agents) */}
+      <LiveMouseSwarm isEnabled={isSwarmFollowEnabled && swarmStage >= 5} agentCount={5} />
 
       {/* Top MenuBar wrapper */}
       <div className={`desktop-menubar-wrap ${swarmStage < 5 ? (swarmStage >= 1 ? 'stage-revealed' : 'stage-hidden') : ''}`}>

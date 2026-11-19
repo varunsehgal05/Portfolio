@@ -214,3 +214,33 @@
   width: 5px;
   height: 5px;
 }
+
+/* ========================================================
+   LIGHT MODE DOCK [data-theme="light"]
+   macOS Sequoia frosted light glass aesthetics
+   ======================================================== */
+[data-theme="light"] .dock {
+  background: rgba(255, 255, 255, 0.76) !important;
+  border: 1px solid rgba(0, 0, 0, 0.14) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+[data-theme="light"] .dock-separator {
+  background: rgba(0, 0, 0, 0.16) !important;
+}
+
+[data-theme="light"] .dock-tooltip {
+  background: rgba(255, 255, 255, 0.95) !important;
+  color: #0f172a !important;
+  border: 1px solid rgba(0, 0, 0, 0.14) !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12) !important;
+}
+
+[data-theme="light"] .dock-dot {
+  background: rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="light"] .dock-dot.active {
+  background: #0284c7 !important;
+  box-shadow: 0 0 6px #0284c7 !important;
+}

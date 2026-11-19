@@ -382,11 +382,11 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
       let agentTargets = {};
 
       // =====================================================================
-      // Phase 1: Top MenuBar Drafting & Alignment (0.0s - 1.4s)
+      // Phase 1: Top MenuBar Drafting & Alignment (0.0s - 0.8s)
       // =====================================================================
-      if (elapsed < 1.4) {
+      if (elapsed < 0.8) {
         setStatusMessage('[1/5] Drafting macOS MenuBar wireframe...');
-        const t = Math.min(1, Math.max(0, elapsed / 1.4));
+        const t = Math.min(1, Math.max(0, elapsed / 0.8));
         const eased = smootherstep(t);
 
         const menuX = lerp(20, w - 20, eased);
@@ -462,11 +462,11 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         ]);
       }
       // =====================================================================
-      // Phase 2: Desktop App Icons Continuous Stamping (1.4s - 2.8s)
+      // Phase 2: Desktop App Icons Continuous Stamping (0.8s - 1.6s)
       // =====================================================================
-      else if (elapsed < 2.8) {
+      else if (elapsed < 1.6) {
         setStatusMessage('[2/5] Stamping & Duplicating Desktop Apps...');
-        const t = Math.min(1, Math.max(0, (elapsed - 1.4) / 1.4));
+        const t = Math.min(1, Math.max(0, (elapsed - 0.8) / 0.8));
         const eased = smootherstep(t);
         const arcOffset = Math.sin(t * Math.PI) * 45;
 
@@ -559,11 +559,11 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         ]);
       }
       // =====================================================================
-      // Phase 3: Center Finder Window & Live Headline Typing (2.8s - 4.8s)
+      // Phase 3: Center Finder Window & Live Headline Typing (1.6s - 2.6s)
       // =====================================================================
-      else if (elapsed < 4.8) {
+      else if (elapsed < 2.6) {
         setStatusMessage('[3/5] Constructing Finder Window & Typing Content...');
-        const t = Math.min(1, Math.max(0, (elapsed - 2.8) / 2.0));
+        const t = Math.min(1, Math.max(0, (elapsed - 1.6) / 1.0));
         const eased = smootherstep(t);
 
         const curW = lerp(80, winTargetW, eased);
@@ -679,11 +679,11 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         ]);
       }
       // =====================================================================
-      // Phase 4: Bottom macOS Dock Capsule (4.8s - 5.8s)
+      // Phase 4: Bottom macOS Dock Capsule (2.6s - 3.2s)
       // =====================================================================
-      else if (elapsed < 5.8) {
+      else if (elapsed < 3.2) {
         setStatusMessage('[4/5] Extruding Glass Dock Capsule...');
-        const t = Math.min(1, Math.max(0, (elapsed - 4.8) / 1.0));
+        const t = Math.min(1, Math.max(0, (elapsed - 2.6) / 0.6));
         const easedMove = smootherstep(t);
 
         const dockSpan = lerp(60, dockTargetW, easedMove);
@@ -761,11 +761,11 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         ]);
       }
       // =====================================================================
-      // Phase 5: Assistant Bot & Grand Harmonic Convergence (5.8s - 6.8s)
+      // Phase 5: Assistant Bot & Grand Harmonic Convergence (3.2s - 3.8s)
       // =====================================================================
-      else if (elapsed < 6.8) {
+      else if (elapsed < 3.8) {
         setStatusMessage('[5/5] Deploying Assistant Bot & Convergence...');
-        const t = Math.min(1, Math.max(0, (elapsed - 5.8) / 1.0));
+        const t = Math.min(1, Math.max(0, (elapsed - 3.2) / 0.6));
         const eased = smootherstep(t);
         const centerX = w / 2;
         const centerY = h / 2;
@@ -921,6 +921,40 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
 
   return (
     <div className={`swarm-overlay-container ${completeBanner ? 'fade-out-overlay' : ''}`}>
+      {/* Top Floating Rebuild HUD Controls (Option 2) */}
+      <div className="swarm-hud-bar">
+        <div className="swarm-hud-status">
+          <span className="swarm-hud-pulse-dot" />
+          <span className="swarm-hud-phase">{statusMessage}</span>
+        </div>
+        <div className="swarm-hud-controls">
+          <button 
+            type="button"
+            className="swarm-hud-btn" 
+            onClick={handleToggleSpeed} 
+            title="Toggle playback speed"
+          >
+            {speedMultiplier}× Speed
+          </button>
+          <button 
+            type="button"
+            className="swarm-hud-btn" 
+            onClick={handleToggleSound} 
+            title="Toggle audio cues (M)"
+          >
+            {isMuted ? '🔇 Muted' : '🔊 Audio'}
+          </button>
+          <button 
+            type="button"
+            className="swarm-hud-skip-btn" 
+            onClick={finishSwarm} 
+            title="Skip reconstruction and open VarunOS immediately (Esc)"
+          >
+            ⏭ Skip Rebuild / Finish Now
+          </button>
+        </div>
+      </div>
+
       {/* Blueprint Coordinates Indicator (Bottom-Left) */}
       <div className="swarm-blueprint-indicator">
         <span className="blueprint-tag">⚡ SWARM REBUILD ENGINE v3.5</span>

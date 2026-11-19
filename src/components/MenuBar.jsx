@@ -18,7 +18,9 @@ import {
   Info,
   Sun,
   Moon,
-  Coffee
+  Coffee,
+  Shield,
+  Laptop
 } from 'lucide-react';
 import './MenuBar.css';
 
@@ -290,15 +292,71 @@ const MenuBar = ({ userName = 'Guest', onReplaySwarm }) => {
       </div>
       
       <div className="menu-right">
-        {/* Active Collaborator Pill */}
-        <div 
-          className="menu-user-presence" 
-          title={`Signed in as ${userName} — Collaborative mode active`}
-          onClick={handleTriggerSwarm}
-        >
-          <span className="presence-dot" />
-          <User size={11} className="presence-icon" />
-          <span className="presence-name">{userName}</span>
+        {/* Active Collaborator / User Profile Dropdown (Option 1) */}
+        <div className="menu-item-wrapper">
+          <div 
+            className={`menu-user-presence ${activeMenu === 'user' ? 'active' : ''}`}
+            title={`Account: ${userName} (Lead Designer) — Click for Profile & Settings`}
+            onClick={() => toggleMenu('user')}
+          >
+            <span className="presence-dot" />
+            <User size={11} className="presence-icon" />
+            <span className="presence-name">{userName}</span>
+          </div>
+
+          {activeMenu === 'user' && (
+            <div className="apple-dropdown-menu right-aligned user-profile-dropdown">
+              <div className="user-profile-header">
+                <div className="user-avatar-badge">
+                  {userName.charAt(0).toUpperCase()}
+                </div>
+                <div className="user-profile-info">
+                  <div className="user-profile-name-row">
+                    <span className="user-full-name">{userName === 'Designer' ? 'Varun Sehgal' : userName}</span>
+                    <span className="user-verified-badge">PRO</span>
+                  </div>
+                  <span className="user-role-badge">Lead UI/UX & Product Designer</span>
+                  <span className="user-session-meta">🟢 Active • macOS Sequoia M3 Max</span>
+                </div>
+              </div>
+
+              <div className="dropdown-divider" />
+
+              <button className="apple-dropdown-item" onClick={() => { setActiveMenu(null); window.dispatchEvent(new CustomEvent('varunos-open-app', { detail: { appId: 'settings' } })); }}>
+                <Sliders size={14} className="dropdown-icon" />
+                <span>System Settings</span>
+              </button>
+
+              <button className="apple-dropdown-item" onClick={() => { setActiveMenu(null); window.dispatchEvent(new CustomEvent('varunos-open-app', { detail: { appId: 'contact' } })); }}>
+                <Info size={14} className="dropdown-icon" />
+                <span>Varun Sehgal Contact Card</span>
+              </button>
+
+              <button className="apple-dropdown-item" onClick={() => { 
+                setActiveMenu(null); 
+                const newName = prompt('Enter collaborator name:', userName);
+                if (newName && newName.trim()) {
+                  localStorage.setItem('varunos_user_name', newName.trim());
+                  window.location.reload();
+                }
+              }}>
+                <User size={14} className="dropdown-icon" />
+                <span>Switch User / Rename ({userName})</span>
+              </button>
+
+              <button className="apple-dropdown-item" onClick={() => { setActiveMenu(null); window.dispatchEvent(new CustomEvent('varunos-open-coffee-modal')); }}>
+                <Coffee size={14} className="dropdown-icon" />
+                <span>Support via UPI QR / Coffee</span>
+              </button>
+
+              <div className="dropdown-divider" />
+
+              <button className="apple-dropdown-item text-danger" onClick={() => { setActiveMenu(null); window.location.reload(); }}>
+                <Power size={14} className="dropdown-icon" />
+                <span>Lock / Reload Session</span>
+              </button>
+            </div>
+          )}
         </div>
 
         <button 

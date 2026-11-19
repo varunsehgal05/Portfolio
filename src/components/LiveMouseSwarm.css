@@ -60,6 +60,105 @@
   line-height: 1.2;
 }
 
+.live-swarm-action {
+  margin-left: 5px;
+  padding: 1px 4px;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 3px;
+  font-size: 8.5px;
+  font-weight: 500;
+  opacity: 0.92;
+  letter-spacing: -0.1px;
+}
+
+/* ========================================================
+   COLLABORATIVE APP ASSEMBLY BOUNDING BOX
+   ======================================================== */
+.swarm-assembly-box {
+  position: absolute;
+  pointer-events: none;
+  border: 1.5px dashed #a259ff;
+  border-radius: 12px;
+  box-shadow: 
+    0 0 0 1px rgba(162, 89, 255, 0.35),
+    0 0 28px rgba(162, 89, 255, 0.3),
+    inset 0 0 24px rgba(162, 89, 255, 0.12);
+  z-index: 9997;
+  animation: assemblyBoxPulse 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes assemblyBoxPulse {
+  0% {
+    border-color: #a259ff;
+    box-shadow: 0 0 20px rgba(162, 89, 255, 0.25), inset 0 0 16px rgba(162, 89, 255, 0.08);
+  }
+  100% {
+    border-color: #ec4899;
+    box-shadow: 0 0 32px rgba(236, 72, 153, 0.4), inset 0 0 24px rgba(236, 72, 153, 0.16);
+  }
+}
+
+.assembly-handle {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  background: #ffffff;
+  border: 2px solid #a259ff;
+  border-radius: 2px;
+}
+
+.assembly-handle.top-left {
+  top: -4.5px;
+  left: -4.5px;
+}
+.assembly-handle.top-right {
+  top: -4.5px;
+  right: -4.5px;
+}
+.assembly-handle.bottom-left {
+  bottom: -4.5px;
+  left: -4.5px;
+}
+.assembly-handle.bottom-right {
+  bottom: -4.5px;
+  right: -4.5px;
+}
+
+.assembly-badge {
+  position: absolute;
+  top: -26px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  background: linear-gradient(135deg, #a259ff 0%, #ec4899 100%);
+  color: #ffffff;
+  border-radius: 999px;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+  font-size: 10.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(162, 89, 255, 0.5);
+  animation: assemblyBadgeBounce 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes assemblyBadgeBounce {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 6px) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+.assembly-pulse-icon {
+  font-size: 11px;
+}
+
 /* Subtle Live Status Indicator */
 .live-swarm-status-badge {
   position: fixed;

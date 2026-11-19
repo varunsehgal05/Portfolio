@@ -586,3 +586,34 @@
     transform: scale(1.015);
   }
 }
+
+/* ========================================================
+   LIGHT MODE WINDOW CHROME [data-theme="light"]
+   ======================================================== */
+[data-theme="light"] .window-inner {
+  background: #ffffff !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .window-titlebar {
+  background: rgba(246, 246, 248, 0.98) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] .window-title {
+  color: #1e293b !important;
+}
+
+[data-theme="light"] .titlebar-folder-icon {
+  color: #0284c7 !important;
+}
+
+[data-theme="light"] .titlebar-drag-indicator {
+  background: rgba(0, 0, 0, 0.06) !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
+  color: #64748b !important;
+}
+
+[data-theme="light"] .app-window.active {
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.22) !important;
+}

@@ -1285,3 +1285,102 @@
   background: rgba(168, 85, 247, 0.35);
   transform: translateX(2px);
 }
+
+/* ========================================================
+   LIGHT MODE SYSTEM SETTINGS [data-theme="light"]
+   macOS Sequoia clean bright porcelain aesthetics
+   ======================================================== */
+[data-theme="light"] .settings-container {
+  background: #f8fafc !important;
+  color: #1e293b !important;
+}
+
+[data-theme="light"] .settings-sidebar {
+  background: #f1f5f9 !important;
+  border-right: 1px solid #e2e8f0 !important;
+}
+
+[data-theme="light"] .settings-user-card {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+[data-theme="light"] .settings-name {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .settings-sub {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .settings-nav-item {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .settings-nav-item:hover {
+  background: rgba(0, 0, 0, 0.05) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .settings-nav-item.active {
+  background: #0284c7 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="light"] .settings-content {
+  background: #ffffff !important;
+}
+
+[data-theme="light"] .settings-panel-title {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .settings-panel-desc {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .settings-group {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme="light"] .row-title {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .row-sub {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .theme-card {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+[data-theme="light"] .theme-card.active {
+  border-color: #0284c7 !important;
+  box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.25) !important;
+}
+
+[data-theme="light"] .appearance-preview-box {
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+[data-theme="light"] .about-specs-card {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+[data-theme="light"] .about-os-name {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .spec-label {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .spec-val {
+  color: #0f172a !important;
+}
