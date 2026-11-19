@@ -1,1519 +1,832 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { 
-  Files, 
-  Search, 
-  GitBranch, 
-  Play, 
-  Package, 
-  Settings, 
-  User, 
-  ChevronRight, 
-  ChevronDown, 
-  ExternalLink, 
-  Code, 
-  FileCode, 
-  FileText, 
-  Sparkles,
-  Terminal,
-  Copy,
-  Check,
-  CheckCircle2,
-  Cpu,
-  Layers,
-  Trash2,
+import {
+  Files,
+  Search,
+  GitBranch,
+  Play,
+  Package,
+  Settings,
+  User,
+  ChevronRight,
+  ChevronDown,
+  Terminal as TerminalIcon,
+  X,
+  Split,
   Maximize2,
   Minimize2,
-  X,
-  AlertCircle,
-  Folder,
-  FolderOpen
+  Bell,
+  Sparkles,
+  Layout,
+  ArrowLeft,
+  ArrowRight,
+  MoreHorizontal
 } from 'lucide-react';
 import './VsCodeApp.css';
 
-const PROJECTS_DATA = {
-  'ai-interview-platform.tsx': {
-    name: 'ai-interview-platform.tsx',
-    category: 'Vibecoded Projects',
-    badge: 'Vibecoded • AI SaaS',
-    icon: 'tsx',
-    path: 'vibecoded > ai-interview-platform.tsx',
-    title: 'AI Interview & Prep Platform',
-    desc: 'Autonomous AI candidate evaluation engine with security grading and real-time audio/code assessment modules.',
-    tags: ['Next.js 14', 'TypeScript', 'Tailwind CSS', 'OpenAI API', 'Ollama Local LLM'],
-    liveUrl: 'https://www.figma.com/design/ezDh2NmBto6iv7xaQNs3Ha/AI-Interview?node-id=11-1842',
-    githubUrl: 'https://github.com/varunsehgal05',
-    code: `// ========================================================
-// AI Interview & Prep Platform — Autonomous Assessment Core
-// Architect: Varun Sehgal (UI/UX & Product Engineer)
-// ========================================================
+// Exact TerminalApp.jsx source code matching the user's reference image
+const TERMINAL_APP_CODE = `import React, { useState, useEffect, useRef } from 'react';
+import { Terminal, Sparkles, Folder, Play, Check, Copy } from 'lucide-react';
+import './TerminalApp.css';
 
-import { useState, useEffect } from 'react';
-import { LLMClient, CandidateStream } from '@varun/ai-core';
-
-interface AssessmentState {
-  candidateId: string;
-  interviewType: 'System Design' | 'Frontend Architecture' | 'Product UX';
-  evalScore: number;
-  securityVerdict: 'VERIFIED_HUMAN' | 'FLAGGED_ANOMALY';
-}
-
-export const AIInterviewWorkspace: React.FC<{ sessionToken: string }> = ({ sessionToken }) => {
-  const [assessment, setAssessment] = useState<AssessmentState>({
-    candidateId: 'cand_9841',
-    interviewType: 'System Design',
-    evalScore: 94.8,
-    securityVerdict: 'VERIFIED_HUMAN',
-  });
-
-  const [transcriptionStream, setTranscriptionStream] = useState<string[]>([]);
-  const [isGrading, setIsGrading] = useState<boolean>(false);
-
-  // Autonomous telemetry grading loop
-  useEffect(() => {
-    const stream = new CandidateStream({ sessionToken });
-    stream.on('audioChunk', async (audioBuffer) => {
-      const response = await LLMClient.evaluateCandidateResponse({
-        audio: audioBuffer,
-        rubric: 'FAANG_L5_ARCHITECT',
-        temperature: 0.2
-      });
-      setTranscriptionStream((prev) => [...prev, response.transcription]);
-    });
-
-    return () => stream.disconnect();
-  }, [sessionToken]);
-
-  return (
-    <div className="interview-hud-grid p-6 bg-zinc-950 text-white rounded-xl">
-      <header className="flex justify-between border-b border-zinc-800 pb-4">
-        <h1 className="text-xl font-bold text-sky-400">AI Interview Evaluator</h1>
-        <span className="badge-grade bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full">
-          Grade: {assessment.evalScore}% • {assessment.securityVerdict}
-        </span>
-      </header>
-      {/* Real-time telemetry & question graph */}
-    </div>
-  );
-};
-
-export default AIInterviewWorkspace;`
-  },
-
-  'prompt-to-ui-engine.ts': {
-    name: 'prompt-to-ui-engine.ts',
-    category: 'Vibecoded Projects',
-    badge: 'Vibecoded • Generative Agent',
-    icon: 'ts',
-    path: 'vibecoded > prompt-to-ui-engine.ts',
-    title: 'Prompt-to-UI Prototyping Engine',
-    desc: 'Self-assembling UI agent that converts natural language design specs into production Tailwind and React components.',
-    tags: ['TypeScript', 'Generative UI', 'AST Transformer', 'Design Tokens'],
-    liveUrl: 'https://github.com/varunsehgal05',
-    githubUrl: 'https://github.com/varunsehgal05',
-    code: `// ========================================================
-// Prompt-to-UI Engine — Generative Agent AST Compiler
-// Author: Varun Sehgal
-// ========================================================
-
-export interface DesignTokens {
-  surfaceBg: string;
-  accentPrimary: string;
-  borderRadius: string;
-  glassBlur: string;
-}
-
-export class PromptToUICompiler {
-  private baseTokens: DesignTokens = {
-    surfaceBg: 'rgba(18, 22, 30, 0.94)',
-    accentPrimary: '#38bdf8',
-    borderRadius: '16px',
-    glassBlur: '28px'
-  };
-
-  /**
-   * Synthesize natural language prompt into reactive Component tree
-   */
-  public async compilePromptToReact(prompt: string): Promise<{ jsxCode: string; cssVariables: Record<string, string> }> {
-    console.log('[Compiler] Parsing prompt intent:', prompt);
-    
-    const AST = await this.generateComponentAST(prompt);
-    const optimizedTree = this.applyDesignSystemTokens(AST, this.baseTokens);
-    
-    return {
-      jsxCode: this.renderASTToString(optimizedTree),
-      cssVariables: {
-        '--mac-blur': this.baseTokens.glassBlur,
-        '--mac-accent': this.baseTokens.accentPrimary
-      }
-    };
-  }
-
-  private async generateComponentAST(spec: string) {
-    // LLM generative code synthesis logic
-    return { type: 'WindowContainer', children: ['ActivityBar', 'CodeEditor', 'StatusBar'] };
-  }
-
-  private applyDesignSystemTokens(ast: any, tokens: DesignTokens) {
-    return { ...ast, appliedTheme: tokens };
-  }
-
-  private renderASTToString(ast: any): string {
-    return \`<div className="vibecoded-preview">\${JSON.stringify(ast)}</div>\`;
-  }
-}`
-  },
-
-  'eventflow-ticketing.tsx': {
-    name: 'eventflow-ticketing.tsx',
-    category: 'Frontend Projects',
-    badge: 'Frontend • SaaS Checkout',
-    icon: 'tsx',
-    path: 'frontend > eventflow-ticketing.tsx',
-    title: 'EventFlow: Event Ticketing SaaS',
-    desc: 'Frictionless 4-step event ticketing checkout flow reducing checkout abandon rate by 30% with 50+ component design tokens.',
-    tags: ['React.js', 'Figma Tokens', 'Stripe Elements', 'Motion UX'],
-    liveUrl: 'https://www.figma.com/design/29nTBBWxZfoOKdFnOaQWbq/EventFlow?node-id=2-2',
-    githubUrl: 'https://github.com/varunsehgal05',
-    code: `// ========================================================
-// EventFlow — 4-Step High-Conversion Checkout Pipeline
-// UX Architect: Varun Sehgal
-// Impact: Reduced user drop-off by 30%
-// ========================================================
-
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-
-export type CheckoutStep = 'SELECTION' | 'SEAT_MAP' | 'PAYMENT' | 'TICKET_PASS';
-
-export const EventFlowCheckout: React.FC<{ eventId: string }> = ({ eventId }) => {
-  const [currentStep, setCurrentStep] = useState<CheckoutStep>('SELECTION');
-  const [selectedTier, setSelectedTier] = useState<string>('VIP_ACCESS');
-  const [subtotal, setSubtotal] = useState<number>(149.00);
-
-  const proceedToNextStep = () => {
-    const sequence: CheckoutStep[] = ['SELECTION', 'SEAT_MAP', 'PAYMENT', 'TICKET_PASS'];
-    const nextIdx = sequence.indexOf(currentStep) + 1;
-    if (nextIdx < sequence.length) {
-      setCurrentStep(sequence[nextIdx]);
-    }
-  };
-
-  return (
-    <div className="eventflow-container max-w-4xl mx-auto p-8 bg-zinc-900 border border-zinc-800 rounded-2xl">
-      <div className="step-progress-indicator flex justify-between mb-8">
-        {['Select Tier', 'Choose Seats', 'Payment', 'Instant Pass'].map((label, idx) => (
-          <div key={idx} className="flex items-center gap-2">
-            <span className="step-circle bg-sky-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">
-              {idx + 1}
-            </span>
-            <span className="step-label text-sm font-medium text-zinc-300">{label}</span>
-          </div>
-        ))}
-      </div>
-
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={currentStep}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -20 }}
-          transition={{ duration: 0.25 }}
-        >
-          {/* Step Dynamic Content with sub-5 second checkout optimization */}
-          <button onClick={proceedToNextStep} className="btn-primary bg-sky-600 hover:bg-sky-500 px-6 py-3 rounded-xl font-bold">
-            Continue to {currentStep === 'PAYMENT' ? 'Complete Order' : 'Next Step'}
-          </button>
-        </motion.div>
-      </AnimatePresence>
-    </div>
-  );
-};`
-  },
-
-  'expensify-fintech.jsx': {
-    name: 'expensify-fintech.jsx',
-    category: 'Frontend Projects',
-    badge: 'Mobile UX • Fintech',
-    icon: 'jsx',
-    path: 'frontend > expensify-fintech.jsx',
-    title: 'Expensify: Budget Tracker App',
-    desc: '17+ mobile screens refined for rapid expense logging in under 5 seconds with real-time financial telemetry.',
-    tags: ['React Native', 'Tailwind', 'Chart.js', 'Fintech UI'],
-    liveUrl: 'https://www.figma.com/design/3mw8XBHEZ3b8HKNNqcs6U2/Expensify---Budget-Tracker-App?node-id=135-318',
-    githubUrl: 'https://github.com/varunsehgal05',
-    code: `// ========================================================
-// Expensify Budget Tracker — Sub-5-Second Expense Ledger
-// Designer & Lead: Varun Sehgal
-// ========================================================
-
-import React, { useState } from 'react';
-
-export const QuickExpenseLogger = ({ onLogExpense }) => {
-  const [amount, setAmount] = useState('');
-  const [category, setCategory] = useState('Workspace');
-  const [currency, setCurrency] = useState('USD');
-
-  const handleQuickSubmit = (e) => {
-    e.preventDefault();
-    if (!amount || isNaN(amount)) return;
-
-    onLogExpense({
-      amount: parseFloat(amount),
-      category,
-      timestamp: new Date().toISOString(),
-      latencyMs: performance.now()
-    });
-    setAmount('');
-  };
-
-  return (
-    <form onSubmit={handleQuickSubmit} className="expense-quick-dock bg-zinc-900/90 backdrop-blur-md p-4 rounded-2xl border border-white/10">
-      <div className="flex items-center gap-3">
-        <span className="text-2xl text-emerald-400 font-bold">$</span>
-        <input
-          type="number"
-          step="0.01"
-          placeholder="0.00"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          className="text-3xl font-mono bg-transparent border-none text-white outline-none w-full"
-          autoFocus
-        />
-        <button type="submit" className="bg-emerald-500 hover:bg-emerald-400 text-black px-4 py-2 rounded-xl font-bold">
-          Log
-        </button>
-      </div>
-    </form>
-  );
-};`
-  },
-
-  'codesrijan-hackathon.tsx': {
-    name: 'codesrijan-hackathon.tsx',
-    category: 'Frontend Projects',
-    badge: 'Hackathon Platform • 200+ Devs',
-    icon: 'tsx',
-    path: 'frontend > codesrijan-hackathon.tsx',
-    title: 'CodeSrijan Hackathon Ecosystem',
-    desc: 'Full digital platform, live judging scoreboards, and registration portals for 200+ participants.',
-    tags: ['React.js', 'Node.js', 'WebSocket', 'Branding'],
-    liveUrl: 'https://lnkd.in/p/dUXQYx92',
-    githubUrl: 'https://github.com/varunsehgal05',
-    code: `// ========================================================
-// CodeSrijan Hackathon — Live Evaluation & Leaderboard Hub
-// Lead UI/UX & Operations: Varun Sehgal
-// Scale: 200+ Participants across 72 Hours
-// ========================================================
-
-import React, { useEffect, useState } from 'react';
-
-export const LiveLeaderboard: React.FC = () => {
-  const [teams, setTeams] = useState([
-    { rank: 1, name: 'NeuralNomads', project: 'AI Health Diagnostics', score: 98.4 },
-    { rank: 2, name: 'ByteCrafters', project: 'DeFi Micro-Lending', score: 96.1 },
-    { rank: 3, name: 'SyntaxSorcerers', project: 'Green Supply Chain', score: 94.7 },
-  ]);
-
-  return (
-    <div className="leaderboard-card p-6 bg-zinc-950 border border-purple-500/20 rounded-2xl">
-      <h2 className="text-xl font-extrabold text-purple-400 mb-4">🏆 CodeSrijan Finalists</h2>
-      <div className="space-y-3">
-        {teams.map((t) => (
-          <div key={t.rank} className="flex justify-between items-center p-3 bg-zinc-900 rounded-lg">
-            <div className="flex items-center gap-3">
-              <span className="font-bold text-lg text-amber-400">#{t.rank}</span>
-              <div>
-                <p className="font-semibold text-white">{t.name}</p>
-                <p className="text-xs text-zinc-400">{t.project}</p>
-              </div>
-            </div>
-            <span className="text-emerald-400 font-mono font-bold">{t.score} pts</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};`
-  },
-
-  'ollama-local-llm-service.py': {
-    name: 'ollama-local-llm-service.py',
-    category: 'Backend & AI',
-    badge: 'Backend • Local LLM API',
-    icon: 'py',
-    path: 'backend > ollama-local-llm-service.py',
-    title: 'Ollama Local LLM Integration Service',
-    desc: 'Local microservice streaming quantized Llama-3 and Mistral inferences for instant offline question generation.',
-    tags: ['Python 3.11', 'FastAPI', 'Ollama', 'LangChain', 'Docker'],
-    liveUrl: 'https://github.com/varunsehgal05',
-    githubUrl: 'https://github.com/varunsehgal05',
-    code: `# ========================================================
-# Ollama Local LLM Telemetry API
-# Backend Architecture: Varun Sehgal
-# ========================================================
-
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-import httpx
-import json
-
-app = FastAPI(title="VarunOS Local LLM Microservice", version="2.4.0")
-
-class PromptRequest(BaseModel):
-    model: str = "llama3:8b"
-    prompt: str
-    temperature: float = 0.2
-
-@app.post("/api/v1/generate")
-async def generate_response(req: PromptRequest):
-    """Stream quantized local LLM responses without external API latency"""
-    ollama_url = "http://localhost:11434/api/generate"
-    payload = {
-        "model": req.model,
-        "prompt": req.prompt,
-        "stream": False,
-        "options": {
-            "temperature": req.temperature,
-            "top_p": 0.9
-        }
-    }
-
-    async with httpx.AsyncClient(timeout=30.0) as client:
-        try:
-            resp = await client.post(ollama_url, json=payload)
-            data = resp.json()
-            return {
-                "status": "success",
-                "model": req.model,
-                "response": data.get("response", ""),
-                "eval_duration_ms": data.get("eval_duration", 0) / 1e6
-            }
-        except httpx.ConnectError:
-            raise HTTPException(status_code=503, detail="Local Ollama instance unreachable")`
-  },
-
-  'README.md': {
-    name: 'README.md',
-    category: 'Root',
-    badge: 'Overview • Varun Sehgal',
-    icon: 'md',
-    path: 'varun-portfolio > README.md',
-    title: 'Varun Sehgal — UI/UX Designer & Software Engineer',
-    desc: 'Portfolio workspace featuring vibecoded tools, interactive design systems, and frontend/backend software architecture.',
-    tags: ['UI/UX', 'Product Design', 'Vibecoding', 'Full-Stack'],
-    liveUrl: 'https://varunsehgal.runs-on.dev',
-    githubUrl: 'https://github.com/varunsehgal05/Portfolio',
-    code: `# Varun Sehgal 🚀
-**UI/UX Designer & Software Engineer**
-*B.Tech in Computer Science & Engineering @ JUET (2023 - 2027)*
-
-> Designing intuitive digital experiences, high-converting SaaS interfaces, and vibecoded product ecosystems.
-
----
-
-### 🌟 Project Categories Inside This VS Code Workspace:
-- **⚡ Vibecoded Projects:**
-  - \`ai-interview-platform.tsx\` — AI Candidate Evaluation SaaS
-  - \`prompt-to-ui-engine.ts\` — Generative Agent AST Compiler
-- **🎨 Frontend Projects:**
-  - \`eventflow-ticketing.tsx\` — 4-Step Checkout Flow (30% drop-off reduction)
-  - \`expensify-fintech.jsx\` — Rapid Expense Ledger App
-  - \`codesrijan-hackathon.tsx\` — 200+ Developer Live Event Portal
-- **🛠️ Backend & AI Architecture:**
-  - \`ollama-local-llm-service.py\` — Offline Quantized LLM Microservice
-
----
-
-### 📬 Connect & Collaborate:
-- **Email:** varun.sehgal02@gmail.com
-- **LinkedIn:** [linkedin.com/in/varunsehgal02](https://linkedin.com/in/varunsehgal02)
-- **Behance:** [behance.net/varunsehgal3](https://behance.net/varunsehgal3)
-- **GitHub:** [github.com/varunsehgal05](https://github.com/varunsehgal05)`
-  }
-};
-
-// ========================================================
-// Realistic File Execution Outputs for Integrated Terminal
-// ========================================================
-const FILE_EXECUTION_LOGS = {
-  'ai-interview-platform.tsx': [
-    { type: 'info', text: '[ai-core] Initializing Autonomous Candidate Assessment Engine...' },
-    { type: 'info', text: '[ai-core] Connecting to CandidateStream (session: cand_9841)' },
-    { type: 'success', text: '[telemetry] FAANG L5 System Design rubric loaded (target evalScore: 94.8%)' },
-    { type: 'success', text: '[security] Facial & Audio biometrics: VERIFIED_HUMAN (confidence: 99.4%)' },
-    { type: 'info', text: '[evaluator] Streaming 18 audio frames to Ollama Local LLM inference server...' },
-    { type: 'success', text: '✓ Assessment workspace active on http://localhost:8080 (38ms)' }
-  ],
-  'prompt-to-ui-engine.ts': [
-    { type: 'info', text: '[Compiler] Parsing design prompt intent: "Build reactive Glass UI with fluid motion"' },
-    { type: 'info', text: '[AST Generator] Synthesizing Component tree with design system tokens...' },
-    { type: 'info', text: '[DesignTokens] Applied: surfaceBg="rgba(18,22,30,0.94)", glassBlur="28px"' },
-    { type: 'success', text: '[Compiler] Generated 14 React components with Tailwind CSS in 48ms.' },
-    { type: 'success', text: '✓ AST output compiled to dist/bundle.js (18.4 kB)' }
-  ],
-  'eventflow-ticketing.tsx': [
-    { type: 'prompt', text: '> eventflow-ticketing@1.0.0 dev' },
-    { type: 'info', text: 'VITE v5.2.8 ready in 190 ms' },
-    { type: 'success', text: '➜ Local:   http://localhost:3001/' },
-    { type: 'info', text: '[SeatMap] 3D SVG Auditorium geometry cached (1,450 seats ready)' },
-    { type: 'success', text: '[Payment] Stripe Webhooks verified: /api/webhooks/stripe' }
-  ],
-  'expensify-fintech.jsx': [
-    { type: 'info', text: '[FinTech Engine] Parsing transaction ledger (1,240 records)...' },
-    { type: 'info', text: '[Budget AI] Calculated breakdown: Housing (38%), Cloud (11%), Food (10%), Savings (41%)' },
-    { type: 'success', text: '[Analytics] Month-over-month burn rate reduced by 14.2%' },
-    { type: 'success', text: '✓ Sync completed with Plaid & Banking APIs (0 errors)' }
-  ],
-  'codesrijan-hackathon.tsx': [
-    { type: 'prompt', text: '▲ Next.js 14.2.3 dev server running' },
-    { type: 'success', text: '- Local:        http://localhost:3002' },
-    { type: 'info', text: '✓ Compiled /portal/teams in 310ms (822 modules)' },
-    { type: 'success', text: '[Database] Connected to PostgreSQL (JUET Hackathon cluster: 840 participants)' },
-    { type: 'info', text: '[Leaderboard] Real-time WebSocket scoring pipeline active.' }
-  ],
-  'ollama-local-llm-service.py': [
-    { type: 'info', text: '[INFO] FastAPI 0.110.0 starting on http://127.0.0.1:11434' },
-    { type: 'info', text: '[INFO] Loading local model weights: llama3:8b-instruct-q4_K_M' },
-    { type: 'success', text: '[INFO] GPU acceleration: Apple Metal / CUDA enabled (14 layers offloaded)' },
-    { type: 'success', text: '[INFO] Health check: OK (latency: 18ms)' },
-    { type: 'prompt', text: '[INFO] POST /api/generate - 200 OK (38.4 tokens/sec)' }
-  ],
-  'README.md': [
-    { type: 'info', text: '# Varun Sehgal — UI/UX Designer & Software Engineer' },
-    { type: 'prompt', text: 'Undergraduate at Jaypee University Of Engineering And Technology (2023–2027)' },
-    { type: 'success', text: 'Specialties: Vibecoded AI SaaS, Frontend Architecture, Design Systems' },
-    { type: 'info', text: 'GitHub: https://github.com/varunsehgal05 | Email: varun.sehgal02@gmail.com' }
-  ]
-};
-
-const EXTENSIONS_LIST = [
-  { name: 'Tailwind CSS IntelliSense', publisher: 'Tailwind Labs', version: 'v0.10.5', icon: '🎨', desc: 'Intelligent Tailwind CSS tooling for VS Code.' },
-  { name: 'Prettier - Code formatter', publisher: 'Prettier', version: 'v10.4.0', icon: '✨', desc: 'Code formatter using prettier.' },
-  { name: 'Python', publisher: 'Microsoft', version: 'v2024.4.0', icon: '🐍', desc: 'Python language support with syntax highlighting and linting.' },
-  { name: 'ESLint', publisher: 'Microsoft', version: 'v3.0.8', icon: '🛡️', desc: 'Integrates ESLint JavaScript into VS Code.' },
-  { name: 'GitHub Copilot', publisher: 'GitHub', version: 'v1.180.0', icon: '🤖', desc: 'Your AI pair programmer.' }
+const WELCOME_BANNER = [
+  'Last login: ' + new Date().toLocaleString() + ' on ttys001',
+  'VarunOS Sequoia Darwin 24.1.0 (arm64 Apple M3 Max)',
+  'Oh-My-Zsh configured with zsh-syntax-highlighting & pure prompt',
+  '',
+  'Type "help" or click any shortcut pill above to begin exploring.',
+  ''
 ];
 
-const VsCodeApp = () => {
-  const [activeFile, setActiveFile] = useState('README.md');
-  const [openTabs, setOpenTabs] = useState(['README.md', 'ai-interview-platform.tsx', 'eventflow-ticketing.tsx']);
-  const [copied, setCopied] = useState(false);
-  const [activeActivity, setActiveActivity] = useState('explorer'); // 'explorer' | 'search' | 'git' | 'debug' | 'extensions'
+const NEOFETCH_LINES = [
+  { text: '                    \\'.',          varun@macbook-pro.local', color: '#38bdf8', bold: true },
+  { text: '                 ,xNMM.',          '-----------------------', color: '#38bdf8' },
+  { text: '               .OMMMMo',           'OS: VarunOS Sequoia 15.1 (24B83) arm64', color: '#facc15' },
+  { text: '               OMMM0,',            'Host: MacBookPro18,1 (Apple M3 Max)', color: '#facc15' },
+  { text: '     .;loddo:.  .olloddol;.',      'Kernel: Darwin 24.1.0', color: '#facc15' },
+  { text: '   cKMMMMMMMMMMNWMMMMMMMMMM0:',    'Uptime: 4 days, 12 hours, 38 mins', color: '#4ade80' },
+  { text: ' .KMMMMMMMMMMMMMMMMMMMMMMMWd.',    'Packages: 842 (brew), 24 (npm)', color: '#4ade80' },
+  { text: ' XMMMMMMMMMMMMMMMMMMMMMMMX.',      'Shell: zsh 5.9 (x86_64-apple-darwin24.0)', color: '#4ade80' },
+  { text: ';MMMMMMMMMMMMMMMMMMMMMMMM:',       'Resolution: 3024x1964 Retina Display', color: '#a78bfa' },
+  { text: ':MMMMMMMMMMMMMMMMMMMMMMMM:',       'DE: Aqua / Quartz Compositor', color: '#a78bfa' },
+  { text: '.MMMMMMMMMMMMMMMMMMMMMMMMX.',      'WM: VarunOS Window Server', color: '#a78bfa' },
+  { text: ' kMMMMMMMMMMMMMMMMMMMMMMMMWd.',    'Terminal: Apple Terminal.app (Sequoia)', color: '#ec4899' },
+  { text: ' .XMMMMMMMMMMMMMMMMMMMMMMMMMMk',   'CPU: Apple M3 Max (16 cores @ 4.05GHz)', color: '#ec4899' },
+  { text: '  .XMMMMMMMMMMMMMMMMMMMMMMMMK.',   'GPU: Apple M3 Max 40-Core GPU', color: '#ec4899' },
+  { text: '    kMMMMMMMMMMMMMMMMMMMMMMd',     'Memory: 18432MiB / 65536MiB (28%)', color: '#38bdf8' },
+  { text: '     ;KMMMMMMMWXXWMMMMMMMk.',      'Specialty: UI/UX & Vibecoded Product Engineering', color: '#38bdf8' },
+  { text: '       .cooc,.    .,cooc.',        '', color: '#38bdf8' },
+  { text: ' ', color: '#94a3b8' },
+  { text: '                                 [■■■■■■■■] [■■■■■■■■] [■■■■■■■■] [■■■■■■■■]', color: '#f43f5e' },
+  { text: '', color: '#94a3b8' }
+];
 
-  // Editable files state
-  const [editedCodes, setEditedCodes] = useState({});
-  const [unsavedFiles, setUnsavedFiles] = useState([]);
-  const [cursorPos, setCursorPos] = useState({ line: 1, col: 1 });
+const HELP_COMMANDS = [
+  { cmd: 'neofetch', desc: 'Display VarunOS system hardware & specs banner' },
+  { cmd: 'about', desc: 'Summary of Varun Sehgal and design philosophy' },
+  { cmd: 'skills', desc: 'Display UI/UX, AI prototyping & frontend toolset' },
+  { cmd: 'projects', desc: 'List featured SaaS and vibecoded platforms' },
+  { cmd: 'vibecoding', desc: 'Explore autonomous AI code generation tools' },
+  { cmd: 'experience', desc: 'Show career timeline & internship details' },
+  { cmd: 'contact', desc: 'Print direct email, phone, and social handles' },
+  { cmd: 'cat resume', desc: 'Read text preview of ATS-optimized resume' },
+  { cmd: 'open <app>', desc: 'Launch desktop app (e.g. open figma, open vscode)' },
+  { cmd: 'whoami', desc: 'Print active authenticated session user' },
+  { cmd: 'date', desc: 'Print current system time and calendar timestamp' },
+  { cmd: 'clear', desc: 'Clear the terminal view' }
+];
 
-  // Terminal state
-  const [terminalOpen, setTerminalOpen] = useState(false);
-  const [terminalTab, setTerminalTab] = useState('terminal'); // 'terminal' | 'output' | 'problems' | 'debug'
-  const [isTerminalMaximized, setIsTerminalMaximized] = useState(false);
-  const [terminalInput, setTerminalInput] = useState('');
-  const [isRunningCode, setIsRunningCode] = useState(false);
+const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
+  const [history, setHistory] = useState(WELCOME_BANNER);
+  const [inputVal, setInputVal] = useState('');
+  const [cmdHistory, setCmdHistory] = useState(['neofetch']);
+  const [historyIdx, setHistoryIdx] = useState(-1);
+  const bottomRef = useRef(null);
+  const inputRef = useRef(null);
 
-  const [terminalHistory, setTerminalHistory] = useState([
-    { type: 'system', text: 'VarunOS VS Code Developer Environment [Version 3.2.0]' },
-    { type: 'system', text: 'Type "help" or click a Quick Run chip to execute scripts.' },
-    { type: 'prompt', text: 'varun@macbook:~/varun-portfolio $ npm run dev' },
-    { type: 'success', text: '[vite v5.2.0] ready in 180 ms. Local: http://localhost:3000/' }
-  ]);
-
-  // Search view state
-  const [searchQuery, setSearchQuery] = useState('');
-
-  // Source control view state
-  const [commitMessage, setCommitMessage] = useState('');
-  const [commitToast, setCommitToast] = useState(false);
-
-  // Run & debug view state
-  const [debugConfig, setDebugConfig] = useState('Launch Active File');
-
-  const terminalBodyRef = useRef(null);
-  const editorTextareaRef = useRef(null);
-
-  // Auto-scroll terminal
   useEffect(() => {
-    if (terminalBodyRef.current) {
-      terminalBodyRef.current.scrollTop = terminalBodyRef.current.scrollHeight;
-    }
-  }, [terminalHistory, terminalOpen, terminalTab]);
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [history]);
 
-  // Folder open/closed state
-  const [foldersOpen, setFoldersOpen] = useState({
-    vibecoded: true,
-    frontend: true,
-    backend: true
-  });
+  const handleContainerClick = () => {
+    inputRef.current?.focus();
+  };`;
 
-  const toggleFolder = (folderKey) => {
-    setFoldersOpen(prev => ({ ...prev, [folderKey]: !prev[folderKey] }));
-  };
+const FINDER_CSS_CODE = `/* ========================================================
+   macOS Sequoia Finder Styling
+   100% Solid Dark Glass Background (Zero bleed-through)
+   ======================================================== */
 
-  const handleSelectFile = (fileName) => {
-    if (!openTabs.includes(fileName)) {
-      setOpenTabs(prev => [...prev, fileName]);
-    }
-    setActiveFile(fileName);
-  };
+.finder-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  background: #16181e !important;
+  color: #e4e4e7;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* 1. Left Sidebar */
+.finder-sidebar {
+  width: 200px;
+  background: rgba(22, 24, 30, 0.98) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 12px 10px;
+  flex-shrink: 0;
+}`;
+
+const SAFARI_APP_CODE = `import React, { useState } from 'react';
+import { ArrowLeft, ArrowRight, RotateCw, Share2, Lock, ExternalLink, Globe } from 'lucide-react';
+import './SafariApp.css';
+
+const BOOKMARKS = [
+  { id: 'portfolio', label: '🌐 Portfolio Live', url: 'https://varunsehgal.runs-on.dev' },
+  { id: 'github', label: '🐙 GitHub', url: 'https://github.com/varunsehgal05' },
+  { id: 'linkedin', label: '💼 LinkedIn', url: 'https://linkedin.com/in/varunsehgal02' }
+];
+
+export const SafariApp = () => {
+  const [url, setUrl] = useState('https://github.com/varunsehgal05/Portfolio');
+  const [isLoading, setIsLoading] = useState(false);
+
+  return (
+    <div className="safari-root">
+      <header className="safari-toolbar">
+        <div className="nav-buttons">
+          <ArrowLeft size={14} />
+          <ArrowRight size={14} />
+        </div>
+      </header>
+    </div>
+  );
+};`;
+
+const RESUME_TEX_CODE = `%-------------------------
+% ATS-Optimized Resume
+% Author: Varun Sehgal
+% Role: UI/UX Designer | Product Designer
+%-------------------------
+
+\\documentclass[letterpaper,10.5pt]{article}
+\\usepackage{latexsym}
+\\usepackage[empty]{fullpage}
+\\usepackage{titlesec}
+\\usepackage{marvosym}
+\\usepackage[usenames,dvipsnames]{color}
+\\usepackage{enumitem}
+\\usepackage[hidelinks]{hyperref}
+
+\\begin{document}
+\\begin{center}
+  \\textbf{\\Huge \\scshape Varun Sehgal} \\\\ \\vspace{1pt}
+  \\small +91 9817349924 $|$ \\href{mailto:varunsehgal2005@gmail.com}{varunsehgal2005@gmail.com} $|$
+  \\href{https://linkedin.com/in/varunsehgal02}{linkedin.com/in/varunsehgal02}
+\\end{center}
+\\end{document}`;
+
+const RESUME_CSS_CODE = `/* macOS Preview — ATS Resume Viewer */
+.resume-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background-color: #f1f3f6;
+  color: #1e293b;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', sans-serif;
+  overflow: hidden;
+}
+
+.resume-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+}`;
+
+const SETTINGS_APP_CODE = `import React, { useState } from 'react';
+import { Image, Sparkles, Info, Volume2, Monitor } from 'lucide-react';
+import './SettingsApp.css';
+
+export const SettingsApp = () => {
+  const [wallpaper, setWallpaper] = useState('Sequoia Midnight');
+
+  return (
+    <div className="settings-container">
+      <h2>System Preferences</h2>
+      <p>Theme: Dark Native Sequoia</p>
+    </div>
+  );
+};`;
+
+const VSCODE_APP_CODE = `// Antigravity IDE — VS Code Emulation Engine
+import React, { useState } from 'react';
+import './VsCodeApp.css';
+
+export const VsCodeApp = () => {
+  return (
+    <div className="vscode-root-container">
+      {/* Code Editor & Integrated Terminal */}
+    </div>
+  );
+};
+export default VsCodeApp;`;
+
+const PROJECT_FILES = {
+  'FinderApp.css': {
+    name: 'FinderApp.css',
+    path: 'src > components > FinderApp.css',
+    icon: 'css',
+    lang: 'CSS',
+    code: FINDER_CSS_CODE
+  },
+  'TerminalApp.jsx': {
+    name: 'TerminalApp.jsx',
+    path: 'src > components > ⚛ TerminalApp.jsx',
+    icon: 'jsx',
+    lang: 'TypeScript React',
+    code: TERMINAL_APP_CODE
+  },
+  'SafariApp.jsx': {
+    name: 'SafariApp.jsx',
+    path: 'src > components > ⚛ SafariApp.jsx',
+    icon: 'jsx',
+    lang: 'TypeScript React',
+    code: SAFARI_APP_CODE
+  },
+  'Varun_Sehgal_Resume_Updated.tex': {
+    name: 'Varun_Sehgal_Resume_Updated.tex',
+    path: 'root > Varun_Sehgal_Resume_Updated.tex',
+    icon: 'tex',
+    lang: 'LaTeX',
+    code: RESUME_TEX_CODE
+  },
+  'ResumeApp.css': {
+    name: 'ResumeApp.css',
+    path: 'src > components > ResumeApp.css',
+    icon: 'css',
+    lang: 'CSS',
+    code: RESUME_CSS_CODE
+  },
+  'SettingsApp.jsx': {
+    name: 'SettingsApp.jsx',
+    path: 'src > components > ⚛ SettingsApp.jsx',
+    icon: 'jsx',
+    lang: 'TypeScript React',
+    code: SETTINGS_APP_CODE
+  },
+  'VsCodeApp.jsx': {
+    name: 'VsCodeApp.jsx',
+    path: 'src > components > ⚛ VsCodeApp.jsx',
+    icon: 'jsx',
+    lang: 'TypeScript React',
+    code: VSCODE_APP_CODE
+  }
+};
+
+const TAB_ORDER = [
+  'FinderApp.css',
+  'TerminalApp.jsx',
+  'SafariApp.jsx',
+  'Varun_Sehgal_Resume_Updated.tex',
+  'ResumeApp.css',
+  'SettingsApp.jsx',
+  'VsCodeApp.jsx'
+];
+
+export const VsCodeApp = () => {
+  const [activeFile, setActiveFile] = useState('TerminalApp.jsx');
+  const [openTabs, setOpenTabs] = useState(TAB_ORDER);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [activeActivity, setActiveActivity] = useState('explorer');
+  const [terminalOpen, setTerminalOpen] = useState(true);
+  const [terminalTab, setTerminalTab] = useState('terminal');
+  const [terminalInput, setTerminalInput] = useState('');
+  const [terminalHistory, setTerminalHistory] = useState([
+    { type: 'output', text: 'Microsoft Windows [Version 10.0.22631.4460]' },
+    { type: 'output', text: '(c) Microsoft Corporation. All rights reserved.' },
+    { type: 'output', text: '' }
+  ]);
+  const [cursorLine, setCursorLine] = useState(26);
+  const [cursorCol, setCursorCol] = useState(1);
+  const terminalInputRef = useRef(null);
+  const editorScrollRef = useRef(null);
+
+  const currentFile = PROJECT_FILES[activeFile] || PROJECT_FILES['TerminalApp.jsx'];
+  const codeLines = currentFile.code.split('\n');
 
   const handleCloseTab = (e, fileName) => {
     e.stopPropagation();
-    const newTabs = openTabs.filter(t => t !== fileName);
-    setOpenTabs(newTabs);
-    if (activeFile === fileName && newTabs.length > 0) {
-      setActiveFile(newTabs[newTabs.length - 1]);
+    const remaining = openTabs.filter(t => t !== fileName);
+    setOpenTabs(remaining);
+    if (activeFile === fileName && remaining.length > 0) {
+      setActiveFile(remaining[0]);
     }
-  };
-
-  const currentProject = PROJECTS_DATA[activeFile] || PROJECTS_DATA['README.md'];
-  const currentCode = editedCodes[activeFile] !== undefined 
-    ? editedCodes[activeFile] 
-    : (currentProject.code || '');
-
-  const handleCopyCode = () => {
-    navigator.clipboard?.writeText(currentCode);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const handleCodeChange = (e) => {
-    const val = e.target.value;
-    setEditedCodes(prev => ({ ...prev, [activeFile]: val }));
-    if (!unsavedFiles.includes(activeFile)) {
-      setUnsavedFiles(prev => [...prev, activeFile]);
-    }
-    updateCaretPos(e.target);
-  };
-
-  const updateCaretPos = (textarea) => {
-    if (!textarea) return;
-    const selStart = textarea.selectionStart || 0;
-    const textBefore = textarea.value.substring(0, selStart);
-    const lines = textBefore.split('\n');
-    setCursorPos({
-      line: lines.length,
-      col: lines[lines.length - 1].length + 1
-    });
-  };
-
-  const handleEditorKeyDown = (e) => {
-    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-      e.preventDefault();
-      setUnsavedFiles(prev => prev.filter(f => f !== activeFile));
-    } else if (e.key === 'Tab') {
-      e.preventDefault();
-      const textarea = e.target;
-      const start = textarea.selectionStart;
-      const end = textarea.selectionEnd;
-      const val = textarea.value;
-      const newVal = val.substring(0, start) + '  ' + val.substring(end);
-      setEditedCodes(prev => ({ ...prev, [activeFile]: newVal }));
-      if (!unsavedFiles.includes(activeFile)) {
-        setUnsavedFiles(prev => [...prev, activeFile]);
-      }
-      setTimeout(() => {
-        textarea.selectionStart = textarea.selectionEnd = start + 2;
-        updateCaretPos(textarea);
-      }, 0);
-    }
-  };
-
-  // Run Code in Integrated Terminal
-  const handleRunCode = () => {
-    setTerminalOpen(true);
-    setTerminalTab('terminal');
-    setIsRunningCode(true);
-
-    const fileName = activeFile;
-    const runCmd = fileName.endsWith('.tsx') || fileName.endsWith('.ts')
-      ? `tsx ${fileName}`
-      : fileName.endsWith('.py')
-      ? `python ${fileName}`
-      : fileName.endsWith('.jsx')
-      ? `node ${fileName}`
-      : `cat ${fileName}`;
-
-    setTerminalHistory(prev => [
-      ...prev,
-      { type: 'prompt', text: `varun@macbook:~/varun-portfolio $ ${runCmd}` },
-      { type: 'info', text: `[Runner] Executing ${fileName}...` }
-    ]);
-
-    setTimeout(() => {
-      const logs = FILE_EXECUTION_LOGS[fileName] || [
-        { type: 'success', text: `[Runner] Process finished with exit code 0` }
-      ];
-      setTerminalHistory(prev => [...prev, ...logs]);
-      setIsRunningCode(false);
-    }, 450);
-  };
-
-  const executeTerminalCommand = (rawCmd) => {
-    const cmd = rawCmd.trim();
-    if (!cmd) return;
-
-    if (cmd === 'clear') {
-      setTerminalHistory([]);
-      return;
-    }
-
-    if (cmd === 'run-active' || cmd === 'run') {
-      handleRunCode();
-      return;
-    }
-
-    setTerminalHistory(prev => [
-      ...prev,
-      { type: 'prompt', text: `varun@macbook:~/varun-portfolio $ ${cmd}` }
-    ]);
-
-    if (cmd === 'help') {
-      setTerminalHistory(prev => [
-        ...prev,
-        { type: 'system', text: 'Available commands:' },
-        { type: 'info', text: '  run               Run currently open file' },
-        { type: 'info', text: '  node <file>       Execute with Node.js' },
-        { type: 'info', text: '  python <file>     Execute Python service' },
-        { type: 'info', text: '  npm run dev       Start Vite dev server' },
-        { type: 'info', text: '  ls / dir          List workspace projects' },
-        { type: 'info', text: '  cat <file>        Print file content' },
-        { type: 'info', text: '  git status        Show Git working tree' },
-        { type: 'info', text: '  clear             Clear terminal screen' },
-        { type: 'info', text: '  whoami            Show user identity' }
-      ]);
-      return;
-    }
-
-    if (cmd === 'ls' || cmd === 'dir') {
-      setTerminalHistory(prev => [
-        ...prev,
-        { type: 'info', text: '⚡ vibecoded-projects/   🎨 frontend-apps/   🛠️ backend-architecture/   📄 README.md' }
-      ]);
-      return;
-    }
-
-    if (cmd.startsWith('node ') || cmd.startsWith('tsx ') || cmd.startsWith('python ')) {
-      const target = cmd.split(' ')[1];
-      const match = Object.keys(FILE_EXECUTION_LOGS).find(k => k.includes(target));
-      if (match) {
-        setTerminalHistory(prev => [
-          ...prev,
-          { type: 'info', text: `[Runner] Executing ${match}...` },
-          ...(FILE_EXECUTION_LOGS[match] || [])
-        ]);
-        return;
-      }
-    }
-
-    if (cmd === 'npm run dev' || cmd === 'npm start') {
-      setTerminalHistory(prev => [
-        ...prev,
-        { type: 'prompt', text: '> varun-portfolio@3.0.0 dev' },
-        { type: 'info', text: 'VITE v5.2.0 ready in 140 ms' },
-        { type: 'success', text: '➜ Local: http://localhost:3000/' }
-      ]);
-      return;
-    }
-
-    if (cmd === 'git status') {
-      setTerminalHistory(prev => [
-        ...prev,
-        { type: 'info', text: 'On branch main' },
-        { type: 'info', text: 'Your branch is up to date with origin/main.' },
-        { type: 'success', text: 'nothing to commit, working tree clean' }
-      ]);
-      return;
-    }
-
-    if (cmd === 'whoami') {
-      setTerminalHistory(prev => [
-        ...prev,
-        { type: 'success', text: 'varun (UI/UX Designer & Product Software Engineer)' }
-      ]);
-      return;
-    }
-
-    if (cmd === 'pwd') {
-      setTerminalHistory(prev => [
-        ...prev,
-        { type: 'info', text: '/Users/varun/portfolio/varun-portfolio' }
-      ]);
-      return;
-    }
-
-    setTerminalHistory(prev => [
-      ...prev,
-      { type: 'info', text: `[Shell] Executed: ${cmd} (exit code 0)` }
-    ]);
   };
 
   const handleTerminalSubmit = (e) => {
     e.preventDefault();
     const cmd = terminalInput.trim();
     if (!cmd) return;
-    setTerminalInput('');
-    executeTerminalCommand(cmd);
-  };
 
-  const handleCommit = (e) => {
-    e.preventDefault();
-    if (!commitMessage.trim()) return;
-    setCommitToast(true);
-    setTimeout(() => {
-      setCommitToast(false);
-      setCommitMessage('');
-    }, 2200);
-  };
+    const newHistory = [
+      ...terminalHistory,
+      { type: 'command', text: `PS C:\\Users\\Varun\\Downloads\\destop-portflio> ${cmd}` }
+    ];
 
-  // Helper for file icons
-  const renderFileIcon = (iconType) => {
-    switch (iconType) {
-      case 'tsx':
-      case 'jsx':
-        return <span className="vsc-icon-tsx">⚛</span>;
-      case 'ts':
-        return <span className="vsc-icon-ts">TS</span>;
-      case 'py':
-        return <span className="vsc-icon-py">🐍</span>;
-      case 'md':
-        return <span className="vsc-icon-md">ℹ</span>;
-      default:
-        return <FileCode size={14} className="vsc-icon-default" />;
+    const lower = cmd.toLowerCase();
+    if (lower === 'clear' || lower === 'cls') {
+      setTerminalHistory([]);
+      setTerminalInput('');
+      return;
+    } else if (lower === 'git status') {
+      newHistory.push({ type: 'output', text: 'On branch main' });
+      newHistory.push({ type: 'output', text: "Your branch is up to date with 'origin/main'." });
+      newHistory.push({ type: 'output', text: 'nothing to commit, working tree clean' });
+    } else if (lower === 'npm run dev' || lower === 'npm start') {
+      newHistory.push({ type: 'output', text: '> destop-portflio@0.0.0 dev' });
+      newHistory.push({ type: 'output', text: '> vite' });
+      newHistory.push({ type: 'output', text: '  VITE v8.3.2  ready in 240 ms' });
+      newHistory.push({ type: 'output', text: '  ➜  Local:   http://localhost:5173/' });
+    } else if (lower === 'ls' || lower === 'dir') {
+      newHistory.push({ type: 'output', text: '    Directory: C:\\Users\\Varun\\Downloads\\destop-portflio' });
+      newHistory.push({ type: 'output', text: 'Mode                 LastWriteTime         Length Name' });
+      newHistory.push({ type: 'output', text: 'd-----        19-11-2026     02:30                src' });
+      newHistory.push({ type: 'output', text: 'd-----        19-11-2026     02:30                public' });
+      newHistory.push({ type: 'output', text: '-a----        19-11-2026     02:30           1420 package.json' });
+      newHistory.push({ type: 'output', text: '-a----        19-11-2026     02:30           1080 vite.config.js' });
+    } else if (lower === 'node -v' || lower === 'node --version') {
+      newHistory.push({ type: 'output', text: 'v20.18.0' });
+    } else if (lower === 'whoami') {
+      newHistory.push({ type: 'output', text: 'desktop-varun\\varun' });
+    } else if (lower === 'help') {
+      newHistory.push({ type: 'output', text: 'Available commands: git status, npm run dev, ls, dir, node -v, whoami, clear' });
+    } else {
+      newHistory.push({ type: 'output', text: `${cmd} : The term '${cmd}' is not recognized as a cmdlet, function, script file, or operable program.` });
     }
+
+    setTerminalHistory(newHistory);
+    setTerminalInput('');
   };
 
-  // Filter projects for search
-  const searchResults = searchQuery.trim() === '' ? [] : Object.entries(PROJECTS_DATA).filter(([key, val]) => {
-    return key.toLowerCase().includes(searchQuery.toLowerCase()) || 
-           val.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-           val.code.toLowerCase().includes(searchQuery.toLowerCase());
-  });
+  // Render file icon matching user screenshot
+  const renderTabIcon = (iconType) => {
+    if (iconType === 'css') {
+      return <span className="tab-file-icon icon-css">{'{}'}</span>;
+    }
+    if (iconType === 'jsx') {
+      return <span className="tab-file-icon icon-jsx">⚛</span>;
+    }
+    if (iconType === 'tex') {
+      return <span className="tab-file-icon icon-tex">T</span>;
+    }
+    return <span className="tab-file-icon icon-default">📄</span>;
+  };
+
+  // Syntax highlighting parser with inline color preview swatches
+  const renderSyntaxHighlightedLine = (line, lineNum) => {
+    // Check if line contains a hex color code like '#38bdf8'
+    const hexMatch = line.match(/(#[0-9a-fA-F]{3,8})/);
+    const hexColor = hexMatch ? hexMatch[1] : null;
+
+    // Check if line is a comment
+    if (line.trim().startsWith('//') || line.trim().startsWith('/*') || line.trim().startsWith('*') || line.trim().startsWith('%')) {
+      return <span className="token-comment">{line}</span>;
+    }
+
+    // Split line into parts if it has inline hex color
+    if (hexColor && (line.includes("color:") || line.includes("fill:"))) {
+      const parts = line.split(hexColor);
+      return (
+        <span>
+          {renderTokens(parts[0])}
+          <span className="token-string">
+            <span 
+              className="inline-color-swatch" 
+              style={{ backgroundColor: hexColor }} 
+              title={`Color preview: ${hexColor}`}
+            />
+            {hexColor}
+          </span>
+          {parts.slice(1).map((part, pIdx) => (
+            <React.Fragment key={pIdx}>
+              {renderTokens(part)}
+            </React.Fragment>
+          ))}
+        </span>
+      );
+    }
+
+    return renderTokens(line);
+  };
+
+  const renderTokens = (text) => {
+    const parts = text.split(/('([^'\\]|\\.)*'|"([^"\\]|\\.)*"|`([^`\\]|\\.)*`|\b(?:import|export|from|const|let|var|return|function|default|class|interface|type|async|await|new|if|else|switch|case|break)\b)/g);
+
+    return parts.map((part, idx) => {
+      if (!part) return null;
+      if (part.startsWith("'") || part.startsWith('"') || part.startsWith('`')) {
+        return <span key={idx} className="token-string">{part}</span>;
+      }
+      if (/^(import|export|from|const|let|var|return|function|default|class|interface|type|async|await|new|if|else|switch|case|break)$/.test(part)) {
+        return <span key={idx} className="token-keyword">{part}</span>;
+      }
+      if (/^[0-9]+(\.[0-9]+)?$/.test(part)) {
+        return <span key={idx} className="token-number">{part}</span>;
+      }
+      return <span key={idx} className="token-text">{part}</span>;
+    });
+  };
 
   return (
-    <div className="vscode-root-container">
-      {/* 1. Left Activity Bar */}
-      <div className="vscode-activity-bar">
-        <div className="activity-top">
+    <div className="vscode-window-shell">
+      {/* 1. Top Menu Titlebar (Antigravity IDE - Reference Match) */}
+      <header className="vscode-titlebar">
+        <div className="titlebar-left">
+          {/* Antigravity / IDE Logo Icon */}
+          <div className="titlebar-app-icon" title="Antigravity IDE">
+            <span className="antigravity-brand-a">A</span>
+          </div>
+          {/* Main Menus */}
+          <nav className="titlebar-menu-items">
+            <button className="menu-text-btn">File</button>
+            <button className="menu-text-btn">Edit</button>
+            <button className="menu-text-btn">Selection</button>
+            <button className="menu-text-btn">View</button>
+            <button className="menu-text-btn">Go</button>
+            <button className="menu-text-btn">Run</button>
+            <button className="menu-text-btn">Terminal</button>
+            <button className="menu-text-btn">Help</button>
+          </nav>
+        </div>
+
+        {/* Center File Title */}
+        <div className="titlebar-center">
+          <span className="titlebar-file-label">
+            destop-portflio - Antigravity IDE - {activeFile}
+          </span>
+        </div>
+
+        {/* Right Window & Layout Action Icons */}
+        <div className="titlebar-right-controls">
           <button 
-            className={`activity-btn ${activeActivity === 'explorer' ? 'active' : ''}`}
-            onClick={() => setActiveActivity('explorer')}
-            title="Explorer (Ctrl+Shift+E)"
+            className="titlebar-tool-btn" 
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            title="Toggle Primary Side Bar"
           >
-            <Files size={18} />
+            <Layout size={13} />
           </button>
-          <button 
-            className={`activity-btn ${activeActivity === 'search' ? 'active' : ''}`}
-            onClick={() => setActiveActivity('search')}
-            title="Search (Ctrl+Shift+F)"
-          >
-            <Search size={18} />
+          <button className="titlebar-tool-btn" title="Navigate Back">
+            <ArrowLeft size={13} />
           </button>
-          <button 
-            className={`activity-btn with-badge ${activeActivity === 'git' ? 'active' : ''}`}
-            onClick={() => setActiveActivity('git')}
-            title="Source Control (Ctrl+Shift+G)"
-          >
-            <GitBranch size={18} />
-            <span className="activity-badge">{unsavedFiles.length > 0 ? unsavedFiles.length : 3}</span>
+          <button className="titlebar-tool-btn" title="Navigate Forward">
+            <ArrowRight size={13} />
           </button>
-          <button 
-            className={`activity-btn ${activeActivity === 'debug' ? 'active' : ''}`}
-            onClick={() => setActiveActivity('debug')}
-            title="Run and Debug (Ctrl+Shift+D)"
-          >
-            <Play size={18} />
-          </button>
-          <button 
-            className={`activity-btn ${activeActivity === 'extensions' ? 'active' : ''}`}
-            onClick={() => setActiveActivity('extensions')}
-            title="Extensions (Ctrl+Shift+X)"
-          >
-            <Package size={18} />
+          <button className="titlebar-tool-btn" title="More Actions">
+            <MoreHorizontal size={13} />
           </button>
         </div>
-        <div className="activity-bottom">
-          <button className="activity-btn" title="Accounts">
-            <User size={18} />
-          </button>
-          <button className="activity-btn" title="Settings">
-            <Settings size={18} />
-          </button>
-        </div>
-      </div>
+      </header>
 
-      {/* 2. Dynamic Activity Sidebar */}
-      <div className="vscode-sidebar">
-        {/* VIEW: Explorer */}
-        {activeActivity === 'explorer' && (
-          <>
-            <div className="sidebar-header">
-              <span>EXPLORER</span>
-              <span className="sidebar-menu-dots">•••</span>
-            </div>
-
-            <div className="sidebar-tree">
-              {/* Root Project Accordion */}
-              <div className="tree-root-label">
-                <ChevronDown size={14} />
-                <span className="font-semibold">VARUN-PORTFOLIO</span>
-              </div>
-
-              {/* Folder: Vibecoded Projects */}
-              <div className="tree-folder">
-                <div className="folder-label" onClick={() => toggleFolder('vibecoded')}>
-                  {foldersOpen.vibecoded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-                  <span className="folder-name">⚡ vibecoded-projects</span>
-                </div>
-                {foldersOpen.vibecoded && (
-                  <div className="folder-contents">
-                    <div 
-                      className={`tree-file ${activeFile === 'ai-interview-platform.tsx' ? 'active' : ''}`}
-                      onClick={() => handleSelectFile('ai-interview-platform.tsx')}
-                    >
-                      {renderFileIcon('tsx')}
-                      <span>ai-interview-platform.tsx</span>
-                      {unsavedFiles.includes('ai-interview-platform.tsx') && <span className="dirty-indicator">●</span>}
-                    </div>
-                    <div 
-                      className={`tree-file ${activeFile === 'prompt-to-ui-engine.ts' ? 'active' : ''}`}
-                      onClick={() => handleSelectFile('prompt-to-ui-engine.ts')}
-                    >
-                      {renderFileIcon('ts')}
-                      <span>prompt-to-ui-engine.ts</span>
-                      {unsavedFiles.includes('prompt-to-ui-engine.ts') && <span className="dirty-indicator">●</span>}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Folder: Frontend Projects */}
-              <div className="tree-folder">
-                <div className="folder-label" onClick={() => toggleFolder('frontend')}>
-                  {foldersOpen.frontend ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-                  <span className="folder-name">🎨 frontend-apps</span>
-                </div>
-                {foldersOpen.frontend && (
-                  <div className="folder-contents">
-                    <div 
-                      className={`tree-file ${activeFile === 'eventflow-ticketing.tsx' ? 'active' : ''}`}
-                      onClick={() => handleSelectFile('eventflow-ticketing.tsx')}
-                    >
-                      {renderFileIcon('tsx')}
-                      <span>eventflow-ticketing.tsx</span>
-                      {unsavedFiles.includes('eventflow-ticketing.tsx') && <span className="dirty-indicator">●</span>}
-                    </div>
-                    <div 
-                      className={`tree-file ${activeFile === 'expensify-fintech.jsx' ? 'active' : ''}`}
-                      onClick={() => handleSelectFile('expensify-fintech.jsx')}
-                    >
-                      {renderFileIcon('jsx')}
-                      <span>expensify-fintech.jsx</span>
-                      {unsavedFiles.includes('expensify-fintech.jsx') && <span className="dirty-indicator">●</span>}
-                    </div>
-                    <div 
-                      className={`tree-file ${activeFile === 'codesrijan-hackathon.tsx' ? 'active' : ''}`}
-                      onClick={() => handleSelectFile('codesrijan-hackathon.tsx')}
-                    >
-                      {renderFileIcon('tsx')}
-                      <span>codesrijan-hackathon.tsx</span>
-                      {unsavedFiles.includes('codesrijan-hackathon.tsx') && <span className="dirty-indicator">●</span>}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Folder: Backend & AI */}
-              <div className="tree-folder">
-                <div className="folder-label" onClick={() => toggleFolder('backend')}>
-                  {foldersOpen.backend ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-                  <span className="folder-name">🛠️ backend-architecture</span>
-                </div>
-                {foldersOpen.backend && (
-                  <div className="folder-contents">
-                    <div 
-                      className={`tree-file ${activeFile === 'ollama-local-llm-service.py' ? 'active' : ''}`}
-                      onClick={() => handleSelectFile('ollama-local-llm-service.py')}
-                    >
-                      {renderFileIcon('py')}
-                      <span>ollama-local-llm-service.py</span>
-                      {unsavedFiles.includes('ollama-local-llm-service.py') && <span className="dirty-indicator">●</span>}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Root Level Files */}
-              <div 
-                className={`tree-file root-item ${activeFile === 'README.md' ? 'active' : ''}`}
-                onClick={() => handleSelectFile('README.md')}
-              >
-                {renderFileIcon('md')}
-                <span>README.md</span>
-                {unsavedFiles.includes('README.md') && <span className="dirty-indicator">●</span>}
-              </div>
-            </div>
-          </>
-        )}
-
-        {/* VIEW: Search */}
-        {activeActivity === 'search' && (
-          <div className="sidebar-search-panel">
-            <div className="sidebar-header">
-              <span>SEARCH</span>
-              <span className="sidebar-menu-dots">•••</span>
-            </div>
-            <div className="search-input-box">
-              <Search size={14} className="search-icon-inside" />
-              <input 
-                type="text" 
-                className="vsc-search-input"
-                placeholder="Search code (e.g. AI, Next.js, Ollama)..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                autoFocus
-              />
-              {searchQuery && (
-                <button className="search-clear-btn" onClick={() => setSearchQuery('')}>×</button>
-              )}
-            </div>
-            <div className="search-results-info">
-              {searchQuery.trim() === '' ? (
-                <span>Type to search files and code</span>
-              ) : (
-                <span>{searchResults.length} result{searchResults.length === 1 ? '' : 's'} in workspace</span>
-              )}
-            </div>
-            <div className="search-results-list">
-              {searchResults.map(([fileKey, item]) => (
-                <div 
-                  key={fileKey} 
-                  className="search-result-row"
-                  onClick={() => handleSelectFile(fileKey)}
-                >
-                  <div className="search-res-title">
-                    {renderFileIcon(item.icon)}
-                    <span className="search-res-name">{item.name}</span>
-                  </div>
-                  <div className="search-res-match">{item.title}</div>
-                  <div className="search-res-sub">{item.badge}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* VIEW: Source Control (Git) */}
-        {activeActivity === 'git' && (
-          <div className="sidebar-git-panel">
-            <div className="sidebar-header">
-              <span>SOURCE CONTROL: GIT</span>
-              <span className="sidebar-menu-dots">•••</span>
-            </div>
-            <div className="git-branch-banner">
-              <GitBranch size={13} />
-              <span className="font-semibold">main*</span>
-              <span className="git-sync-chip">Synchronized</span>
-            </div>
-            <form className="git-commit-form" onSubmit={handleCommit}>
-              <textarea 
-                className="git-commit-input"
-                rows={2}
-                placeholder="Commit message (Ctrl+Enter to commit)"
-                value={commitMessage}
-                onChange={(e) => setCommitMessage(e.target.value)}
-                onKeyDown={(e) => {
-                  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-                    handleCommit(e);
-                  }
-                }}
-              />
-              <button 
-                type="submit" 
-                className="git-commit-btn"
-                disabled={!commitMessage.trim()}
-              >
-                <Check size={13} />
-                <span>Commit & Push</span>
-              </button>
-              {commitToast && (
-                <div className="git-commit-success">
-                  <CheckCircle2 size={13} color="#4ade80" />
-                  <span>Pushed to origin/main successfully!</span>
-                </div>
-              )}
-            </form>
-
-            <div className="git-changes-header">
-              <span>STAGED & MODIFIED CHANGES ({unsavedFiles.length + 3})</span>
-            </div>
-            <div className="git-changes-list">
-              {unsavedFiles.map(f => (
-                <div key={f} className="git-change-item" onClick={() => handleSelectFile(f)}>
-                  <span className="git-badge-m">M</span>
-                  <span className="git-change-name">{f}</span>
-                  <span className="git-change-status">Unsaved</span>
-                </div>
-              ))}
-              <div className="git-change-item" onClick={() => handleSelectFile('ai-interview-platform.tsx')}>
-                <span className="git-badge-m">M</span>
-                <span className="git-change-name">ai-interview-platform.tsx</span>
-                <span className="git-change-status">Modified</span>
-              </div>
-              <div className="git-change-item" onClick={() => handleSelectFile('prompt-to-ui-engine.ts')}>
-                <span className="git-badge-m">M</span>
-                <span className="git-change-name">prompt-to-ui-engine.ts</span>
-                <span className="git-change-status">Modified</span>
-              </div>
-              <div className="git-change-item" onClick={() => handleSelectFile('ollama-local-llm-service.py')}>
-                <span className="git-badge-a">A</span>
-                <span className="git-change-name">ollama-local-llm-service.py</span>
-                <span className="git-change-status">Added</span>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* VIEW: Run and Debug */}
-        {activeActivity === 'debug' && (
-          <div className="sidebar-debug-panel">
-            <div className="sidebar-header">
-              <span>RUN AND DEBUG</span>
-              <span className="sidebar-menu-dots">•••</span>
-            </div>
-            <div className="debug-launch-box">
-              <select 
-                className="debug-config-select"
-                value={debugConfig}
-                onChange={(e) => setDebugConfig(e.target.value)}
-              >
-                <option value="Launch Active File">▶ Launch: {activeFile}</option>
-                <option value="Launch Vite Dev Server">▶ Launch: Vite Dev Server</option>
-                <option value="Debug Python LLM Service">▶ Launch: Python Service</option>
-              </select>
-              <button className="debug-play-btn" onClick={handleRunCode} title="Start Debugging (F5)">
-                <Play size={13} fill="#4ade80" color="#4ade80" />
-                <span>Start Debugging</span>
-              </button>
-            </div>
-
-            <div className="debug-section-label">WATCH EXPRESSIONS</div>
-            <div className="debug-watch-list">
-              <div className="debug-watch-row">
-                <span className="watch-key">process.env.NODE_ENV:</span>
-                <span className="watch-val">"production"</span>
-              </div>
-              <div className="debug-watch-row">
-                <span className="watch-key">activeCandidate:</span>
-                <span className="watch-val">"cand_9841"</span>
-              </div>
-              <div className="debug-watch-row">
-                <span className="watch-key">gpuAcceleration:</span>
-                <span className="watch-val">"Metal (14 layers)"</span>
-              </div>
-            </div>
-
-            <div className="debug-section-label">BREAKPOINTS</div>
-            <div className="debug-breakpoints-list">
-              <div className="debug-bp-row" onClick={() => handleSelectFile('ai-interview-platform.tsx')}>
-                <span className="bp-dot red">●</span>
-                <span>ai-interview-platform.tsx:75</span>
-              </div>
-              <div className="debug-bp-row" onClick={() => handleSelectFile('ollama-local-llm-service.py')}>
-                <span className="bp-dot red">●</span>
-                <span>ollama-local-llm-service.py:42</span>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* VIEW: Extensions */}
-        {activeActivity === 'extensions' && (
-          <div className="sidebar-ext-panel">
-            <div className="sidebar-header">
-              <span>EXTENSIONS</span>
-              <span className="sidebar-menu-dots">•••</span>
-            </div>
-            <div className="ext-search-box">
-              <Search size={14} className="search-icon-inside" />
-              <input 
-                type="text" 
-                className="vsc-search-input"
-                placeholder="Search Extensions in Marketplace..."
-              />
-            </div>
-            <div className="ext-section-label">INSTALLED (5)</div>
-            <div className="ext-list">
-              {EXTENSIONS_LIST.map((ext, idx) => (
-                <div key={idx} className="ext-item">
-                  <div className="ext-icon">{ext.icon}</div>
-                  <div className="ext-info">
-                    <div className="ext-title-row">
-                      <span className="ext-name">{ext.name}</span>
-                      <span className="ext-version">{ext.version}</span>
-                    </div>
-                    <div className="ext-desc">{ext.desc}</div>
-                    <div className="ext-meta">
-                      <span className="ext-pub">{ext.publisher}</span>
-                      <span className="ext-installed-badge">Installed</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* 3. Main Editor Column */}
-      <div className="vscode-editor-pane">
-        {/* Editor Tabs Bar */}
-        <div className="editor-tabs-bar">
-          <div className="tabs-scroll-area">
-            {openTabs.map((fileName) => {
-              const fileData = PROJECTS_DATA[fileName] || {};
-              const isActive = activeFile === fileName;
-              const isDirty = unsavedFiles.includes(fileName);
-              return (
-                <div
-                  key={fileName}
-                  className={`editor-tab ${isActive ? 'active' : ''}`}
-                  onClick={() => setActiveFile(fileName)}
-                >
-                  {renderFileIcon(fileData.icon)}
-                  <span className="tab-title">{fileName}</span>
-                  {isDirty && <span className="tab-dirty-dot" title="Unsaved changes">●</span>}
-                  <button 
-                    className="tab-close-btn" 
-                    onClick={(e) => handleCloseTab(e, fileName)}
-                    title="Close"
-                  >
-                    ×
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="tab-actions-right">
+      {/* 2. Workspace Layout */}
+      <div className="vscode-workspace-row">
+        {/* Left Activity Bar */}
+        <aside className="vscode-activity-bar">
+          <div className="activity-group-top">
             <button 
-              className="tab-run-code-btn" 
-              onClick={handleRunCode}
-              title="Run Code in Terminal (Ctrl+F5)"
-              disabled={isRunningCode}
+              className={`activity-btn ${activeActivity === 'explorer' && sidebarOpen ? 'active' : ''}`}
+              onClick={() => {
+                if (activeActivity === 'explorer') {
+                  setSidebarOpen(!sidebarOpen);
+                } else {
+                  setActiveActivity('explorer');
+                  setSidebarOpen(true);
+                }
+              }}
+              title="Explorer (Ctrl+Shift+E)"
             >
-              <Play size={12} fill="#4ade80" color="#4ade80" />
-              <span>{isRunningCode ? 'Running...' : 'Run Code'}</span>
+              <Files size={18} />
             </button>
             <button 
-              className={`tab-action-btn ${terminalOpen ? 'active' : ''}`}
-              onClick={() => setTerminalOpen(!terminalOpen)}
-              title="Toggle Integrated Terminal (Ctrl+`)"
+              className={`activity-btn ${activeActivity === 'search' && sidebarOpen ? 'active' : ''}`}
+              onClick={() => {
+                setActiveActivity('search');
+                setSidebarOpen(true);
+              }}
+              title="Search (Ctrl+Shift+F)"
             >
-              <Terminal size={13} />
+              <Search size={18} />
             </button>
-            <button className="tab-action-btn" onClick={handleCopyCode} title="Copy Code">
-              {copied ? <Check size={13} color="#4ade80" /> : <Copy size={13} />}
-            </button>
-            <a 
-              href={currentProject.githubUrl || 'https://github.com/varunsehgal05'} 
-              target="_blank" 
-              rel="noreferrer"
-              className="tab-action-btn"
-              title="Open in GitHub"
-            >
-              <ExternalLink size={13} />
-            </a>
-          </div>
-        </div>
-
-        {/* Breadcrumb Row */}
-        <div className="editor-breadcrumbs">
-          <span className="crumb-segment">varun-portfolio</span>
-          <span className="crumb-sep">›</span>
-          <span className="crumb-segment">{currentProject.category}</span>
-          <span className="crumb-sep">›</span>
-          <span className="crumb-segment current">{currentProject.name}</span>
-
-          <div className="project-badge-pill">
-            <Sparkles size={11} />
-            <span>{currentProject.badge}</span>
-          </div>
-        </div>
-
-        {/* Project Header Info Banner */}
-        <div className="project-banner">
-          <div className="project-banner-info">
-            <h2 className="project-banner-title">{currentProject.title}</h2>
-            <p className="project-banner-desc">{currentProject.desc}</p>
-            <div className="project-banner-tags">
-              {currentProject.tags?.map((t, idx) => (
-                <span key={idx} className="banner-tag">{t}</span>
-              ))}
-            </div>
-          </div>
-          <div className="project-banner-cta">
             <button 
-              className="vscode-btn-preview run-accent"
-              onClick={handleRunCode}
-              title="Execute active project in terminal"
-            >
-              <Play size={13} fill="#ffffff" />
-              <span>Run Code</span>
-            </button>
-            {currentProject.liveUrl && (
-              <a 
-                href={currentProject.liveUrl} 
-                target="_blank" 
-                rel="noreferrer" 
-                className="vscode-btn-preview"
-              >
-                <ExternalLink size={13} />
-                <span>Live Showcase</span>
-              </a>
-            )}
-            <a 
-              href={currentProject.githubUrl || 'https://github.com/varunsehgal05'} 
-              target="_blank" 
-              rel="noreferrer" 
-              className="vscode-btn-github"
-            >
-              <Code size={13} />
-              <span>GitHub Repo</span>
-            </a>
-          </div>
-        </div>
-
-        {/* Code Editor View */}
-        <div className="editor-code-container">
-          <div className="editor-code-body">
-            <div className="line-numbers">
-              {currentCode.split('\n').map((_, idx) => (
-                <div key={idx} className="line-no">{idx + 1}</div>
-              ))}
-            </div>
-            <div className="code-editor-wrapper">
-              <textarea
-                ref={editorTextareaRef}
-                className="code-editor-textarea"
-                rows={Math.max(30, currentCode.split('\n').length + 5)}
-                value={currentCode}
-                onChange={handleCodeChange}
-                onKeyDown={handleEditorKeyDown}
-                onClick={(e) => updateCaretPos(e.target)}
-                onKeyUp={(e) => updateCaretPos(e.target)}
-                spellCheck="false"
-                autoCapitalize="off"
-                autoComplete="off"
-              />
-            </div>
-          </div>
-
-          {/* Mini-map representation */}
-          <div className="editor-minimap">
-            {currentCode.split('\n').slice(0, 45).map((line, idx) => (
-              <div 
-                key={idx} 
-                className="minimap-line"
-                style={{ width: `${Math.min(100, Math.max(15, line.length * 1.8))}%` }}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Integrated Terminal Panel */}
-        {terminalOpen && (
-          <div 
-            className={`vscode-terminal-panel ${isTerminalMaximized ? 'maximized' : ''}`}
-            style={{ height: isTerminalMaximized ? '65%' : '230px' }}
-          >
-            <div className="terminal-header-bar">
-              <div className="terminal-tabs-left">
-                <button 
-                  className={`terminal-tab-btn ${terminalTab === 'problems' ? 'active' : ''}`}
-                  onClick={() => setTerminalTab('problems')}
-                >
-                  PROBLEMS <span className="term-badge">0</span>
-                </button>
-                <button 
-                  className={`terminal-tab-btn ${terminalTab === 'output' ? 'active' : ''}`}
-                  onClick={() => setTerminalTab('output')}
-                >
-                  OUTPUT
-                </button>
-                <button 
-                  className={`terminal-tab-btn ${terminalTab === 'debug' ? 'active' : ''}`}
-                  onClick={() => setTerminalTab('debug')}
-                >
-                  DEBUG CONSOLE
-                </button>
-                <button 
-                  className={`terminal-tab-btn ${terminalTab === 'terminal' ? 'active' : ''}`}
-                  onClick={() => setTerminalTab('terminal')}
-                >
-                  TERMINAL <span className="term-badge-blue">bash</span>
-                </button>
-              </div>
-
-              <div className="terminal-actions-right">
-                <button 
-                  className="term-action-btn term-run-btn"
-                  onClick={handleRunCode}
-                  title="Run Active File"
-                  disabled={isRunningCode}
-                >
-                  <Play size={11} fill="#4ade80" color="#4ade80" />
-                  <span>{isRunningCode ? 'Running...' : 'Run'}</span>
-                </button>
-                <button 
-                  className="term-action-btn"
-                  onClick={() => setTerminalHistory([])}
-                  title="Clear Terminal"
-                >
-                  <Trash2 size={13} />
-                </button>
-                <button 
-                  className="term-action-btn"
-                  onClick={() => setIsTerminalMaximized(!isTerminalMaximized)}
-                  title={isTerminalMaximized ? "Restore Size" : "Maximize Size"}
-                >
-                  {isTerminalMaximized ? <Minimize2 size={13} /> : <Maximize2 size={13} />}
-                </button>
-                <button 
-                  className="term-action-btn"
-                  onClick={() => setTerminalOpen(false)}
-                  title="Close Terminal Panel"
-                >
-                  <X size={13} />
-                </button>
-              </div>
-            </div>
-
-            {/* Quick Chips Bar */}
-            {terminalTab === 'terminal' && (
-              <div className="terminal-chips-bar">
-                <span className="chips-label">Quick Run:</span>
-                <button className="term-chip primary" onClick={handleRunCode}>
-                  ▶ Run active ({activeFile})
-                </button>
-                <button className="term-chip" onClick={() => executeTerminalCommand('npm run dev')}>
-                  npm run dev
-                </button>
-                <button className="term-chip" onClick={() => executeTerminalCommand('git status')}>
-                  git status
-                </button>
-                <button className="term-chip" onClick={() => executeTerminalCommand('ls')}>
-                  ls
-                </button>
-                <button className="term-chip" onClick={() => executeTerminalCommand('node -v')}>
-                  node -v
-                </button>
-                <button className="term-chip" onClick={() => executeTerminalCommand('whoami')}>
-                  whoami
-                </button>
-                <button className="term-chip" onClick={() => executeTerminalCommand('help')}>
-                  help
-                </button>
-                <button className="term-chip" onClick={() => setTerminalHistory([])}>
-                  clear
-                </button>
-              </div>
-            )}
-
-            {/* Terminal Body */}
-            <div className="terminal-scroll-body" ref={terminalBodyRef}>
-              {terminalTab === 'problems' && (
-                <div className="terminal-tab-empty">
-                  <CheckCircle2 size={18} color="#4ade80" />
-                  <span>No problems have been detected in the workspace.</span>
-                </div>
-              )}
-
-              {terminalTab === 'output' && (
-                <div className="terminal-tab-empty text-left font-mono">
-                  <p className="text-zinc-400">[Vite HMR] connected to http://localhost:5173</p>
-                  <p className="text-zinc-500">[Language Server] TypeScript 5.4.2 active. 0 diagnostics reported.</p>
-                  <p className="text-zinc-500">[Tailwind CSS] IntelliSense active on 8 workspace files.</p>
-                </div>
-              )}
-
-              {terminalTab === 'debug' && (
-                <div className="terminal-tab-empty text-left font-mono">
-                  <p className="text-emerald-400">&gt; Debugger listening on ws://127.0.0.1:9229</p>
-                  <p className="text-zinc-400">&gt; For help, see: https://nodejs.org/en/docs/inspector</p>
-                  <p className="text-zinc-500">&gt; Debugger attached to process {activeFile}.</p>
-                </div>
-              )}
-
-              {terminalTab === 'terminal' && (
-                <div className="terminal-log-flow">
-                  {terminalHistory.map((line, idx) => (
-                    <div key={idx} className={`term-line term-${line.type}`}>
-                      {line.type === 'prompt' && <span className="term-prompt-prefix">❯ </span>}
-                      <span>{line.text}</span>
-                    </div>
-                  ))}
-
-                  {/* Interactive Prompt Line */}
-                  <form className="term-prompt-line" onSubmit={handleTerminalSubmit}>
-                    <span className="term-prompt-user">varun@macbook:~/varun-portfolio $</span>
-                    <input 
-                      type="text"
-                      className="term-interactive-input"
-                      value={terminalInput}
-                      onChange={(e) => setTerminalInput(e.target.value)}
-                      placeholder="type command (e.g. 'run', 'npm run dev', 'git status', 'ls', 'help')..."
-                      autoComplete="off"
-                      spellCheck="false"
-                    />
-                  </form>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* 4. VS Code Status Bar */}
-        <div className="vscode-status-bar">
-          <div className="status-left">
-            <span 
-              className="status-item git-item clickable" 
-              onClick={() => setActiveActivity('git')}
+              className={`activity-btn ${activeActivity === 'git' && sidebarOpen ? 'active' : ''}`}
+              onClick={() => {
+                setActiveActivity('git');
+                setSidebarOpen(true);
+              }}
               title="Source Control"
             >
-              <GitBranch size={11} />
-              <span>main*</span>
-            </span>
-            <span 
-              className="status-item clickable" 
-              onClick={() => { setTerminalOpen(true); setTerminalTab('problems'); }}
-              title="Problems"
-            >
-              <CheckCircle2 size={11} color="#4ade80" />
-              <span>0 errors</span>
-            </span>
+              <GitBranch size={18} />
+              <span className="activity-dot-badge" />
+            </button>
             <button 
-              className={`status-item status-term-btn ${terminalOpen ? 'active' : ''}`}
-              onClick={() => setTerminalOpen(!terminalOpen)}
-              title="Toggle Terminal"
+              className={`activity-btn ${activeActivity === 'debug' && sidebarOpen ? 'active' : ''}`}
+              onClick={() => {
+                setActiveActivity('debug');
+                setSidebarOpen(true);
+              }}
+              title="Run and Debug"
             >
-              <Terminal size={11} />
-              <span>Terminal</span>
+              <Play size={18} />
+            </button>
+            <button 
+              className={`activity-btn ${activeActivity === 'extensions' && sidebarOpen ? 'active' : ''}`}
+              onClick={() => {
+                setActiveActivity('extensions');
+                setSidebarOpen(true);
+              }}
+              title="Extensions"
+            >
+              <Package size={18} />
+            </button>
+            <button 
+              className="activity-btn agent-btn"
+              title="Antigravity AI Agent"
+            >
+              <Sparkles size={18} className="text-sky-400" />
             </button>
           </div>
-          <div className="status-right">
-            <span className="status-item">Ln {cursorPos.line}, Col {cursorPos.col}</span>
-            <span className="status-item">Spaces: 2</span>
-            <span className="status-item">UTF-8</span>
-            <span className="status-item">
-              {activeFile.endsWith('.tsx') ? 'TypeScript React' : 
-               activeFile.endsWith('.ts') ? 'TypeScript' :
-               activeFile.endsWith('.py') ? 'Python' :
-               activeFile.endsWith('.jsx') ? 'JavaScript React' : 'Markdown'}
-            </span>
-            <span className="status-item prettier-item">Prettier: ✓</span>
+
+          <div className="activity-group-bottom">
+            <button className="activity-btn" title="Accounts">
+              <User size={18} />
+            </button>
+            <button className="activity-btn" title="Manage Settings">
+              <Settings size={18} />
+            </button>
           </div>
-        </div>
+        </aside>
+
+        {/* Collapsible Primary Sidebar (Explorer) */}
+        {sidebarOpen && (
+          <aside className="vscode-primary-sidebar">
+            <div className="sidebar-header-row">
+              <span className="sidebar-title">EXPLORER</span>
+              <span className="sidebar-more">•••</span>
+            </div>
+            <div className="sidebar-tree-container">
+              <div className="tree-project-root">
+                <ChevronDown size={14} />
+                <span>DESTOP-PORTFLIO</span>
+              </div>
+              <div className="tree-branch-group">
+                <div className="tree-item-folder">
+                  <ChevronRight size={13} />
+                  <span>.gemini</span>
+                </div>
+                <div className="tree-item-folder">
+                  <ChevronRight size={13} />
+                  <span>public</span>
+                </div>
+                <div className="tree-item-folder open">
+                  <ChevronDown size={13} />
+                  <span>src</span>
+                </div>
+                <div className="tree-item-folder sub open">
+                  <ChevronDown size={13} />
+                  <span>components</span>
+                </div>
+                {/* File Items */}
+                {Object.keys(PROJECT_FILES).map((fileName) => {
+                  const f = PROJECT_FILES[fileName];
+                  const isActive = activeFile === fileName;
+                  return (
+                    <div
+                      key={fileName}
+                      className={`tree-item-file ${isActive ? 'active' : ''}`}
+                      onClick={() => {
+                        if (!openTabs.includes(fileName)) {
+                          setOpenTabs([...openTabs, fileName]);
+                        }
+                        setActiveFile(fileName);
+                      }}
+                    >
+                      {renderTabIcon(f.icon)}
+                      <span className="tree-file-name">{fileName}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </aside>
+        )}
+
+        {/* Main Editor & Terminal Area */}
+        <main className="vscode-editor-main">
+          {/* Tabs Bar */}
+          <div className="vscode-tabs-bar">
+            <div className="tabs-list-scroll">
+              {openTabs.map((fileName) => {
+                const f = PROJECT_FILES[fileName] || {};
+                const isActive = activeFile === fileName;
+                return (
+                  <div
+                    key={fileName}
+                    className={`editor-tab-item ${isActive ? 'active' : ''}`}
+                    onClick={() => setActiveFile(fileName)}
+                  >
+                    {renderTabIcon(f.icon)}
+                    <span className="tab-label">{fileName}</span>
+                    <button
+                      className="tab-close-icon"
+                      onClick={(e) => handleCloseTab(e, fileName)}
+                      title="Close"
+                    >
+                      <X size={11} />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Right Tab Controls */}
+            <div className="tabs-right-tools">
+              <button className="tab-tool-btn" title="Split Editor Right">
+                <Split size={13} />
+              </button>
+              <button className="tab-tool-btn" title="More Tab Actions">
+                <MoreHorizontal size={13} />
+              </button>
+            </div>
+          </div>
+
+          {/* Breadcrumbs Row */}
+          <div className="vscode-breadcrumbs-row">
+            <span className="crumb-text">src</span>
+            <span className="crumb-chevron">&gt;</span>
+            <span className="crumb-text">components</span>
+            <span className="crumb-chevron">&gt;</span>
+            <span className="crumb-icon">{renderTabIcon(currentFile.icon)}</span>
+            <span className="crumb-text active-crumb">{currentFile.name}</span>
+            <span className="crumb-chevron">&gt;</span>
+            <span className="crumb-text muted">...</span>
+          </div>
+
+          {/* Code Viewport with Gutter & Minimap */}
+          <div className="vscode-code-viewport">
+            <div className="code-editor-scrollable" ref={editorScrollRef}>
+              <div className="code-lines-table">
+                {codeLines.map((line, idx) => {
+                  const lineNum = idx + 1;
+                  const isCursor = lineNum === cursorLine;
+                  return (
+                    <div 
+                      key={idx} 
+                      className={`code-line-row ${isCursor ? 'cursor-active-line' : ''}`}
+                      onClick={() => setCursorLine(lineNum)}
+                    >
+                      <div className="gutter-cell">
+                        <span className="fold-icon">{line.includes('{') || line.includes('[') ? '⌄' : ''}</span>
+                        <span className="line-num">{lineNum}</span>
+                        <span className="git-status-gutter">{lineNum === 56 ? '+' : ''}</span>
+                      </div>
+                      <div className="code-text-cell">
+                        {renderSyntaxHighlightedLine(line, lineNum)}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Code Minimap (Right side) */}
+            <div className="vscode-minimap-pane">
+              <div className="minimap-viewport-slider" />
+              <div className="minimap-content">
+                {codeLines.slice(0, 75).map((l, idx) => (
+                  <div
+                    key={idx}
+                    className="minimap-bar-line"
+                    style={{
+                      width: `${Math.min(95, Math.max(12, l.length * 1.5))}%`,
+                      backgroundColor: l.includes('color:') ? '#38bdf8' : l.includes('const') ? '#c586c0' : 'rgba(255,255,255,0.18)'
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Integrated Terminal Panel */}
+          {terminalOpen && (
+            <div className="vscode-terminal-dock">
+              {/* Terminal Header Tabs */}
+              <div className="terminal-header-tabs">
+                <div className="terminal-tab-group">
+                  <button 
+                    className={`terminal-tab-item ${terminalTab === 'problems' ? 'active' : ''}`}
+                    onClick={() => setTerminalTab('problems')}
+                  >
+                    Problems
+                  </button>
+                  <button 
+                    className={`terminal-tab-item ${terminalTab === 'output' ? 'active' : ''}`}
+                    onClick={() => setTerminalTab('output')}
+                  >
+                    Output
+                  </button>
+                  <button 
+                    className={`terminal-tab-item ${terminalTab === 'debug' ? 'active' : ''}`}
+                    onClick={() => setTerminalTab('debug')}
+                  >
+                    Debug Console
+                  </button>
+                  <button 
+                    className={`terminal-tab-item ${terminalTab === 'terminal' ? 'active' : ''}`}
+                    onClick={() => setTerminalTab('terminal')}
+                  >
+                    Terminal
+                  </button>
+                  <button 
+                    className={`terminal-tab-item ${terminalTab === 'ports' ? 'active' : ''}`}
+                    onClick={() => setTerminalTab('ports')}
+                  >
+                    Ports
+                  </button>
+                  <button 
+                    className={`terminal-tab-item ${terminalTab === 'comments' ? 'active' : ''}`}
+                    onClick={() => setTerminalTab('comments')}
+                  >
+                    Comments
+                  </button>
+                </div>
+
+                {/* Right Terminal Actions */}
+                <div className="terminal-right-tools">
+                  <div className="term-shell-pill">
+                    <span className="shell-type-icon">powershell</span>
+                    <ChevronDown size={11} />
+                  </div>
+                  <button className="term-ctrl-btn" title="New Terminal">+</button>
+                  <button className="term-ctrl-btn" title="Split Terminal">
+                    <Split size={12} />
+                  </button>
+                  <button className="term-ctrl-btn" title="Maximize Panel">
+                    <Maximize2 size={12} />
+                  </button>
+                  <button 
+                    className="term-ctrl-btn" 
+                    onClick={() => setTerminalOpen(false)}
+                    title="Close Terminal"
+                  >
+                    <X size={12} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Terminal Console Output */}
+              <div 
+                className="terminal-console-body"
+                onClick={() => terminalInputRef.current?.focus()}
+              >
+                {terminalHistory.map((item, idx) => (
+                  <div key={idx} className={`term-msg-row ${item.type}`}>
+                    <span>{item.text}</span>
+                  </div>
+                ))}
+
+                {/* Interactive Prompt Line */}
+                <form className="term-live-prompt" onSubmit={handleTerminalSubmit}>
+                  <span className="term-circle-badge">o</span>
+                  <span className="term-powershell-text">PS</span>
+                  <span className="term-path-text">C:\\Users\\Varun\\Downloads\\destop-portflio&gt;</span>
+                  <input
+                    ref={terminalInputRef}
+                    type="text"
+                    className="term-cmd-input"
+                    value={terminalInput}
+                    onChange={(e) => setTerminalInput(e.target.value)}
+                    autoComplete="off"
+                    spellCheck="false"
+                  />
+                  <span className="term-blinking-cursor">|</span>
+                </form>
+              </div>
+            </div>
+          )}
+
+          {/* 4. Bottom Status Bar */}
+          <footer className="vscode-statusbar">
+            <div className="statusbar-left">
+              <span className="status-badge remote" title="WSL / Remote Window">
+                &gt;&lt;
+              </span>
+              <span className="status-item git-branch">
+                <GitBranch size={11} />
+                <span>main*</span>
+              </span>
+              <span className="status-item diagnostics">
+                <span>⊗ 0</span>
+                <span>⚠ 0</span>
+              </span>
+            </div>
+
+            <div className="statusbar-right">
+              <span className="status-item">Ln {cursorLine}, Col {cursorCol}</span>
+              <span className="status-item">Spaces: 2</span>
+              <span className="status-item">UTF-8</span>
+              <span className="status-item lang-mode">{currentFile.lang}</span>
+              <span className="status-item prettier">Prettier: ✓</span>
+              <span className="status-item bell">
+                <Bell size={11} />
+              </span>
+            </div>
+          </footer>
+        </main>
       </div>
     </div>
   );
