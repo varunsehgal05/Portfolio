@@ -610,8 +610,39 @@ const FigmaApp = ({ isInteracting, userName, onOpenApp }) => {
 
   // Canvas pan & zoom state
   const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
   const [isPanning, setIsPanning] = useState(false);
+  const [isWireframeMode, setIsWireframeMode] = useState(false);
   const startPanRef = useRef({ x: 0, y: 0 });
+
+  // Dynamic Selected Node & Live Editable Properties
+  const [selectedNodeId, setSelectedNodeId] = useState('root-canvas');
+  const [selectedNodeLabel, setSelectedNodeLabel] = useState('Varun_Sehgal_Portfolio');
+  const [selectedNodeType, setSelectedNodeType] = useState('Frame');
+  const [nodeProps, setNodeProps] = useState({
+    'root-canvas': { x: 0, y: 0, w: 1200, h: 850, radius: 16, fill: '#1E2020', fillOpacity: 35, stroke: '#FFFFFF', strokeWidth: 1, opacity: 100 },
+    'work-codesrijan': { x: 40, y: 80, w: 360, h: 440, radius: 16, fill: '#181920', stroke: '#38bdf8', strokeWidth: 1, opacity: 100 },
+    'work-eventflow': { x: 430, y: 80, w: 360, h: 440, radius: 16, fill: '#181920', stroke: '#818cf8', strokeWidth: 1, opacity: 100 },
+    'work-landing': { x: 820, y: 80, w: 360, h: 440, radius: 16, fill: '#181920', stroke: '#34d399', strokeWidth: 1, opacity: 100 },
+    'work-saas': { x: 40, y: 550, w: 360, h: 440, radius: 16, fill: '#181920', stroke: '#f59e0b', strokeWidth: 1, opacity: 100 },
+    'exp-imagine': { x: 60, y: 80, w: 420, h: 220, radius: 16, fill: '#181920', stroke: '#38bdf8', strokeWidth: 1, opacity: 100 },
+    'exp-knaptix': { x: 540, y: 30, w: 420, h: 220, radius: 16, fill: '#181920', stroke: '#818cf8', strokeWidth: 1, opacity: 100 },
+    'exp-udemy': { x: 540, y: 280, w: 420, h: 220, radius: 16, fill: '#181920', stroke: '#34d399', strokeWidth: 1, opacity: 100 },
+    'exp-infosys': { x: 60, y: 330, w: 420, h: 220, radius: 16, fill: '#181920', stroke: '#f59e0b', strokeWidth: 1, opacity: 100 },
+    'about-avatar': { x: 510, y: 310, w: 220, h: 220, radius: 110, fill: '#181920', stroke: '#38bdf8', strokeWidth: 2, opacity: 100 },
+    'about-strengths': { x: 40, y: 40, w: 360, h: 260, radius: 16, fill: '#181920', stroke: '#34d399', strokeWidth: 1, opacity: 100 },
+    'about-weaknesses': { x: 840, y: 40, w: 360, h: 260, radius: 16, fill: '#181920', stroke: '#f59e0b', strokeWidth: 1, opacity: 100 },
+    'about-philosophy': { x: 40, y: 440, w: 360, h: 260, radius: 16, fill: '#181920', stroke: '#818cf8', strokeWidth: 1, opacity: 100 },
+    'about-toolkit': { x: 840, y: 440, w: 360, h: 260, radius: 16, fill: '#181920', stroke: '#38bdf8', strokeWidth: 1, opacity: 100 },
+    'about-education': { x: 440, y: 600, w: 360, h: 240, radius: 16, fill: '#181920', stroke: '#ec4899', strokeWidth: 1, opacity: 100 },
+    'process-p1': { x: 40, y: 80, w: 380, h: 560, radius: 16, fill: '#181920', stroke: '#38bdf8', strokeWidth: 1, opacity: 100 },
+    'process-p2': { x: 480, y: 80, w: 380, h: 560, radius: 16, fill: '#181920', stroke: '#c084fc', strokeWidth: 1, opacity: 100 },
+    'process-p3': { x: 920, y: 80, w: 380, h: 560, radius: 16, fill: '#181920', stroke: '#34d399', strokeWidth: 1, opacity: 100 },
+    'process-p4': { x: 1360, y: 80, w: 380, h: 560, radius: 16, fill: '#181920', stroke: '#f59e0b', strokeWidth: 1, opacity: 100 },
+    'process-p5': { x: 1800, y: 80, w: 380, h: 560, radius: 16, fill: '#181920', stroke: '#38bdf8', strokeWidth: 1, opacity: 100 },
+    'process-p6': { x: 2240, y: 80, w: 380, h: 560, radius: 16, fill: '#181920', stroke: '#10b981', strokeWidth: 1, opacity: 100 },
+    'resume-artboard': { x: 40, y: 40, w: 920, h: 1180, radius: 16, fill: '#181920', stroke: '#38bdf8', strokeWidth: 1, opacity: 100 }
+  });
 
   // Floating sticky notes
   const [floatingShapes, setFloatingShapes] = useState(INITIAL_SHAPES);
@@ -706,6 +737,37 @@ const FigmaApp = ({ isInteracting, userName, onOpenApp }) => {
       navigator.clipboard.writeText(url);
     }
     showToast(`${label} copied to clipboard!`);
+  };
+
+  const handleSelectNode = (id, label, type) => {
+    setSelectedNodeId(id);
+    setSelectedLayerId(id);
+    setSelectedNodeLabel(label);
+    setSelectedNodeType(type);
+    showToast(`Selected: ${label}`);
+  };
+
+  const selectedNode = nodeProps[selectedNodeId] || {
+    x: frameX, y: frameY, w: frameW, h: frameH, radius: frameRadius, fill: fillColor, fillOpacity: fillOpacity, stroke: strokeColor, strokeWidth: strokeWidth, opacity: layerOpacity
+  };
+
+  const updateSelectedProp = (key, val) => {
+    setNodeProps(prev => ({
+      ...prev,
+      [selectedNodeId]: {
+        ...(prev[selectedNodeId] || selectedNode),
+        [key]: val
+      }
+    }));
+    if (key === 'x') setFrameX(val);
+    if (key === 'y') setFrameY(val);
+    if (key === 'w') setFrameW(val);
+    if (key === 'h') setFrameH(val);
+    if (key === 'radius') setFrameRadius(val);
+    if (key === 'fill') setFillColor(val);
+    if (key === 'stroke') setStrokeColor(val);
+    if (key === 'strokeWidth') setStrokeWidth(val);
+    if (key === 'opacity') setLayerOpacity(val);
   };
 
   const handleExportFrame = () => {
@@ -844,11 +906,17 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
     setFloatingShapes(prev => prev.filter(s => s.id !== id));
   };
 
-  // Canvas Mouse Down for Panning
+  // Canvas Mouse Down for Panning & Stage Selection
   const handleCanvasMouseDown = (e) => {
-    if (e.target.closest('.artboard-container') || e.target.closest('.sticky-note-element') || e.target.closest('button') || e.target.closest('a')) {
+    if (e.target.closest('.figma-selectable-node') || e.target.closest('button') || e.target.closest('a') || e.target.closest('input') || e.target.closest('textarea') || e.target.closest('.sticky-note-textarea')) {
       return;
     }
+    // Clicked background -> select root canvas artboard
+    setSelectedNodeId('root-canvas');
+    setSelectedLayerId(null);
+    setSelectedNodeLabel('Varun_Sehgal_Portfolio');
+    setSelectedNodeType('Frame');
+
     setIsPanning(true);
     startPanRef.current = {
       x: e.pageX - pan.x,
@@ -866,6 +934,19 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
 
   const handleCanvasMouseUp = () => {
     setIsPanning(false);
+  };
+
+  const handleCanvasWheel = (e) => {
+    if (e.ctrlKey || e.metaKey) {
+      e.preventDefault();
+      const factor = e.deltaY < 0 ? 1.05 : 0.95;
+      setZoom(z => Math.min(2.5, Math.max(0.4, Number((z * factor).toFixed(2)))));
+    } else {
+      setPan(p => ({
+        x: p.x - e.deltaX,
+        y: p.y - e.deltaY
+      }));
+    }
   };
 
   const filteredProjects = ALL_PROJECTS.filter(p => {
@@ -973,6 +1054,47 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 </button>
               </div>
             )}
+          </div>
+
+          {/* Wireframe View Mode Toggle */}
+          <button
+            type="button"
+            className={`wireframe-toggle-btn ${isWireframeMode ? 'active' : ''}`}
+            onClick={() => {
+              setIsWireframeMode(!isWireframeMode);
+              showToast(isWireframeMode ? 'Wireframe mode off' : 'Wireframe blueprint mode active');
+            }}
+            title="Toggle Figma Blueprint Wireframe View"
+          >
+            <span className="material-symbols-outlined text-[15px]">grid_on</span>
+            <span>Wireframe</span>
+          </button>
+
+          {/* Canvas Zoom & Pan Controls */}
+          <div className="canvas-zoom-pill">
+            <button 
+              type="button" 
+              className="canvas-zoom-btn"
+              onClick={() => setZoom(z => Math.max(0.4, Number((z - 0.1).toFixed(2))))}
+              title="Zoom out"
+            >
+              −
+            </button>
+            <span 
+              className="canvas-zoom-val" 
+              onClick={() => { setZoom(1); setPan({ x: 0, y: 0 }); }}
+              title="Reset Zoom & Pan to 100%"
+            >
+              {Math.round(zoom * 100)}%
+            </span>
+            <button 
+              type="button" 
+              className="canvas-zoom-btn"
+              onClick={() => setZoom(z => Math.min(2.5, Number((z + 0.1).toFixed(2))))}
+              title="Zoom in"
+            >
+              +
+            </button>
           </div>
         </div>
 
@@ -1283,10 +1405,11 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
         {/* Center Main Stage */}
         <main
           ref={containerRef}
-          className={`lovable-canvas-stage ${isPanning ? 'panning' : ''}`}
+          className={`lovable-canvas-stage ${isPanning ? 'panning' : ''} ${isWireframeMode ? 'wireframe-mode-stage' : ''}`}
           onMouseDown={handleCanvasMouseDown}
           onMouseMove={handleCanvasMouseMove}
           onMouseUp={handleCanvasMouseUp}
+          onWheel={handleCanvasWheel}
         >
           {/* Dot Grid Background */}
           <div
@@ -1303,7 +1426,8 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
             <div
               className="lovable-canvas-world"
               style={{
-                transform: `translate3d(${pan.x}px, ${pan.y}px, 0)`
+                transform: `translate3d(${pan.x}px, ${pan.y}px, 0) scale(${zoom})`,
+                transformOrigin: '0 0'
               }}
             >
               {/* Sticky Notes */}
@@ -1498,11 +1622,17 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
           )}
 
           {/* =========================================================================
-              VIEW 2: WORK / PROJECTS (Full Bento Grid & Search)
+              VIEW 2: WORK / PROJECTS (Infinite Canvas Bento Grid & Selectable Nodes)
               ========================================================================= */}
           {activeTab === 'projects' && (
-            <div className="lovable-static-view">
-              <div className="view-content-wrapper">
+            <div
+              className="lovable-canvas-world"
+              style={{
+                transform: `translate3d(${pan.x}px, ${pan.y}px, 0) scale(${zoom})`,
+                transformOrigin: '0 0'
+              }}
+            >
+              <div className="view-content-wrapper" style={{ padding: '30px 40px 140px', minWidth: '1350px' }}>
                 <header className="view-page-header">
                   <h1 className="view-page-title">Work & Case Studies</h1>
                   <p className="view-page-desc">Complete showcase of production UX flows, SaaS platforms, and mobile applications.</p>
@@ -1534,45 +1664,81 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   </div>
                 </div>
 
-                {/* Full Bento Grid */}
+                {/* Full Bento Grid with Selectable Cards */}
                 <div className="bento-grid-container">
-                  {filteredProjects.map(proj => (
-                    <div key={proj.id} className="bento-card">
-                      <div className="bento-img-wrap">
-                        <FirebaseImage
-                          storagePath={`projects/${proj.id}.png`}
-                          fallbackSrc={proj.image}
-                          alt={proj.name}
-                          className="bento-img"
-                        />
-                        <span className="bento-badge">{proj.badge}</span>
-                      </div>
-                      <div className="bento-body">
-                        <span className="bento-cat">{proj.category}</span>
-                        <h3 className="bento-title">{proj.name}</h3>
-                        <p className="bento-desc">{proj.desc}</p>
-                        <div className="bento-tags-list">
-                          {proj.tags.map((t, idx) => (
-                            <span key={idx} className="bento-tag">{t}</span>
-                          ))}
+                  {filteredProjects.map(proj => {
+                    const nodeId = `work-${proj.id}`;
+                    const isSelected = selectedNodeId === nodeId;
+                    const props = nodeProps[nodeId] || {};
+                    return (
+                      <div
+                        key={proj.id}
+                        className={`bento-card figma-selectable-node ${isSelected ? 'is-selected' : ''}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleSelectNode(nodeId, proj.name, 'Component');
+                        }}
+                        style={{
+                          borderRadius: props.radius ? `${props.radius}px` : undefined,
+                          backgroundColor: props.fill || undefined,
+                          borderColor: props.stroke || undefined,
+                          borderWidth: props.strokeWidth ? `${props.strokeWidth}px` : undefined,
+                          opacity: props.opacity !== undefined ? props.opacity / 100 : undefined
+                        }}
+                      >
+                        {isSelected && (
+                          <div className="figma-selection-overlay">
+                            <div className="selection-tag">❖ {proj.name} [{props.w || 360}×{props.h || 440}]</div>
+                            <div className="selection-handle tl" />
+                            <div className="selection-handle tr" />
+                            <div className="selection-handle bl" />
+                            <div className="selection-handle br" />
+                          </div>
+                        )}
+                        <div className="bento-img-wrap">
+                          <img
+                            src={proj.image}
+                            alt={proj.name}
+                            className="bento-img"
+                            onError={(e) => {
+                              e.currentTarget.src = '/figma_LandingPage.png';
+                            }}
+                          />
+                          <span className="bento-badge">{proj.badge}</span>
                         </div>
-                        <a href={proj.link} target="_blank" rel="noreferrer" className="bento-action-btn">
-                          Open in Figma <span className="material-symbols-outlined text-[16px]">open_in_new</span>
-                        </a>
+                        <div className="bento-body">
+                          <span className="bento-cat">{proj.category}</span>
+                          <h3 className="bento-title">{proj.name}</h3>
+                          <p className="bento-desc">{proj.desc}</p>
+                          <div className="bento-tags-list">
+                            {proj.tags.map((t, idx) => (
+                              <span key={idx} className="bento-tag">{t}</span>
+                            ))}
+                          </div>
+                          <a href={proj.link} target="_blank" rel="noreferrer" className="bento-action-btn">
+                            Open in Figma <span className="material-symbols-outlined text-[16px]">open_in_new</span>
+                          </a>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             </div>
           )}
 
           {/* =========================================================================
-              VIEW 3: EXPERIENCE (Recent Activity, Zigzag Timeline & Credentials)
+              VIEW 3: EXPERIENCE (Infinite Canvas Alternating Timeline & Credentials)
               ========================================================================= */}
           {activeTab === 'experience' && (
-            <div className="lovable-static-view">
-              <div className="view-content-wrapper">
+            <div
+              className="lovable-canvas-world"
+              style={{
+                transform: `translate3d(${pan.x}px, ${pan.y}px, 0) scale(${zoom})`,
+                transformOrigin: '0 0'
+              }}
+            >
+              <div className="view-content-wrapper" style={{ padding: '30px 40px 140px', minWidth: '1200px' }}>
                 <header className="view-page-header">
                   <div className="activity-header-top">
                     <div>
@@ -1627,6 +1793,9 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
 
                       {filteredActivity.map((item, index) => {
                         const isRight = index % 2 === 0;
+                        const expNodeId = `exp-${item.id}`;
+                        const isSelected = selectedNodeId === expNodeId;
+                        const props = nodeProps[expNodeId] || {};
                         return (
                           <div 
                             key={item.id} 
@@ -1638,7 +1807,29 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                             </div>
 
                             {/* Alternating Card */}
-                            <div className="zigzag-card">
+                            <div
+                              className={`zigzag-card figma-selectable-node ${isSelected ? 'is-selected' : ''}`}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleSelectNode(expNodeId, item.highlight, 'Frame');
+                              }}
+                              style={{
+                                borderRadius: props.radius ? `${props.radius}px` : undefined,
+                                backgroundColor: props.fill || undefined,
+                                borderColor: props.stroke || undefined,
+                                borderWidth: props.strokeWidth ? `${props.strokeWidth}px` : undefined,
+                                opacity: props.opacity !== undefined ? props.opacity / 100 : undefined
+                              }}
+                            >
+                              {isSelected && (
+                                <div className="figma-selection-overlay">
+                                  <div className="selection-tag">❖ {item.highlight} [{props.w || 420}×{props.h || 220}]</div>
+                                  <div className="selection-handle tl" />
+                                  <div className="selection-handle tr" />
+                                  <div className="selection-handle bl" />
+                                  <div className="selection-handle br" />
+                                </div>
+                              )}
                               <div className="zigzag-card-header">
                                 <span className="zigzag-card-date">{item.date}</span>
                                 <span className="zigzag-card-badge">{item.category}</span>
@@ -1831,390 +2022,316 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
           )}
 
           {/* =========================================================================
-              VIEW 4: ABOUT (Master Component Specs & FigJam Whiteboard Canvas)
+              VIEW 4: ABOUT (Infinite Canvas Radial Traits with Image 3 Connectors)
               ========================================================================= */}
           {activeTab === 'about' && (
-            <div className="lovable-static-view">
-              <div className="view-content-wrapper">
+            <div
+              className="lovable-canvas-world"
+              style={{
+                transform: `translate3d(${pan.x}px, ${pan.y}px, 0) scale(${zoom})`,
+                transformOrigin: '0 0'
+              }}
+            >
+              <div className="view-content-wrapper" style={{ padding: '20px 30px 140px', minWidth: '1350px' }}>
                 <header className="view-page-header">
                   <div className="about-header-flex">
                     <div>
                       <h1 className="view-page-title">About Varun Sehgal</h1>
-                      <p className="view-page-desc">Design philosophy, technical architecture, and master component parameters.</p>
-                    </div>
-
-                    <div className="flex items-center gap-3 flex-wrap">
-                      <div className="activity-view-switcher">
-                        <button
-                          type="button"
-                          className={`view-switch-btn ${aboutViewMode === 'canvas' ? 'active' : ''}`}
-                          onClick={() => setAboutViewMode('canvas')}
-                          title="FigJam Canvas Board"
-                        >
-                          <span className="material-symbols-outlined text-[15px]">space_dashboard</span>
-                          <span>Canvas</span>
-                        </button>
-                        <button
-                          type="button"
-                          className={`view-switch-btn ${aboutViewMode === 'specs' ? 'active' : ''}`}
-                          onClick={() => setAboutViewMode('specs')}
-                          title="Component Specs"
-                        >
-                          <span className="material-symbols-outlined text-[15px]">tune</span>
-                          <span>Specs</span>
-                        </button>
-                      </div>
-
-                      {aboutViewMode === 'specs' && (
-                        <div className="variant-switch-group">
-                          <span className="variant-label">Variant:</span>
-                          {['Product Designer', 'UI/UX Specialist', 'Design System Lead'].map(v => (
-                            <button
-                              key={v}
-                              className={`variant-btn ${aboutVariant === v ? 'active' : ''}`}
-                              onClick={() => setAboutVariant(v)}
-                            >
-                              {v}
-                            </button>
-                          ))}
-                        </div>
-                      )}
+                      <p className="view-page-desc">Design philosophy, superpowers, growth vectors, and architectural toolkit.</p>
                     </div>
                   </div>
                 </header>
 
-                {aboutViewMode === 'canvas' ? (
-                  /* FigJam Whiteboard Canvas Layout (Matching User Mockup) */
-                  <div className="figjam-whiteboard-board">
-                    <div className="figjam-canvas-controls">
-                      <div className="figjam-canvas-badge">
-                        <span className="material-symbols-outlined text-[14px] text-[#38bdf8]">draw</span>
-                        <span>FigJam Whiteboard · About.jam</span>
+                <div className="about-radial-canvas-container">
+                  {/* SVG Radiating Curved Dashed Connectors Layer (Matching Image 3) */}
+                  <svg className="about-connector-svg-layer" viewBox="0 0 1240 860" fill="none">
+                    {/* Path 1: Center Avatar -> Top Left (Core Strengths) */}
+                    <path
+                      d="M 520,380 C 440,380 400,280 400,200"
+                      stroke="#38bdf8"
+                      strokeWidth="2"
+                      strokeDasharray="6 6"
+                    />
+                    <circle cx="400" cy="200" r="4.5" fill="#38bdf8" />
+
+                    {/* Path 2: Center Avatar -> Top Right (Weaknesses & Growth Vectors) */}
+                    <path
+                      d="M 720,380 C 800,380 840,280 840,200"
+                      stroke="#38bdf8"
+                      strokeWidth="2"
+                      strokeDasharray="6 6"
+                    />
+                    <circle cx="840" cy="200" r="4.5" fill="#38bdf8" />
+
+                    {/* Path 3: Center Avatar -> Bottom Left (Design Philosophy) */}
+                    <path
+                      d="M 520,460 C 440,460 400,520 400,580"
+                      stroke="#38bdf8"
+                      strokeWidth="2"
+                      strokeDasharray="6 6"
+                    />
+                    <circle cx="400" cy="580" r="4.5" fill="#38bdf8" />
+
+                    {/* Path 4: Center Avatar -> Bottom Right (Technical Stack) */}
+                    <path
+                      d="M 720,460 C 800,460 840,520 840,580"
+                      stroke="#38bdf8"
+                      strokeWidth="2"
+                      strokeDasharray="6 6"
+                    />
+                    <circle cx="840" cy="580" r="4.5" fill="#38bdf8" />
+
+                    {/* Path 5: Center Avatar -> Bottom Center (Education & Hackathons) */}
+                    <path
+                      d="M 620,530 C 620,560 620,580 620,600"
+                      stroke="#38bdf8"
+                      strokeWidth="2"
+                      strokeDasharray="6 6"
+                    />
+                    <circle cx="620" cy="600" r="4.5" fill="#38bdf8" />
+                  </svg>
+
+                  {/* 1. Center Avatar of Varun */}
+                  <div
+                    className={`about-center-avatar-node figma-selectable-node ${selectedNodeId === 'about-avatar' ? 'is-selected' : ''}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSelectNode('about-avatar', 'Varun_Avatar_Core', 'Component');
+                    }}
+                    style={{
+                      borderRadius: nodeProps['about-avatar']?.radius ? `${nodeProps['about-avatar'].radius}px` : undefined,
+                      backgroundColor: nodeProps['about-avatar']?.fill || undefined,
+                      borderColor: nodeProps['about-avatar']?.stroke || undefined,
+                      opacity: nodeProps['about-avatar']?.opacity !== undefined ? nodeProps['about-avatar'].opacity / 100 : undefined
+                    }}
+                  >
+                    {selectedNodeId === 'about-avatar' && (
+                      <div className="figma-selection-overlay">
+                        <div className="selection-tag">❖ Varun_Avatar_Core [220×220]</div>
+                        <div className="selection-handle tl" />
+                        <div className="selection-handle tr" />
+                        <div className="selection-handle bl" />
+                        <div className="selection-handle br" />
                       </div>
-                      <span className="text-[11px] text-zinc-500 font-mono">100% · Scaled Viewport</span>
+                    )}
+                    <div className="about-avatar-ring">
+                      <img src="/varun.jpg" alt="Varun Sehgal" className="about-avatar-img" onError={(e) => { e.currentTarget.src = '/profile/varun.jpg'; }} />
                     </div>
-
-                    <div className="figjam-grid-layout">
-                      {/* Row 1: Phase 01: Ideation -> Phase 02: Architecture */}
-                      <div className="figjam-flow-row">
-                        {/* Section 1: Phase 01: Ideation (Matching User Reference) */}
-                        <div className="figjam-section-col">
-                          <div className="figjam-phase-card">
-                            <div className="phase-header-block">
-                              <h2 className="phase-title-large">Phase 01: Ideation</h2>
-                              <p className="phase-desc-muted">
-                                Unstructured thoughts, user journey mapping, and early structural wireframes. Mapping the chaotic void before styling.
-                              </p>
-                              <div className="phase-subheading-pin">
-                                <span className="material-symbols-outlined phase-pin-symbol">location_on</span>
-                                <span>Brainstorming</span>
-                              </div>
-                            </div>
-
-                            {/* Overlapping Colorful Sticky Notes */}
-                            <div className="phase-stickies-cluster">
-                              {/* Blue Sticky */}
-                              <div className="figjam-color-sticky sticky-blue">
-                                <p className="sticky-body-text">
-                                  How might we make the portfolio feel like a high-end application rather than a static document?
-                                </p>
-                                <div className="sticky-footer-row">
-                                  <span>Idea</span>
-                                  <span className="material-symbols-outlined sticky-footer-icon">lightbulb</span>
-                                </div>
-                              </div>
-
-                              {/* Orange Sticky (Overlapping) */}
-                              <div className="figjam-color-sticky sticky-orange">
-                                <p className="sticky-body-text">
-                                  Focus heavily on dark mode aesthetics. Deep blacks, atmospheric blurs, and spectral accent colors.
-                                </p>
-                                <div className="sticky-footer-row">
-                                  <span>Aesthetic</span>
-                                  <span className="material-symbols-outlined sticky-footer-icon">palette</span>
-                                </div>
-                              </div>
-
-                              {/* Purple Sticky */}
-                              <div className="figjam-color-sticky sticky-purple">
-                                <p className="sticky-body-text">
-                                  Typography needs to be crisp. Use Monospace for technical details, Sans for body, Geist for headings.
-                                </p>
-                                <div className="sticky-footer-row">
-                                  <span>Typography</span>
-                                  <span className="material-symbols-outlined sticky-footer-icon">text_fields</span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Curved Dashed Connector Bridge */}
-                        <div className="figjam-connector-bridge">
-                          <svg className="figjam-curve-svg" viewBox="0 0 120 140" fill="none">
-                            <path d="M 10,25 C 80,25 40,115 110,115" className="figjam-curve-path" />
-                            <circle cx="110" cy="115" r="3.5" fill="#38bdf8" />
-                          </svg>
-                        </div>
-
-                        {/* Section 2: Phase 02: Architecture & Systems */}
-                        <div className="figjam-section-col">
-                          <div className="figjam-phase-card">
-                            <div className="phase-header-block">
-                              <h2 className="phase-title-large">Phase 02: Architecture</h2>
-                              <p className="phase-desc-muted">
-                                Synthesizing user journeys, scalable design tokens, and modular atomic primitives across web & mobile.
-                              </p>
-                              <div className="phase-subheading-pin">
-                                <span className="material-symbols-outlined phase-pin-symbol" style={{ color: '#c084fc' }}>schema</span>
-                                <span>Design Systems & Flows</span>
-                              </div>
-                            </div>
-
-                            {/* Overlapping Emerald & Amber Stickies */}
-                            <div className="phase-stickies-cluster mb-4">
-                              <div className="figjam-color-sticky sticky-emerald">
-                                <p className="sticky-body-text">
-                                  Tokens first: semantic color mapping, fluid spacing scales, and strict WCAG AA/AAA contrast ratios.
-                                </p>
-                                <div className="sticky-footer-row">
-                                  <span>Tokens</span>
-                                  <span className="material-symbols-outlined sticky-footer-icon">token</span>
-                                </div>
-                              </div>
-
-                              <div className="figjam-color-sticky sticky-amber">
-                                <p className="sticky-body-text">
-                                  Atomic hierarchy: Primitives → Compounds → Responsive Artboards with auto-layout padding.
-                                </p>
-                                <div className="sticky-footer-row">
-                                  <span>Auto-Layout</span>
-                                  <span className="material-symbols-outlined sticky-footer-icon">view_quilt</span>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="figjam-flow-frame mt-2">
-                              <div className="flow-step-node active-node">
-                                Varun Sehgal (Lead Product Designer)
-                              </div>
-                              <div className="flow-stem-divider"></div>
-                              <div className="flow-step-node">
-                                Design Systems & Component Architecture
-                              </div>
-                              <div className="flow-stem-divider"></div>
-                              <div className="flow-branch-row">
-                                <div className="flow-step-node">
-                                  Frontend Code (React / Tailwind)
-                                </div>
-                                <div className="flow-step-node">
-                                  AI Product Prototyping
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Row 2: Phase 03: Execution -> Phase 04: Availability */}
-                      <div className="figjam-flow-row">
-                        {/* Section 3: Phase 03: Execution & AI Velocity */}
-                        <div className="figjam-section-col">
-                          <div className="figjam-phase-card">
-                            <div className="phase-header-block">
-                              <h2 className="phase-title-large">Phase 03: Execution</h2>
-                              <p className="phase-desc-muted">
-                                High-fidelity Figma prototypes, vibecoded AI acceleration, and frictionless design-engineering handoffs.
-                              </p>
-                              <div className="phase-subheading-pin">
-                                <span className="material-symbols-outlined phase-pin-symbol" style={{ color: '#34d399' }}>rocket_launch</span>
-                                <span>AI Velocity & Production Stack</span>
-                              </div>
-                            </div>
-
-                            {/* Overlapping Rose & Teal Stickies */}
-                            <div className="phase-stickies-cluster mb-4">
-                              <div className="figjam-color-sticky sticky-rose">
-                                <p className="sticky-body-text">
-                                  AI-assisted prototyping (Figma Magician, Automator, Galileo) cuts concept turnaround by 45% without losing craft.
-                                </p>
-                                <div className="sticky-footer-row">
-                                  <span>Velocity</span>
-                                  <span className="material-symbols-outlined sticky-footer-icon">bolt</span>
-                                </div>
-                              </div>
-
-                              <div className="figjam-color-sticky sticky-teal">
-                                <p className="sticky-body-text">
-                                  Bridging design & code: Every Figma component maps 1:1 to React.js, TypeScript, and Tailwind CSS props.
-                                </p>
-                                <div className="sticky-footer-row">
-                                  <span>Engineering</span>
-                                  <span className="material-symbols-outlined sticky-footer-icon">code</span>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="figjam-tokens-row">
-                              <span className="figjam-token-pill">Figma AI</span>
-                              <span className="figjam-token-pill">FigJam</span>
-                              <span className="figjam-token-pill">Tokens Studio</span>
-                              <span className="figjam-token-pill">React.js</span>
-                              <span className="figjam-token-pill">TypeScript</span>
-                              <span className="figjam-token-pill">Tailwind CSS</span>
-                              <span className="figjam-token-pill">Git</span>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Curved Dashed Connector Bridge */}
-                        <div className="figjam-connector-bridge">
-                          <svg className="figjam-curve-svg" viewBox="0 0 120 140" fill="none">
-                            <path d="M 10,25 C 80,25 40,115 110,115" className="figjam-curve-path purple" />
-                            <circle cx="110" cy="115" r="3.5" fill="#c084fc" />
-                          </svg>
-                        </div>
-
-                        {/* Section 4: Phase 04: Availability & Impact */}
-                        <div className="figjam-section-col">
-                          <div className="figjam-phase-card">
-                            <div className="phase-header-block">
-                              <h2 className="phase-title-large">Phase 04: Availability</h2>
-                              <p className="phase-desc-muted">
-                                Open for high-impact full-time design roles, product collaborations, and design system leadership.
-                              </p>
-                              <div className="phase-subheading-pin">
-                                <span className="material-symbols-outlined phase-pin-symbol" style={{ color: '#fbbf24' }}>stars</span>
-                                <span>Next Chapter</span>
-                              </div>
-                            </div>
-
-                            <div className="figjam-flow-frame">
-                              <div className="flow-step-node active-node" style={{ borderColor: 'rgba(245, 158, 11, 0.6)', background: 'rgba(245, 158, 11, 0.12)', color: '#fde68a' }}>
-                                🟢 Open for Full-Time Roles & Design Collaborations
-                              </div>
-                              <p className="text-[12.5px] text-zinc-400 mt-3 leading-relaxed">
-                                Pursuing B.Tech in CSE at Jaypee University of Engineering and Technology (2023–2027) with 3+ years experience delivering scalable B2B dashboards, mobile UX flows, and atomic design systems.
-                              </p>
-                              <div className="figjam-actions-bar">
-                                <button 
-                                  type="button" 
-                                  className="cert-action-btn primary"
-                                  onClick={() => onOpenApp ? onOpenApp('contact') : window.location.href = 'mailto:varun.sehgal02@gmail.com'}
-                                >
-                                  <span className="material-symbols-outlined text-[14px]">mail</span>
-                                  <span>Email Me</span>
-                                </button>
-                                <a 
-                                  href="/Varun_Sehgal_Resume_Updated.pdf" 
-                                  download="Varun_Sehgal_Resume.pdf" 
-                                  className="cert-action-btn secondary"
-                                >
-                                  <span className="material-symbols-outlined text-[14px]">download</span>
-                                  <span>Download Resume</span>
-                                </a>
-                                <a 
-                                  href="https://linkedin.com/in/varunsehgal02" 
-                                  target="_blank" 
-                                  rel="noreferrer" 
-                                  className="cert-action-btn secondary"
-                                >
-                                  <span className="material-symbols-outlined text-[14px]">open_in_new</span>
-                                  <span>LinkedIn</span>
-                                </a>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    <div className="about-avatar-name">Varun Sehgal</div>
+                    <div className="about-avatar-role">Product Designer</div>
                   </div>
-                ) : (
-                  /* Alternate Classic Master Specs Layout */
-                  <div className="about-specs-layout">
-                    {/* Master Card */}
-                    <div className="about-profile-card">
-                      <div className="profile-photo-circle">
-                        <FirebaseImage 
-                          storagePath="profile/varun.jpg"
-                          fallbackSrc="/varun.jpg" 
-                          alt="Varun Sehgal" 
-                          onError={(e) => { e.currentTarget.style.display = 'none'; }} 
-                        />
-                        <span className="photo-fallback">VS</span>
-                      </div>
 
-                      <div className="profile-card-details">
-                        <span className="profile-tag">#Core Master Component</span>
-                        <h2 className="profile-name">Varun Sehgal</h2>
-                        <span className="profile-role-pill">{aboutVariant}</span>
-                        <p className="profile-bio">
-                          Undergraduate at Jaypee University Of Engineering And Technology (2023–2027) 
-                          bridging visual design craft with scalable frontend systems.
-                        </p>
+                  {/* 2. Top-Left: Core Strengths & Superpowers */}
+                  <div
+                    className={`about-trait-card figma-selectable-node ${selectedNodeId === 'about-strengths' ? 'is-selected' : ''}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSelectNode('about-strengths', 'Core_Strengths & Superpowers', 'Frame');
+                    }}
+                    style={{
+                      left: '40px',
+                      top: '40px',
+                      width: `${nodeProps['about-strengths']?.w || 360}px`,
+                      borderRadius: nodeProps['about-strengths']?.radius ? `${nodeProps['about-strengths'].radius}px` : undefined,
+                      backgroundColor: nodeProps['about-strengths']?.fill || undefined,
+                      borderColor: nodeProps['about-strengths']?.stroke || undefined,
+                      borderWidth: nodeProps['about-strengths']?.strokeWidth ? `${nodeProps['about-strengths'].strokeWidth}px` : undefined,
+                      opacity: nodeProps['about-strengths']?.opacity !== undefined ? nodeProps['about-strengths'].opacity / 100 : undefined
+                    }}
+                  >
+                    {selectedNodeId === 'about-strengths' && (
+                      <div className="figma-selection-overlay">
+                        <div className="selection-tag">❖ Core_Strengths [360×260]</div>
+                        <div className="selection-handle tl" />
+                        <div className="selection-handle tr" />
+                        <div className="selection-handle bl" />
+                        <div className="selection-handle br" />
                       </div>
+                    )}
+                    <div className="about-trait-title text-[#34d399]">
+                      <span className="material-symbols-outlined text-[17px]">bolt</span>
+                      <span>Core Strengths & Superpowers</span>
                     </div>
-
-                    {/* 4 Technical Specs */}
-                    <div className="specs-quad-grid">
-                      <div className="spec-tile">
-                        <div className="tile-title-row">
-                          <span className="material-symbols-outlined icon">palette</span>
-                          <span>Design Tools</span>
-                        </div>
-                        <div className="tile-tags">
-                          {['Figma', 'Figma AI', 'FigJam', 'Adobe XD', 'Photoshop', 'Illustrator'].map((s, i) => (
-                            <span key={i} className="tile-pill">{s}</span>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="spec-tile">
-                        <div className="tile-title-row">
-                          <span className="material-symbols-outlined icon">code</span>
-                          <span>Frontend Engineering</span>
-                        </div>
-                        <div className="tile-tags">
-                          {['React.js', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Git', 'Vite'].map((s, i) => (
-                            <span key={i} className="tile-pill">{s}</span>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="spec-tile">
-                        <div className="tile-title-row">
-                          <span className="material-symbols-outlined icon">architecture</span>
-                          <span>UI/UX Methods</span>
-                        </div>
-                        <div className="tile-tags">
-                          {['Design Systems', 'Atomic Tokens', 'Wireframing', 'User Testing', 'WCAG AA'].map((s, i) => (
-                            <span key={i} className="tile-pill">{s}</span>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="spec-tile">
-                        <div className="tile-title-row">
-                          <span className="material-symbols-outlined icon">verified_user</span>
-                          <span>Status & Availability</span>
-                        </div>
-                        <p className="spec-status-text">
-                          🟢 Open for Summer 2025 Product Design Roles, Design Systems Audits, & SaaS Consulting.
-                        </p>
-                      </div>
-                    </div>
+                    <ul className="about-trait-list">
+                      <li>⚡ <strong>Design Systems & Tokens:</strong> Architect of token studio pipelines with nested components and dark/light modes.</li>
+                      <li>🎯 <strong>Frictionless UX Flows:</strong> Slashed transaction drop-off by 30% via 4-step optimized booking psychology.</li>
+                      <li>🔮 <strong>Micro-Interactions:</strong> Authentic haptic springs, fluid physics, and interactive prototyping.</li>
+                      <li>💻 <strong>Frontend Empathy:</strong> Understands React, CSS flex/grid, and dev handoff realities.</li>
+                    </ul>
                   </div>
-                )}
+
+                  {/* 3. Top-Right: Weaknesses & Growth Vectors */}
+                  <div
+                    className={`about-trait-card figma-selectable-node ${selectedNodeId === 'about-weaknesses' ? 'is-selected' : ''}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSelectNode('about-weaknesses', 'Weaknesses & Growth Vectors', 'Frame');
+                    }}
+                    style={{
+                      left: '840px',
+                      top: '40px',
+                      width: `${nodeProps['about-weaknesses']?.w || 360}px`,
+                      borderRadius: nodeProps['about-weaknesses']?.radius ? `${nodeProps['about-weaknesses'].radius}px` : undefined,
+                      backgroundColor: nodeProps['about-weaknesses']?.fill || undefined,
+                      borderColor: nodeProps['about-weaknesses']?.stroke || undefined,
+                      borderWidth: nodeProps['about-weaknesses']?.strokeWidth ? `${nodeProps['about-weaknesses'].strokeWidth}px` : undefined,
+                      opacity: nodeProps['about-weaknesses']?.opacity !== undefined ? nodeProps['about-weaknesses'].opacity / 100 : undefined
+                    }}
+                  >
+                    {selectedNodeId === 'about-weaknesses' && (
+                      <div className="figma-selection-overlay">
+                        <div className="selection-tag">❖ Weaknesses_Vectors [360×260]</div>
+                        <div className="selection-handle tl" />
+                        <div className="selection-handle tr" />
+                        <div className="selection-handle bl" />
+                        <div className="selection-handle br" />
+                      </div>
+                    )}
+                    <div className="about-trait-title text-[#f59e0b]">
+                      <span className="material-symbols-outlined text-[17px]">adjust</span>
+                      <span>Weaknesses & Growth Vectors</span>
+                    </div>
+                    <ul className="about-trait-list">
+                      <li>🔍 <strong>Sub-Pixel Perfectionism:</strong> Spends extra time aligning 1px sub-pixel grids before publishing drafts.</li>
+                      <li>🚀 <strong>Reluctance for Raw Roughs:</strong> Dislikes showing half-baked wireframes; prefers quick hi-fi prototypes before review.</li>
+                      <li>🌐 <strong>Edge-Case Maximalism:</strong> Tendency to design 15+ edge states for simple MVP prototypes.</li>
+                      <li>📈 <strong>Growth Action:</strong> Actively practicing timeboxed rapid paper sketch iterations and public builds.</li>
+                    </ul>
+                  </div>
+
+                  {/* 4. Bottom-Left: Design Philosophy */}
+                  <div
+                    className={`about-trait-card figma-selectable-node ${selectedNodeId === 'about-philosophy' ? 'is-selected' : ''}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSelectNode('about-philosophy', 'Design_Philosophy & Heuristics', 'Frame');
+                    }}
+                    style={{
+                      left: '40px',
+                      top: '450px',
+                      width: `${nodeProps['about-philosophy']?.w || 360}px`,
+                      borderRadius: nodeProps['about-philosophy']?.radius ? `${nodeProps['about-philosophy'].radius}px` : undefined,
+                      backgroundColor: nodeProps['about-philosophy']?.fill || undefined,
+                      borderColor: nodeProps['about-philosophy']?.stroke || undefined,
+                      borderWidth: nodeProps['about-philosophy']?.strokeWidth ? `${nodeProps['about-philosophy'].strokeWidth}px` : undefined,
+                      opacity: nodeProps['about-philosophy']?.opacity !== undefined ? nodeProps['about-philosophy'].opacity / 100 : undefined
+                    }}
+                  >
+                    {selectedNodeId === 'about-philosophy' && (
+                      <div className="figma-selection-overlay">
+                        <div className="selection-tag">❖ Design_Philosophy [360×260]</div>
+                        <div className="selection-handle tl" />
+                        <div className="selection-handle tr" />
+                        <div className="selection-handle bl" />
+                        <div className="selection-handle br" />
+                      </div>
+                    )}
+                    <div className="about-trait-title text-[#818cf8]">
+                      <span className="material-symbols-outlined text-[17px]">lightbulb</span>
+                      <span>Design Philosophy & Heuristics</span>
+                    </div>
+                    <ul className="about-trait-list">
+                      <li>📐 <strong>Form Follows Frictionlessness:</strong> Aesthetic delight serves functional comprehension.</li>
+                      <li>🧠 <strong>Cognitive Load Minimization:</strong> Chunking complex data so users never pause or guess.</li>
+                      <li>🔄 <strong>Atomic Consistency:</strong> Strict adherence to design tokens across web, mobile, and desktop.</li>
+                      <li>🧪 <strong>Continuous Validation:</strong> Rapid qualitative user interviews and telemetry feedback loops.</li>
+                    </ul>
+                  </div>
+
+                  {/* 5. Bottom-Right: Technical Stack & Toolkit */}
+                  <div
+                    className={`about-trait-card figma-selectable-node ${selectedNodeId === 'about-toolkit' ? 'is-selected' : ''}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSelectNode('about-toolkit', 'Technical_Stack & Toolkit', 'Frame');
+                    }}
+                    style={{
+                      left: '840px',
+                      top: '450px',
+                      width: `${nodeProps['about-toolkit']?.w || 360}px`,
+                      borderRadius: nodeProps['about-toolkit']?.radius ? `${nodeProps['about-toolkit'].radius}px` : undefined,
+                      backgroundColor: nodeProps['about-toolkit']?.fill || undefined,
+                      borderColor: nodeProps['about-toolkit']?.stroke || undefined,
+                      borderWidth: nodeProps['about-toolkit']?.strokeWidth ? `${nodeProps['about-toolkit'].strokeWidth}px` : undefined,
+                      opacity: nodeProps['about-toolkit']?.opacity !== undefined ? nodeProps['about-toolkit'].opacity / 100 : undefined
+                    }}
+                  >
+                    {selectedNodeId === 'about-toolkit' && (
+                      <div className="figma-selection-overlay">
+                        <div className="selection-tag">❖ Technical_Stack [360×260]</div>
+                        <div className="selection-handle tl" />
+                        <div className="selection-handle tr" />
+                        <div className="selection-handle bl" />
+                        <div className="selection-handle br" />
+                      </div>
+                    )}
+                    <div className="about-trait-title text-[#38bdf8]">
+                      <span className="material-symbols-outlined text-[17px]">terminal</span>
+                      <span>Technical & Creative Arsenal</span>
+                    </div>
+                    <ul className="about-trait-list">
+                      <li>🎨 <strong>Design Tools:</strong> Figma, Tokens Studio, Framer, FigJam, Adobe Illustrator.</li>
+                      <li>⚡ <strong>Frontend Engineering:</strong> React.js, Tailwind CSS, TypeScript, Vite, Next.js.</li>
+                      <li>🤖 <strong>AI Prototyping:</strong> Cursor, Antigravity IDE, Claude, Ollama local LLMs.</li>
+                      <li>📊 <strong>Handoff & Specs:</strong> Auto Layout 5.0, Git version control, Figma Inspect.</li>
+                    </ul>
+                  </div>
+
+                  {/* 6. Bottom-Center: Education & Hackathons */}
+                  <div
+                    className={`about-trait-card figma-selectable-node ${selectedNodeId === 'about-education' ? 'is-selected' : ''}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSelectNode('about-education', 'Education & Hackathons', 'Frame');
+                    }}
+                    style={{
+                      left: '440px',
+                      top: '600px',
+                      width: `${nodeProps['about-education']?.w || 360}px`,
+                      borderRadius: nodeProps['about-education']?.radius ? `${nodeProps['about-education'].radius}px` : undefined,
+                      backgroundColor: nodeProps['about-education']?.fill || undefined,
+                      borderColor: nodeProps['about-education']?.stroke || undefined,
+                      borderWidth: nodeProps['about-education']?.strokeWidth ? `${nodeProps['about-education'].strokeWidth}px` : undefined,
+                      opacity: nodeProps['about-education']?.opacity !== undefined ? nodeProps['about-education'].opacity / 100 : undefined
+                    }}
+                  >
+                    {selectedNodeId === 'about-education' && (
+                      <div className="figma-selection-overlay">
+                        <div className="selection-tag">❖ Education_Hackathons [360×240]</div>
+                        <div className="selection-handle tl" />
+                        <div className="selection-handle tr" />
+                        <div className="selection-handle bl" />
+                        <div className="selection-handle br" />
+                      </div>
+                    )}
+                    <div className="about-trait-title text-[#ec4899]">
+                      <span className="material-symbols-outlined text-[17px]">school</span>
+                      <span>Education & Hackathon Honors</span>
+                    </div>
+                    <ul className="about-trait-list">
+                      <li>🎓 <strong>JUET B.Tech CSE:</strong> Jaypee University of Eng. & Tech. (2023–2027).</li>
+                      <li>🏆 <strong>HAckeThor Winner:</strong> 1st Place National Hackathon Winner by Unstop.</li>
+                      <li>⚡ <strong>CodeSrijan Organizer:</strong> Led UI/UX & identity for 200+ participants.</li>
+                      <li>🎖️ <strong>Imagine Hackathon:</strong> Top National Finalist for collaborative design.</li>
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
           )}
 
           {/* =========================================================================
-              VIEW 5: RESUME (Full ATS Resume Document Sheet)
+              VIEW 5: RESUME (Infinite Canvas Creative Figma Artboard)
               ========================================================================= */}
           {activeTab === 'resume' && (
-            <div className="lovable-static-view">
-              <div className="view-content-wrapper">
+            <div
+              className="lovable-canvas-world"
+              style={{
+                transform: `translate3d(${pan.x}px, ${pan.y}px, 0) scale(${zoom})`,
+                transformOrigin: '0 0'
+              }}
+            >
+              <div className="view-content-wrapper" style={{ padding: '30px 40px 140px', minWidth: '1200px' }}>
                 <header className="view-page-header">
                   <div className="resume-header-flex">
                     <div>
@@ -2233,8 +2350,36 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   </div>
                 </header>
 
-                <div className="figma-resume-sheet-container">
-                  <div className="figma-resume-two-col">
+                <div
+                  className={`figma-resume-artboard-wrap figma-selectable-node ${selectedNodeId === 'resume-artboard' ? 'is-selected' : ''}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSelectNode('resume-artboard', 'Varun_Sehgal_Resume', 'Frame');
+                  }}
+                  style={{
+                    borderRadius: nodeProps['resume-artboard']?.radius ? `${nodeProps['resume-artboard'].radius}px` : undefined,
+                    backgroundColor: nodeProps['resume-artboard']?.fill || undefined,
+                    borderColor: nodeProps['resume-artboard']?.stroke || undefined,
+                    opacity: nodeProps['resume-artboard']?.opacity !== undefined ? nodeProps['resume-artboard'].opacity / 100 : undefined
+                  }}
+                >
+                  <div className="figma-artboard-caliper-x">↕ 24px AUTO LAYOUT • ↔ 920px FRAME WIDTH</div>
+                  <div className="figma-artboard-sticky-note">
+                    <strong>Reviewer Note</strong>
+                    <p style={{ marginTop: '4px', lineHeight: '1.4' }}>ATS Score 98/100. Clean 2-column Figma component structure. Verified UniEvent & Infosys credentials.</p>
+                  </div>
+                  {selectedNodeId === 'resume-artboard' && (
+                    <div className="figma-selection-overlay">
+                      <div className="selection-tag">❖ Varun_Sehgal_Resume.artboard [920×1180]</div>
+                      <div className="selection-handle tl" />
+                      <div className="selection-handle tr" />
+                      <div className="selection-handle bl" />
+                      <div className="selection-handle br" />
+                    </div>
+                  )}
+
+                  <div className="figma-resume-sheet-container">
+                    <div className="figma-resume-two-col">
                     {/* Left Column: Contact, Education, Skills */}
                     <aside className="figma-resume-sidebar">
                       {/* Contact */}
@@ -2500,264 +2645,381 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 </div>
               </div>
             </div>
+          </div>
           )}
 
           {/* =========================================================================
-              VIEW 6: PROCESS (FigJam Whiteboard Canvas & Methodology)
+              VIEW 6: PROCESS (Infinite Canvas Left-to-Right Horizontal Flow)
               ========================================================================= */}
           {activeTab === 'process' && (
-            <div className="lovable-static-view">
-              <div className="view-content-wrapper">
+            <div
+              className="lovable-canvas-world"
+              style={{
+                transform: `translate3d(${pan.x}px, ${pan.y}px, 0) scale(${zoom})`,
+                transformOrigin: '0 0'
+              }}
+            >
+              <div className="view-content-wrapper" style={{ padding: '20px 40px 140px', minWidth: '2800px' }}>
                 <header className="view-page-header">
                   <div className="about-header-flex">
                     <div>
                       <h1 className="view-page-title">Process & Methodology</h1>
-                      <p className="view-page-desc">How Varun Sehgal transforms ambiguous design requirements into polished, tested digital products.</p>
-                    </div>
-
-                    <div className="activity-view-switcher">
-                      <button
-                        type="button"
-                        className={`view-switch-btn ${processViewMode === 'canvas' ? 'active' : ''}`}
-                        onClick={() => setProcessViewMode('canvas')}
-                        title="FigJam Whiteboard Canvas"
-                      >
-                        <span className="material-symbols-outlined text-[15px]">space_dashboard</span>
-                        <span>Canvas</span>
-                      </button>
-                      <button
-                        type="button"
-                        className={`view-switch-btn ${processViewMode === 'grid' ? 'active' : ''}`}
-                        onClick={() => setProcessViewMode('grid')}
-                        title="Classic Grid View"
-                      >
-                        <span className="material-symbols-outlined text-[15px]">grid_view</span>
-                        <span>Grid</span>
-                      </button>
+                      <p className="view-page-desc">Sequential end-to-end UX workflow from raw ideation to verified production handoff (Left to Right).</p>
                     </div>
                   </div>
                 </header>
 
-                {processViewMode === 'canvas' ? (
-                  /* FigJam Whiteboard Canvas Layout (Matching User Mockup) */
-                  <div className="figjam-whiteboard-board">
-                    <div className="figjam-canvas-controls">
-                      <div className="figjam-canvas-badge">
-                        <span className="material-symbols-outlined text-[14px] text-[#38bdf8]">draw</span>
-                        <span>FigJam Whiteboard · Process_Flow.jam</span>
+                {/* Horizontal Left-to-Right Workflow with Image 3 Connectors */}
+                <div className="process-horizontal-flow">
+                  {/* Phase 01: Ideation (Matching user reference media_1795084261884_b468a887.jpg) */}
+                  <div
+                    className={`process-phase-box figma-selectable-node ${selectedNodeId === 'process-p1' ? 'is-selected' : ''}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSelectNode('process-p1', 'Phase 01: Ideation', 'Frame');
+                    }}
+                    style={{
+                      borderRadius: nodeProps['process-p1']?.radius ? `${nodeProps['process-p1'].radius}px` : undefined,
+                      backgroundColor: nodeProps['process-p1']?.fill || undefined,
+                      borderColor: nodeProps['process-p1']?.stroke || undefined,
+                      opacity: nodeProps['process-p1']?.opacity !== undefined ? nodeProps['process-p1'].opacity / 100 : undefined
+                    }}
+                  >
+                    {selectedNodeId === 'process-p1' && (
+                      <div className="figma-selection-overlay">
+                        <div className="selection-tag">❖ Phase 01: Ideation [380×560]</div>
+                        <div className="selection-handle tl" /><div className="selection-handle tr" />
+                        <div className="selection-handle bl" /><div className="selection-handle br" />
                       </div>
-                      <span className="text-[11px] text-zinc-500 font-mono">100% · Scaled Viewport</span>
+                    )}
+                    <div className="phase-header-block mb-3">
+                      <h2 className="phase-title-large text-[#ffb5a1]">Phase 01: Ideation</h2>
+                      <p className="phase-desc-muted">
+                        Unstructured thoughts, user journey mapping, and early structural wireframes. Mapping the chaotic void before styling.
+                      </p>
+                      <div className="phase-subheading-pin mt-2">
+                        <span className="material-symbols-outlined phase-pin-symbol">location_on</span>
+                        <span>Brainstorming</span>
+                      </div>
                     </div>
 
-                    <div className="figjam-grid-layout">
-                      {/* Row 1: Problem -> User Flow */}
-                      <div className="figjam-flow-row">
-                        {/* Section 1: Problem / Phase 01 */}
-                        <div className="figjam-section-col">
-                          <div className="figjam-phase-card">
-                            <div className="phase-header-block">
-                              <h2 className="phase-title-large">Phase 01: Discovery</h2>
-                              <p className="phase-desc-muted">
-                                Unstructured thoughts, user journey mapping, and early structural wireframes. Mapping the chaotic void before styling.
-                              </p>
-                              <div className="phase-subheading-pin">
-                                <span className="material-symbols-outlined phase-pin-symbol">location_on</span>
-                                <span>Problem & Pain Points</span>
-                              </div>
-                            </div>
-
-                            <div className="phase-stickies-cluster">
-                              <div className="figjam-color-sticky sticky-blue">
-                                <p className="sticky-body-text">
-                                  Users find tracking daily expenses tedious and often abandon budgeting tools due to manual entry friction.
-                                </p>
-                                <div className="sticky-footer-row">
-                                  <span>Pain Point</span>
-                                  <span className="material-symbols-outlined sticky-footer-icon">error_outline</span>
-                                </div>
-                              </div>
-
-                              <div className="figjam-color-sticky sticky-orange">
-                                <p className="sticky-body-text">
-                                  Lack of visual clarity in spending categories makes it hard to identify areas for saving.
-                                </p>
-                                <div className="sticky-footer-row">
-                                  <span>Friction</span>
-                                  <span className="material-symbols-outlined sticky-footer-icon">visibility_off</span>
-                                </div>
-                              </div>
-
-                              <div className="figjam-color-sticky sticky-purple">
-                                <p className="sticky-body-text">
-                                  Validate pain points through qualitative interviews and continuous transaction telemetry.
-                                </p>
-                                <div className="sticky-footer-row">
-                                  <span>Insight</span>
-                                  <span className="material-symbols-outlined sticky-footer-icon">lightbulb</span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Curved Dashed Connector Bridge (Matching User Mockup) */}
-                        <div className="figjam-connector-bridge">
-                          <svg className="figjam-curve-svg" viewBox="0 0 120 140" fill="none">
-                            <path d="M 10,25 C 80,25 40,115 110,115" className="figjam-curve-path" />
-                            <circle cx="110" cy="115" r="3.5" fill="#38bdf8" />
-                          </svg>
-                        </div>
-
-                        {/* Section 2: User Flow */}
-                        <div className="figjam-section-col">
-                          <div className="figjam-section-header">
-                            <div className="figjam-icon-pin pin-purple">
-                              <span className="material-symbols-outlined text-[15px]">schema</span>
-                            </div>
-                            <h2 className="figjam-section-title">User Flow</h2>
-                          </div>
-
-                          <div className="figjam-flow-frame">
-                            <div className="flow-step-node">
-                              Launch App
-                            </div>
-                            <div className="flow-stem-divider"></div>
-                            <div className="flow-step-node active-node">
-                              Dashboard Overview
-                            </div>
-                            <div className="flow-stem-divider"></div>
-                            <div className="flow-branch-row">
-                              <div className="flow-step-node">
-                                Add Expense
-                              </div>
-                              <div className="flow-step-node">
-                                View Insights
-                              </div>
-                            </div>
-                          </div>
+                    {/* Overlapping Colorful Sticky Notes (Matching Image 1) */}
+                    <div className="phase-stickies-cluster">
+                      {/* Blue Sticky */}
+                      <div className="figjam-color-sticky sticky-blue">
+                        <p className="sticky-body-text">
+                          How might we make the portfolio feel like a high-end application rather than a static document?
+                        </p>
+                        <div className="sticky-footer-row">
+                          <span>Idea</span>
+                          <span className="material-symbols-outlined sticky-footer-icon">lightbulb</span>
                         </div>
                       </div>
 
-                      {/* Row 2: Wireframes & Tokens -> Interactive Prototype & Impact */}
-                      <div className="figjam-flow-row">
-                        {/* Section 3: Design System Tokens */}
-                        <div className="figjam-section-col">
-                          <div className="figjam-section-header">
-                            <div className="figjam-icon-pin pin-emerald">
-                              <span className="material-symbols-outlined text-[15px]">grid_view</span>
-                            </div>
-                            <h2 className="figjam-section-title">Design System & Tokens</h2>
-                          </div>
-
-                          <div className="figjam-cards-stack">
-                            <div className="figjam-sticky-card tilt-right">
-                              <span className="figjam-card-label">Semantic Color Architecture</span>
-                              Establishing scalable dark mode tokens, accessibility contrast ratios (WCAG AA), and modular states.
-                              <div className="figjam-tokens-row">
-                                <span className="figjam-token-pill">#1E2020</span>
-                                <span className="figjam-token-pill">#34D399</span>
-                                <span className="figjam-token-pill">#F87171</span>
-                              </div>
-                            </div>
-
-                            <div className="figjam-sticky-card tilt-left">
-                              <span className="figjam-card-label">Atomic Auto-Layout</span>
-                              50+ reusable nested components engineered for rapid wireframing and seamless engineering handoffs.
-                            </div>
-                          </div>
+                      {/* Orange Sticky (Overlapping) */}
+                      <div className="figjam-color-sticky sticky-orange">
+                        <p className="sticky-body-text">
+                          Focus heavily on dark mode aesthetics. Deep blacks, atmospheric blurs, and spectral accent colors.
+                        </p>
+                        <div className="sticky-footer-row">
+                          <span>Aesthetic</span>
+                          <span className="material-symbols-outlined sticky-footer-icon">palette</span>
                         </div>
+                      </div>
 
-                        {/* Curved Dashed Connector Bridge */}
-                        <div className="figjam-connector-bridge">
-                          <svg className="figjam-curve-svg" viewBox="0 0 120 140" fill="none">
-                            <path d="M 10,25 C 80,25 40,115 110,115" className="figjam-curve-path purple" />
-                            <circle cx="110" cy="115" r="3.5" fill="#c084fc" />
-                          </svg>
-                        </div>
-
-                        {/* Section 4: Interactive Prototype & Validation */}
-                        <div className="figjam-section-col">
-                          <div className="figjam-section-header">
-                            <div className="figjam-icon-pin pin-amber">
-                              <span className="material-symbols-outlined text-[15px]">play_circle</span>
-                            </div>
-                            <h2 className="figjam-section-title">Validation & Impact</h2>
-                          </div>
-
-                          <div className="figjam-flow-frame">
-                            <div className="flow-step-node active-node" style={{ borderColor: 'rgba(52, 211, 153, 0.6)', background: 'rgba(52, 211, 153, 0.12)', color: '#a7f3d0' }}>
-                              ⚡ 30% Drop-Off Reduction in 4-Step Checkout
-                            </div>
-                            <div className="flow-stem-divider"></div>
-                            <div className="flow-step-node">
-                              Average Expense Logging Time Under 5 Seconds
-                            </div>
-                            <div className="flow-stem-divider"></div>
-                            <div className="flow-branch-row">
-                              <a 
-                                href="https://www.figma.com/design/3mw8XBHEZ3b8HKNNqcs6U2/Expensify---Budget-Tracker-App?node-id=135-318&t=gUJEMUlyDc8ERNeR-1" 
-                                target="_blank" 
-                                rel="noreferrer" 
-                                className="flow-step-node text-center"
-                                style={{ textDecoration: 'none', color: '#ffb5a1' }}
-                              >
-                                Open Expensify Prototype ↗
-                              </a>
-                            </div>
-                          </div>
+                      {/* Purple Sticky */}
+                      <div className="figjam-color-sticky sticky-purple">
+                        <p className="sticky-body-text">
+                          Typography needs to be crisp. Use Monospace for technical details, Sans for body, Geist for headings.
+                        </p>
+                        <div className="sticky-footer-row">
+                          <span>Typography</span>
+                          <span className="material-symbols-outlined sticky-footer-icon">text_fields</span>
                         </div>
                       </div>
                     </div>
                   </div>
-                ) : (
-                  /* Alternate Classic Grid Cards Layout */
-                  <div className="process-steps-grid">
-                    <div className="process-card">
-                      <span className="step-number">01</span>
-                      <h3>Discover & Empathize</h3>
-                      <span className="step-tag">Research & Strategy</span>
-                      <p>Conducting user interviews, stakeholder workshops, competitive audits, and empathy mapping.</p>
+
+                  {/* Connector 1 */}
+                  <div className="process-flow-connector">
+                    <svg viewBox="0 0 60 60" fill="none">
+                      <path d="M 5,30 C 25,30 35,30 55,30" stroke="#38bdf8" strokeWidth="2" strokeDasharray="5 5" />
+                      <circle cx="55" cy="30" r="4.5" fill="#38bdf8" />
+                    </svg>
+                  </div>
+
+                  {/* Phase 02: Architecture & Flows */}
+                  <div
+                    className={`process-phase-box figma-selectable-node ${selectedNodeId === 'process-p2' ? 'is-selected' : ''}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSelectNode('process-p2', 'Phase 02: Architecture', 'Frame');
+                    }}
+                    style={{
+                      borderRadius: nodeProps['process-p2']?.radius ? `${nodeProps['process-p2'].radius}px` : undefined,
+                      backgroundColor: nodeProps['process-p2']?.fill || undefined,
+                      borderColor: nodeProps['process-p2']?.stroke || undefined,
+                      opacity: nodeProps['process-p2']?.opacity !== undefined ? nodeProps['process-p2'].opacity / 100 : undefined
+                    }}
+                  >
+                    {selectedNodeId === 'process-p2' && (
+                      <div className="figma-selection-overlay">
+                        <div className="selection-tag">❖ Phase 02: Architecture [380×560]</div>
+                        <div className="selection-handle tl" /><div className="selection-handle tr" />
+                        <div className="selection-handle bl" /><div className="selection-handle br" />
+                      </div>
+                    )}
+                    <div className="phase-header-block mb-3">
+                      <h2 className="phase-title-large text-[#c084fc]">Phase 02: Architecture</h2>
+                      <p className="phase-desc-muted">
+                        Synthesizing user journeys, sitemaps, task flows, cognitive models, and edge-case routing.
+                      </p>
+                      <div className="phase-subheading-pin mt-2">
+                        <span className="material-symbols-outlined phase-pin-symbol" style={{ color: '#c084fc' }}>schema</span>
+                        <span>Information Architecture</span>
+                      </div>
                     </div>
 
-                    <div className="process-card">
-                      <span className="step-number">02</span>
-                      <h3>Define & Architect</h3>
-                      <span className="step-tag">Structure & Personas</span>
-                      <p>Synthesizing insights into user personas, journey flows, and low-fidelity architectural wireframes.</p>
+                    <div className="figjam-flow-frame mt-3">
+                      <div className="flow-step-node">Launch App / Discovery</div>
+                      <div className="flow-stem-divider"></div>
+                      <div className="flow-step-node active-node">Dashboard Overview</div>
+                      <div className="flow-stem-divider"></div>
+                      <div className="flow-branch-row">
+                        <div className="flow-step-node">Add Transaction</div>
+                        <div className="flow-step-node">View Analytics</div>
+                      </div>
                     </div>
-
-                    <div className="process-card">
-                      <span className="step-number">03</span>
-                      <h3>Design System & Tokens</h3>
-                      <span className="step-tag">Scalable Foundations</span>
-                      <p>Establishing color semantics, typography scales, spacing tokens, and atomic auto-layout components.</p>
-                    </div>
-
-                    <div className="process-card">
-                      <span className="step-number">04</span>
-                      <h3>High-Fidelity Prototyping</h3>
-                      <span className="step-tag">Interactive Flows</span>
-                      <p>Building responsive artboards with smart-animate micro-interactions for authentic stakeholder validation.</p>
-                    </div>
-
-                    <div className="process-card">
-                      <span className="step-number">05</span>
-                      <h3>Validation & Dev Handoff</h3>
-                      <span className="step-tag">Production Alignment</span>
-                      <p>Usability testing, design token documentation, and partnering closely with frontend engineers.</p>
+                    <div className="mt-4 p-3 bg-zinc-900/60 rounded-lg border border-zinc-800 text-[11.5px] text-zinc-300">
+                      <strong>Deliverables:</strong> User Journeys, Heuristic Maps, Sitemap Tree, Wireflow Blueprints.
                     </div>
                   </div>
-                )}
+
+                  {/* Connector 2 */}
+                  <div className="process-flow-connector">
+                    <svg viewBox="0 0 60 60" fill="none">
+                      <path d="M 5,30 C 25,30 35,30 55,30" stroke="#38bdf8" strokeWidth="2" strokeDasharray="5 5" />
+                      <circle cx="55" cy="30" r="4.5" fill="#38bdf8" />
+                    </svg>
+                  </div>
+
+                  {/* Phase 03: Lo-Fi Wireframing */}
+                  <div
+                    className={`process-phase-box figma-selectable-node ${selectedNodeId === 'process-p3' ? 'is-selected' : ''}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSelectNode('process-p3', 'Phase 03: Wireframing', 'Frame');
+                    }}
+                    style={{
+                      borderRadius: nodeProps['process-p3']?.radius ? `${nodeProps['process-p3'].radius}px` : undefined,
+                      backgroundColor: nodeProps['process-p3']?.fill || undefined,
+                      borderColor: nodeProps['process-p3']?.stroke || undefined,
+                      opacity: nodeProps['process-p3']?.opacity !== undefined ? nodeProps['process-p3'].opacity / 100 : undefined
+                    }}
+                  >
+                    {selectedNodeId === 'process-p3' && (
+                      <div className="figma-selection-overlay">
+                        <div className="selection-tag">❖ Phase 03: Wireframing [380×560]</div>
+                        <div className="selection-handle tl" /><div className="selection-handle tr" />
+                        <div className="selection-handle bl" /><div className="selection-handle br" />
+                      </div>
+                    )}
+                    <div className="phase-header-block mb-3">
+                      <h2 className="phase-title-large text-[#34d399]">Phase 03: Wireframing</h2>
+                      <p className="phase-desc-muted">
+                        Rapid grey-box structural prototyping and layout rhythm validation without color distractions.
+                      </p>
+                      <div className="phase-subheading-pin mt-2">
+                        <span className="material-symbols-outlined phase-pin-symbol" style={{ color: '#34d399' }}>grid_view</span>
+                        <span>Layout Blueprints & Cadence</span>
+                      </div>
+                    </div>
+
+                    <div className="p-3 bg-zinc-900/80 rounded-lg border border-dashed border-[#38bdf8]/40 my-3">
+                      <div className="flex items-center justify-between text-[11px] font-mono text-cyan-400 mb-2">
+                        <span>8pt Spatial Grid</span>
+                        <span>Auto Layout 5.0</span>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="h-4 bg-zinc-800 rounded w-3/4"></div>
+                        <div className="h-16 bg-zinc-800/60 rounded border border-zinc-700/50 flex items-center justify-center text-[11px] text-zinc-500">
+                          [ Wireframe Canvas Block ]
+                        </div>
+                        <div className="h-4 bg-zinc-800 rounded w-1/2"></div>
+                      </div>
+                    </div>
+                    <div className="p-3 bg-zinc-900/60 rounded-lg border border-zinc-800 text-[11.5px] text-zinc-300">
+                      <strong>Deliverables:</strong> Low-Fidelity Frames, Clickable Lo-Fi Flow, Spatial Heuristics.
+                    </div>
+                  </div>
+
+                  {/* Connector 3 */}
+                  <div className="process-flow-connector">
+                    <svg viewBox="0 0 60 60" fill="none">
+                      <path d="M 5,30 C 25,30 35,30 55,30" stroke="#38bdf8" strokeWidth="2" strokeDasharray="5 5" />
+                      <circle cx="55" cy="30" r="4.5" fill="#38bdf8" />
+                    </svg>
+                  </div>
+
+                  {/* Phase 04: Design System & Tokens */}
+                  <div
+                    className={`process-phase-box figma-selectable-node ${selectedNodeId === 'process-p4' ? 'is-selected' : ''}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSelectNode('process-p4', 'Phase 04: Design System', 'Frame');
+                    }}
+                    style={{
+                      borderRadius: nodeProps['process-p4']?.radius ? `${nodeProps['process-p4'].radius}px` : undefined,
+                      backgroundColor: nodeProps['process-p4']?.fill || undefined,
+                      borderColor: nodeProps['process-p4']?.stroke || undefined,
+                      opacity: nodeProps['process-p4']?.opacity !== undefined ? nodeProps['process-p4'].opacity / 100 : undefined
+                    }}
+                  >
+                    {selectedNodeId === 'process-p4' && (
+                      <div className="figma-selection-overlay">
+                        <div className="selection-tag">❖ Phase 04: Design System [380×560]</div>
+                        <div className="selection-handle tl" /><div className="selection-handle tr" />
+                        <div className="selection-handle bl" /><div className="selection-handle br" />
+                      </div>
+                    )}
+                    <div className="phase-header-block mb-3">
+                      <h2 className="phase-title-large text-[#f59e0b]">Phase 04: Design System</h2>
+                      <p className="phase-desc-muted">
+                        Scalable design token pipelines: semantic colors, fluid typography scales, and atomic components.
+                      </p>
+                      <div className="phase-subheading-pin mt-2">
+                        <span className="material-symbols-outlined phase-pin-symbol" style={{ color: '#f59e0b' }}>token</span>
+                        <span>Tokens Studio & Hierarchy</span>
+                      </div>
+                    </div>
+
+                    <div className="figjam-tokens-row my-3">
+                      <span className="figjam-token-pill" style={{ borderColor: '#38bdf8', color: '#38bdf8' }}>#38bdf8</span>
+                      <span className="figjam-token-pill" style={{ borderColor: '#818cf8', color: '#818cf8' }}>#818cf8</span>
+                      <span className="figjam-token-pill" style={{ borderColor: '#34d399', color: '#34d399' }}>#34d399</span>
+                      <span className="figjam-token-pill" style={{ borderColor: '#f59e0b', color: '#f59e0b' }}>#f59e0b</span>
+                    </div>
+                    <div className="p-3 bg-zinc-900/60 rounded-lg border border-zinc-800 text-[11.5px] text-zinc-300">
+                      <strong>Deliverables:</strong> 50+ Nested Component Variants, Tokens Studio JSON, WCAG AA/AAA Ratio Rules.
+                    </div>
+                  </div>
+
+                  {/* Connector 4 */}
+                  <div className="process-flow-connector">
+                    <svg viewBox="0 0 60 60" fill="none">
+                      <path d="M 5,30 C 25,30 35,30 55,30" stroke="#38bdf8" strokeWidth="2" strokeDasharray="5 5" />
+                      <circle cx="55" cy="30" r="4.5" fill="#38bdf8" />
+                    </svg>
+                  </div>
+
+                  {/* Phase 05: Hi-Fi Prototyping */}
+                  <div
+                    className={`process-phase-box figma-selectable-node ${selectedNodeId === 'process-p5' ? 'is-selected' : ''}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSelectNode('process-p5', 'Phase 05: Hi-Fi Prototyping', 'Frame');
+                    }}
+                    style={{
+                      borderRadius: nodeProps['process-p5']?.radius ? `${nodeProps['process-p5'].radius}px` : undefined,
+                      backgroundColor: nodeProps['process-p5']?.fill || undefined,
+                      borderColor: nodeProps['process-p5']?.stroke || undefined,
+                      opacity: nodeProps['process-p5']?.opacity !== undefined ? nodeProps['process-p5'].opacity / 100 : undefined
+                    }}
+                  >
+                    {selectedNodeId === 'process-p5' && (
+                      <div className="figma-selection-overlay">
+                        <div className="selection-tag">❖ Phase 05: Hi-Fi Prototyping [380×560]</div>
+                        <div className="selection-handle tl" /><div className="selection-handle tr" />
+                        <div className="selection-handle bl" /><div className="selection-handle br" />
+                      </div>
+                    )}
+                    <div className="phase-header-block mb-3">
+                      <h2 className="phase-title-large text-[#38bdf8]">Phase 05: Hi-Fi Prototyping</h2>
+                      <p className="phase-desc-muted">
+                        Visual craftsmanship, dark mode atmospheric blurs, haptic spring physics, and smart-animate easing.
+                      </p>
+                      <div className="phase-subheading-pin mt-2">
+                        <span className="material-symbols-outlined phase-pin-symbol" style={{ color: '#38bdf8' }}>play_circle</span>
+                        <span>Interactive Prototype Flow</span>
+                      </div>
+                    </div>
+
+                    <div className="p-3 bg-zinc-900/80 rounded-lg border border-zinc-800 my-3">
+                      <div className="text-[11px] text-zinc-400 font-mono mb-2">Smart Animate Easing Curve</div>
+                      <div className="h-10 bg-zinc-950 rounded flex items-center justify-between px-3 text-[11px] text-cyan-400 font-mono">
+                        <span>cubic-bezier(0.16, 1, 0.3, 1)</span>
+                        <span>300ms</span>
+                      </div>
+                    </div>
+                    <div className="p-3 bg-zinc-900/60 rounded-lg border border-zinc-800 text-[11.5px] text-zinc-300">
+                      <strong>Deliverables:</strong> Hi-Fi Interactive Prototypes, Micro-Interaction Specs, Video Walkthroughs.
+                    </div>
+                  </div>
+
+                  {/* Connector 5 */}
+                  <div className="process-flow-connector">
+                    <svg viewBox="0 0 60 60" fill="none">
+                      <path d="M 5,30 C 25,30 35,30 55,30" stroke="#38bdf8" strokeWidth="2" strokeDasharray="5 5" />
+                      <circle cx="55" cy="30" r="4.5" fill="#38bdf8" />
+                    </svg>
+                  </div>
+
+                  {/* Phase 06: Usability & Dev Handoff */}
+                  <div
+                    className={`process-phase-box figma-selectable-node ${selectedNodeId === 'process-p6' ? 'is-selected' : ''}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSelectNode('process-p6', 'Phase 06: Dev Handoff', 'Frame');
+                    }}
+                    style={{
+                      borderRadius: nodeProps['process-p6']?.radius ? `${nodeProps['process-p6'].radius}px` : undefined,
+                      backgroundColor: nodeProps['process-p6']?.fill || undefined,
+                      borderColor: nodeProps['process-p6']?.stroke || undefined,
+                      opacity: nodeProps['process-p6']?.opacity !== undefined ? nodeProps['process-p6'].opacity / 100 : undefined
+                    }}
+                  >
+                    {selectedNodeId === 'process-p6' && (
+                      <div className="figma-selection-overlay">
+                        <div className="selection-tag">❖ Phase 06: Dev Handoff [380×560]</div>
+                        <div className="selection-handle tl" /><div className="selection-handle tr" />
+                        <div className="selection-handle bl" /><div className="selection-handle br" />
+                      </div>
+                    )}
+                    <div className="phase-header-block mb-3">
+                      <h2 className="phase-title-large text-[#10b981]">Phase 06: Dev Handoff</h2>
+                      <p className="phase-desc-muted">
+                        Figma Inspect redlines, tokenized CSS variables, React component parity, and rigorous usability testing.
+                      </p>
+                      <div className="phase-subheading-pin mt-2">
+                        <span className="material-symbols-outlined phase-pin-symbol" style={{ color: '#10b981' }}>code</span>
+                        <span>React / Tailwind Production Parity</span>
+                      </div>
+                    </div>
+
+                    <div className="p-3 bg-zinc-950 rounded-lg border border-zinc-800 font-mono text-[11px] text-emerald-400 my-3">
+                      <code>export const Button = ({`{ variant, size }`}) =&gt; ...</code>
+                    </div>
+                    <div className="p-3 bg-zinc-900/60 rounded-lg border border-zinc-800 text-[11.5px] text-zinc-300">
+                      <strong>Deliverables:</strong> Inspect Mode Redlines, React/Tailwind Code Parity, Usability Report (30% less drop-off).
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           )}
 
           {/* =========================================================================
-              VIEW 7: PLUGINS (Creative Figma Community Ecosystem & Simulator)
+              VIEW 7: PLUGINS (Creative Figma Community Ecosystem & Direct Web Launch)
               ========================================================================= */}
           {activeTab === 'plugins' && (
-            <div className="lovable-static-view">
-              <div className="view-content-wrapper">
+            <div
+              className="lovable-canvas-world"
+              style={{
+                transform: `translate3d(${pan.x}px, ${pan.y}px, 0) scale(${zoom})`,
+                transformOrigin: '0 0'
+              }}
+            >
+              <div className="view-content-wrapper" style={{ padding: '20px 30px 140px', minWidth: '1200px' }}>
                 <div className="plugins-page-wrapper">
                   {/* Creative Hero Banner */}
                   <div className="plugins-hero-banner">
@@ -2772,17 +3034,18 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     </div>
 
                     <div className="flex items-center gap-3">
-                      <button
-                        type="button"
+                      <a
+                        href={COMMUNITY_PLUGINS[0].link}
+                        target="_blank"
+                        rel="noreferrer"
                         className="cta-btn primary"
                         onClick={() => {
-                          setActiveSimulatorPlugin(COMMUNITY_PLUGINS[0]);
-                          showToast('Launched Figma Magician AI simulator');
+                          window.open(COMMUNITY_PLUGINS[0].link, '_blank');
                         }}
                       >
-                        <span className="material-symbols-outlined text-[16px]">play_arrow</span>
-                        <span>Try AI Simulator</span>
-                      </button>
+                        <span className="material-symbols-outlined text-[16px]">open_in_new</span>
+                        <span>Open Magician in Figma</span>
+                      </a>
                     </div>
                   </div>
 
@@ -2814,71 +3077,80 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
 
                   {/* Creative Plugins Grid */}
                   <div className="plugins-creative-grid">
-                    {filteredPlugins.map(plugin => (
-                      <div key={plugin.id} className="plugin-creative-card">
+                    {filteredPlugins.map(plugin => {
+                      const pluginNodeId = `plugin-${plugin.id}`;
+                      const isSelected = selectedNodeId === pluginNodeId;
+                      return (
                         <div
-                          className="plugin-card-banner"
-                          style={{ background: plugin.bannerGradient }}
+                          key={plugin.id}
+                          className={`plugin-creative-card figma-selectable-node ${isSelected ? 'is-selected' : ''}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleSelectNode(pluginNodeId, plugin.name, 'Component');
+                          }}
                         >
-                          <span className="plugin-banner-badge">{plugin.badge}</span>
-                        </div>
-
-                        <div className="plugin-card-body">
-                          <div className="plugin-title-row">
-                            <div className="plugin-icon-avatar">
-                              <span className="material-symbols-outlined text-[20px]">{plugin.icon}</span>
+                          {isSelected && (
+                            <div className="figma-selection-overlay">
+                              <div className="selection-tag">❖ {plugin.name}</div>
+                              <div className="selection-handle tl" /><div className="selection-handle tr" />
+                              <div className="selection-handle bl" /><div className="selection-handle br" />
                             </div>
-                            <div className="plugin-names-wrap">
-                              <h3 className="plugin-main-name">{plugin.name}</h3>
-                              <p className="plugin-author-label">by {plugin.author}</p>
+                          )}
+                          <div
+                            className="plugin-card-banner"
+                            style={{ background: plugin.bannerGradient }}
+                          >
+                            <span className="plugin-banner-badge">{plugin.badge}</span>
+                          </div>
+
+                          <div className="plugin-card-body">
+                            <div className="plugin-title-row">
+                              <div className="plugin-icon-avatar">
+                                <span className="material-symbols-outlined text-[20px]">{plugin.icon}</span>
+                              </div>
+                              <div className="plugin-names-wrap">
+                                <h3 className="plugin-main-name">{plugin.name}</h3>
+                                <p className="plugin-author-label">by {plugin.author}</p>
+                              </div>
+                            </div>
+
+                            <p className="plugin-card-desc">{plugin.desc}</p>
+
+                            <div className="flex flex-wrap gap-1 my-1">
+                              {plugin.tags.map((t, idx) => (
+                                <span key={idx} className="cert-id-badge">{t}</span>
+                              ))}
+                            </div>
+
+                            <div className="plugin-stats-row">
+                              <span>
+                                <span className="material-symbols-outlined text-[13px] text-amber-400">star</span>
+                                {plugin.rating}
+                              </span>
+                              <span>
+                                <span className="material-symbols-outlined text-[13px]">download</span>
+                                {plugin.installs} installs
+                              </span>
+                            </div>
+
+                            <div className="plugin-card-actions">
+                              <a
+                                href={plugin.link}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="plugin-run-btn"
+                                onClick={() => {
+                                  window.open(plugin.link, '_blank');
+                                }}
+                              >
+                                <span className="material-symbols-outlined text-[14px]">open_in_new</span>
+                                <span>Open in Figma ↗</span>
+                              </a>
                             </div>
                           </div>
-
-                          <p className="plugin-card-desc">{plugin.desc}</p>
-
-                          <div className="flex flex-wrap gap-1 my-1">
-                            {plugin.tags.map((t, idx) => (
-                              <span key={idx} className="cert-id-badge">{t}</span>
-                            ))}
-                          </div>
-
-                          <div className="plugin-stats-row">
-                            <span>
-                              <span className="material-symbols-outlined text-[13px] text-amber-400">star</span>
-                              {plugin.rating}
-                            </span>
-                            <span>
-                              <span className="material-symbols-outlined text-[13px]">download</span>
-                              {plugin.installs} installs
-                            </span>
-                          </div>
-
-                          <div className="plugin-card-actions">
-                            <button
-                              type="button"
-                              className="plugin-run-btn"
-                              onClick={() => {
-                                setActiveSimulatorPlugin(plugin);
-                                setSimulatorStep(0);
-                                showToast(`Launched ${plugin.name} simulator`);
-                              }}
-                            >
-                              <span className="material-symbols-outlined text-[14px]">play_circle</span>
-                              <span>Run Simulator</span>
-                            </button>
-                            <a
-                              href={plugin.link}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="plugin-external-btn"
-                              title="Open in Figma Community"
-                            >
-                              <span className="material-symbols-outlined text-[16px]">open_in_new</span>
-                            </a>
-                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               </div>
@@ -3062,11 +3334,15 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   {/* Selected Object Header */}
                   <div className="prop-section prop-target-header">
                     <div className="prop-target-icon">
-                      <span className="material-symbols-outlined text-[15px]">crop_free</span>
+                      <span className="material-symbols-outlined text-[15px]">
+                        {selectedNodeType === 'Component' ? 'widgets' : 'crop_free'}
+                      </span>
                     </div>
                     <div className="prop-target-name">
-                      <span className="target-label">Varun_Sehgal_Portfolio</span>
-                      <span className="target-type">Frame · {frameW} × {frameH}</span>
+                      <span className="target-label">{selectedNodeLabel}</span>
+                      <span className="target-type">
+                        {selectedNodeType} · {selectedNode.w || frameW} × {selectedNode.h || frameH}
+                      </span>
                     </div>
                     <div className="prop-target-controls">
                       <button 
@@ -3173,14 +3449,14 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
 
                   {/* Frame Coordinates & Dimensions */}
                   <div className="prop-section">
-                    <div className="prop-section-title">Frame</div>
+                    <div className="prop-section-title">Dimensions & Position (Live Editable)</div>
                     <div className="prop-grid-2x2">
                       <div className="prop-input-wrap">
                         <span className="prop-input-label">X</span>
                         <input 
                           type="number" 
-                          value={frameX} 
-                          onChange={(e) => setFrameX(Number(e.target.value) || 0)} 
+                          value={selectedNode.x !== undefined ? selectedNode.x : frameX} 
+                          onChange={(e) => updateSelectedProp('x', Number(e.target.value) || 0)} 
                           className="prop-num-input" 
                         />
                       </div>
@@ -3188,8 +3464,8 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                         <span className="prop-input-label">Y</span>
                         <input 
                           type="number" 
-                          value={frameY} 
-                          onChange={(e) => setFrameY(Number(e.target.value) || 0)} 
+                          value={selectedNode.y !== undefined ? selectedNode.y : frameY} 
+                          onChange={(e) => updateSelectedProp('y', Number(e.target.value) || 0)} 
                           className="prop-num-input" 
                         />
                       </div>
@@ -3197,8 +3473,8 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                         <span className="prop-input-label">W</span>
                         <input 
                           type="number" 
-                          value={frameW} 
-                          onChange={(e) => setFrameW(Number(e.target.value) || 0)} 
+                          value={selectedNode.w !== undefined ? selectedNode.w : frameW} 
+                          onChange={(e) => updateSelectedProp('w', Number(e.target.value) || 0)} 
                           className="prop-num-input" 
                         />
                       </div>
@@ -3206,8 +3482,8 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                         <span className="prop-input-label">H</span>
                         <input 
                           type="number" 
-                          value={frameH} 
-                          onChange={(e) => setFrameH(Number(e.target.value) || 0)} 
+                          value={selectedNode.h !== undefined ? selectedNode.h : frameH} 
+                          onChange={(e) => updateSelectedProp('h', Number(e.target.value) || 0)} 
                           className="prop-num-input" 
                         />
                       </div>
@@ -3228,8 +3504,8 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                         </span>
                         <input 
                           type="number" 
-                          value={frameRadius} 
-                          onChange={(e) => setFrameRadius(Number(e.target.value) || 0)} 
+                          value={selectedNode.radius !== undefined ? selectedNode.radius : frameRadius} 
+                          onChange={(e) => updateSelectedProp('radius', Number(e.target.value) || 0)} 
                           className="prop-num-input" 
                         />
                       </div>
@@ -3338,8 +3614,8 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                           type="number" 
                           min="0" 
                           max="100" 
-                          value={layerOpacity} 
-                          onChange={(e) => setLayerOpacity(Math.min(100, Math.max(0, Number(e.target.value) || 0)))} 
+                          value={selectedNode.opacity !== undefined ? selectedNode.opacity : layerOpacity} 
+                          onChange={(e) => updateSelectedProp('opacity', Math.min(100, Math.max(0, Number(e.target.value) || 0)))} 
                           className="prop-num-input text-right" 
                         />
                       </div>
@@ -3362,15 +3638,15 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     <div className="prop-color-row">
                       <input 
                         type="color" 
-                        value={fillColor.startsWith('#') && fillColor.length === 7 ? fillColor : '#1E2020'} 
-                        onChange={(e) => setFillColor(e.target.value)}
+                        value={(selectedNode.fill || fillColor).startsWith('#') && (selectedNode.fill || fillColor).length === 7 ? (selectedNode.fill || fillColor) : '#1E2020'} 
+                        onChange={(e) => updateSelectedProp('fill', e.target.value)}
                         className="color-picker-input-native"
                         title="Pick fill color"
                       />
                       <input 
                         type="text" 
-                        value={fillColor.toUpperCase()} 
-                        onChange={(e) => setFillColor(e.target.value)}
+                        value={(selectedNode.fill || fillColor).toUpperCase()} 
+                        onChange={(e) => updateSelectedProp('fill', e.target.value)}
                         className="color-hex-input"
                         title="Hex color code"
                       />
@@ -3395,7 +3671,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                             className="color-preset-dot"
                             style={{ background: hex }}
                             onClick={() => {
-                              setFillColor(hex);
+                              updateSelectedProp('fill', hex);
                               setShowColorPicker(false);
                             }}
                             title={`Select ${hex}`}
@@ -3413,8 +3689,8 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                         type="button"
                         className="prop-header-icon-btn"
                         onClick={() => {
-                          setStrokeColor('#FFFFFF');
-                          setStrokeWidth(1);
+                          updateSelectedProp('stroke', '#FFFFFF');
+                          updateSelectedProp('strokeWidth', 1);
                         }}
                         title="Reset stroke"
                       >
@@ -3424,15 +3700,15 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     <div className="prop-color-row">
                       <input 
                         type="color" 
-                        value={strokeColor.startsWith('#') && strokeColor.length === 7 ? strokeColor : '#FFFFFF'} 
-                        onChange={(e) => setStrokeColor(e.target.value)}
+                        value={(selectedNode.stroke || strokeColor).startsWith('#') && (selectedNode.stroke || strokeColor).length === 7 ? (selectedNode.stroke || strokeColor) : '#FFFFFF'} 
+                        onChange={(e) => updateSelectedProp('stroke', e.target.value)}
                         className="color-picker-input-native"
                         title="Pick stroke color"
                       />
                       <input 
                         type="text" 
-                        value={strokeColor.toUpperCase()} 
-                        onChange={(e) => setStrokeColor(e.target.value)}
+                        value={(selectedNode.stroke || strokeColor).toUpperCase()} 
+                        onChange={(e) => updateSelectedProp('stroke', e.target.value)}
                         className="color-hex-input"
                         title="Stroke hex color"
                       />
@@ -3455,8 +3731,8 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                           type="number" 
                           min="0" 
                           max="20" 
-                          value={strokeWidth} 
-                          onChange={(e) => setStrokeWidth(Number(e.target.value) || 0)} 
+                          value={selectedNode.strokeWidth !== undefined ? selectedNode.strokeWidth : strokeWidth} 
+                          onChange={(e) => updateSelectedProp('strokeWidth', Number(e.target.value) || 0)} 
                           className="prop-num-input" 
                         />
                       </div>

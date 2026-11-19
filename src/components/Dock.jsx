@@ -271,14 +271,13 @@ const Dock = ({
           if (mouseX !== null && dockRef.current) {
             const itemCenter = getExactItemCenter(idx);
             const dist = Math.abs(mouseX - itemCenter);
-            const maxDist = 120;
+            const maxDist = 100;
 
             if (dist < maxDist) {
               const factor = Math.cos((dist / maxDist) * (Math.PI / 2));
-              scale = 1 + 0.35 * factor;
-              translateY = -12 * factor;
-              // Push adjacent icons outward horizontally so they never collide or overlap
-              marginX = Math.max(0, (scale - 1) * 14);
+              scale = 1 + 0.28 * factor;
+              translateY = -8 * factor;
+              marginX = Math.max(0, (scale - 1) * 8);
             }
           }
 

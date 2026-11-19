@@ -4261,3 +4261,332 @@
     margin-top: 0;
   }
 }
+
+
+/* =========================================================================
+   Selection Overlay & Interactive Node Styling
+   ========================================================================= */
+.figma-selectable-node {
+  position: relative;
+  cursor: pointer;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.figma-selectable-node.is-selected {
+  outline: 1.5px solid #0d99ff !important;
+  outline-offset: 2px !important;
+}
+
+.figma-selection-overlay {
+  position: absolute;
+  inset: -3px;
+  border: 1.5px solid #0d99ff;
+  pointer-events: none;
+  z-index: 100;
+  box-shadow: 0 0 0 1px rgba(13, 153, 255, 0.3);
+  border-radius: 4px;
+}
+
+.selection-tag {
+  position: absolute;
+  top: -24px;
+  left: 0;
+  background: #0d99ff;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", monospace;
+  padding: 2px 7px;
+  border-radius: 4px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.selection-handle {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  background: #ffffff;
+  border: 1.5px solid #0d99ff;
+  border-radius: 1px;
+}
+.selection-handle.tl { top: -4px; left: -4px; }
+.selection-handle.tr { top: -4px; right: -4px; }
+.selection-handle.bl { bottom: -4px; left: -4px; }
+.selection-handle.br { bottom: -4px; right: -4px; }
+
+/* Wireframe Mode */
+.wireframe-mode-stage .bento-card,
+.wireframe-mode-stage .zigzag-card,
+.wireframe-mode-stage .about-trait-card,
+.wireframe-mode-stage .figjam-phase-card,
+.wireframe-mode-stage .process-phase-box,
+.wireframe-mode-stage .plugin-creative-card {
+  background: rgba(11, 25, 44, 0.95) !important;
+  border: 1.5px dashed #38bdf8 !important;
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.15), inset 0 0 10px rgba(56, 189, 248, 0.05) !important;
+}
+
+.wireframe-mode-stage .lovable-dot-grid {
+  background-image: radial-gradient(circle, rgba(56, 189, 248, 0.35) 1px, transparent 1px) !important;
+}
+
+/* Canvas Zoom & Wireframe Toolbar Controls */
+.canvas-header-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 12px;
+}
+
+.wireframe-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #e4e4e7;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.wireframe-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.wireframe-toggle-btn.active {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: #38bdf8;
+  color: #38bdf8;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
+}
+
+.canvas-zoom-pill {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.canvas-zoom-btn {
+  background: transparent;
+  border: none;
+  color: #a1a1aa;
+  padding: 3px 7px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.canvas-zoom-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.canvas-zoom-val {
+  padding: 0 6px;
+  font-size: 11px;
+  font-family: monospace;
+  color: #d4d4d8;
+  cursor: pointer;
+}
+
+.canvas-zoom-val:hover {
+  color: #38bdf8;
+}
+
+/* About Page Radial Layout */
+.about-radial-canvas-container {
+  position: relative;
+  width: 1240px;
+  height: 860px;
+  margin: 20px auto 100px;
+}
+
+.about-center-avatar-node {
+  position: absolute;
+  left: 510px;
+  top: 310px;
+  width: 220px;
+  height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  text-align: center;
+}
+
+.about-avatar-ring {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 3px solid #38bdf8;
+  box-shadow: 0 0 30px rgba(56, 189, 248, 0.35);
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.about-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.about-avatar-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.about-avatar-role {
+  font-size: 11px;
+  color: #38bdf8;
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+.about-trait-card {
+  position: absolute;
+  padding: 18px 20px;
+  border-radius: 14px;
+  background: rgba(24, 25, 32, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+  z-index: 5;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.about-trait-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.8);
+}
+
+.about-trait-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+
+.about-trait-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.about-trait-list li {
+  font-size: 11.5px;
+  color: #d4d4d8;
+  line-height: 1.5;
+}
+
+.about-connector-svg-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Process Left-to-Right Horizontal Flow */
+.process-horizontal-flow {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 28px;
+  padding: 30px 40px 140px;
+  min-width: 2750px;
+}
+
+.process-phase-box {
+  width: 380px;
+  flex-shrink: 0;
+  background: rgba(24, 25, 32, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(20px);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.process-phase-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.8);
+}
+
+.process-flow-connector {
+  width: 60px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+}
+
+.process-flow-connector svg {
+  width: 60px;
+  height: 60px;
+}
+
+/* Creative Resume Artboard Frame */
+.figma-resume-artboard-wrap {
+  width: 920px;
+  margin: 30px auto 120px;
+  position: relative;
+}
+
+.figma-artboard-caliper-x {
+  position: absolute;
+  top: -24px;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-family: monospace;
+  color: #38bdf8;
+  letter-spacing: 0.5px;
+}
+
+.figma-artboard-caliper-x::before,
+.figma-artboard-caliper-x::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(56, 189, 248, 0.4);
+  margin: 0 8px;
+}
+
+.figma-artboard-sticky-note {
+  position: absolute;
+  top: 40px;
+  right: -170px;
+  width: 155px;
+  background: #f59e0b;
+  color: #1c1917;
+  padding: 12px;
+  border-radius: 4px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
+  transform: rotate(3deg);
+  font-size: 11px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  z-index: 20;
+}
