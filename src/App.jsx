@@ -7,9 +7,10 @@ import './index.css';
 const IDLE_TIMEOUT = 180000; // 3 minutes
 
 function App() {
-  // Desktop is ready on startup/reload (prevents getting stuck on blank blueprint)
-  const [bootState, setBootState] = useState('ready');
-  const [swarmStage, setSwarmStage] = useState(5); // 5 = fully loaded and operational
+  // Rebuild runs on startup/refresh to construct the workspace
+  const [bootState, setBootState] = useState('swarm');
+  const [swarmStage, setSwarmStage] = useState(0); // 0 = start animation
+  const [rebuildKey, setRebuildKey] = useState(1);
   const [userName, setUserName] = useState(() => {
     try {
       return localStorage.getItem('varunos_user_name') || 'Varun';
@@ -43,6 +44,7 @@ function App() {
   };
 
   const handleReplaySwarm = () => {
+    setRebuildKey((k) => k + 1);
     setSwarmStage(0);
     setBootState('swarm');
   };
@@ -87,9 +89,10 @@ function App() {
         swarmStage={bootState === 'swarm' ? swarmStage : 5}
       />
 
-      {/* 2. Swarm Rebuild Overlay Animation (when replayed) */}
+      {/* 2. Swarm Rebuild Overlay Animation (on boot & replay) */}
       {bootState === 'swarm' && (
         <SwarmRebuildOverlay 
+          key={`rebuild-${rebuildKey}`}
           userName={userName} 
           onStageChange={setSwarmStage}
           onComplete={handleSwarmComplete} 

@@ -238,7 +238,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
   const animFrameRef = useRef(null);
   const startTimeRef = useRef(Date.now());
   const isFinishedRef = useRef(false);
-  const stageRef = useRef(0);
+  const stageRef = useRef(-1);
   const dimsRef = useRef({ w: typeof window !== 'undefined' ? window.innerWidth : 1440, h: typeof window !== 'undefined' ? window.innerHeight : 900 });
   const isPausedRef = useRef(false);
   const speedMultiplierRef = useRef(1);
@@ -295,7 +295,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
 
     setTimeout(() => {
       if (onComplete) onComplete();
-    }, 150);
+    }, 650);
   };
 
   const handleToggleSound = () => {
@@ -347,6 +347,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
 
   // High-fidelity continuous animation loop
   useEffect(() => {
+    isFinishedRef.current = false;
     startTimeRef.current = Date.now();
     soundSynth.init();
     updateStage(0);

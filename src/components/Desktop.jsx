@@ -238,19 +238,21 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
     }
   };
 
-  // Replay Swarm Rebuild handler guaranteeing Finder is open & restored
+  // Replay Swarm Rebuild handler guaranteeing clean workspace & Finder is open
   const handleInternalReplaySwarm = () => {
-    setOpenWindows(prev => (prev.includes('finder') ? prev : [...prev, 'finder']));
-    setMinimizedWindows(prev => prev.filter(id => id !== 'finder'));
+    setOpenWindows(['finder']);
+    setMinimizedWindows([]);
+    setMaximizedWindows([]);
     setActiveWindow('finder');
     if (onReplaySwarm) onReplaySwarm();
   };
 
-  // Ensure Finder is always present when entering rebuild mode
+  // Ensure Finder is cleanly prepared when entering rebuild mode
   useEffect(() => {
     if (swarmStage < 5) {
-      setOpenWindows(prev => (prev.includes('finder') ? prev : [...prev, 'finder']));
-      setMinimizedWindows(prev => prev.filter(id => id !== 'finder'));
+      setOpenWindows(['finder']);
+      setMinimizedWindows([]);
+      setMaximizedWindows([]);
       setActiveWindow('finder');
     }
   }, [swarmStage]);
