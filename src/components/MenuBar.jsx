@@ -24,11 +24,85 @@ import {
 } from 'lucide-react';
 import './MenuBar.css';
 
+
+const PORTFOLIO_ROLES = [
+  {
+    id: 'designer',
+    name: 'Designer',
+    title: 'Lead UI/UX Designer',
+    desc: 'Figma case studies, UX psychology & design systems',
+    icon: '🎨',
+    color: '#38bdf8',
+    bg: 'rgba(56, 189, 248, 0.12)',
+    app: 'figma'
+  },
+  {
+    id: 'developer',
+    name: 'Developer',
+    title: 'Frontend & Full-Stack',
+    desc: 'Interactive VS Code IDE, live code runner & clean code',
+    icon: '💻',
+    color: '#a855f7',
+    bg: 'rgba(168, 85, 247, 0.12)',
+    app: 'vscode'
+  },
+  {
+    id: 'architect',
+    name: 'Architect',
+    title: 'Core Systems Architect',
+    desc: 'Design tokens pipelines, component APIs & swarm engine',
+    icon: '⚡',
+    color: '#f59e0b',
+    bg: 'rgba(245, 158, 11, 0.12)',
+    app: 'settings'
+  },
+  {
+    id: 'recruiter',
+    name: 'Recruiter',
+    title: 'Hiring Manager & Talent',
+    desc: 'ATS tactile resume, experience timeline & quick contact',
+    icon: '💼',
+    color: '#10b981',
+    bg: 'rgba(16, 185, 129, 0.12)',
+    app: 'resume'
+  },
+  {
+    id: 'visitor',
+    name: 'Visitor',
+    title: 'Guest Explorer',
+    desc: 'General portfolio showcase & desktop easter eggs',
+    icon: '👀',
+    color: '#ec4899',
+    bg: 'rgba(236, 72, 153, 0.12)',
+    app: 'finder'
+  }
+];
+
 const MenuBar = ({ userName = 'Guest', onReplaySwarm }) => {
   const [time, setTime] = useState(new Date());
   const [activeMenu, setActiveMenu] = useState(null); // 'apple', 'file', 'edit', 'view', 'window', 'help', 'wifi', 'battery', 'sound', 'calendar'
   const [volume, setVolume] = useState(85);
   const [isMuted, setIsMuted] = useState(false);
+  const [currentRole, setCurrentRole] = useState(() => {
+    try {
+      return localStorage.getItem('varunos_user_name') || userName || 'Designer';
+    } catch {
+      return userName || 'Designer';
+    }
+  });
+
+  const handleSelectRole = (role) => {
+    setActiveMenu(null);
+    setCurrentRole(role.name);
+    try {
+      localStorage.setItem('varunos_user_name', role.name);
+      localStorage.setItem('varunos_user_role', role.id);
+    } catch {}
+    window.dispatchEvent(new CustomEvent('varunos-user-change', { detail: { userName: role.name, roleId: role.id } }));
+    if (role.app) {
+      window.dispatchEvent(new CustomEvent('varunos-open-app', { detail: { appId: role.app } }));
+    }
+  };
   const menuBarRef = useRef(null);
 
   useEffect(() => {
@@ -292,69 +366,58 @@ const MenuBar = ({ userName = 'Guest', onReplaySwarm }) => {
       </div>
       
       <div className="menu-right">
-        {/* Active Collaborator / User Profile Dropdown (Option 1) */}
+        {/* Active Collaborator / Role Switcher Popover (Option 1) */}
         <div className="menu-item-wrapper">
           <div 
             className={`menu-user-presence ${activeMenu === 'user' ? 'active' : ''}`}
-            title={`Account: ${userName} (Lead Designer) — Click for Profile & Settings`}
+            title={`Active Perspective: ${currentRole} — Click to Switch Role`}
             onClick={() => toggleMenu('user')}
           >
             <span className="presence-dot" />
             <User size={11} className="presence-icon" />
-            <span className="presence-name">{userName}</span>
+            <span className="presence-name">{currentRole}</span>
           </div>
 
           {activeMenu === 'user' && (
-            <div className="apple-dropdown-menu right-aligned user-profile-dropdown">
-              <div className="user-profile-header">
-                <div className="user-avatar-badge">
-                  {userName.charAt(0).toUpperCase()}
+            <div className="apple-dropdown-menu right-aligned role-switcher-dropdown">
+              <div className="role-switcher-header">
+                <div className="role-switcher-title-row">
+                  <span className="role-header-sparkle">✨</span>
+                  <span className="role-switcher-title">Switch Portfolio Perspective</span>
                 </div>
-                <div className="user-profile-info">
-                  <div className="user-profile-name-row">
-                    <span className="user-full-name">{userName === 'Designer' ? 'Varun Sehgal' : userName}</span>
-                    <span className="user-verified-badge">PRO</span>
-                  </div>
-                  <span className="user-role-badge">Lead UI/UX & Product Designer</span>
-                  <span className="user-session-meta">🟢 Active • macOS Sequoia M3 Max</span>
-                </div>
+                <p className="role-switcher-sub">Select how you want to experience VarunOS</p>
               </div>
 
               <div className="dropdown-divider" />
 
-              <button className="apple-dropdown-item" onClick={() => { setActiveMenu(null); window.dispatchEvent(new CustomEvent('varunos-open-app', { detail: { appId: 'settings' } })); }}>
-                <Sliders size={14} className="dropdown-icon" />
-                <span>System Settings</span>
-              </button>
-
-              <button className="apple-dropdown-item" onClick={() => { setActiveMenu(null); window.dispatchEvent(new CustomEvent('varunos-open-app', { detail: { appId: 'contact' } })); }}>
-                <Info size={14} className="dropdown-icon" />
-                <span>Varun Sehgal Contact Card</span>
-              </button>
-
-              <button className="apple-dropdown-item" onClick={() => { 
-                setActiveMenu(null); 
-                const newName = prompt('Enter collaborator name:', userName);
-                if (newName && newName.trim()) {
-                  localStorage.setItem('varunos_user_name', newName.trim());
-                  window.location.reload();
-                }
-              }}>
-                <User size={14} className="dropdown-icon" />
-                <span>Switch User / Rename ({userName})</span>
-              </button>
-
-              <button className="apple-dropdown-item" onClick={() => { setActiveMenu(null); window.dispatchEvent(new CustomEvent('varunos-open-coffee-modal')); }}>
-                <Coffee size={14} className="dropdown-icon" />
-                <span>Support via UPI QR / Coffee</span>
-              </button>
-
-              <div className="dropdown-divider" />
-
-              <button className="apple-dropdown-item text-danger" onClick={() => { setActiveMenu(null); window.location.reload(); }}>
-                <Power size={14} className="dropdown-icon" />
-                <span>Lock / Reload Session</span>
-              </button>
+              <div className="role-options-list">
+                {PORTFOLIO_ROLES.map((role) => {
+                  const isSelected = (currentRole || 'Designer').toLowerCase() === role.name.toLowerCase();
+                  return (
+                    <button
+                      key={role.id}
+                      type="button"
+                      className={`role-option-item ${isSelected ? 'active' : ''}`}
+                      onClick={() => handleSelectRole(role)}
+                    >
+                      <span className="role-option-emoji">{role.icon}</span>
+                      <div className="role-option-info">
+                        <div className="role-option-top">
+                          <span className="role-option-name">{role.name}</span>
+                          <span 
+                            className="role-option-badge" 
+                            style={{ color: role.color, background: role.bg }}
+                          >
+                            {role.title}
+                          </span>
+                        </div>
+                        <span className="role-option-desc">{role.desc}</span>
+                      </div>
+                      {isSelected && <Check size={14} className="role-option-check text-cyan-400" />}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>

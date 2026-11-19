@@ -239,6 +239,10 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
   const startTimeRef = useRef(Date.now());
   const isFinishedRef = useRef(false);
   const stageRef = useRef(0);
+  const dimsRef = useRef({ w: typeof window !== 'undefined' ? window.innerWidth : 1440, h: typeof window !== 'undefined' ? window.innerHeight : 900 });
+  const isPausedRef = useRef(false);
+  const speedMultiplierRef = useRef(1);
+  const userNameRef = useRef(userName);
   const lastTypeTimeRef = useRef(0);
   const lastTimeRef = useRef(Date.now());
   const lastStampedIndexRef = useRef(-1);
@@ -259,11 +263,17 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
 
   useEffect(() => {
     const handleResize = () => {
-      setDims({ w: window.innerWidth, h: window.innerHeight });
+      const newDims = { w: window.innerWidth, h: window.innerHeight };
+      setDims(newDims);
+      dimsRef.current = newDims;
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  useEffect(() => { isPausedRef.current = isPaused; }, [isPaused]);
+  useEffect(() => { speedMultiplierRef.current = speedMultiplier; }, [speedMultiplier]);
+  useEffect(() => { userNameRef.current = userName; }, [userName]);
 
   // 5 Collaborative Multiplayer Cursors (Figma / Swarm Rebuild Style)
   const [cursors, setCursors] = useState({
@@ -277,6 +287,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
   const finishSwarm = () => {
     if (isFinishedRef.current) return;
     isFinishedRef.current = true;
+    if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
     soundSynth.playChime();
     setCompleteBanner(true);
     setStatusMessage('✓ VarunOS Workspace Assembled & Ready!');
@@ -284,7 +295,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
 
     setTimeout(() => {
       if (onComplete) onComplete();
-    }, 450);
+    }, 150);
   };
 
   const handleToggleSound = () => {
@@ -343,7 +354,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
     const loop = () => {
       if (isFinishedRef.current) return;
 
-      if (isPaused) {
+      if (isPausedRef.current) {
         lastTimeRef.current = Date.now();
         animFrameRef.current = requestAnimationFrame(loop);
         return;
@@ -354,8 +365,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
       lastTimeRef.current = now;
 
       const rawElapsed = (now - startTimeRef.current) / 1000;
-      const elapsed = rawElapsed * speedMultiplier;
-      const { w, h } = dims;
+      const elapsed = rawElapsed * (speedMultiplierRef.current || 1);
+      const { w, h } = dimsRef.current || dims;
 
       // Initialize persistent physics if needed
       if (!physicsRef.current) {
@@ -917,7 +928,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
     return () => {
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
     };
-  }, [dims, userName, speedMultiplier, isPaused]);
+  }, []);
 
   return (
     <div className={`swarm-overlay-container ${completeBanner ? 'fade-out-overlay' : ''}`}>

@@ -24,6 +24,14 @@ function App() {
       const savedTheme = localStorage.getItem('varunos_theme_mode') || 'dark';
       document.documentElement.setAttribute('data-theme', savedTheme);
     } catch {}
+
+    const handleUserChange = (e) => {
+      if (e.detail?.userName) {
+        setUserName(e.detail.userName);
+      }
+    };
+    window.addEventListener('varunos-user-change', handleUserChange);
+    return () => window.removeEventListener('varunos-user-change', handleUserChange);
   }, []);
 
   const [isIdle, setIsIdle] = useState(false);
