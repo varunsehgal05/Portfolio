@@ -1079,6 +1079,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
     const targetNodeEl = e.target.closest('.figma-selectable-node');
     const targetNodeId = targetNodeEl ? targetNodeEl.getAttribute('data-node-id') : null;
 
+    let rafId = null;
     const handleWindowMouseMove = (moveEvt) => {
       const dx = moveEvt.pageX - dragStartRef.current.pageX;
       const dy = moveEvt.pageY - dragStartRef.current.pageY;
@@ -1088,13 +1089,21 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
         isDraggingCanvasRef.current = true;
       }
 
-      setPan({
-        x: Math.round(dragStartRef.current.panX + dx),
-        y: Math.round(dragStartRef.current.panY + dy)
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        setPan({
+          x: Math.round(dragStartRef.current.panX + dx),
+          y: Math.round(dragStartRef.current.panY + dy)
+        });
+        rafId = null;
       });
     };
 
     const handleWindowMouseUp = () => {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
       window.removeEventListener('mousemove', handleWindowMouseMove);
       window.removeEventListener('mouseup', handleWindowMouseUp);
       setIsPanning(false);

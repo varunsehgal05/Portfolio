@@ -44,12 +44,19 @@
   }
 }
 
-.app-window:not(.interacting) {
+.app-window:not(.interacting):not(.react-draggable-dragging) {
   transition: width 0.36s cubic-bezier(0.16, 1, 0.3, 1),
               height 0.36s cubic-bezier(0.16, 1, 0.3, 1),
               transform 0.36s cubic-bezier(0.16, 1, 0.3, 1),
               border-radius 0.28s ease,
               box-shadow 0.28s ease;
+}
+
+.app-window.interacting,
+.app-window.react-draggable-dragging,
+.react-draggable-transparent-selection .app-window {
+  transition: none !important;
+  will-change: transform;
 }
 
 /* Smooth macOS Zoom-in/Zoom-out Transition during Full Screen Toggle */

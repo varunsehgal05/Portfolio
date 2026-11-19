@@ -584,6 +584,14 @@
   position: absolute;
   inset: 0;
   transform-origin: 0 0;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.lovable-canvas-stage.panning .lovable-canvas-world {
+  pointer-events: none;
+  user-select: none;
 }
 
 /* Sticky Notes */

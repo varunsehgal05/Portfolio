@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './SwarmRebuildOverlay.css';
 
-// SVG Pointer Component in authentic Figma/Swarm style with fluid particle trail
-const SwarmCursor = ({
+// SVG Pointer Component in authentic Figma/Swarm style with fluid particle trail (Memoized for 60fps)
+const SwarmCursor = React.memo(({
   x,
   y,
   color,
@@ -17,7 +17,7 @@ const SwarmCursor = ({
   return (
     <>
       {/* Liquid glowing trail behind active cursor */}
-      {trail && trail.map((t, idx) => (
+      {trail && trail.slice(-3).map((t, idx) => (
         <div
           key={`trail-${idx}`}
           className="swarm-cursor-trail-dot"
@@ -81,7 +81,7 @@ const SwarmCursor = ({
       </div>
     </>
   );
-};
+});
 
 // Web Audio API Synthesizer with rich mechanical tactile clicks & chord chime
 class SwarmSoundSynthesizer {
