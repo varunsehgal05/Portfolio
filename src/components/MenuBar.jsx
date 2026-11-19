@@ -378,15 +378,6 @@ const MenuBar = ({ userName = 'Guest', onReplaySwarm }) => {
           <span>{isSwarmFollow ? "Swarm Follow: ON" : "Swarm Follow"}</span>
         </button>
 
-        {/* Buy Me a Coffee / Sponsor Pill */}
-        <button 
-          className="menu-coffee-btn" 
-          onClick={() => window.dispatchEvent(new CustomEvent('varunos-open-coffee-modal'))}
-          title="Buy Varun a Coffee / Support via UPI QR"
-        >
-          <Coffee size={12} className="coffee-pill-icon" />
-          <span>Buy Me a Coffee</span>
-        </button>
 
         {/* Quick Light/Dark Mode Switcher */}
         <button

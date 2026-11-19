@@ -5,7 +5,8 @@ import {
   Trash2, 
   FileText,
   Mail,
-  Folder
+  Folder,
+  Coffee
 } from 'lucide-react';
 import './Dock.css';
 
@@ -75,6 +76,12 @@ const SettingsIcon = () => (
   </div>
 );
 
+const CoffeeDockIcon = () => (
+  <div className="dock-icon-inner coffee-bg" style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)' }}>
+    <Coffee size={21} color="#ffffff" />
+  </div>
+);
+
 const TrashDockIcon = () => (
   <div className="dock-icon-inner trash-bg">
     <Trash2 size={21} color="#d4d4d8" />
@@ -91,6 +98,7 @@ const DOCK_ITEMS = [
   { id: 'contact', name: 'Contact', icon: ContactDockIcon },
   { id: 'settings', name: 'Settings', icon: SettingsIcon },
   { id: 'separator', isSeparator: true },
+  { id: 'coffee', name: 'Buy Me a Coffee', icon: CoffeeDockIcon },
   { id: 'trash', name: 'Trash', icon: TrashDockIcon }
 ];
 

@@ -1,0 +1,404 @@
+/* ==========================================================================
+   CoffeeApp.css — VarunOS (Inspired by macOS)
+   Interactive Donation, Patron & UPI QR Windowed Application
+   ========================================================================== */
+
+.coffee-app-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background: #141418;
+  color: #f3f4f6;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+  overflow-y: auto;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+[data-theme="light"] .coffee-app-container {
+  background: #f8fafc;
+  color: #1e293b;
+}
+
+.coffee-app-body {
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* 1. Profile Hero Card */
+.coffee-profile-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 14px 18px;
+}
+
+[data-theme="light"] .coffee-profile-card {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.coffee-profile-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #f59e0b;
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.35);
+  flex-shrink: 0;
+}
+
+.coffee-profile-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.profile-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.coffee-profile-name {
+  font-size: 16px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+[data-theme="light"] .coffee-profile-name {
+  color: #0f172a;
+}
+
+.coffee-verified-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10.5px;
+  font-weight: 700;
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  padding: 1px 7px;
+  border-radius: 9999px;
+}
+
+.coffee-profile-bio {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+  color: #94a3b8;
+}
+
+[data-theme="light"] .coffee-profile-bio {
+  color: #64748b;
+}
+
+/* 2. QR Code and Payment Details Container */
+.coffee-qr-section {
+  display: grid;
+  grid-template-columns: 210px 1fr;
+  gap: 22px;
+  align-items: start;
+}
+
+@media (max-width: 620px) {
+  .coffee-qr-section {
+    grid-template-columns: 1fr;
+  }
+}
+
+.coffee-qr-frame {
+  position: relative;
+  background: #ffffff;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="light"] .coffee-qr-frame {
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.coffee-qr-img {
+  width: 100%;
+  max-width: 180px;
+  height: auto;
+  border-radius: 6px;
+  display: block;
+}
+
+.coffee-qr-overlay-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #0284c7;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  margin-top: 8px;
+}
+
+.coffee-details-column {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Field Group */
+.coffee-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.coffee-field-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+[data-theme="light"] .coffee-field-label {
+  color: #64748b;
+}
+
+/* UPI Box */
+.coffee-upi-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+[data-theme="light"] .coffee-upi-box {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+.coffee-upi-box:hover {
+  border-color: #38bdf8;
+  background: rgba(56, 189, 248, 0.05);
+}
+
+.upi-text-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.upi-id-value {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #38bdf8;
+}
+
+.upi-app-hint {
+  font-size: 10.5px;
+  color: #94a3b8;
+}
+
+[data-theme="light"] .upi-app-hint {
+  color: #64748b;
+}
+
+.coffee-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.coffee-copy-btn:hover {
+  background: #38bdf8;
+  color: #0f172a;
+}
+
+.coffee-copy-btn.copied {
+  background: #22c55e;
+  border-color: #22c55e;
+  color: #ffffff;
+}
+
+/* Preset Chips */
+.coffee-presets-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.coffee-preset-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1.5px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+}
+
+[data-theme="light"] .coffee-preset-chip {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+.coffee-preset-chip:hover {
+  border-color: #f59e0b;
+  transform: translateY(-1px);
+}
+
+.coffee-preset-chip.active {
+  background: rgba(245, 158, 11, 0.14);
+  border-color: #f59e0b;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.25);
+}
+
+.preset-icon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.preset-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.preset-amount {
+  font-size: 12.5px;
+  font-weight: 800;
+  color: #f59e0b;
+}
+
+.preset-name {
+  font-size: 10px;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+[data-theme="light"] .preset-name {
+  color: #64748b;
+}
+
+/* Scan Tip Box */
+.coffee-scan-tip-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: #fde68a;
+  line-height: 1.4;
+}
+
+[data-theme="light"] .coffee-scan-tip-box {
+  color: #92400e;
+  background: #fffbeb;
+  border-color: #fde68a;
+}
+
+/* Trust Banner */
+.coffee-trust-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px dashed rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+[data-theme="light"] .coffee-trust-footer {
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+}
+
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11.5px;
+  color: #94a3b8;
+}
+
+[data-theme="light"] .trust-item {
+  color: #475569;
+}
+
+/* Footer Links */
+.coffee-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="light"] .coffee-modal-footer {
+  border-top-color: rgba(0, 0, 0, 0.08);
+}
+
+.footer-other-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11.5px;
+  flex-wrap: wrap;
+}
+
+.footer-other-label {
+  color: #94a3b8;
+}
+
+.footer-link {
+  color: #38bdf8;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.15s ease;
+}
+
+.footer-link:hover {
+  color: #7dd3fc;
+  text-decoration: underline;
+}
+
+.footer-dot {
+  color: #64748b;
+}

@@ -51,6 +51,12 @@ export const portfolioApps = {
     title: 'System Settings — VarunOS',
     icon: 'settings'
   },
+  coffee: {
+    id: 'coffee',
+    name: 'Buy Me a Coffee',
+    title: 'Buy Me a Coffee — VarunOS',
+    icon: 'coffee'
+  },
   trash: {
     id: 'trash',
     name: 'Trash',
@@ -60,4 +66,4 @@ export const portfolioApps = {
   }
 };
 
-export const desktopIconIds = ['figma', 'vscode', 'resume', 'contact', 'trash'];
+export const desktopIconIds = ['figma', 'vscode', 'resume', 'contact', 'coffee', 'trash'];

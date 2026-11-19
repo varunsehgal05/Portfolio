@@ -186,16 +186,10 @@ const BuyMeCoffeeModal = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
-              {/* Direct UPI Intent Link (For Mobile or UPI-enabled devices) */}
-              <a 
-                href={upiDeepLink} 
-                className="coffee-direct-pay-btn"
-                title="Open directly in your default UPI app"
-              >
-                <Smartphone size={14} />
-                <span>Pay ₹{selectedPreset} via UPI App</span>
-                <ExternalLink size={12} className="btn-arrow" />
-              </a>
+              <div className="coffee-scan-tip-box" style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(245, 158, 11, 0.08)', border: '1px solid rgba(245, 158, 11, 0.25)', borderRadius: '8px', padding: '9px 12px', fontSize: '11.5px', color: '#fde68a' }}>
+                <Sparkles size={13} className="text-amber-400 flex-shrink-0" />
+                <span>Scan the QR code with GPay, PhonePe, or Paytm to send ₹{selectedPreset}!</span>
+              </div>
             </div>
           </div>
 

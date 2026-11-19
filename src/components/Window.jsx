@@ -12,6 +12,7 @@ import TerminalApp from './TerminalApp';
 import SettingsApp from './SettingsApp';
 import VsCodeApp from './VsCodeApp';
 import TrashApp from './TrashApp';
+import CoffeeApp from './CoffeeApp';
 
 const Window = ({
   app,
@@ -61,6 +62,7 @@ const Window = ({
     if (app.id === 'figma') return { width: Math.min(availableWidth - 60, 1100), height: Math.min(availableHeight, 680) };
     if (app.id === 'vscode') return { width: Math.min(availableWidth - 80, 1000), height: Math.min(availableHeight, 620) };
     if (app.id === 'contact') return { width: Math.min(availableWidth - 80, 840), height: Math.min(availableHeight - 20, 560) };
+    if (app.id === 'coffee') return { width: Math.min(availableWidth - 80, 680), height: Math.min(availableHeight - 20, 540) };
     return { width: Math.min(availableWidth - 80, 800), height: Math.min(availableHeight, 500) };
   };
 
@@ -355,6 +357,8 @@ const Window = ({
         return <ResumeApp />;
       case 'contact':
         return <ContactApp />;
+      case 'coffee':
+        return <CoffeeApp onClose={handleClose} />;
       case 'trash':
         return <TrashApp onClose={handleClose} onOpenApp={onOpenApp} />;
       default:
