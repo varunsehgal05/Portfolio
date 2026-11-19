@@ -953,13 +953,13 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
   const getTabDimensions = (tab) => {
     switch (tab) {
       case 'home': return { width: 1240, height: 880 };
-      case 'projects': return { width: 1350, height: 950 };
-      case 'experience': return { width: 1200, height: 950 };
-      case 'about': return { width: 1350, height: 920 };
-      case 'resume': return { width: 1160, height: 1100 };
-      case 'process': return { width: 900, height: 850 };
-      case 'plugins': return { width: 1200, height: 900 };
-      default: return { width: 1200, height: 850 };
+      case 'projects': return { width: 1340, height: 960 };
+      case 'experience': return { width: 1240, height: 1360 };
+      case 'about': return { width: 1340, height: 940 };
+      case 'resume': return { width: 1100, height: 1420 };
+      case 'process': return { width: 1360, height: 960 };
+      case 'plugins': return { width: 1300, height: 980 };
+      default: return { width: 1240, height: 880 };
     }
   };
 
@@ -968,22 +968,22 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
     const stageW = containerRef.current.clientWidth || 900;
     const stageH = containerRef.current.clientHeight || 650;
     const dim = getTabDimensions(tab);
+    const activeZoom = tab === 'projects' ? 0.9 : zoom;
 
-    let targetX = Math.round((stageW - dim.width * zoom) / 2);
-    let targetY = Math.round((stageH - dim.height * zoom) / 2);
+    let targetX = Math.round((stageW - dim.width * activeZoom) / 2);
+    let targetY = Math.round((stageH - dim.height * activeZoom) / 2);
 
-    if (tab === 'process') {
-      targetX = Math.max(40, Math.round((stageW - 900 * zoom) / 2));
-      targetY = 24;
-    } else {
-      targetY = Math.max(16, targetY);
-    }
+    targetY = Math.max(20, targetY);
+    targetX = Math.max(20, targetX);
 
     setPan({ x: targetX, y: targetY });
   };
 
-  // Center on tab switch & initial mount
+  // Center on tab switch & initial mount with 90% auto-zoom for Work page
   useEffect(() => {
+    if (activeTab === 'projects') {
+      setZoom(0.9);
+    }
     const timer = setTimeout(() => {
       centerCanvasView(activeTab);
     }, 60);
@@ -1951,96 +1951,119 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 transformOrigin: '0 0'
               }}
             >
-              <div className="view-content-wrapper" style={{ padding: '30px 40px 140px', minWidth: '1350px' }}>
-                <header className="view-page-header">
-                  <h1 className="view-page-title">Work & Case Studies</h1>
-                  <p className="view-page-desc">Complete showcase of production UX flows, SaaS platforms, and mobile applications.</p>
-                </header>
-
-                {/* Filter and Search Bar */}
-                <div className="projects-filter-bar">
-                  <div className="search-input-wrap">
-                    <span className="material-symbols-outlined search-icon">search</span>
-                    <input
-                      type="text"
-                      placeholder="Search projects by name, tags, domain..."
-                      value={projectSearch}
-                      onChange={(e) => setProjectSearch(e.target.value)}
-                      className="search-field"
-                    />
+              <div className="view-content-wrapper" style={{ padding: '36px 40px 140px' }}>
+                {/* Framed Artboard Box (Pixel-perfect match to user reference Image 1) */}
+                <div
+                  className={`figma-artboard-box work-artboard-box figma-selectable-node ${selectedNodeId === 'work-artboard' ? 'is-selected' : ''}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSelectNode('work-artboard', 'Work & Case Studies Artboard', 'Frame');
+                  }}
+                >
+                  <div className="figma-artboard-header-tag">
+                    <span className="artboard-hash">#</span>
+                    <span className="artboard-name">Work & Case Studies</span>
+                    <span className="artboard-dims">[1340 × 960]</span>
                   </div>
 
-                  <div className="category-filter-pills">
-                    {['All', 'Mobile App', 'SaaS / Web'].map(cat => (
-                      <button
-                        key={cat}
-                        className={`cat-filter-btn ${projectFilter === cat ? 'active' : ''}`}
-                        onClick={() => setProjectFilter(cat)}
-                      >
-                        {cat}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                  {selectedNodeId === 'work-artboard' && (
+                    <div className="figma-selection-overlay">
+                      <div className="selection-tag">❖ Work & Case Studies [1340×960]</div>
+                      <div className="selection-handle tl" /><div className="selection-handle tr" />
+                      <div className="selection-handle bl" /><div className="selection-handle br" />
+                    </div>
+                  )}
 
-                {/* Full Bento Grid with Selectable Cards */}
-                <div className="bento-grid-container">
-                  {filteredProjects.map(proj => {
-                    const nodeId = `work-${proj.id}`;
-                    const isSelected = selectedNodeId === nodeId;
-                    const props = nodeProps[nodeId] || {};
-                    return (
-                      <div
-                        key={proj.id}
-                        className={`bento-card figma-selectable-node ${isSelected ? 'is-selected' : ''}`}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleSelectNode(nodeId, proj.name, 'Component');
-                        }}
-                        style={{
-                          borderRadius: props.radius ? `${props.radius}px` : undefined,
-                          backgroundColor: props.fill || undefined,
-                          borderColor: props.stroke || undefined,
-                          borderWidth: props.strokeWidth ? `${props.strokeWidth}px` : undefined,
-                          opacity: props.opacity !== undefined ? props.opacity / 100 : undefined
-                        }}
-                      >
-                        {isSelected && (
-                          <div className="figma-selection-overlay">
-                            <div className="selection-tag">❖ {proj.name} [{props.w || 360}×{props.h || 440}]</div>
-                            <div className="selection-handle tl" />
-                            <div className="selection-handle tr" />
-                            <div className="selection-handle bl" />
-                            <div className="selection-handle br" />
+                  <header className="view-page-header">
+                    <h1 className="view-page-title">Work & Case Studies</h1>
+                    <p className="view-page-desc">Complete showcase of production UX flows, SaaS platforms, and mobile applications.</p>
+                  </header>
+
+                  {/* Filter and Search Bar */}
+                  <div className="projects-filter-bar">
+                    <div className="search-input-wrap">
+                      <span className="material-symbols-outlined search-icon">search</span>
+                      <input
+                        type="text"
+                        placeholder="Search projects by name, tags, domain..."
+                        value={projectSearch}
+                        onChange={(e) => setProjectSearch(e.target.value)}
+                        className="search-field"
+                      />
+                    </div>
+
+                    <div className="category-filter-pills">
+                      {['All', 'Mobile App', 'SaaS / Web'].map(cat => (
+                        <button
+                          key={cat}
+                          className={`cat-filter-btn ${projectFilter === cat ? 'active' : ''}`}
+                          onClick={() => setProjectFilter(cat)}
+                        >
+                          {cat}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Full Bento Grid with Selectable Cards */}
+                  <div className="bento-grid-container">
+                    {filteredProjects.map(proj => {
+                      const nodeId = `work-${proj.id}`;
+                      const isSelected = selectedNodeId === nodeId;
+                      const props = nodeProps[nodeId] || {};
+                      return (
+                        <div
+                          key={proj.id}
+                          className={`bento-card figma-selectable-node ${isSelected ? 'is-selected' : ''}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleSelectNode(nodeId, proj.name, 'Component');
+                          }}
+                          style={{
+                            borderRadius: props.radius ? `${props.radius}px` : undefined,
+                            backgroundColor: props.fill || undefined,
+                            borderColor: props.stroke || undefined,
+                            borderWidth: props.strokeWidth ? `${props.strokeWidth}px` : undefined,
+                            opacity: props.opacity !== undefined ? props.opacity / 100 : undefined
+                          }}
+                        >
+                          {isSelected && (
+                            <div className="figma-selection-overlay">
+                              <div className="selection-tag">❖ {proj.name} [{props.w || 360}×{props.h || 440}]</div>
+                              <div className="selection-handle tl" />
+                              <div className="selection-handle tr" />
+                              <div className="selection-handle bl" />
+                              <div className="selection-handle br" />
+                            </div>
+                          )}
+                          <div className="bento-img-wrap">
+                            <img
+                              src={proj.image}
+                              alt={proj.name}
+                              className="bento-img"
+                              onError={(e) => {
+                                e.currentTarget.src = '/figma_LandingPage.png';
+                              }}
+                            />
+                            <span className="bento-badge">{proj.badge}</span>
                           </div>
-                        )}
-                        <div className="bento-img-wrap">
-                          <img
-                            src={proj.image}
-                            alt={proj.name}
-                            className="bento-img"
-                            onError={(e) => {
-                              e.currentTarget.src = '/figma_LandingPage.png';
-                            }}
-                          />
-                          <span className="bento-badge">{proj.badge}</span>
-                        </div>
-                        <div className="bento-body">
-                          <span className="bento-cat">{proj.category}</span>
-                          <h3 className="bento-title">{proj.name}</h3>
-                          <p className="bento-desc">{proj.desc}</p>
-                          <div className="bento-tags-list">
-                            {proj.tags.map((t, idx) => (
-                              <span key={idx} className="bento-tag">{t}</span>
-                            ))}
+                          <div className="bento-body">
+                            <span className="bento-cat">{proj.category}</span>
+                            <h3 className="bento-title">{proj.name}</h3>
+                            <p className="bento-desc">{proj.desc}</p>
+                            <div className="bento-tags-list">
+                              {proj.tags.map((t, idx) => (
+                                <span key={idx} className="bento-tag">{t}</span>
+                              ))}
+                            </div>
+                            <a href={proj.link} target="_blank" rel="noreferrer" className="bento-action-btn">
+                              Open in Figma <span className="material-symbols-outlined text-[16px]">open_in_new</span>
+                            </a>
                           </div>
-                          <a href={proj.link} target="_blank" rel="noreferrer" className="bento-action-btn">
-                            Open in Figma <span className="material-symbols-outlined text-[16px]">open_in_new</span>
-                          </a>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             </div>
@@ -2057,73 +2080,108 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 transformOrigin: '0 0'
               }}
             >
-              <div className="view-content-wrapper" style={{ padding: '30px 40px 140px', minWidth: '1200px' }}>
-                <header className="view-page-header">
-                  <div className="activity-header-top">
-                    <div>
-                      <h1 className="view-page-title">Recent Activity</h1>
-                      <p className="view-page-desc">Tracking changes across Varun_Sehgal_Portfolio.fig</p>
-                    </div>
-
-                    {/* Filter and View Controls */}
-                    <div className="activity-controls-row">
-                      <div className="activity-filter-pills">
-                        {['All', 'Experience', 'Hackathons', 'Certifications'].map(filter => (
-                          <button
-                            key={filter}
-                            type="button"
-                            className={`activity-filter-btn ${activityFilter === filter ? 'active' : ''}`}
-                            onClick={() => setActiveFilter(filter)}
-                          >
-                            {filter}
-                          </button>
-                        ))}
-                      </div>
-
-                      <div className="activity-view-switcher">
-                        <button
-                          type="button"
-                          className={`view-switch-btn ${experienceViewMode === 'zigzag' ? 'active' : ''}`}
-                          onClick={() => setExperienceViewMode('zigzag')}
-                          title="Alternating Timeline View"
-                        >
-                          <span className="material-symbols-outlined text-[15px]">timeline</span>
-                          <span>Timeline</span>
-                        </button>
-                        <button
-                          type="button"
-                          className={`view-switch-btn ${experienceViewMode === 'split' ? 'active' : ''}`}
-                          onClick={() => setExperienceViewMode('split')}
-                          title="Split Column View"
-                        >
-                          <span className="material-symbols-outlined text-[15px]">view_column</span>
-                          <span>Columns</span>
-                        </button>
-                      </div>
-                    </div>
+              <div className="view-content-wrapper" style={{ padding: '36px 40px 140px' }}>
+                {/* Framed Artboard Box for Experience */}
+                <div
+                  className={`figma-artboard-box experience-artboard-box figma-selectable-node ${selectedNodeId === 'exp-artboard' ? 'is-selected' : ''}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSelectNode('exp-artboard', 'Recent Activity & Timeline Frame', 'Frame');
+                  }}
+                >
+                  <div className="figma-artboard-header-tag">
+                    <span className="artboard-hash">#</span>
+                    <span className="artboard-name">Recent Activity &amp; Career Timeline</span>
+                    <span className="artboard-dims">[1240 × 1360]</span>
                   </div>
-                </header>
 
-                {/* Alternating Zigzag Timeline (Matching Recent Activity Mockup) */}
-                {experienceViewMode === 'zigzag' ? (
-                  <div className="zigzag-timeline-wrapper">
-                    <div className="zigzag-timeline-container">
-                      <div className="zigzag-center-line"></div>
+                  {selectedNodeId === 'exp-artboard' && (
+                    <div className="figma-selection-overlay">
+                      <div className="selection-tag">❖ Recent Activity &amp; Career Timeline [1240×1360]</div>
+                      <div className="selection-handle tl" /><div className="selection-handle tr" />
+                      <div className="selection-handle bl" /><div className="selection-handle br" />
+                    </div>
+                  )}
 
-                      {filteredActivity.map((item, index) => {
-                        const isRight = index % 2 === 0;
-                        const expNodeId = `exp-${item.id}`;
-                        const isSelected = selectedNodeId === expNodeId;
-                        const props = nodeProps[expNodeId] || {};
-                        return (
-                          <div
-                            key={item.id}
-                            className={`zigzag-timeline-row ${isRight ? 'align-right' : 'align-left'}`}
+                  <header className="view-page-header">
+                    <div className="activity-header-top">
+                      <div>
+                        <h1 className="view-page-title">Recent Activity &amp; Career Timeline</h1>
+                        <p className="view-page-desc">Production UX design milestones, hackathon achievements, and verified credentials.</p>
+                      </div>
+
+                      {/* Filter and View Controls */}
+                      <div className="activity-controls-row">
+                        <div className="activity-filter-pills">
+                          {['All', 'Experience', 'Hackathons', 'Certifications'].map(filter => (
+                            <button
+                              key={filter}
+                              type="button"
+                              className={`activity-filter-btn ${activityFilter === filter ? 'active' : ''}`}
+                              onClick={() => setActiveFilter(filter)}
+                            >
+                              {filter}
+                            </button>
+                          ))}
+                        </div>
+
+                        <div className="activity-view-switcher">
+                          <button
+                            type="button"
+                            className={`view-switch-btn ${experienceViewMode === 'zigzag' ? 'active' : ''}`}
+                            onClick={() => setExperienceViewMode('zigzag')}
+                            title="Alternating Timeline View"
                           >
-                            {/* Center Node Icon pinned on spine */}
-                            <div className="zigzag-node-icon" title={item.category}>
-                              <span className="material-symbols-outlined text-[17px]">{item.icon}</span>
-                            </div>
+                            <span className="material-symbols-outlined text-[15px]">timeline</span>
+                            <span>Timeline</span>
+                          </button>
+                          <button
+                            type="button"
+                            className={`view-switch-btn ${experienceViewMode === 'split' ? 'active' : ''}`}
+                            onClick={() => setExperienceViewMode('split')}
+                            title="Split Column View"
+                          >
+                            <span className="material-symbols-outlined text-[15px]">view_column</span>
+                            <span>Columns</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </header>
+
+                  {/* Alternating Zigzag Timeline (Matching Recent Activity Mockup with Elevated Center Spine) */}
+                  {experienceViewMode === 'zigzag' ? (
+                    <div className="zigzag-timeline-wrapper">
+                      <div className="zigzag-timeline-container">
+                        {/* Luminous Top Milestone Beacon on Spine */}
+                        <div className="zigzag-spine-beacon-top">
+                          <div className="spine-beacon-pill">
+                            <span className="beacon-pulse-dot" />
+                            <span className="beacon-title">CAREER ODYSSEY &amp; TELEMETRY</span>
+                            <span className="beacon-year-range">2024 — 2026</span>
+                          </div>
+                        </div>
+
+                        {/* Center vertical glowing spine */}
+                        <div className="zigzag-center-line">
+                          <div className="zigzag-spine-glow-beam" />
+                        </div>
+
+                        {filteredActivity.map((item, index) => {
+                          const isRight = index % 2 === 0;
+                          const expNodeId = `exp-${item.id}`;
+                          const isSelected = selectedNodeId === expNodeId;
+                          const props = nodeProps[expNodeId] || {};
+                          return (
+                            <div
+                              key={item.id}
+                              className={`zigzag-timeline-row ${isRight ? 'align-right' : 'align-left'}`}
+                            >
+                              {/* Center Node Icon pinned on spine with halo */}
+                              <div className={`zigzag-node-icon category-${item.category.toLowerCase().replace(/[^a-z0-9]/g, '')}`} title={item.category}>
+                                <div className="zigzag-node-inner-halo" />
+                                <span className="material-symbols-outlined text-[17px]">{item.icon}</span>
+                              </div>
 
                             {/* Alternating Card */}
                             <div
@@ -2336,6 +2394,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     </div>
                   </div>
                 )}
+                </div>
               </div>
             </div>
           )}
@@ -2351,96 +2410,215 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 transformOrigin: '0 0'
               }}
             >
-              <div className="view-content-wrapper" style={{ padding: '20px 30px 140px', minWidth: '1350px' }}>
-                <header className="view-page-header">
-                  <div className="about-header-flex">
-                    <div>
-                      <h1 className="view-page-title">About Varun Sehgal</h1>
-                      <p className="view-page-desc">Design philosophy, superpowers, growth vectors, and architectural toolkit.</p>
-                    </div>
+              <div className="view-content-wrapper" style={{ padding: '36px 40px 140px' }}>
+                {/* Framed Artboard Box for About */}
+                <div
+                  className={`figma-artboard-box about-artboard-box figma-selectable-node ${selectedNodeId === 'about-artboard' ? 'is-selected' : ''}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSelectNode('about-artboard', 'About Varun Sehgal Frame', 'Frame');
+                  }}
+                >
+                  <div className="figma-artboard-header-tag">
+                    <span className="artboard-hash">#</span>
+                    <span className="artboard-name">About Varun Sehgal</span>
+                    <span className="artboard-dims">[1340 × 940]</span>
                   </div>
-                </header>
 
-                <div className="about-radial-canvas-container">
-                  {/* SVG Radiating Curved Dashed Connectors Layer (Matching Image 3) */}
-                  <svg className="about-connector-svg-layer" viewBox="0 0 1240 860" fill="none">
-                    {/* Path 1: Center Avatar -> Top Left (Core Strengths) */}
-                    <path
-                      d="M 520,380 C 440,380 400,280 400,200"
-                      stroke="#38bdf8"
-                      strokeWidth="2"
-                      strokeDasharray="6 6"
-                    />
-                    <circle cx="400" cy="200" r="4.5" fill="#38bdf8" />
+                  {selectedNodeId === 'about-artboard' && (
+                    <div className="figma-selection-overlay">
+                      <div className="selection-tag">❖ About Varun Sehgal [1340×940]</div>
+                      <div className="selection-handle tl" /><div className="selection-handle tr" />
+                      <div className="selection-handle bl" /><div className="selection-handle br" />
+                    </div>
+                  )}
 
-                    {/* Path 2: Center Avatar -> Top Right (Weaknesses & Growth Vectors) */}
-                    <path
-                      d="M 720,380 C 800,380 840,280 840,200"
-                      stroke="#38bdf8"
-                      strokeWidth="2"
-                      strokeDasharray="6 6"
-                    />
-                    <circle cx="840" cy="200" r="4.5" fill="#38bdf8" />
-
-                    {/* Path 3: Center Avatar -> Bottom Left (Design Philosophy) */}
-                    <path
-                      d="M 520,460 C 440,460 400,520 400,580"
-                      stroke="#38bdf8"
-                      strokeWidth="2"
-                      strokeDasharray="6 6"
-                    />
-                    <circle cx="400" cy="580" r="4.5" fill="#38bdf8" />
-
-                    {/* Path 4: Center Avatar -> Bottom Right (Technical Stack) */}
-                    <path
-                      d="M 720,460 C 800,460 840,520 840,580"
-                      stroke="#38bdf8"
-                      strokeWidth="2"
-                      strokeDasharray="6 6"
-                    />
-                    <circle cx="840" cy="580" r="4.5" fill="#38bdf8" />
-
-                    {/* Path 5: Center Avatar -> Bottom Center (Education & Hackathons) */}
-                    <path
-                      d="M 620,530 C 620,560 620,580 620,600"
-                      stroke="#38bdf8"
-                      strokeWidth="2"
-                      strokeDasharray="6 6"
-                    />
-                    <circle cx="620" cy="600" r="4.5" fill="#38bdf8" />
-                  </svg>
-
-                  {/* 1. Center Avatar of Varun */}
-                  <div
-                    className={`about-center-avatar-node figma-selectable-node ${selectedNodeId === 'about-avatar' ? 'is-selected' : ''}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSelectNode('about-avatar', 'Varun_Avatar_Core', 'Component');
-                    }}
-                    style={{
-                      borderRadius: nodeProps['about-avatar']?.radius ? `${nodeProps['about-avatar'].radius}px` : undefined,
-                      backgroundColor: nodeProps['about-avatar']?.fill || undefined,
-                      borderColor: nodeProps['about-avatar']?.stroke || undefined,
-                      opacity: nodeProps['about-avatar']?.opacity !== undefined ? nodeProps['about-avatar'].opacity / 100 : undefined
-                    }}
-                  >
-                    {selectedNodeId === 'about-avatar' && (
-                      <div className="figma-selection-overlay">
-                        <div className="selection-tag">❖ Varun_Avatar_Core [220×220]</div>
-                        <div className="selection-handle tl" />
-                        <div className="selection-handle tr" />
-                        <div className="selection-handle bl" />
-                        <div className="selection-handle br" />
+                  <header className="view-page-header">
+                    <div className="about-header-flex">
+                      <div>
+                        <h1 className="view-page-title">About Varun Sehgal</h1>
+                        <p className="view-page-desc">Design philosophy, superpowers, growth vectors, and architectural toolkit.</p>
                       </div>
-                    )}
-                    <div className="about-avatar-ring">
-                      <img src="/varun.jpg" alt="Varun Sehgal" className="about-avatar-img" onError={(e) => { e.currentTarget.src = '/profile/varun.jpg'; }} />
                     </div>
-                    <div className="about-avatar-name">Varun Sehgal</div>
-                    <div className="about-avatar-role">Product Designer</div>
-                  </div>
+                  </header>
 
-                  {/* 2. Top-Left: Core Strengths & Superpowers */}
+                  <div className="about-radial-canvas-container">
+                    {/* SVG Radiating Curved Dashed Connectors Layer with Gradient Glow */}
+                    <svg className="about-connector-svg-layer" viewBox="0 0 1240 860" fill="none">
+                      <defs>
+                        <linearGradient id="aboutGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#38bdf8" />
+                          <stop offset="100%" stopColor="#34d399" />
+                        </linearGradient>
+                        <linearGradient id="aboutGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#38bdf8" />
+                          <stop offset="100%" stopColor="#fbbf24" />
+                        </linearGradient>
+                        <linearGradient id="aboutGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#38bdf8" />
+                          <stop offset="100%" stopColor="#818cf8" />
+                        </linearGradient>
+                        <linearGradient id="aboutGrad4" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#38bdf8" />
+                          <stop offset="100%" stopColor="#38bdf8" />
+                        </linearGradient>
+                        <linearGradient id="aboutGrad5" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#38bdf8" />
+                          <stop offset="100%" stopColor="#ec4899" />
+                        </linearGradient>
+                      </defs>
+
+                      {/* Path 1: Center -> Top Left (Core Strengths) */}
+                      <path
+                        d="M 520,380 C 440,380 400,280 400,200"
+                        stroke="url(#aboutGrad1)"
+                        strokeWidth="2.5"
+                        strokeDasharray="6 6"
+                      />
+                      <circle cx="400" cy="200" r="5" fill="#34d399" />
+
+                      {/* Path 2: Center -> Top Right (Weaknesses & Growth Vectors) */}
+                      <path
+                        d="M 720,380 C 800,380 840,280 840,200"
+                        stroke="url(#aboutGrad2)"
+                        strokeWidth="2.5"
+                        strokeDasharray="6 6"
+                      />
+                      <circle cx="840" cy="200" r="5" fill="#fbbf24" />
+
+                      {/* Path 3: Center -> Bottom Left (Design Philosophy) */}
+                      <path
+                        d="M 520,460 C 440,460 400,520 400,580"
+                        stroke="url(#aboutGrad3)"
+                        strokeWidth="2.5"
+                        strokeDasharray="6 6"
+                      />
+                      <circle cx="400" cy="580" r="5" fill="#818cf8" />
+
+                      {/* Path 4: Center -> Bottom Right (Technical Stack) */}
+                      <path
+                        d="M 720,460 C 800,460 840,520 840,580"
+                        stroke="url(#aboutGrad4)"
+                        strokeWidth="2.5"
+                        strokeDasharray="6 6"
+                      />
+                      <circle cx="840" cy="580" r="5" fill="#38bdf8" />
+
+                      {/* Path 5: Center -> Bottom Center (Education & Hackathons) */}
+                      <path
+                        d="M 620,530 C 620,560 620,580 620,600"
+                        stroke="url(#aboutGrad5)"
+                        strokeWidth="2.5"
+                        strokeDasharray="6 6"
+                      />
+                      <circle cx="620" cy="600" r="5" fill="#ec4899" />
+                    </svg>
+
+                    {/* 1. Recreated Interactive Center Designer Cockpit / Hub */}
+                    <div
+                      className={`about-center-avatar-node recreated-center-hub figma-selectable-node ${selectedNodeId === 'about-avatar' ? 'is-selected' : ''}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleSelectNode('about-avatar', 'Varun_Designer_Core_Hub', 'Component');
+                      }}
+                      style={{
+                        borderRadius: nodeProps['about-avatar']?.radius ? `${nodeProps['about-avatar'].radius}px` : undefined,
+                        backgroundColor: nodeProps['about-avatar']?.fill || undefined,
+                        borderColor: nodeProps['about-avatar']?.stroke || undefined,
+                        opacity: nodeProps['about-avatar']?.opacity !== undefined ? nodeProps['about-avatar'].opacity / 100 : undefined
+                      }}
+                    >
+                      {selectedNodeId === 'about-avatar' && (
+                        <div className="figma-selection-overlay">
+                          <div className="selection-tag">❖ Varun_Designer_Core_Hub [280×300]</div>
+                          <div className="selection-handle tl" /><div className="selection-handle tr" />
+                          <div className="selection-handle bl" /><div className="selection-handle br" />
+                        </div>
+                      )}
+
+                      {/* Dual Concentric Orbital Rings */}
+                      <div className="about-orbital-ring ring-outer">
+                        <div className="orbit-particle p1" />
+                        <div className="orbit-particle p2" />
+                      </div>
+                      <div className="about-orbital-ring ring-inner">
+                        <div className="orbit-particle p3" />
+                      </div>
+
+                      {/* Center Avatar Orb */}
+                      <div className="about-avatar-orb-container">
+                        <div className="about-avatar-glow-ring" />
+                        <img
+                          src="/varun.jpg"
+                          alt="Varun Sehgal"
+                          className="about-avatar-img-recreated"
+                          onError={(e) => { e.currentTarget.src = '/profile/varun.jpg'; }}
+                        />
+                        <div className="avatar-live-status-pill">
+                          <span className="status-live-beacon" />
+                          <span>Online in VarunOS</span>
+                        </div>
+                      </div>
+
+                      {/* Identity & Specs Info */}
+                      <div className="about-avatar-info-panel">
+                        <h3 className="about-avatar-name-bold">Varun Sehgal</h3>
+                        <div className="about-avatar-role-pill">
+                          <span className="material-symbols-outlined text-[13px]">verified</span>
+                          <span>Lead UI/UX &amp; Product Designer</span>
+                        </div>
+
+                        <div className="about-avatar-specs-row">
+                          <span className="spec-token">3+ Yrs Exp</span>
+                          <span className="spec-sep">•</span>
+                          <span className="spec-token">10+ Releases</span>
+                          <span className="spec-sep">•</span>
+                          <span className="spec-token text-amber-300">1st HackThor</span>
+                        </div>
+
+                        {/* Interactive Radar Quick Chips */}
+                        <div className="about-avatar-chips-grid">
+                          <span
+                            className="radar-chip"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleSelectNode('about-strengths', 'Core Strengths', 'Frame');
+                            }}
+                          >
+                            ⚡ Design Systems
+                          </span>
+                          <span
+                            className="radar-chip"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleSelectNode('about-philosophy', 'Design Philosophy', 'Frame');
+                            }}
+                          >
+                            🧠 UX Psychology
+                          </span>
+                          <span
+                            className="radar-chip"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleSelectNode('about-technical', 'Technical Stack', 'Frame');
+                            }}
+                          >
+                            📱 Prototyping
+                          </span>
+                          <span
+                            className="radar-chip"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleSelectNode('about-education', 'Education', 'Frame');
+                            }}
+                          >
+                            🏆 Hackathons
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 2. Top-Left: Core Strengths & Superpowers */}
                   <div
                     className={`about-trait-card figma-selectable-node ${selectedNodeId === 'about-strengths' ? 'is-selected' : ''}`}
                     onClick={(e) => {
@@ -2635,6 +2813,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     </ul>
                   </div>
                 </div>
+                </div>
               </div>
             </div>
           )}
@@ -2650,319 +2829,336 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 transformOrigin: '0 0'
               }}
             >
-              <div className="view-content-wrapper" style={{ padding: '30px 40px 140px', minWidth: '1200px' }}>
-                <header className="view-page-header">
-                  <div className="resume-header-flex">
-                    <div>
-                      <h1 className="view-page-title">Resume & Qualifications</h1>
-                      <p className="view-page-desc">Official ATS-optimized curriculum vitae — UI/UX Designer & Product Designer.</p>
-                    </div>
-
-                    <a
-                      href="/Varun_Sehgal_Resume_Updated.pdf"
-                      download="Varun_Sehgal_Resume.pdf"
-                      className="resume-download-action-btn"
-                    >
-                      <span className="material-symbols-outlined text-[18px]">download</span>
-                      Download Resume PDF
-                    </a>
-                  </div>
-                </header>
-
+              <div className="view-content-wrapper" style={{ padding: '36px 40px 140px' }}>
+                {/* Framed Artboard Box for Resume */}
                 <div
-                  className={`figma-resume-artboard-wrap figma-selectable-node ${selectedNodeId === 'resume-artboard' ? 'is-selected' : ''}`}
+                  className={`figma-artboard-box resume-artboard-box figma-selectable-node ${selectedNodeId === 'resume-artboard' ? 'is-selected' : ''}`}
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleSelectNode('resume-artboard', 'Varun_Sehgal_Resume', 'Frame');
-                  }}
-                  style={{
-                    borderRadius: nodeProps['resume-artboard']?.radius ? `${nodeProps['resume-artboard'].radius}px` : undefined,
-                    backgroundColor: nodeProps['resume-artboard']?.fill || undefined,
-                    borderColor: nodeProps['resume-artboard']?.stroke || undefined,
-                    opacity: nodeProps['resume-artboard']?.opacity !== undefined ? nodeProps['resume-artboard'].opacity / 100 : undefined
+                    handleSelectNode('resume-artboard', 'Tactile_Creative_Resume', 'Frame');
                   }}
                 >
-                  <div className="figma-artboard-caliper-x">↕ 24px AUTO LAYOUT • ↔ 920px FRAME WIDTH</div>
-                  <div className="figma-artboard-sticky-note">
-                    <strong>Reviewer Note</strong>
-                    <p style={{ marginTop: '4px', lineHeight: '1.4' }}>ATS Score 98/100. Clean 2-column Figma component structure. Verified UniEvent & Infosys credentials.</p>
+                  <div className="figma-artboard-header-tag">
+                    <span className="artboard-hash">#</span>
+                    <span className="artboard-name">Creative Tactile Resume — Varun Sehgal</span>
+                    <span className="artboard-dims">[1100 × 1420]</span>
                   </div>
+
                   {selectedNodeId === 'resume-artboard' && (
                     <div className="figma-selection-overlay">
-                      <div className="selection-tag">❖ Varun_Sehgal_Resume.artboard [920×1180]</div>
-                      <div className="selection-handle tl" />
-                      <div className="selection-handle tr" />
-                      <div className="selection-handle bl" />
-                      <div className="selection-handle br" />
+                      <div className="selection-tag">❖ Creative_Tactile_Resume [1100×1420]</div>
+                      <div className="selection-handle tl" /><div className="selection-handle tr" />
+                      <div className="selection-handle bl" /><div className="selection-handle br" />
                     </div>
                   )}
 
-                  <div className="figma-resume-sheet-container">
-                    <div className="figma-resume-two-col">
-                      {/* Left Column: Contact, Education, Skills */}
-                      <aside className="figma-resume-sidebar">
-                        {/* Contact */}
-                        <div>
-                          <h4 className="figma-resume-section-title">
-                            <span className="text-[#0d99ff]">#</span> CONTACT
-                          </h4>
-                          <ul className="figma-resume-contact-list">
-                            <li>
-                              <span className="material-symbols-outlined text-[14px]">call</span>
-                              <span>+91 9399361193</span>
-                            </li>
-                            <li>
-                              <span className="material-symbols-outlined text-[14px]">mail</span>
-                              <a href="mailto:varun.sehgal02@gmail.com">varun.sehgal02@gmail.com</a>
-                            </li>
-                            <li>
-                              <span className="material-symbols-outlined text-[14px]">location_on</span>
-                              <span>Gwalior, MP, India</span>
-                            </li>
-                            <li>
-                              <span className="material-symbols-outlined text-[14px]">language</span>
-                              <a href="https://varunsehgal.runs-on.dev" target="_blank" rel="noreferrer">varunsehgal.runs-on.dev</a>
-                            </li>
-                            <li>
-                              <span className="material-symbols-outlined text-[14px]">work</span>
-                              <a href="https://linkedin.com/in/varunsehgal02" target="_blank" rel="noreferrer">linkedin.com/in/varunsehgal02</a>
-                            </li>
-                            <li>
-                              <span className="material-symbols-outlined text-[14px]">palette</span>
-                              <a href="https://behance.net/varunsehgal3" target="_blank" rel="noreferrer">behance.net/varunsehgal3</a>
-                            </li>
-                            <li>
-                              <span className="material-symbols-outlined text-[14px]">code</span>
-                              <a href="https://github.com/varunsehgal05" target="_blank" rel="noreferrer">github.com/varunsehgal05</a>
-                            </li>
-                          </ul>
+                  {/* Tactile Grid Paper Canvas (Pixel-perfect match to user reference Image 3) */}
+                  <div className="tactile-resume-paper-sheet">
+                    {/* Metal binder clips at top edges */}
+                    <div className="binder-clip-top-left" />
+                    <div className="binder-clip-top-right" />
+
+                    {/* TOP ROW: Pinned ID Badge + Handwritten Note */}
+                    <div className="tactile-resume-top-row">
+                      {/* 1. Left Pinned ID Card with Metal Paperclip */}
+                      <div className="tactile-id-badge-card">
+                        {/* SVG Metal Paperclip */}
+                        <div className="metal-paperclip-graphic">
+                          <svg viewBox="0 0 32 64" fill="none">
+                            <path
+                              d="M 16,4 C 24,4 28,10 28,20 L 28,48 C 28,56 22,60 16,60 C 10,60 4,56 4,48 L 4,16 C 4,10 8,6 14,6 C 20,6 22,10 22,16 L 22,46 C 22,50 18,52 16,52 C 14,52 10,50 10,46 L 10,20"
+                              stroke="#a1a1aa"
+                              strokeWidth="3.2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
                         </div>
 
-                        {/* Education */}
-                        <div>
-                          <h4 className="figma-resume-section-title">
-                            <span className="text-[#0d99ff]">#</span> EDUCATION
-                          </h4>
-                          <div className="text-[12px] text-white font-semibold">Jaypee University of Eng. & Tech.</div>
-                          <div className="text-[11px] text-[#0d99ff]">B.Tech in Computer Science & Eng.</div>
-                          <div className="text-[10.5px] text-zinc-500 mt-1 font-mono">Aug 2023 – May 2027 • Guna, India</div>
+                        {/* Yellow Photo Block */}
+                        <div className="id-photo-yellow-block">
+                          <img
+                            src="/varun.jpg"
+                            alt="Varun Sehgal"
+                            className="id-photo-img"
+                            onError={(e) => { e.currentTarget.src = '/profile/varun.jpg'; }}
+                          />
                         </div>
 
-                        {/* Skills */}
-                        <div>
-                          <h4 className="figma-resume-section-title">
-                            <span className="text-[#0d99ff]">#</span> SKILLS ARSENAL
-                          </h4>
-
-                          <div className="mb-3">
-                            <div className="text-[11px] font-bold text-zinc-300 mb-1">UI/UX Design:</div>
-                            <div className="flex flex-wrap gap-1">
-                              {['Wireframing', 'Prototyping', 'User Research', 'Usability Testing', 'Design Systems', 'Info Architecture'].map((s, i) => (
-                                <span key={i} className="cert-id-badge">{s}</span>
-                              ))}
-                            </div>
-                          </div>
-
-                          <div className="mb-3">
-                            <div className="text-[11px] font-bold text-zinc-300 mb-1">Design Tools:</div>
-                            <div className="flex flex-wrap gap-1">
-                              {['Figma', 'Figma AI', 'Adobe XD', 'Photoshop', 'Illustrator', 'FigJam'].map((s, i) => (
-                                <span key={i} className="cert-id-badge">{s}</span>
-                              ))}
-                            </div>
-                          </div>
-
-                          <div className="mb-3">
-                            <div className="text-[11px] font-bold text-zinc-300 mb-1">AI-Augmented Design:</div>
-                            <div className="flex flex-wrap gap-1">
-                              {['Uizard', 'Galileo AI', 'Visily', 'Figma Magician', 'Automator'].map((s, i) => (
-                                <span key={i} className="cert-id-badge">{s}</span>
-                              ))}
-                            </div>
-                          </div>
-
-                          <div>
-                            <div className="text-[11px] font-bold text-zinc-300 mb-1">Tech & Prototyping:</div>
-                            <div className="flex flex-wrap gap-1">
-                              {['React.js', 'Next.js', 'TypeScript', 'Tailwind CSS', 'HTML5/CSS3', 'Git'].map((s, i) => (
-                                <span key={i} className="cert-id-badge">{s}</span>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      </aside>
-
-                      {/* Right Column: Main ATS Content */}
-                      <main className="figma-resume-main">
-                        {/* Candidate Header */}
-                        <header>
-                          <div className="flex items-center justify-between gap-3">
-                            <h2 className="figma-resume-candidate-title">Varun Sehgal</h2>
-                            <span className="cert-id-badge" style={{ background: 'rgba(52, 211, 153, 0.1)', color: '#34d399', borderColor: 'rgba(52, 211, 153, 0.3)' }}>
-                              ATS-Optimized
-                            </span>
-                          </div>
-                          <p className="figma-resume-roles">UI/UX Designer • Product Designer • Frontend Engineer</p>
-                          <p className="figma-resume-summary-text">
-                            UI/UX & Product Designer with 3+ years of experience delivering high-impact SaaS and AI product experiences. Skilled in user research, wireframing, rapid prototyping, and design systems, with proven results including a 45% increase in user engagement and a 30% reduction in drop-off rates.
+                        {/* ID Card Details */}
+                        <div className="id-card-details">
+                          <h2 className="id-card-name">Varun Sehgal</h2>
+                          <p className="id-card-tagline">
+                            I craft friction-free product experiences from design systems to hi-fi interactive prototypes through user psychology and code.
                           </p>
-                        </header>
 
-                        {/* Work Experience */}
-                        <section>
-                          <h4 className="figma-resume-section-title">
-                            <span className="material-symbols-outlined text-[15px] text-[#0d99ff]">work</span>
-                            WORK EXPERIENCE
-                          </h4>
-
-                          <div className="figma-resume-item">
-                            <div className="figma-resume-item-header">
-                              <div><strong>UI/UX Designer Intern</strong> — UniEvent (Remote)</div>
-                              <span className="figma-resume-item-date">Jun 2024 – Nov 2024</span>
-                            </div>
-                            <ul className="figma-resume-bullets">
-                              <li>Designed user-focused digital experiences and translated complex business requirements into clear, consistent interfaces for campus ticketing platform (EventFlow). Completed internship in early November 2024.</li>
-                              <li>Architected 4-step booking flow optimization, slashing transaction drop-off by 30% across 50+ modular components and checkout psychology.</li>
-                            </ul>
+                          <div className="id-card-meta-table">
+                            <div className="meta-cell"><span className="meta-k">DOB:</span> <span className="meta-v">02.10.2003</span></div>
+                            <div className="meta-cell"><span className="meta-k">LOC:</span> <span className="meta-v">Bengaluru / Remote</span></div>
+                            <div className="meta-cell"><span className="meta-k">📞</span> <span className="meta-v">+91 9399361193</span></div>
+                            <div className="meta-cell"><span className="meta-k">✉️</span> <a href="mailto:varun.sehgal02@gmail.com" className="meta-v">varun.sehgal02@gmail.com</a></div>
+                            <div className="meta-cell full"><span className="meta-k">Portfolio:</span> <a href="https://varunsehgal.runs-on.dev" target="_blank" rel="noreferrer" className="meta-v">varunsehgal.runs-on.dev</a></div>
+                            <div className="meta-cell full"><span className="meta-k">Lang:</span> <span className="meta-v">English (Fluent) • Hindi (Native)</span></div>
                           </div>
+                        </div>
 
-                          <div className="figma-resume-item">
-                            <div className="figma-resume-item-header">
-                              <div><strong>Assistant Head of Operations / UX Intern</strong> — Assemble (Remote)</div>
-                              <span className="figma-resume-item-date">Aug 2024 – Jan 2025</span>
-                            </div>
-                            <ul className="figma-resume-bullets">
-                              <li>Assisted in the planning and smooth execution of esports competitions, driving cross-functional coordination.</li>
-                              <li>Designed collaborative creator workspace tools and interaction prototypes in Figma.</li>
-                            </ul>
+                        {/* QR Code with vertical label */}
+                        <div className="id-card-qr-box">
+                          <div className="qr-vertical-tag">portfolio</div>
+                          <img src="/qr.png" alt="Portfolio QR" className="id-qr-img" onError={(e) => { e.currentTarget.src = '/qr.png'; }} />
+                        </div>
+                      </div>
+
+                      {/* 2. Top-Right Playful Handwritten Note with Red Doodle Arrow */}
+                      <div className="tactile-handwritten-note">
+                        <p className="handwritten-script-text">
+                          Please don't hesitate to <span className="handwritten-circle">reach me</span> if this resume doesn't provide enough clarification
+                        </p>
+
+                        {/* Hand-drawn doodle arrow SVG */}
+                        <svg className="handwritten-doodle-arrow" viewBox="0 0 100 50" fill="none">
+                          <path d="M 10,10 Q 50,45 85,25" stroke="#ef4444" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+                          <path d="M 75,18 L 86,25 L 78,34" stroke="#ef4444" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                        </svg>
+
+                        <div className="handwritten-contact-links">
+                          <div className="handwritten-item">
+                            <span className="material-symbols-outlined text-[15px] text-red-500">call</span>
+                            <span className="font-mono text-xs text-zinc-800 font-semibold">+91 9399361193</span>
                           </div>
-
-                          <div className="figma-resume-item">
-                            <div className="figma-resume-item-header">
-                              <div><strong>UI/UX Designer Intern</strong> — Knaptix Ventures (Remote)</div>
-                              <span className="figma-resume-item-date">Jan 2024 – Jun 2024</span>
-                            </div>
-                            <ul className="figma-resume-bullets">
-                              <li>Conceptualized 5+ high-fidelity UI/UX interfaces for web/mobile, achieving a 40% increase in user satisfaction scores during testing phases.</li>
-                              <li>Accelerated wireframe-to-prototype turnaround by leveraging AI-assisted Figma plugins (Magician, Automator), cutting early-stage design time by 45%.</li>
-                              <li>Facilitated design-to-engineering hand-offs, reducing implementation friction and technical errors by 15%.</li>
-                            </ul>
+                          <div className="handwritten-item underline-red">
+                            <span className="text-red-500 font-bold font-mono text-xs">in</span>
+                            <a href="https://linkedin.com/in/varunsehgal02" target="_blank" rel="noreferrer" className="text-xs font-mono text-zinc-800 font-semibold">
+                              linkedin.com/in/varunsehgal02
+                            </a>
                           </div>
+                        </div>
+                      </div>
+                    </div>
 
-                          <div className="figma-resume-item">
-                            <div className="figma-resume-item-header">
-                              <div><strong>Freelance UI/UX Designer</strong> — Self-Employed (Remote)</div>
-                              <span className="figma-resume-item-date">Jan 2024 – Present</span>
-                            </div>
-                            <ul className="figma-resume-bullets">
-                              <li>Executed 10+ end-to-end UI/UX design projects for tech startups, maintaining a 95% client retention rate through human-centered delivery.</li>
-                              <li>Redesigned product interfaces for 4 early-stage companies, utilizing AI-assisted prototyping tools to speed concept iteration.</li>
-                            </ul>
-                          </div>
-                        </section>
+                    {/* MAIN 2-COLUMN GRID */}
+                    <div className="tactile-resume-grid">
+                      {/* LEFT COLUMN: Work Experiences & Education */}
+                      <div className="tactile-column-left">
+                        {/* SECTION 1: Work Experiences */}
+                        <div className="tactile-section">
+                          <h3 className="highlighter-heading yellow-marker">
+                            <span className="highlighter-text">Work Experiences</span>
+                          </h3>
 
-                        {/* Design Projects */}
-                        <section>
-                          <h4 className="figma-resume-section-title">
-                            <span className="material-symbols-outlined text-[15px] text-[#0d99ff]">folder</span>
-                            DESIGN PROJECTS
-                          </h4>
-
-                          <div className="figma-resume-item">
-                            <div className="figma-resume-item-header">
-                              <div><strong>AI Interview & Preparation Platform</strong></div>
-                              <a href="https://www.figma.com/design/ezDh2NmBto6iv7xaQNs3Ha/AI-Interview?node-id=11-1842" target="_blank" rel="noreferrer" className="text-[#0d99ff] text-[11px] font-semibold underline">
-                                Figma Showcase ↗
-                              </a>
-                            </div>
-                            <div className="text-[11px] text-zinc-400 font-mono mb-1">Stack: Figma, SaaS Design, AI Security & Grading UX</div>
-                            <ul className="figma-resume-bullets">
-                              <li>Architected an AI-driven SaaS platform, integrating specialized "Security" and "Grading" modules to automate candidate evaluation processes.</li>
-                              <li>Streamlined dense analytical data into a clean dark-themed UI, enhancing dashboard scannability and user task efficiency by 25%.</li>
-                            </ul>
-                          </div>
-
-                          <div className="figma-resume-item">
-                            <div className="figma-resume-item-header">
-                              <div><strong>EventFlow: Event Ticketing SaaS</strong></div>
-                              <a href="https://www.figma.com/design/29nTBBWxZfoOKdFnOaQWbq/EventFlow?node-id=2-2" target="_blank" rel="noreferrer" className="text-[#0d99ff] text-[11px] font-semibold underline">
-                                Figma Showcase ↗
-                              </a>
-                            </div>
-                            <div className="text-[11px] text-zinc-400 font-mono mb-1">Stack: Figma, Design Systems, Modular Components</div>
-                            <ul className="figma-resume-bullets">
-                              <li>Spearheaded a 4-step booking flow optimization that minimized user drop-off by 30% through simplified checkout psychology.</li>
-                              <li>Constructed a comprehensive design system with 50+ modular components to ensure cross-platform visual consistency.</li>
-                            </ul>
-                          </div>
-
-                          <div className="figma-resume-item">
-                            <div className="figma-resume-item-header">
-                              <div><strong>Expensify: Budget Tracker App</strong></div>
-                              <a href="https://www.figma.com/design/3mw8XBHEZ3b8HKNNqcs6U2/Expensify---Budget-Tracker-App?node-id=135-318" target="_blank" rel="noreferrer" className="text-[#0d99ff] text-[11px] font-semibold underline">
-                                Figma Showcase ↗
-                              </a>
-                            </div>
-                            <div className="text-[11px] text-zinc-400 font-mono mb-1">Stack: Mobile UX, Real-time Analytics, Micro-interactions</div>
-                            <ul className="figma-resume-bullets">
-                              <li>Refined 17+ screens for real-time analytics, reducing the average "Add Expense" transaction time to under 5 seconds.</li>
-                            </ul>
-                          </div>
-                        </section>
-
-                        {/* Hackathons & Leadership */}
-                        <section>
-                          <h4 className="figma-resume-section-title">
-                            <span className="material-symbols-outlined text-[15px] text-[#0d99ff]">emoji_events</span>
-                            HACKATHONS & LEADERSHIP
-                          </h4>
-
-                          <div className="figma-resume-item">
-                            <div className="figma-resume-item-header">
-                              <div>
-                                <strong>Co-Organizer & Lead Designer</strong> — CodeSrijan Hackathon (JUET)
-                                <a href="https://lnkd.in/p/dUXQYx92" target="_blank" rel="noreferrer" className="text-[#0d99ff] ml-2 text-[11px] font-semibold underline inline-flex items-center gap-0.5">
-                                  LinkedIn Post ↗
-                                </a>
+                          <div className="tactile-timeline">
+                            {/* Job 1 */}
+                            <div className="tactile-timeline-item">
+                              <div className="timeline-bullet-hollow" />
+                              <div className="timeline-time-row">Sep 2024 — Nov 2024 • 6 mos</div>
+                              <h4 className="timeline-job-role">UI/UX Designer Intern</h4>
+                              <div className="timeline-company-row">
+                                <span className="font-bold text-zinc-900">UniEvent (EventFlow)</span>
+                                <span className="text-zinc-500">•</span>
+                                <span className="highlighter-badge-green">Full-time</span>
                               </div>
-                              <span className="figma-resume-item-date">Apr 2024</span>
+                              <div className="timeline-loc-text">Bengaluru, Karnataka, India (Remote)</div>
+                              <p className="timeline-bullet-desc">
+                                Designed campus event ticketing platform (EventFlow). Slashed transaction drop-off by 30% across 4-step booking workflow across 50+ components.
+                              </p>
                             </div>
-                            <ul className="figma-resume-bullets">
-                              <li>Directed complete visual identity and design system for a 72-hour hackathon with 200+ participants; designed official event merchandise, participant ID cards, certificates, and marketing creatives.</li>
-                              <li>Architected the digital platform UI covering team formation, submission portals, and real-time mentor evaluation under 72h high-pressure conditions. Boosted registrations by 20% YoY.</li>
-                            </ul>
-                          </div>
 
-                          <div className="figma-resume-item">
-                            <div className="figma-resume-item-header">
-                              <div>
-                                <strong>2nd Runner-up (Team Pixel_Codes)</strong> — Code Conquerors Hackathon (JUET)
-                                <a href="https://www.linkedin.com/posts/pushkar-chaturvedi-a83778284_hackathon2025-codeconquerors-aiineducation-activity-7335535096017375236-DBk_" target="_blank" rel="noreferrer" className="text-[#0d99ff] ml-2 text-[11px] font-semibold underline inline-flex items-center gap-0.5">
-                                  LinkedIn Post ↗
-                                </a>
+                            {/* Job 2 */}
+                            <div className="tactile-timeline-item">
+                              <div className="timeline-bullet-hollow" />
+                              <div className="timeline-time-row">Aug 2024 — Jan 2025 • 6 mos</div>
+                              <h4 className="timeline-job-role">Assistant Head of Operations / UI/UX Intern</h4>
+                              <div className="timeline-company-row">
+                                <span className="font-bold text-zinc-900">Assemble</span>
+                                <span className="text-zinc-500">•</span>
+                                <span className="highlighter-badge-green">Full-time</span>
                               </div>
-                              <span className="figma-resume-item-date">Apr 2024</span>
+                              <div className="timeline-loc-text">Remote</div>
+                              <p className="timeline-bullet-desc">
+                                Designed collaborative creator workspace tools and interaction prototypes in Figma. Coordinated operations for multi-team competitions.
+                              </p>
                             </div>
-                            <ul className="figma-resume-bullets">
-                              <li>Led frontend development and UI design in a 12-hour offline hackathon (150+ participants), building an AI-powered quiz generator using Next.js and Tailwind CSS.</li>
-                              <li>Engineered interactive question builder workflows and dynamic answer-key verification interfaces consuming Ollama local LLM APIs, placing 3rd out of 50+ competing teams.</li>
-                            </ul>
-                          </div>
 
-                          <div className="figma-resume-item">
-                            <div className="figma-resume-item-header">
-                              <div><strong>🏆 HAckeThor Winner (1st Place)</strong> — Unstop Hackathon</div>
-                              <span className="figma-resume-item-date">Apr 2025</span>
+                            {/* Job 3 */}
+                            <div className="tactile-timeline-item">
+                              <div className="timeline-bullet-hollow" />
+                              <div className="timeline-time-row">Jun 2024 — Aug 2024 • 3 mos</div>
+                              <h4 className="timeline-job-role">UI/UX Designer Intern</h4>
+                              <div className="timeline-company-row">
+                                <span className="font-bold text-zinc-900">Knaptix Ventures</span>
+                                <span className="text-zinc-500">•</span>
+                                <span className="highlighter-badge-green">Internship</span>
+                              </div>
+                              <div className="timeline-loc-text">Remote</div>
+                              <p className="timeline-bullet-desc">
+                                Delivered brand identities and conversion-focused SaaS landing pages for 10+ tech startups with a 95% client retention rate.
+                              </p>
                             </div>
-                            <ul className="figma-resume-bullets">
-                              <li>Awarded 1st place in national competitive hackathon demonstrating rapid UX prototyping, interactive user testing, and AI tool integration.</li>
-                            </ul>
                           </div>
-                        </section>
-                      </main>
+                        </div>
+
+                        {/* SECTION 2: Education */}
+                        <div className="tactile-section mt-6">
+                          <h3 className="highlighter-heading yellow-marker">
+                            <span className="highlighter-text">Education</span>
+                          </h3>
+
+                          <div className="tactile-timeline">
+                            <div className="tactile-timeline-item">
+                              <div className="timeline-bullet-hollow" />
+                              <div className="timeline-time-row">2023 — 2027</div>
+                              <h4 className="timeline-job-role">Jaypee University of Engineering &amp; Technology</h4>
+                              <div className="timeline-company-row">
+                                <span className="font-bold text-zinc-900">B.Tech in Computer Science &amp; Engineering</span>
+                                <span className="text-zinc-500">•</span>
+                                <span className="highlighter-badge-green">CGPA 8.5</span>
+                              </div>
+                              <div className="timeline-loc-text">Guna, Madhya Pradesh, India</div>
+                            </div>
+
+                            <div className="tactile-timeline-item">
+                              <div className="timeline-bullet-hollow" />
+                              <div className="timeline-time-row">Hackathons &amp; Honors</div>
+                              <h4 className="timeline-job-role">🏆 HACKeThor Winner (1st Place National Hackathon by Unstop)</h4>
+                              <div className="timeline-company-row">
+                                <span className="font-bold text-zinc-900">CodeSrijan Organizer (Lead UI/UX for 200+ hackers)</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* RIGHT COLUMN: Area of Expertise (Stickers) & Software Skills */}
+                      <div className="tactile-column-right">
+                        {/* SECTION 3: Area of Expertise (Tilted Stickers) */}
+                        <div className="tactile-section">
+                          <h3 className="highlighter-heading yellow-marker">
+                            <span className="highlighter-text">Area of Expertise</span>
+                          </h3>
+
+                          <div className="stickers-cluster-box">
+                            {/* Tape 1 */}
+                            <div className="sticker-tape-kraft">
+                              <span className="material-symbols-outlined text-[16px]">campaign</span>
+                              <span>PROMOTIONAL DESIGN</span>
+                            </div>
+
+                            {/* Torn Paper 2 */}
+                            <div className="sticker-torn-green">
+                              <span>EDITORIAL &amp; DESIGN SYSTEMS</span>
+                            </div>
+
+                            {/* Red Triangle 3 */}
+                            <div className="sticker-triangle-red">
+                              <span className="triangle-inner-pill">UI DESIGN</span>
+                            </div>
+
+                            {/* Cyan Circle 4 */}
+                            <div className="sticker-circle-cyan">
+                              <div className="scribble-circle-lines" />
+                              <span>MOTION GRAPHICS</span>
+                            </div>
+
+                            {/* Pill 5 */}
+                            <div className="sticker-pill-indigo">
+                              <span>⚡ AI UX &amp; PROTOTYPING</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* SECTION 4: Software Skills (Folders with Level Bars) */}
+                        <div className="tactile-section mt-8">
+                          <h3 className="highlighter-heading yellow-marker">
+                            <span className="highlighter-text">Software Skills</span>
+                          </h3>
+
+                          <div className="software-skills-grid">
+                            <div className="skill-folder-card">
+                              <div className="skill-folder-tab" style={{ background: '#300060' }}>
+                                <span className="font-bold text-xs text-purple-200">Ae</span>
+                              </div>
+                              <span className="skill-folder-name">After Effects</span>
+                              <div className="skill-battery-bar">
+                                <div className="battery-fill" style={{ width: '85%', background: '#9333ea' }} />
+                              </div>
+                            </div>
+
+                            <div className="skill-folder-card">
+                              <div className="skill-folder-tab" style={{ background: '#00005b' }}>
+                                <span className="font-bold text-xs text-indigo-200">Pr</span>
+                              </div>
+                              <span className="skill-folder-name">Premiere Pro</span>
+                              <div className="skill-battery-bar">
+                                <div className="battery-fill" style={{ width: '80%', background: '#6366f1' }} />
+                              </div>
+                            </div>
+
+                            <div className="skill-folder-card">
+                              <div className="skill-folder-tab" style={{ background: '#001e36' }}>
+                                <span className="font-bold text-xs text-sky-200">Ps</span>
+                              </div>
+                              <span className="skill-folder-name">Photoshop</span>
+                              <div className="skill-battery-bar">
+                                <div className="battery-fill" style={{ width: '92%', background: '#0284c7' }} />
+                              </div>
+                            </div>
+
+                            <div className="skill-folder-card">
+                              <div className="skill-folder-tab" style={{ background: '#330000' }}>
+                                <span className="font-bold text-xs text-orange-200">Ai</span>
+                              </div>
+                              <span className="skill-folder-name">Illustrator</span>
+                              <div className="skill-battery-bar">
+                                <div className="battery-fill" style={{ width: '88%', background: '#ea580c' }} />
+                              </div>
+                            </div>
+
+                            <div className="skill-folder-card">
+                              <div className="skill-folder-tab" style={{ background: '#1e1e1e' }}>
+                                <span className="font-bold text-xs text-emerald-300">❖</span>
+                              </div>
+                              <span className="skill-folder-name">Figma</span>
+                              <div className="skill-battery-bar">
+                                <div className="battery-fill" style={{ width: '98%', background: '#10b981' }} />
+                              </div>
+                            </div>
+
+                            <div className="skill-folder-card">
+                              <div className="skill-folder-tab" style={{ background: '#082f49' }}>
+                                <span className="font-bold text-xs text-cyan-300">⚛</span>
+                              </div>
+                              <span className="skill-folder-name">React / Next</span>
+                              <div className="skill-battery-bar">
+                                <div className="battery-fill" style={{ width: '90%', background: '#06b6d4' }} />
+                              </div>
+                            </div>
+
+                            <div className="skill-folder-card">
+                              <div className="skill-folder-tab" style={{ background: '#0c4a6e' }}>
+                                <span className="font-bold text-xs text-teal-300">≈</span>
+                              </div>
+                              <span className="skill-folder-name">Tailwind CSS</span>
+                              <div className="skill-battery-bar">
+                                <div className="battery-fill" style={{ width: '95%', background: '#14b8a6' }} />
+                              </div>
+                            </div>
+
+                            <div className="skill-folder-card">
+                              <div className="skill-folder-tab" style={{ background: '#172554' }}>
+                                <span className="font-bold text-xs text-blue-300">TS</span>
+                              </div>
+                              <span className="skill-folder-name">TypeScript</span>
+                              <div className="skill-battery-bar">
+                                <div className="battery-fill" style={{ width: '85%', background: '#3b82f6' }} />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
+
               </div>
             </div>
           )}
@@ -2978,348 +3174,192 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 transformOrigin: '0 0'
               }}
             >
-              <div className="view-content-wrapper" style={{ padding: '20px 40px 140px', minWidth: '2800px' }}>
-                <header className="view-page-header">
-                  <div className="about-header-flex">
-                    <div>
-                      <h1 className="view-page-title">Process & Methodology</h1>
-                      <p className="view-page-desc">Sequential end-to-end UX workflow from raw ideation to verified production handoff (Left to Right).</p>
-                    </div>
+              <div className="view-content-wrapper" style={{ padding: '36px 40px 140px' }}>
+                {/* Framed Artboard Box for Process */}
+                <div
+                  className={`figma-artboard-box process-artboard-box figma-selectable-node ${selectedNodeId === 'process-artboard' ? 'is-selected' : ''}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSelectNode('process-artboard', 'Process & Methodology Frame', 'Frame');
+                  }}
+                >
+                  <div className="figma-artboard-header-tag">
+                    <span className="artboard-hash">#</span>
+                    <span className="artboard-name">Process &amp; Design Methodology Flow</span>
+                    <span className="artboard-dims">[1360 × 960]</span>
                   </div>
-                </header>
 
-                {/* Horizontal Left-to-Right Workflow with Image 3 Connectors */}
-                <div className="process-horizontal-flow">
-                  {/* Phase 01: Ideation (Matching user reference media_1795084261884_b468a887.jpg) */}
-                  <div
-                    className={`process-phase-box figma-selectable-node ${selectedNodeId === 'process-p1' ? 'is-selected' : ''}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSelectNode('process-p1', 'Phase 01: Ideation', 'Frame');
-                    }}
-                    style={{
-                      borderRadius: nodeProps['process-p1']?.radius ? `${nodeProps['process-p1'].radius}px` : undefined,
-                      backgroundColor: nodeProps['process-p1']?.fill || undefined,
-                      borderColor: nodeProps['process-p1']?.stroke || undefined,
-                      opacity: nodeProps['process-p1']?.opacity !== undefined ? nodeProps['process-p1'].opacity / 100 : undefined
-                    }}
-                  >
-                    {selectedNodeId === 'process-p1' && (
-                      <div className="figma-selection-overlay">
-                        <div className="selection-tag">❖ Phase 01: Ideation [380×560]</div>
-                        <div className="selection-handle tl" /><div className="selection-handle tr" />
-                        <div className="selection-handle bl" /><div className="selection-handle br" />
-                      </div>
-                    )}
-                    <div className="phase-header-block mb-3">
-                      <h2 className="phase-title-large text-[#0d99ff]">Phase 01: Ideation</h2>
-                      <p className="phase-desc-muted">
-                        Unstructured thoughts, user journey mapping, and early structural wireframes. Mapping the chaotic void before styling.
-                      </p>
-                      <div className="phase-subheading-pin mt-2">
-                        <span className="material-symbols-outlined phase-pin-symbol">location_on</span>
-                        <span>Brainstorming</span>
+                  {selectedNodeId === 'process-artboard' && (
+                    <div className="figma-selection-overlay">
+                      <div className="selection-tag">❖ Process_Methodology_Flow [1360×960]</div>
+                      <div className="selection-handle tl" /><div className="selection-handle tr" />
+                      <div className="selection-handle bl" /><div className="selection-handle br" />
+                    </div>
+                  )}
+
+                  <header className="view-page-header">
+                    <div className="about-header-flex">
+                      <div>
+                        <h1 className="view-page-title">Process &amp; Methodology</h1>
+                        <p className="view-page-desc">Dynamic non-linear UX workflow: from discovery, mental models, and design tokens to verified telemetry handoff.</p>
                       </div>
                     </div>
+                  </header>
 
-                    {/* Overlapping Colorful Sticky Notes (Matching Image 1) */}
-                    <div className="phase-stickies-cluster">
-                      {/* Blue Sticky */}
-                      <div className="figjam-color-sticky sticky-blue">
-                        <p className="sticky-body-text">
-                          How might we make the portfolio feel like a high-end application rather than a static document?
-                        </p>
-                        <div className="sticky-footer-row">
-                          <span>Idea</span>
-                          <span className="material-symbols-outlined sticky-footer-icon">lightbulb</span>
+                  {/* 2-Tier S-Curve Flow (Non-straight, fits comfortably inside the Frame Box with Notes) */}
+                  <div className="process-scurve-canvas">
+                    {/* SVG Bezier Flow Pipeline between Phases */}
+                    <svg className="process-flow-svg-overlay" viewBox="0 0 1260 760" fill="none">
+                      <defs>
+                        <linearGradient id="flowGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stopColor="#0d99ff" />
+                          <stop offset="100%" stopColor="#c084fc" />
+                        </linearGradient>
+                        <linearGradient id="flowGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stopColor="#c084fc" />
+                          <stop offset="100%" stopColor="#38bdf8" />
+                        </linearGradient>
+                        <linearGradient id="flowLoopGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                          <stop offset="0%" stopColor="#38bdf8" />
+                          <stop offset="50%" stopColor="#f59e0b" />
+                          <stop offset="100%" stopColor="#fb923c" />
+                        </linearGradient>
+                        <linearGradient id="flowGrad3" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stopColor="#fb923c" />
+                          <stop offset="100%" stopColor="#a855f7" />
+                        </linearGradient>
+                        <linearGradient id="flowGrad4" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stopColor="#a855f7" />
+                          <stop offset="100%" stopColor="#10b981" />
+                        </linearGradient>
+                      </defs>
+
+                      {/* Path 1 -> 2 */}
+                      <path d="M 370,180 C 410,180 430,180 470,180" stroke="url(#flowGrad1)" strokeWidth="3" strokeDasharray="6 6" />
+                      <circle cx="470" cy="180" r="5" fill="#c084fc" />
+
+                      {/* Path 2 -> 3 */}
+                      <path d="M 830,180 C 870,180 890,180 930,180" stroke="url(#flowGrad2)" strokeWidth="3" strokeDasharray="6 6" />
+                      <circle cx="930" cy="180" r="5" fill="#38bdf8" />
+
+                      {/* S-Curve Loop Dropping from Row 1 to Row 2 */}
+                      <path d="M 1120,240 C 1240,240 1240,460 1120,460" stroke="url(#flowLoopGrad)" strokeWidth="3.5" strokeDasharray="6 6" />
+                      <circle cx="1120" cy="460" r="5" fill="#fb923c" />
+
+                      {/* Path 4 -> 5 -> 6 */}
+                      <path d="M 470,520 C 430,520 410,520 370,520" stroke="url(#flowGrad3)" strokeWidth="3" strokeDasharray="6 6" />
+                      <circle cx="370" cy="520" r="5" fill="#fb923c" />
+
+                      <path d="M 930,520 C 890,520 870,520 830,520" stroke="url(#flowGrad4)" strokeWidth="3" strokeDasharray="6 6" />
+                      <circle cx="830" cy="520" r="5" fill="#10b981" />
+                    </svg>
+
+                    {/* TOP TIER: Discovery, Architecture, Wireframing */}
+                    <div className="process-tier-row top-tier">
+                      {/* Phase 01: Ideation & Framing */}
+                      <div className="process-step-card phase-1">
+                        <div className="phase-badge-pill text-[#0d99ff]">Phase 01</div>
+                        <h3 className="step-title">Ideation &amp; Problem Framing</h3>
+                        <p className="step-desc">Mapping the chaotic void. Conducting stakeholder interviews, user empathy maps, and competitive UX audits.</p>
+                        <div className="step-deliverables-pill">
+                          <span className="material-symbols-outlined text-[13px]">lightbulb</span>
+                          <span>User Personas &amp; Journey Maps</span>
+                        </div>
+
+                        {/* Pinned Critique Sticky Note 1 */}
+                        <div className="process-sticky-pinned sticky-yellow note-pos-1">
+                          <div className="sticky-tape-stamp" />
+                          <p>💡 <strong>Note:</strong> Start with raw low-fi roughs before jumping to hi-fi polish.</p>
                         </div>
                       </div>
 
-                      {/* Orange Sticky (Overlapping) */}
-                      <div className="figjam-color-sticky sticky-orange">
-                        <p className="sticky-body-text">
-                          Focus heavily on dark mode aesthetics. Deep blacks, atmospheric blurs, and spectral accent colors.
-                        </p>
-                        <div className="sticky-footer-row">
-                          <span>Aesthetic</span>
-                          <span className="material-symbols-outlined sticky-footer-icon">palette</span>
+                      {/* Phase 02: Information Architecture */}
+                      <div className="process-step-card phase-2">
+                        <div className="phase-badge-pill text-[#c084fc]">Phase 02</div>
+                        <h3 className="step-title">Architecture &amp; User Flows</h3>
+                        <p className="step-desc">Synthesizing mental models, edge-case routing, checkout pipelines, and sitemaps.</p>
+                        <div className="step-deliverables-pill">
+                          <span className="material-symbols-outlined text-[13px]">schema</span>
+                          <span>Task Flows &amp; IA Trees</span>
+                        </div>
+
+                        {/* Pinned Critique Sticky Note 2 */}
+                        <div className="process-sticky-pinned sticky-cyan note-pos-2">
+                          <div className="sticky-tape-stamp" />
+                          <p>📌 <strong>Heuristic:</strong> 4-step booking flow slashed drop-offs by 30%.</p>
                         </div>
                       </div>
 
-                      {/* Purple Sticky */}
-                      <div className="figjam-color-sticky sticky-purple">
-                        <p className="sticky-body-text">
-                          Typography needs to be crisp. Use Monospace for technical details, Sans for body, Geist for headings.
-                        </p>
-                        <div className="sticky-footer-row">
-                          <span>Typography</span>
-                          <span className="material-symbols-outlined sticky-footer-icon">text_fields</span>
+                      {/* Phase 03: Wireframing */}
+                      <div className="process-step-card phase-3">
+                        <div className="phase-badge-pill text-[#38bdf8]">Phase 03</div>
+                        <h3 className="step-title">Wireframing &amp; Structure</h3>
+                        <p className="step-desc">Translating cognitive flows into layout scaffolds, visual hierarchy, and sub-pixel grid alignments.</p>
+                        <div className="step-deliverables-pill">
+                          <span className="material-symbols-outlined text-[13px]">grid_view</span>
+                          <span>8pt Grid Layouts &amp; Roughs</span>
+                        </div>
+
+                        {/* Pinned Critique Sticky Note 3 */}
+                        <div className="process-sticky-pinned sticky-pink note-pos-3">
+                          <div className="sticky-tape-stamp" />
+                          <p>⚡ <strong>Rule:</strong> Strict 8pt spatial rhythm across all viewports.</p>
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Connector 1 */}
-                  <div className="process-flow-connector">
-                    <svg viewBox="0 0 60 60" fill="none">
-                      <path d="M 5,30 C 25,30 35,30 55,30" stroke="#38bdf8" strokeWidth="2" strokeDasharray="5 5" />
-                      <circle cx="55" cy="30" r="4.5" fill="#38bdf8" />
-                    </svg>
-                  </div>
-
-                  {/* Phase 02: Architecture & Flows */}
-                  <div
-                    className={`process-phase-box figma-selectable-node ${selectedNodeId === 'process-p2' ? 'is-selected' : ''}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSelectNode('process-p2', 'Phase 02: Architecture', 'Frame');
-                    }}
-                    style={{
-                      borderRadius: nodeProps['process-p2']?.radius ? `${nodeProps['process-p2'].radius}px` : undefined,
-                      backgroundColor: nodeProps['process-p2']?.fill || undefined,
-                      borderColor: nodeProps['process-p2']?.stroke || undefined,
-                      opacity: nodeProps['process-p2']?.opacity !== undefined ? nodeProps['process-p2'].opacity / 100 : undefined
-                    }}
-                  >
-                    {selectedNodeId === 'process-p2' && (
-                      <div className="figma-selection-overlay">
-                        <div className="selection-tag">❖ Phase 02: Architecture [380×560]</div>
-                        <div className="selection-handle tl" /><div className="selection-handle tr" />
-                        <div className="selection-handle bl" /><div className="selection-handle br" />
-                      </div>
-                    )}
-                    <div className="phase-header-block mb-3">
-                      <h2 className="phase-title-large text-[#c084fc]">Phase 02: Architecture</h2>
-                      <p className="phase-desc-muted">
-                        Synthesizing user journeys, sitemaps, task flows, cognitive models, and edge-case routing.
-                      </p>
-                      <div className="phase-subheading-pin mt-2">
-                        <span className="material-symbols-outlined phase-pin-symbol" style={{ color: '#c084fc' }}>schema</span>
-                        <span>Information Architecture</span>
-                      </div>
-                    </div>
-
-                    <div className="figjam-flow-frame mt-3">
-                      <div className="flow-step-node">Launch App / Discovery</div>
-                      <div className="flow-stem-divider"></div>
-                      <div className="flow-step-node active-node">Dashboard Overview</div>
-                      <div className="flow-stem-divider"></div>
-                      <div className="flow-branch-row">
-                        <div className="flow-step-node">Add Transaction</div>
-                        <div className="flow-step-node">View Analytics</div>
-                      </div>
-                    </div>
-                    <div className="mt-4 p-3 bg-zinc-900/60 rounded-lg border border-zinc-800 text-[11.5px] text-zinc-300">
-                      <strong>Deliverables:</strong> User Journeys, Heuristic Maps, Sitemap Tree, Wireflow Blueprints.
-                    </div>
-                  </div>
-
-                  {/* Connector 2 */}
-                  <div className="process-flow-connector">
-                    <svg viewBox="0 0 60 60" fill="none">
-                      <path d="M 5,30 C 25,30 35,30 55,30" stroke="#38bdf8" strokeWidth="2" strokeDasharray="5 5" />
-                      <circle cx="55" cy="30" r="4.5" fill="#38bdf8" />
-                    </svg>
-                  </div>
-
-                  {/* Phase 03: Lo-Fi Wireframing */}
-                  <div
-                    className={`process-phase-box figma-selectable-node ${selectedNodeId === 'process-p3' ? 'is-selected' : ''}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSelectNode('process-p3', 'Phase 03: Wireframing', 'Frame');
-                    }}
-                    style={{
-                      borderRadius: nodeProps['process-p3']?.radius ? `${nodeProps['process-p3'].radius}px` : undefined,
-                      backgroundColor: nodeProps['process-p3']?.fill || undefined,
-                      borderColor: nodeProps['process-p3']?.stroke || undefined,
-                      opacity: nodeProps['process-p3']?.opacity !== undefined ? nodeProps['process-p3'].opacity / 100 : undefined
-                    }}
-                  >
-                    {selectedNodeId === 'process-p3' && (
-                      <div className="figma-selection-overlay">
-                        <div className="selection-tag">❖ Phase 03: Wireframing [380×560]</div>
-                        <div className="selection-handle tl" /><div className="selection-handle tr" />
-                        <div className="selection-handle bl" /><div className="selection-handle br" />
-                      </div>
-                    )}
-                    <div className="phase-header-block mb-3">
-                      <h2 className="phase-title-large text-[#34d399]">Phase 03: Wireframing</h2>
-                      <p className="phase-desc-muted">
-                        Rapid grey-box structural prototyping and layout rhythm validation without color distractions.
-                      </p>
-                      <div className="phase-subheading-pin mt-2">
-                        <span className="material-symbols-outlined phase-pin-symbol" style={{ color: '#34d399' }}>grid_view</span>
-                        <span>Layout Blueprints & Cadence</span>
-                      </div>
-                    </div>
-
-                    <div className="p-3 bg-zinc-900/80 rounded-lg border border-dashed border-[#38bdf8]/40 my-3">
-                      <div className="flex items-center justify-between text-[11px] font-mono text-cyan-400 mb-2">
-                        <span>8pt Spatial Grid</span>
-                        <span>Auto Layout 5.0</span>
-                      </div>
-                      <div className="space-y-2">
-                        <div className="h-4 bg-zinc-800 rounded w-3/4"></div>
-                        <div className="h-16 bg-zinc-800/60 rounded border border-zinc-700/50 flex items-center justify-center text-[11px] text-zinc-500">
-                          [ Wireframe Canvas Block ]
+                    {/* BOTTOM TIER: Design Systems, Hi-Fi Prototyping, Production Handoff */}
+                    <div className="process-tier-row bottom-tier">
+                      {/* Phase 04: Design Systems & Tokens */}
+                      <div className="process-step-card phase-4">
+                        <div className="phase-badge-pill text-[#fb923c]">Phase 04</div>
+                        <h3 className="step-title">Design System &amp; Tokens</h3>
+                        <p className="step-desc">Building atomic component matrices, dark/light token palettes, typography ramps, and state variants in Tokens Studio.</p>
+                        <div className="step-deliverables-pill">
+                          <span className="material-symbols-outlined text-[13px]">layers</span>
+                          <span>Tokens Studio &amp; Auto Layout 5.0</span>
                         </div>
-                        <div className="h-4 bg-zinc-800 rounded w-1/2"></div>
+
+                        {/* Pinned Critique Sticky Note 4 */}
+                        <div className="process-sticky-pinned sticky-orange note-pos-4">
+                          <div className="sticky-tape-stamp" />
+                          <p>🎨 <strong>System:</strong> Nested components with dark/light mode token sync.</p>
+                        </div>
                       </div>
-                    </div>
-                    <div className="p-3 bg-zinc-900/60 rounded-lg border border-zinc-800 text-[11.5px] text-zinc-300">
-                      <strong>Deliverables:</strong> Low-Fidelity Frames, Clickable Lo-Fi Flow, Spatial Heuristics.
-                    </div>
-                  </div>
 
-                  {/* Connector 3 */}
-                  <div className="process-flow-connector">
-                    <svg viewBox="0 0 60 60" fill="none">
-                      <path d="M 5,30 C 25,30 35,30 55,30" stroke="#38bdf8" strokeWidth="2" strokeDasharray="5 5" />
-                      <circle cx="55" cy="30" r="4.5" fill="#38bdf8" />
-                    </svg>
-                  </div>
+                      {/* Phase 05: Prototyping */}
+                      <div className="process-step-card phase-5">
+                        <div className="phase-badge-pill text-[#a855f7]">Phase 05</div>
+                        <h3 className="step-title">Hi-Fi Prototyping &amp; Springs</h3>
+                        <p className="step-desc">Injecting authentic haptic feedback, fluid spring physics, interactive micro-states, and animated transitions.</p>
+                        <div className="step-deliverables-pill">
+                          <span className="material-symbols-outlined text-[13px]">animation</span>
+                          <span>60fps Interactive Prototype</span>
+                        </div>
 
-                  {/* Phase 04: Design System & Tokens */}
-                  <div
-                    className={`process-phase-box figma-selectable-node ${selectedNodeId === 'process-p4' ? 'is-selected' : ''}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSelectNode('process-p4', 'Phase 04: Design System', 'Frame');
-                    }}
-                    style={{
-                      borderRadius: nodeProps['process-p4']?.radius ? `${nodeProps['process-p4'].radius}px` : undefined,
-                      backgroundColor: nodeProps['process-p4']?.fill || undefined,
-                      borderColor: nodeProps['process-p4']?.stroke || undefined,
-                      opacity: nodeProps['process-p4']?.opacity !== undefined ? nodeProps['process-p4'].opacity / 100 : undefined
-                    }}
-                  >
-                    {selectedNodeId === 'process-p4' && (
-                      <div className="figma-selection-overlay">
-                        <div className="selection-tag">❖ Phase 04: Design System [380×560]</div>
-                        <div className="selection-handle tl" /><div className="selection-handle tr" />
-                        <div className="selection-handle bl" /><div className="selection-handle br" />
+                        {/* Pinned Critique Sticky Note 5 */}
+                        <div className="process-sticky-pinned sticky-purple note-pos-5">
+                          <div className="sticky-tape-stamp" />
+                          <p>🎯 <strong>Testing:</strong> 200+ hackathon participants tested flow live.</p>
+                        </div>
                       </div>
-                    )}
-                    <div className="phase-header-block mb-3">
-                      <h2 className="phase-title-large text-[#f59e0b]">Phase 04: Design System</h2>
-                      <p className="phase-desc-muted">
-                        Scalable design token pipelines: semantic colors, fluid typography scales, and atomic components.
-                      </p>
-                      <div className="phase-subheading-pin mt-2">
-                        <span className="material-symbols-outlined phase-pin-symbol" style={{ color: '#f59e0b' }}>token</span>
-                        <span>Tokens Studio & Hierarchy</span>
+
+                      {/* Phase 06: Production Handoff */}
+                      <div className="process-step-card phase-6">
+                        <div className="phase-badge-pill text-[#10b981]">Phase 06</div>
+                        <h3 className="step-title">Dev Handoff &amp; Telemetry</h3>
+                        <p className="step-desc">Figma Inspect mode redlines, React/Tailwind component parity, zero layout shift, and live accessibility verification.</p>
+                        <div className="step-deliverables-pill">
+                          <span className="material-symbols-outlined text-[13px]">verified</span>
+                          <span>React/Tailwind &amp; WCAG AA Pass</span>
+                        </div>
+
+                        {/* Pinned Critique Sticky Note 6 */}
+                        <div className="process-sticky-pinned sticky-green note-pos-6">
+                          <div className="sticky-tape-stamp" />
+                          <p>🚀 <strong>Status:</strong> Zero layout shift &amp; 100% component parity.</p>
+                        </div>
                       </div>
-                    </div>
-
-                    <div className="figjam-tokens-row my-3">
-                      <span className="figjam-token-pill" style={{ borderColor: '#38bdf8', color: '#38bdf8' }}>#38bdf8</span>
-                      <span className="figjam-token-pill" style={{ borderColor: '#818cf8', color: '#818cf8' }}>#818cf8</span>
-                      <span className="figjam-token-pill" style={{ borderColor: '#34d399', color: '#34d399' }}>#34d399</span>
-                      <span className="figjam-token-pill" style={{ borderColor: '#f59e0b', color: '#f59e0b' }}>#f59e0b</span>
-                    </div>
-                    <div className="p-3 bg-zinc-900/60 rounded-lg border border-zinc-800 text-[11.5px] text-zinc-300">
-                      <strong>Deliverables:</strong> 50+ Nested Component Variants, Tokens Studio JSON, WCAG AA/AAA Ratio Rules.
-                    </div>
-                  </div>
-
-                  {/* Connector 4 */}
-                  <div className="process-flow-connector">
-                    <svg viewBox="0 0 60 60" fill="none">
-                      <path d="M 5,30 C 25,30 35,30 55,30" stroke="#38bdf8" strokeWidth="2" strokeDasharray="5 5" />
-                      <circle cx="55" cy="30" r="4.5" fill="#38bdf8" />
-                    </svg>
-                  </div>
-
-                  {/* Phase 05: Hi-Fi Prototyping */}
-                  <div
-                    className={`process-phase-box figma-selectable-node ${selectedNodeId === 'process-p5' ? 'is-selected' : ''}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSelectNode('process-p5', 'Phase 05: Hi-Fi Prototyping', 'Frame');
-                    }}
-                    style={{
-                      borderRadius: nodeProps['process-p5']?.radius ? `${nodeProps['process-p5'].radius}px` : undefined,
-                      backgroundColor: nodeProps['process-p5']?.fill || undefined,
-                      borderColor: nodeProps['process-p5']?.stroke || undefined,
-                      opacity: nodeProps['process-p5']?.opacity !== undefined ? nodeProps['process-p5'].opacity / 100 : undefined
-                    }}
-                  >
-                    {selectedNodeId === 'process-p5' && (
-                      <div className="figma-selection-overlay">
-                        <div className="selection-tag">❖ Phase 05: Hi-Fi Prototyping [380×560]</div>
-                        <div className="selection-handle tl" /><div className="selection-handle tr" />
-                        <div className="selection-handle bl" /><div className="selection-handle br" />
-                      </div>
-                    )}
-                    <div className="phase-header-block mb-3">
-                      <h2 className="phase-title-large text-[#38bdf8]">Phase 05: Hi-Fi Prototyping</h2>
-                      <p className="phase-desc-muted">
-                        Visual craftsmanship, dark mode atmospheric blurs, haptic spring physics, and smart-animate easing.
-                      </p>
-                      <div className="phase-subheading-pin mt-2">
-                        <span className="material-symbols-outlined phase-pin-symbol" style={{ color: '#38bdf8' }}>play_circle</span>
-                        <span>Interactive Prototype Flow</span>
-                      </div>
-                    </div>
-
-                    <div className="p-3 bg-zinc-900/80 rounded-lg border border-zinc-800 my-3">
-                      <div className="text-[11px] text-zinc-400 font-mono mb-2">Smart Animate Easing Curve</div>
-                      <div className="h-10 bg-zinc-950 rounded flex items-center justify-between px-3 text-[11px] text-cyan-400 font-mono">
-                        <span>cubic-bezier(0.16, 1, 0.3, 1)</span>
-                        <span>300ms</span>
-                      </div>
-                    </div>
-                    <div className="p-3 bg-zinc-900/60 rounded-lg border border-zinc-800 text-[11.5px] text-zinc-300">
-                      <strong>Deliverables:</strong> Hi-Fi Interactive Prototypes, Micro-Interaction Specs, Video Walkthroughs.
-                    </div>
-                  </div>
-
-                  {/* Connector 5 */}
-                  <div className="process-flow-connector">
-                    <svg viewBox="0 0 60 60" fill="none">
-                      <path d="M 5,30 C 25,30 35,30 55,30" stroke="#38bdf8" strokeWidth="2" strokeDasharray="5 5" />
-                      <circle cx="55" cy="30" r="4.5" fill="#38bdf8" />
-                    </svg>
-                  </div>
-
-                  {/* Phase 06: Usability & Dev Handoff */}
-                  <div
-                    className={`process-phase-box figma-selectable-node ${selectedNodeId === 'process-p6' ? 'is-selected' : ''}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSelectNode('process-p6', 'Phase 06: Dev Handoff', 'Frame');
-                    }}
-                    style={{
-                      borderRadius: nodeProps['process-p6']?.radius ? `${nodeProps['process-p6'].radius}px` : undefined,
-                      backgroundColor: nodeProps['process-p6']?.fill || undefined,
-                      borderColor: nodeProps['process-p6']?.stroke || undefined,
-                      opacity: nodeProps['process-p6']?.opacity !== undefined ? nodeProps['process-p6'].opacity / 100 : undefined
-                    }}
-                  >
-                    {selectedNodeId === 'process-p6' && (
-                      <div className="figma-selection-overlay">
-                        <div className="selection-tag">❖ Phase 06: Dev Handoff [380×560]</div>
-                        <div className="selection-handle tl" /><div className="selection-handle tr" />
-                        <div className="selection-handle bl" /><div className="selection-handle br" />
-                      </div>
-                    )}
-                    <div className="phase-header-block mb-3">
-                      <h2 className="phase-title-large text-[#10b981]">Phase 06: Dev Handoff</h2>
-                      <p className="phase-desc-muted">
-                        Figma Inspect redlines, tokenized CSS variables, React component parity, and rigorous usability testing.
-                      </p>
-                      <div className="phase-subheading-pin mt-2">
-                        <span className="material-symbols-outlined phase-pin-symbol" style={{ color: '#10b981' }}>code</span>
-                        <span>React / Tailwind Production Parity</span>
-                      </div>
-                    </div>
-
-                    <div className="p-3 bg-zinc-950 rounded-lg border border-zinc-800 font-mono text-[11px] text-emerald-400 my-3">
-                      <code>export const Button = ({`{ variant, size }`}) =&gt; ...</code>
-                    </div>
-                    <div className="p-3 bg-zinc-900/60 rounded-lg border border-zinc-800 text-[11.5px] text-zinc-300">
-                      <strong>Deliverables:</strong> Inspect Mode Redlines, React/Tailwind Code Parity, Usability Report (30% less drop-off).
                     </div>
                   </div>
                 </div>
@@ -3338,40 +3378,226 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 transformOrigin: '0 0'
               }}
             >
-              <div className="view-content-wrapper" style={{ padding: '20px 30px 140px', minWidth: '1200px' }}>
-                <div className="plugins-page-wrapper">
-                  {/* Creative Hero Banner */}
-                  <div className="plugins-hero-banner">
-                    <div className="plugins-hero-text">
-                      <h2>
-                        <span className="material-symbols-outlined text-[24px] text-[#0d99ff]">extension</span>
-                        Figma Community & Creative Extensions
-                      </h2>
-                      <p>
-                        Supercharge your product design workflows — from generative AI copy and vector generation to automated WCAG AA accessibility compliance audits.
-                      </p>
+              <div className="view-content-wrapper" style={{ padding: '36px 40px 140px' }}>
+                {/* Framed Artboard Box for Plugins */}
+                <div
+                  className={`figma-artboard-box plugins-artboard-box figma-selectable-node ${selectedNodeId === 'plugins-artboard' ? 'is-selected' : ''}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSelectNode('plugins-artboard', 'Figma Community Plugins Frame', 'Frame');
+                  }}
+                >
+                  <div className="figma-artboard-header-tag">
+                    <span className="artboard-hash">#</span>
+                    <span className="artboard-name">Figma Community &amp; Creative Extensions Lab</span>
+                    <span className="artboard-dims">[1300 × 980]</span>
+                  </div>
+
+                  {selectedNodeId === 'plugins-artboard' && (
+                    <div className="figma-selection-overlay">
+                      <div className="selection-tag">❖ Figma_Community_Plugins_Lab [1300×980]</div>
+                      <div className="selection-handle tl" /><div className="selection-handle tr" />
+                      <div className="selection-handle bl" /><div className="selection-handle br" />
+                    </div>
+                  )}
+
+                  <header className="view-page-header">
+                    <div className="about-header-flex">
+                      <div>
+                        <h1 className="view-page-title">Figma Community &amp; Creative Extensions</h1>
+                        <p className="view-page-desc">Interactive testing bench and power-user toolkit for Tokens Studio, Stark, Magician AI, and AutoFlow.</p>
+                      </div>
+                    </div>
+                  </header>
+
+                  {/* CENTERPIECE: Interactive Creative Plugin Studio & Testing Lab */}
+                  <div className="plugins-center-lab-container">
+                    <div className="plugin-lab-header">
+                      <div className="lab-title-group">
+                        <span className="material-symbols-outlined text-sky-400 text-[20px]">science</span>
+                        <h3 className="lab-title">Figma Plugin Testing Bench (Live Interactive Simulator)</h3>
+                      </div>
+                      <div className="lab-tabs-row">
+                        <button
+                          type="button"
+                          className={`lab-tab-pill ${(!activeSimulatorPlugin || activeSimulatorPlugin.id === 'tokens') ? 'active' : ''}`}
+                          onClick={() => setActiveSimulatorPlugin({ id: 'tokens', name: 'Tokens Studio for Figma' })}
+                        >
+                          <span className="material-symbols-outlined text-[14px]">palette</span>
+                          <span>Tokens Studio</span>
+                        </button>
+                        <button
+                          type="button"
+                          className={`lab-tab-pill ${activeSimulatorPlugin?.id === 'magician' ? 'active' : ''}`}
+                          onClick={() => setActiveSimulatorPlugin({ id: 'magician', name: 'Magician AI' })}
+                        >
+                          <span className="material-symbols-outlined text-[14px]">auto_fix_high</span>
+                          <span>Magician AI</span>
+                        </button>
+                        <button
+                          type="button"
+                          className={`lab-tab-pill ${activeSimulatorPlugin?.id === 'stark' ? 'active' : ''}`}
+                          onClick={() => setActiveSimulatorPlugin({ id: 'stark', name: 'Stark Accessibility' })}
+                        >
+                          <span className="material-symbols-outlined text-[14px]">visibility</span>
+                          <span>Stark WCAG</span>
+                        </button>
+                        <button
+                          type="button"
+                          className={`lab-tab-pill ${activeSimulatorPlugin?.id === 'autoflow' ? 'active' : ''}`}
+                          onClick={() => setActiveSimulatorPlugin({ id: 'autoflow', name: 'AutoFlow Diagrams' })}
+                        >
+                          <span className="material-symbols-outlined text-[14px]">schema</span>
+                          <span>AutoFlow</span>
+                        </button>
+                      </div>
                     </div>
 
-                    <div className="flex items-center gap-3">
-                      <a
-                        href={COMMUNITY_PLUGINS[0].link}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="cta-btn primary"
-                        onClick={() => {
-                          window.open(COMMUNITY_PLUGINS[0].link, '_blank');
-                        }}
-                      >
-                        <span className="material-symbols-outlined text-[16px]">open_in_new</span>
-                        <span>Open Magician in Figma</span>
-                      </a>
+                    {/* Live Plugin Canvas Workbench */}
+                    <div className="plugin-lab-workbench">
+                      {/* 1. Tokens Studio Interactive Test Drive */}
+                      {(!activeSimulatorPlugin || activeSimulatorPlugin.id === 'tokens') && (
+                        <div className="lab-demo-pane tokens-demo">
+                          <div className="demo-controls-sidebar">
+                            <h4 className="demo-sidebar-heading">Active Design Tokens</h4>
+                            <div className="token-control-group">
+                              <label>Primary Brand Hue</label>
+                              <div className="token-swatches-row">
+                                {['#0d99ff', '#10b981', '#a855f7', '#f97316'].map(color => (
+                                  <button
+                                    key={color}
+                                    type="button"
+                                    className={`swatch-btn ${fillColor === color ? 'selected' : ''}`}
+                                    style={{ background: color }}
+                                    onClick={() => setFillColor(color)}
+                                  />
+                                ))}
+                              </div>
+                            </div>
+
+                            <div className="token-control-group">
+                              <label>Corner Radius Scale</label>
+                              <div className="token-pill-buttons">
+                                {[4, 8, 16, 999].map(rad => (
+                                  <button
+                                    key={rad}
+                                    type="button"
+                                    className={`rad-btn ${frameRadius === rad ? 'selected' : ''}`}
+                                    onClick={() => setFrameRadius(rad)}
+                                  >
+                                    {rad === 999 ? 'Pill' : `${rad}px`}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="demo-preview-stage">
+                            <div
+                              className="token-live-preview-card"
+                              style={{
+                                borderColor: fillColor,
+                                borderRadius: `${frameRadius}px`,
+                                boxShadow: `0 8px 32px ${fillColor}25`
+                              }}
+                            >
+                              <div className="preview-badge" style={{ background: `${fillColor}20`, color: fillColor }}>
+                                ❖ Auto-Synced Token
+                              </div>
+                              <h3 className="preview-card-title">Tokenized Component Matrix</h3>
+                              <p className="preview-card-text">
+                                When design tokens change in Tokens Studio, all nested Figma components and Tailwind classes update instantly with zero layout drift.
+                              </p>
+                              <button
+                                type="button"
+                                className="preview-action-btn"
+                                style={{
+                                  background: fillColor,
+                                  borderRadius: `${frameRadius}px`
+                                }}
+                              >
+                                Test-Drive Component
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* 2. Magician AI Vector & Copy Lab */}
+                      {activeSimulatorPlugin?.id === 'magician' && (
+                        <div className="lab-demo-pane magician-demo">
+                          <div className="magician-prompt-row">
+                            <input
+                              type="text"
+                              defaultValue="High-conversion event booking badge"
+                              className="magician-input-field"
+                            />
+                            <button
+                              type="button"
+                              className="magician-cast-btn"
+                              onClick={() => showToast('✨ Magic Cast! Vector badge generated.')}
+                            >
+                              <span className="material-symbols-outlined text-[15px]">auto_awesome</span>
+                              <span>Cast Magic</span>
+                            </button>
+                          </div>
+                          <div className="magician-results-stage">
+                            <div className="ai-result-badge">
+                              <span className="material-symbols-outlined text-purple-400 text-[24px]">verified</span>
+                              <div>
+                                <h4 className="font-bold text-white text-sm">EventFlow Instant Access Pass</h4>
+                                <p className="text-xs text-zinc-400">Zero drop-off guaranteed • Powered by Magician AI</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* 3. Stark Accessibility Contrast Checker */}
+                      {activeSimulatorPlugin?.id === 'stark' && (
+                        <div className="lab-demo-pane stark-demo">
+                          <div className="stark-telemetry-grid">
+                            <div className="stark-metric-box">
+                              <span className="stark-score-val text-emerald-400">16.4 : 1</span>
+                              <span className="stark-score-lbl">Contrast Ratio (AAA Pass)</span>
+                            </div>
+                            <div className="stark-checks-list">
+                              <div className="check-row">
+                                <span className="text-emerald-400">✓</span>
+                                <span>Normal Text (WCAG AAA)</span>
+                              </div>
+                              <div className="check-row">
+                                <span className="text-emerald-400">✓</span>
+                                <span>Large Text &amp; Icons (WCAG AAA)</span>
+                              </div>
+                              <div className="check-row">
+                                <span className="text-emerald-400">✓</span>
+                                <span>UI Components &amp; Graphical Objects (3.0:1 Pass)</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* 4. AutoFlow Diagram Connector */}
+                      {activeSimulatorPlugin?.id === 'autoflow' && (
+                        <div className="lab-demo-pane autoflow-demo">
+                          <div className="autoflow-stage-preview">
+                            <div className="flow-node node-a">Screen A: Event List</div>
+                            <div className="flow-arrow-beam">
+                              <span>➔ 4-Step Checkout ➔</span>
+                            </div>
+                            <div className="flow-node node-b">Screen B: QR Pass</div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
 
                   {/* Filter Toolbar & Search */}
-                  <div className="plugins-filter-toolbar">
+                  <div className="plugins-filter-toolbar mt-8">
                     <div className="activity-filter-pills">
-                      {['All', 'AI & Automation', 'Diagramming', 'Accessibility', 'Content', 'Assets & Icons', 'Media', 'Productivity', 'Automation'].map(cat => (
+                      {['All', 'AI & Automation', 'Diagramming', 'Accessibility', 'Content'].map(cat => (
                         <button
                           key={cat}
                           type="button"
@@ -3394,7 +3620,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     </div>
                   </div>
 
-                  {/* Creative Plugins Grid */}
+                  {/* Curated Community Plugins Grid */}
                   <div className="plugins-creative-grid">
                     {filteredPlugins.map(plugin => {
                       const pluginNodeId = `plugin-${plugin.id}`;
@@ -3453,6 +3679,17 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                             </div>
 
                             <div className="plugin-card-actions">
+                              <button
+                                type="button"
+                                className="plugin-test-btn"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setActiveSimulatorPlugin(plugin);
+                                  showToast(`Testing ${plugin.name} in Lab!`);
+                                }}
+                              >
+                                Test Drive Live
+                              </button>
                               <a
                                 href={plugin.link}
                                 target="_blank"
