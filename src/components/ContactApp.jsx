@@ -14,7 +14,9 @@ import {
   MessageSquare,
   Clock,
   Layers,
-  ArrowUpRight
+  ArrowUpRight,
+  Coffee,
+  QrCode
 } from 'lucide-react';
 import './ContactApp.css';
 
@@ -142,6 +144,34 @@ const ContactApp = () => {
           <p className="badge-desc">
             Open for product design roles, scalable design systems, and freelance SaaS design.
           </p>
+        </div>
+
+        {/* Buy Me a Coffee / UPI Donation Card */}
+        <div 
+          className="contact-coffee-card"
+          onClick={() => window.dispatchEvent(new CustomEvent('varunos-open-coffee-modal'))}
+          title="Click to view UPI QR code & donation options"
+        >
+          <div className="coffee-card-left">
+            <div className="coffee-card-badge">
+              <Coffee size={15} className="text-amber-400" />
+            </div>
+            <div>
+              <div className="coffee-card-title">Buy Varun a Coffee ☕</div>
+              <div className="coffee-card-sub">Scan UPI QR • varun.sehgal02@okicici</div>
+            </div>
+          </div>
+          <button 
+            type="button" 
+            className="coffee-card-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              window.dispatchEvent(new CustomEvent('varunos-open-coffee-modal'));
+            }}
+          >
+            <QrCode size={12} />
+            <span>Show QR</span>
+          </button>
         </div>
 
         {/* Fast Action Details */}

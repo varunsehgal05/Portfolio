@@ -17,7 +17,8 @@ import {
   Eye,
   Info,
   Sun,
-  Moon
+  Moon,
+  Coffee
 } from 'lucide-react';
 import './MenuBar.css';
 
@@ -144,6 +145,18 @@ const MenuBar = ({ userName = 'Guest', onReplaySwarm }) => {
                 <Sparkles size={14} className="dropdown-icon sparkle-icon" />
                 <span>Replay Swarm Rebuild</span>
                 <span className="dropdown-shortcut">⌘R</span>
+              </button>
+              <div className="apple-dropdown-divider" />
+              <button 
+                className="apple-dropdown-item coffee-action-item" 
+                onClick={() => {
+                  setActiveMenu(null);
+                  window.dispatchEvent(new CustomEvent('varunos-open-coffee-modal'));
+                }}
+              >
+                <Coffee size={14} className="dropdown-icon coffee-gold" />
+                <span>☕ Buy Varun a Coffee / Donate...</span>
+                <span className="dropdown-shortcut">UPI QR</span>
               </button>
               <div className="apple-dropdown-divider" />
               <button className="apple-dropdown-item" onClick={() => window.open('https://github.com/varunsehgal05/Portfolio', '_blank')}>
@@ -305,6 +318,16 @@ const MenuBar = ({ userName = 'Guest', onReplaySwarm }) => {
         >
           <Sparkles size={11} />
           <span>{isSwarmFollow ? "Swarm Follow: ON" : "Swarm Follow"}</span>
+        </button>
+
+        {/* Buy Me a Coffee / Sponsor Pill */}
+        <button 
+          className="menu-coffee-btn" 
+          onClick={() => window.dispatchEvent(new CustomEvent('varunos-open-coffee-modal'))}
+          title="Buy Varun a Coffee / Support via UPI QR"
+        >
+          <Coffee size={12} className="coffee-pill-icon" />
+          <span>Buy Me a Coffee</span>
         </button>
 
         {/* Quick Light/Dark Mode Switcher */}

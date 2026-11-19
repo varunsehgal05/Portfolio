@@ -740,6 +740,24 @@
   color: #4ade80;
 }
 
+.about-btn.coffee {
+  background: rgba(245, 158, 11, 0.14);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+.about-btn.coffee:hover {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #ffffff;
+  border-color: #f59e0b;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+  transform: translateY(-1px);
+}
+
+.about-btn.coffee:hover .text-amber-400 {
+  color: #ffffff;
+}
+
 .about-btn.icon-only {
   padding: 6px 9px;
   background: rgba(255, 255, 255, 0.06);

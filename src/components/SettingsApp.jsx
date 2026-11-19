@@ -21,7 +21,8 @@ import {
   Layers,
   Award,
   Flame,
-  ArrowRight
+  ArrowRight,
+  Coffee
 } from 'lucide-react';
 import { desktopWallpapers, terminalWallpapers } from '../config/wallpapers';
 import './SettingsApp.css';
@@ -273,6 +274,16 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
                   >
                     {copiedEmail ? <Check size={13} color="#4ade80" /> : <Copy size={13} />}
                     <span>{copiedEmail ? 'Email Copied!' : 'Copy Email'}</span>
+                  </button>
+
+                  <button 
+                    type="button"
+                    className="about-btn coffee"
+                    onClick={() => window.dispatchEvent(new CustomEvent('varunos-open-coffee-modal'))}
+                    title="Buy Varun a Coffee / Donate via UPI"
+                  >
+                    <Coffee size={13} className="text-amber-400" />
+                    <span>Buy Me a Coffee</span>
                   </button>
 
                   <a 

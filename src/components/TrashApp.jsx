@@ -15,7 +15,8 @@ import {
   X, 
   Sparkles,
   Check,
-  FolderOpen
+  FolderOpen,
+  Coffee
 } from 'lucide-react';
 import './TrashApp.css';
 
@@ -348,6 +349,16 @@ const TrashApp = () => {
 
         {/* Action Buttons */}
         <div className="trash-toolbar-right">
+          <button
+            type="button"
+            className="trash-action-btn coffee-btn"
+            onClick={() => window.dispatchEvent(new CustomEvent('varunos-open-coffee-modal'))}
+            title="Buy Varun a Coffee / Donate via UPI"
+          >
+            <Coffee size={13} className="coffee-icon-gold" />
+            <span>Buy Me a Coffee</span>
+          </button>
+
           {items.length > 0 ? (
             <button
               type="button"
@@ -461,14 +472,24 @@ const TrashApp = () => {
             <p className="empty-sub">
               Zero clutter, zero tech debt. Varun writes 100% modular, performant code.
             </p>
-            <button
-              type="button"
-              className="trash-restore-empty-btn"
-              onClick={handleRestoreAll}
-            >
-              <RotateCcw size={13} />
-              <span>Spawn Hilarious Developer Artifacts</span>
-            </button>
+            <div className="trash-empty-buttons-row">
+              <button
+                type="button"
+                className="trash-restore-empty-btn"
+                onClick={handleRestoreAll}
+              >
+                <RotateCcw size={13} />
+                <span>Spawn Hilarious Developer Artifacts</span>
+              </button>
+              <button
+                type="button"
+                className="trash-coffee-empty-btn"
+                onClick={() => window.dispatchEvent(new CustomEvent('varunos-open-coffee-modal'))}
+              >
+                <Coffee size={13} />
+                <span>Fuel Varun with Coffee ☕</span>
+              </button>
+            </div>
           </div>
         )}
       </main>

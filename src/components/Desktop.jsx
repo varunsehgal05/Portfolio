@@ -7,6 +7,7 @@ import PixelAssistant from './PixelAssistant';
 import { portfolioApps, desktopIconIds } from '../config/apps';
 import { desktopWallpapers } from '../config/wallpapers';
 import LiveMouseSwarm from './LiveMouseSwarm';
+import BuyMeCoffeeModal from './BuyMeCoffeeModal';
 import './Desktop.css';
 
 const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) => {
@@ -62,6 +63,20 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
       return true;
     }
   });
+
+  // Global Buy Me a Coffee Modal State
+  const [isCoffeeModalOpen, setIsCoffeeModalOpen] = useState(false);
+
+  useEffect(() => {
+    const handleOpenCoffee = () => setIsCoffeeModalOpen(true);
+    const handleCloseCoffee = () => setIsCoffeeModalOpen(false);
+    window.addEventListener('varunos-open-coffee-modal', handleOpenCoffee);
+    window.addEventListener('varunos-close-coffee-modal', handleCloseCoffee);
+    return () => {
+      window.removeEventListener('varunos-open-coffee-modal', handleOpenCoffee);
+      window.removeEventListener('varunos-close-coffee-modal', handleCloseCoffee);
+    };
+  }, []);
 
   useEffect(() => {
     const handleSwarmFollowToggle = (e) => {
@@ -283,6 +298,12 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
           />
         </div>
       </div>
+
+      {/* Global Buy Me a Coffee / UPI Donation Modal */}
+      <BuyMeCoffeeModal 
+        isOpen={isCoffeeModalOpen} 
+        onClose={() => setIsCoffeeModalOpen(false)} 
+      />
     </div>
   );
 };
