@@ -10,6 +10,7 @@ import SafariApp from './SafariApp';
 import TerminalApp from './TerminalApp';
 import SettingsApp from './SettingsApp';
 import VsCodeApp from './VsCodeApp';
+import TrashApp from './TrashApp';
 
 const Window = ({
   app,
@@ -51,7 +52,7 @@ const Window = ({
     const availableHeight = Math.max(300, window.innerHeight - MENUBAR_HEIGHT - DOCK_CLEARANCE);
     const availableWidth = Math.max(400, window.innerWidth);
 
-    if (app.id === 'trash') return { width: 440, height: 320 };
+    if (app.id === 'trash') return { width: Math.min(availableWidth - 80, 780), height: Math.min(availableHeight - 40, 500) };
     if (app.id === 'terminal') return { width: Math.min(availableWidth - 80, 720), height: Math.min(availableHeight - 40, 460) };
     if (app.id === 'settings') return { width: Math.min(availableWidth - 80, 680), height: Math.min(availableHeight - 30, 500) };
     if (app.id === 'safari') return { width: Math.min(availableWidth - 80, 960), height: Math.min(availableHeight - 20, 580) };
@@ -220,11 +221,7 @@ const Window = ({
       case 'contact':
         return <ContactApp />;
       case 'trash':
-        return (
-          <div className="window-content-inner trash-content">
-            <p>Trash is empty.</p>
-          </div>
-        );
+        return <TrashApp />;
       default:
         return <div className="window-content-inner"><p>Loading...</p></div>;
     }
@@ -313,7 +310,7 @@ const Window = ({
           <div className="titlebar-right-spacer" />
         </div>
 
-        <div className={`window-content ${app.id === 'resume' || app.id === 'contact' || app.id === 'figma' || app.id === 'finder' || app.id === 'safari' || app.id === 'settings' || app.id === 'vscode' || app.id === 'terminal' ? 'no-padding' : ''}`}>
+        <div className={`window-content ${app.id === 'resume' || app.id === 'contact' || app.id === 'figma' || app.id === 'finder' || app.id === 'safari' || app.id === 'settings' || app.id === 'vscode' || app.id === 'terminal' || app.id === 'trash' ? 'no-padding' : ''}`}>
           {renderContent()}
         </div>
       </div>
