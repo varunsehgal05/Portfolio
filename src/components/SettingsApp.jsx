@@ -1,69 +1,65 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Image, 
   Sparkles, 
   Info, 
-  Volume2, 
-  VolumeX, 
-  Monitor, 
+  Terminal,
   Check, 
   RotateCcw,
-  Layers,
-  Cpu
+  Monitor
 } from 'lucide-react';
+import { desktopWallpapers, terminalWallpapers } from '../config/wallpapers';
 import './SettingsApp.css';
-
-const WALLPAPERS = [
-  {
-    id: 'default',
-    name: 'Sequoia Midnight',
-    style: {
-      backgroundColor: '#0c0c10',
-      backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px), radial-gradient(circle at 50% 45%, #181820 0%, #0e0e14 60%, #07070a 100%)',
-      backgroundSize: '24px 24px, 100% 100%'
-    }
-  },
-  {
-    id: 'cosmic',
-    name: 'Deep Cosmic Purple',
-    style: {
-      backgroundColor: '#0a0614',
-      backgroundImage: 'radial-gradient(rgba(168, 85, 247, 0.12) 1px, transparent 1px), radial-gradient(circle at 60% 40%, #2e1065 0%, #17082e 60%, #080312 100%)',
-      backgroundSize: '28px 28px, 100% 100%'
-    }
-  },
-  {
-    id: 'aurora',
-    name: 'Cyan Aurora Glow',
-    style: {
-      backgroundColor: '#03131e',
-      backgroundImage: 'radial-gradient(rgba(56, 189, 248, 0.12) 1px, transparent 1px), radial-gradient(circle at 40% 60%, #0c4a6e 0%, #082f49 60%, #02111c 100%)',
-      backgroundSize: '24px 24px, 100% 100%'
-    }
-  },
-  {
-    id: 'minimal',
-    name: 'Minimal Slate',
-    style: {
-      backgroundColor: '#0f172a',
-      backgroundImage: 'radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%)',
-      backgroundSize: '100% 100%'
-    }
-  }
-];
 
 const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
   const [activeTab, setActiveTab] = useState('wallpaper');
-  const [activeWallpaper, setActiveWallpaper] = useState('default');
+  const [wallpaperSection, setWallpaperSection] = useState('desktop'); // 'desktop' | 'terminal'
+
+  const [activeWallpaper, setActiveWallpaper] = useState(() => {
+    try {
+      return localStorage.getItem('varunos_desktop_wallpaper') || 'roxy-calendar';
+    } catch {
+      return 'roxy-calendar';
+    }
+  });
+
+  const [activeTerminalWallpaper, setActiveTerminalWallpaper] = useState(() => {
+    try {
+      return localStorage.getItem('varunos_terminal_wallpaper') || 'roxy-calendar';
+    } catch {
+      return 'roxy-calendar';
+    }
+  });
+
+  useEffect(() => {
+    const handleDesktopSync = (e) => {
+      if (e.detail?.id) setActiveWallpaper(e.detail.id);
+    };
+    const handleTerminalSync = (e) => {
+      if (e.detail?.id) setActiveTerminalWallpaper(e.detail.id);
+    };
+    window.addEventListener('varunos-set-desktop-wallpaper', handleDesktopSync);
+    window.addEventListener('varunos-set-terminal-wallpaper', handleTerminalSync);
+    return () => {
+      window.removeEventListener('varunos-set-desktop-wallpaper', handleDesktopSync);
+      window.removeEventListener('varunos-set-terminal-wallpaper', handleTerminalSync);
+    };
+  }, []);
 
   const applyWallpaper = (wp) => {
     setActiveWallpaper(wp.id);
-    const desktopEl = document.querySelector('.desktop');
-    if (desktopEl) {
-      desktopEl.style.backgroundColor = wp.style.backgroundColor;
-      desktopEl.style.backgroundImage = wp.style.backgroundImage;
-      desktopEl.style.backgroundSize = wp.style.backgroundSize;
-    }
+    try {
+      localStorage.setItem('varunos_desktop_wallpaper', wp.id);
+    } catch {}
+    window.dispatchEvent(new CustomEvent('varunos-set-desktop-wallpaper', { detail: { id: wp.id } }));
+  };
+
+  const applyTerminalWallpaper = (wp) => {
+    setActiveTerminalWallpaper(wp.id);
+    try {
+      localStorage.setItem('varunos_terminal_wallpaper', wp.id);
+    } catch {}
+    window.dispatchEvent(new CustomEvent('varunos-set-terminal-wallpaper', { detail: { id: wp.id } }));
   };
 
   return (
@@ -84,7 +80,7 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
             onClick={() => setActiveTab('wallpaper')}
           >
             <Image size={15} />
-            <span>Wallpaper</span>
+            <span>Wallpapers</span>
           </button>
 
           <button 
@@ -109,27 +105,90 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
       <main className="settings-main">
         {activeTab === 'wallpaper' && (
           <div className="settings-panel">
-            <h2 className="settings-panel-title">Desktop Wallpaper</h2>
-            <p className="settings-panel-desc">Choose a visual theme for the desktop workspace.</p>
+            <div className="settings-panel-header">
+              <div>
+                <h2 className="settings-panel-title">System Wallpapers</h2>
+                <p className="settings-panel-desc">Customize desktop backgrounds and terminal backdrops.</p>
+              </div>
 
-            <div className="wallpaper-grid">
-              {WALLPAPERS.map((wp) => (
-                <div 
-                  key={wp.id} 
-                  className={`wallpaper-card ${activeWallpaper === wp.id ? 'active' : ''}`}
-                  onClick={() => applyWallpaper(wp)}
+              {/* Subtab Switcher */}
+              <div className="wallpaper-subtab-group">
+                <button
+                  type="button"
+                  className={`wallpaper-subtab-btn ${wallpaperSection === 'desktop' ? 'active' : ''}`}
+                  onClick={() => setWallpaperSection('desktop')}
                 >
-                  <div className="wallpaper-preview" style={wp.style}>
-                    {activeWallpaper === wp.id && (
-                      <div className="wallpaper-check">
-                        <Check size={14} color="#ffffff" />
-                      </div>
-                    )}
-                  </div>
-                  <span className="wallpaper-name">{wp.name}</span>
-                </div>
-              ))}
+                  <Monitor size={13} />
+                  <span>Desktop ({desktopWallpapers.length})</span>
+                </button>
+                <button
+                  type="button"
+                  className={`wallpaper-subtab-btn ${wallpaperSection === 'terminal' ? 'active' : ''}`}
+                  onClick={() => setWallpaperSection('terminal')}
+                >
+                  <Terminal size={13} />
+                  <span>Terminal ({terminalWallpapers.length})</span>
+                </button>
+              </div>
             </div>
+
+            {/* Desktop Wallpapers View */}
+            {wallpaperSection === 'desktop' && (
+              <>
+                <div className="wallpaper-shortcut-banner">
+                  <span>⚡ <strong>Quick Shortcut:</strong> Press <code>Alt + 1</code> through <code>Alt + 5</code> anytime to switch desktop wallpapers instantly!</span>
+                </div>
+
+                <div className="wallpaper-grid">
+                  {desktopWallpapers.map((wp) => (
+                    <div 
+                      key={wp.id} 
+                      className={`wallpaper-card ${activeWallpaper === wp.id ? 'active' : ''}`}
+                      onClick={() => applyWallpaper(wp)}
+                    >
+                      <div className="wallpaper-preview" style={wp.style}>
+                        {activeWallpaper === wp.id && (
+                          <div className="wallpaper-check">
+                            <Check size={14} color="#ffffff" />
+                          </div>
+                        )}
+                        {wp.tag && <span className="wallpaper-tag-pill">{wp.tag}</span>}
+                      </div>
+                      <span className="wallpaper-name">{wp.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {/* Terminal Wallpapers View */}
+            {wallpaperSection === 'terminal' && (
+              <>
+                <div className="wallpaper-shortcut-banner terminal-banner">
+                  <span>🖥️ <strong>Terminal Backdrops:</strong> Calibrated with high-contrast text overlays so commands and output stay 100% sharp.</span>
+                </div>
+
+                <div className="wallpaper-grid">
+                  {terminalWallpapers.map((wp) => (
+                    <div 
+                      key={wp.id} 
+                      className={`wallpaper-card ${activeTerminalWallpaper === wp.id ? 'active' : ''}`}
+                      onClick={() => applyTerminalWallpaper(wp)}
+                    >
+                      <div className="wallpaper-preview" style={wp.bgStyle}>
+                        {activeTerminalWallpaper === wp.id && (
+                          <div className="wallpaper-check">
+                            <Check size={14} color="#ffffff" />
+                          </div>
+                        )}
+                        {wp.tag && <span className="wallpaper-tag-pill">{wp.tag}</span>}
+                      </div>
+                      <span className="wallpaper-name">{wp.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
           </div>
         )}
 
@@ -171,21 +230,21 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
         {activeTab === 'about' && (
           <div className="settings-panel">
             <h2 className="settings-panel-title">About VarunOS</h2>
-            <p className="settings-panel-desc">Hardware telemetry & system specifications.</p>
+            <p className="settings-panel-desc">System specifications and environment (inspired by macOS).</p>
 
             <div className="about-specs-card">
               <div className="about-apple-badge">⚡</div>
               <h3 className="about-os-name">VarunOS Sequoia</h3>
-              <span className="about-os-version">Version 15.0 (Build 24A348)</span>
+              <span className="about-os-version">Version 15.0 (inspired by macOS)</span>
 
               <div className="about-specs-list">
                 <div className="about-spec-row">
-                  <span className="spec-label">Mac Model</span>
-                  <span className="spec-val">MacBook Pro 16-inch (2026)</span>
+                  <span className="spec-label">Environment</span>
+                  <span className="spec-val">VarunOS Workstation (inspired by macOS)</span>
                 </div>
                 <div className="about-spec-row">
-                  <span className="spec-label">Chip</span>
-                  <span className="spec-val">Apple M3 Max (16-core CPU, 40-core GPU)</span>
+                  <span className="spec-label">System Architecture</span>
+                  <span className="spec-val">Apple M3 Max Architecture (16-core CPU, 40-core GPU)</span>
                 </div>
                 <div className="about-spec-row">
                   <span className="spec-label">Memory</span>

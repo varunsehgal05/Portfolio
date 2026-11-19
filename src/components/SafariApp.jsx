@@ -37,7 +37,7 @@ const BOOKMARKS = [
 const PINNED_REPOS = [
   {
     name: 'Portfolio',
-    desc: 'Interactive macOS Sequoia portfolio with autonomous multiplayer cursor swarm engine & collaborative Figma canvas.',
+    desc: 'Interactive VarunOS portfolio (inspired by macOS) with autonomous multiplayer cursor swarm engine & collaborative Figma canvas.',
     lang: 'JavaScript',
     langColor: '#f1e05a',
     stars: 28,
@@ -525,8 +525,8 @@ const SafariApp = () => {
                 <p>Complete project showcase featuring wireframes, design tokens, and live interactive prototype frames.</p>
               </div>
               <div className="feature-block">
-                <h3>🖥️ macOS Sequoia OS</h3>
-                <p>Authentic desktop interface with responsive genie animations, dock magnification, and native apps.</p>
+                <h3>🖥️ VarunOS Sequoia Desktop</h3>
+                <p>Authentic desktop interface (inspired by macOS) with responsive genie animations, dock magnification, and native apps.</p>
               </div>
             </div>
           </div>
@@ -605,7 +605,7 @@ const SafariApp = () => {
                   varunsehgal05 (Varun Sehgal) · GitHub
                 </a>
                 <p className="result-snippet">
-                  Repositories: Portfolio (macOS desktop operating system in React), AI-Interview-Prep, EventFlow, Expensify. Open source contributor and frontend engineer.
+                  Repositories: Portfolio (VarunOS desktop operating system in React, inspired by macOS), AI-Interview-Prep, EventFlow, Expensify. Open source contributor and frontend engineer.
                 </p>
               </div>
 

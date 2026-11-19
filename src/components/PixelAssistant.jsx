@@ -6,7 +6,7 @@ import './PixelAssistant.css';
 
 const HINTS = [
   "Click me to ask anything about Varun's UI/UX work! 💬",
-  "Press ALT + 1, 2, or 3 to change desktop wallpapers.",
+  "Press Alt + 1, 2, 3, 4, or 5 to change desktop wallpapers.",
   "Check out the interactive VS Code or Figma apps!",
   "Double click any desktop icon to open apps."
 ];
@@ -158,7 +158,7 @@ const getAIResponse = (query) => {
   if (/wallpaper|theme|shortcut|background|alt|how to use|desktop|safari|terminal|vscode|finder/.test(q)) {
     return {
       topic: "VarunOS Desktop Navigation & Shortcuts",
-      answer: "Here are some awesome tips for navigating VarunOS:\n• **Alt + 1 / 2 / 3**: Switch between macOS Monterey, Blue Abstract, and Big Sur wallpapers.\n• **Double-Click Titlebars**: Toggle full screen with native macOS zoom animations.\n• **Dock Click**: Bounces the app icon into view with genuine macOS physics.\n• **Apps:** VS Code, Figma, Safari, Terminal, Resume, Contact, and Settings.",
+      answer: "Here are some awesome tips for navigating VarunOS:\n• **Alt + 1 / 2 / 3**: Switch between Roxy Ifrita, Neon Crimson Cyberpunk, and Sequoia wallpapers.\n• **Double-Click Titlebars**: Toggle full screen with fluid zoom animations (inspired by macOS).\n• **Dock Click**: Bounces the app icon into view with smooth physics (inspired by macOS).\n• **Apps:** VS Code, Figma, Safari, Terminal, Resume, Contact, and Settings.",
       path: "VarunOS > System Settings",
       appId: "settings",
       appName: "Settings App",

@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Terminal, Sparkles, Folder, Play, Check, Copy } from 'lucide-react';
+import { Terminal, Sparkles, Folder, Play, Check, Copy, Image } from 'lucide-react';
+import { terminalWallpapers } from '../config/wallpapers';
 import './TerminalApp.css';
 
 const WELCOME_BANNER = [
   'Last login: ' + new Date().toLocaleString() + ' on ttys001',
-  'VarunOS Sequoia Darwin 24.1.0 (arm64 Apple M3 Max)',
+  'VarunOS Sequoia Darwin 24.1.0 (arm64 Apple M3 Max) [inspired by macOS]',
   'Oh-My-Zsh configured with zsh-syntax-highlighting & pure prompt',
   '',
   'Type "help" or click any shortcut pill above to begin exploring.',
+  'Tip: Type "wallpaper" to preview and change terminal backdrops.',
   ''
 ];
 
@@ -15,15 +17,15 @@ const NEOFETCH_LINES = [
   { text: '                    \'c.          varun@macbook-pro.local', color: '#38bdf8', bold: true },
   { text: '                 ,xNMM.          -----------------------', color: '#38bdf8' },
   { text: '               .OMMMMo           OS: VarunOS Sequoia 15.1 (24B83) arm64', color: '#facc15' },
-  { text: '               OMMM0,            Host: MacBookPro18,1 (Apple M3 Max)', color: '#facc15' },
+  { text: '               OMMM0,            Host: MacBookPro18,1 (Apple M3 Max Architecture)', color: '#facc15' },
   { text: '     .;loddo:.  .olloddol;.      Kernel: Darwin 24.1.0', color: '#facc15' },
   { text: '   cKMMMMMMMMMMNWMMMMMMMMMM0:    Uptime: 4 days, 12 hours, 38 mins', color: '#4ade80' },
   { text: ' .KMMMMMMMMMMMMMMMMMMMMMMMWd.    Packages: 842 (brew), 24 (npm)', color: '#4ade80' },
   { text: ' XMMMMMMMMMMMMMMMMMMMMMMMX.      Shell: zsh 5.9 (x86_64-apple-darwin24.0)', color: '#4ade80' },
   { text: ';MMMMMMMMMMMMMMMMMMMMMMMM:       Resolution: 3024x1964 Retina Display', color: '#a78bfa' },
-  { text: ':MMMMMMMMMMMMMMMMMMMMMMMM:       DE: Aqua / Quartz Compositor', color: '#a78bfa' },
+  { text: ':MMMMMMMMMMMMMMMMMMMMMMMM:       DE: Aqua / Quartz Compositor (inspired by macOS)', color: '#a78bfa' },
   { text: '.MMMMMMMMMMMMMMMMMMMMMMMMX.      WM: VarunOS Window Server', color: '#a78bfa' },
-  { text: ' kMMMMMMMMMMMMMMMMMMMMMMMMWd.    Terminal: Apple Terminal.app (Sequoia)', color: '#ec4899' },
+  { text: ' kMMMMMMMMMMMMMMMMMMMMMMMMWd.    Terminal: VarunOS Terminal.app (inspired by macOS)', color: '#ec4899' },
   { text: ' .XMMMMMMMMMMMMMMMMMMMMMMMMMMk   CPU: Apple M3 Max (16 cores @ 4.05GHz)', color: '#ec4899' },
   { text: '  .XMMMMMMMMMMMMMMMMMMMMMMMMK.   GPU: Apple M3 Max 40-Core GPU', color: '#ec4899' },
   { text: '    kMMMMMMMMMMMMMMMMMMMMMMd     Memory: 18432MiB / 65536MiB (28%)', color: '#38bdf8' },
@@ -35,6 +37,7 @@ const NEOFETCH_LINES = [
 
 const HELP_COMMANDS = [
   { cmd: 'neofetch', desc: 'Display VarunOS system hardware & specs banner' },
+  { cmd: 'wallpaper', desc: 'Change terminal wallpaper backdrop (roxy, cyber, dark)' },
   { cmd: 'about', desc: 'Summary of Varun Sehgal and design philosophy' },
   { cmd: 'skills', desc: 'Display UI/UX, AI prototyping & frontend toolset' },
   { cmd: 'projects', desc: 'List featured SaaS and vibecoded platforms' },
@@ -55,6 +58,34 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
   const [historyIdx, setHistoryIdx] = useState(-1);
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
+
+  // Active terminal wallpaper state (persists in localStorage)
+  const [activeWallpaperId, setActiveWallpaperId] = useState(() => {
+    try {
+      return localStorage.getItem('varunos_terminal_wallpaper') || 'roxy-calendar';
+    } catch {
+      return 'roxy-calendar';
+    }
+  });
+
+  const setTerminalWallpaper = (id) => {
+    const found = terminalWallpapers.find(w => w.id === id) || terminalWallpapers[0];
+    setActiveWallpaperId(found.id);
+    try {
+      localStorage.setItem('varunos_terminal_wallpaper', found.id);
+    } catch {}
+    window.dispatchEvent(new CustomEvent('varunos-set-terminal-wallpaper', { detail: { id: found.id } }));
+  };
+
+  useEffect(() => {
+    const handleSync = (e) => {
+      if (e.detail?.id) {
+        setActiveWallpaperId(e.detail.id);
+      }
+    };
+    window.addEventListener('varunos-set-terminal-wallpaper', handleSync);
+    return () => window.removeEventListener('varunos-set-terminal-wallpaper', handleSync);
+  }, []);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -80,6 +111,48 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
       case 'neofetch':
       case 'fastfetch':
         setHistory([...newHistory, ...NEOFETCH_LINES.map(l => l.text)]);
+        break;
+
+      case 'wallpaper':
+      case 'theme':
+        if (!arg) {
+          const currentWp = terminalWallpapers.find(w => w.id === activeWallpaperId) || terminalWallpapers[0];
+          setHistory([
+            ...newHistory,
+            '🖼️ VARUNOS TERMINAL WALLPAPERS:',
+            '  • roxy      - Roxy Ifrita (Teal & Monochrome Anime Calendar)',
+            '  • cyber     - Neon Crimson Cyberpunk',
+            '  • monterey  - Monterey (inspired by macOS)',
+            '  • dark      - Solid Dark (Clean Minimal)',
+            '',
+            `Current active backdrop: ${currentWp.name}`,
+            'Usage: wallpaper <name> (e.g. "wallpaper roxy", "wallpaper cyber", "wallpaper dark")',
+            ''
+          ]);
+        } else {
+          const key = arg.toLowerCase().trim();
+          let matched = null;
+          if (key.includes('roxy') || key.includes('teal') || key.includes('anime')) matched = 'roxy-calendar';
+          else if (key.includes('cyber') || key.includes('neon') || key.includes('red')) matched = 'neon-crimson-cyber';
+          else if (key.includes('monterey') || key.includes('mac')) matched = 'monterey';
+          else if (key.includes('dark') || key.includes('default') || key.includes('solid')) matched = 'default';
+
+          if (matched) {
+            setTerminalWallpaper(matched);
+            const found = terminalWallpapers.find(w => w.id === matched);
+            setHistory([
+              ...newHistory,
+              `✅ Terminal wallpaper switched to: ${found?.name || matched}`,
+              ''
+            ]);
+          } else {
+            setHistory([
+              ...newHistory,
+              `wallpaper: unknown theme "${arg}". Available: roxy, cyber, monterey, dark`,
+              ''
+            ]);
+          }
+        }
         break;
 
       case 'help':
@@ -219,7 +292,7 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
         break;
 
       case 'sudo':
-        setHistory([...newHistory, 'Password: ••••••••', 'varun is not in the sudoers file. This incident will be reported to Apple security.', '']);
+        setHistory([...newHistory, 'Password: ••••••••', 'varun is not in the sudoers file. This incident will be reported to system security.', '']);
         break;
 
       default:
@@ -235,7 +308,7 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
     } else if (e.key === 'Tab') {
       e.preventDefault();
       // Auto-completion
-      const available = ['help', 'neofetch', 'skills', 'projects', 'vibecoding', 'experience', 'contact', 'clear', 'cat resume', 'open figma', 'open vscode', 'open safari', 'open contact'];
+      const available = ['help', 'neofetch', 'wallpaper', 'wallpaper roxy', 'wallpaper cyber', 'wallpaper dark', 'skills', 'projects', 'vibecoding', 'experience', 'contact', 'clear', 'cat resume', 'open figma', 'open vscode', 'open safari', 'open contact'];
       const match = available.find(c => c.startsWith(inputVal.toLowerCase().trim()));
       if (match) {
         setInputVal(match);
@@ -261,11 +334,17 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
     }
   };
 
+  const currentWp = terminalWallpapers.find(w => w.id === activeWallpaperId) || terminalWallpapers[0];
+
   return (
-    <div className="terminal-wrapper" onClick={handleContainerClick}>
+    <div 
+      className="terminal-wrapper" 
+      onClick={handleContainerClick}
+      style={currentWp.bgStyle}
+    >
       {/* Top Quick Command Bar */}
       <div className="terminal-quick-bar">
-        <span className="quick-bar-label">Quick Commands:</span>
+        <span className="quick-bar-label">Commands:</span>
         {['neofetch', 'skills', 'projects', 'vibecoding', 'experience', 'contact', 'clear'].map((cmd) => (
           <button
             key={cmd}
@@ -279,6 +358,57 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
             {cmd}
           </button>
         ))}
+
+        <div className="terminal-quick-divider" />
+
+        <span className="quick-bar-label">Wallpaper:</span>
+        <button
+          type="button"
+          className={`terminal-pill-btn terminal-wp-pill ${activeWallpaperId === 'roxy-calendar' ? 'active' : ''}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            setTerminalWallpaper('roxy-calendar');
+          }}
+          title="Roxy Ifrita (Teal Calendar)"
+        >
+          🖼️ Roxy
+        </button>
+
+        <button
+          type="button"
+          className={`terminal-pill-btn terminal-wp-pill ${activeWallpaperId === 'neon-crimson-cyber' ? 'active' : ''}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            setTerminalWallpaper('neon-crimson-cyber');
+          }}
+          title="Neon Crimson Cyberpunk"
+        >
+          🖼️ Cyber
+        </button>
+
+        <button
+          type="button"
+          className={`terminal-pill-btn terminal-wp-pill ${activeWallpaperId === 'monterey' ? 'active' : ''}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            setTerminalWallpaper('monterey');
+          }}
+          title="Monterey (inspired by macOS)"
+        >
+          🖼️ Monterey
+        </button>
+
+        <button
+          type="button"
+          className={`terminal-pill-btn terminal-wp-pill ${activeWallpaperId === 'default' ? 'active' : ''}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            setTerminalWallpaper('default');
+          }}
+          title="Solid Dark (Default)"
+        >
+          ⬛ Dark
+        </button>
       </div>
 
       {/* Terminal Viewport */}
@@ -286,13 +416,14 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
         <div className="terminal-output">
           {history.map((line, idx) => {
             const isPrompt = line.startsWith('➜');
-            const isHeader = line.startsWith('┌') || line.startsWith('└') || line.startsWith('═') || line.startsWith('🚀') || line.startsWith('🛠️') || line.startsWith('💼') || line.startsWith('📬') || line.startsWith('⚡') || line.startsWith('👤');
-            const isError = line.includes('command not found') || line.includes('No such file');
+            const isHeader = line.startsWith('┌') || line.startsWith('└') || line.startsWith('═') || line.startsWith('🚀') || line.startsWith('🛠️') || line.startsWith('💼') || line.startsWith('📬') || line.startsWith('⚡') || line.startsWith('👤') || line.startsWith('🖼️');
+            const isSuccess = line.startsWith('✅');
+            const isError = line.includes('command not found') || line.includes('No such file') || line.includes('unknown theme');
             
             return (
               <div 
                 key={idx} 
-                className={`terminal-line ${isPrompt ? 'prompt-line' : ''} ${isHeader ? 'header-line' : ''} ${isError ? 'error-line' : ''}`}
+                className={`terminal-line ${isPrompt ? 'prompt-line' : ''} ${isHeader ? 'header-line' : ''} ${isSuccess ? 'success-line' : ''} ${isError ? 'error-line' : ''}`}
               >
                 {line}
               </div>

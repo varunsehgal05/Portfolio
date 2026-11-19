@@ -5,6 +5,7 @@ import Window from './Window';
 import Dock from './Dock';
 import PixelAssistant from './PixelAssistant';
 import { portfolioApps, desktopIconIds } from '../config/apps';
+import { desktopWallpapers } from '../config/wallpapers';
 import './Desktop.css';
 
 const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) => {
@@ -40,6 +41,59 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
   // Apps that should open in full screen by default
   const FULLSCREEN_APPS = ['figma', 'vscode', 'safari'];
   const [bouncingApp, setBouncingApp] = useState(null);
+
+  // Active desktop wallpaper state (persisted in localStorage, defaults to user selected Roxy Calendar)
+  const [activeWallpaperId, setActiveWallpaperId] = useState(() => {
+    try {
+      return localStorage.getItem('varunos_desktop_wallpaper') || 'roxy-calendar';
+    } catch {
+      return 'roxy-calendar';
+    }
+  });
+  const [wallpaperToast, setWallpaperToast] = useState(null);
+
+  const applyDesktopWallpaper = (id, showToast = false) => {
+    const found = desktopWallpapers.find(w => w.id === id) || desktopWallpapers[0];
+    setActiveWallpaperId(found.id);
+    try {
+      localStorage.setItem('varunos_desktop_wallpaper', found.id);
+    } catch {}
+    if (showToast) {
+      setWallpaperToast(`Wallpaper: ${found.name}`);
+      setTimeout(() => {
+        setWallpaperToast(curr => (curr === `Wallpaper: ${found.name}` ? null : curr));
+      }, 2200);
+    }
+  };
+
+  // Keyboard shortcut: Alt + 1, 2, 3, 4, 5 to quickly switch wallpapers
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.altKey && !e.ctrlKey && !e.metaKey) {
+        const keyNum = parseInt(e.key, 10);
+        if (keyNum >= 1 && keyNum <= desktopWallpapers.length) {
+          e.preventDefault();
+          const targetWp = desktopWallpapers[keyNum - 1];
+          if (targetWp) {
+            applyDesktopWallpaper(targetWp.id, true);
+          }
+        }
+      }
+    };
+
+    const handleCustomWallpaperChange = (e) => {
+      if (e.detail && e.detail.id) {
+        applyDesktopWallpaper(e.detail.id, false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('varunos-set-desktop-wallpaper', handleCustomWallpaperChange);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('varunos-set-desktop-wallpaper', handleCustomWallpaperChange);
+    };
+  }, []);
 
   const triggerAppBounce = (appId) => {
     setBouncingApp(appId);
@@ -126,9 +180,21 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
   }, [swarmStage]);
 
   const displayedIcons = desktopIconIds || ['figma', 'vscode', 'resume', 'contact', 'trash'];
+  const activeWallpaper = desktopWallpapers.find(w => w.id === activeWallpaperId) || desktopWallpapers[0];
 
   return (
-    <div className={`desktop ${swarmStage < 5 ? 'desktop-in-rebuild' : ''}`}>
+    <div 
+      className={`desktop ${swarmStage < 5 ? 'desktop-in-rebuild' : ''}`}
+      style={swarmStage >= 5 ? activeWallpaper.style : undefined}
+    >
+      {/* Toast notification when switching wallpaper */}
+      {wallpaperToast && (
+        <div className="desktop-wallpaper-toast">
+          <span className="toast-icon">🖼️</span>
+          <span>{wallpaperToast}</span>
+        </div>
+      )}
+
       {/* Top MenuBar wrapper */}
       <div className={`desktop-menubar-wrap ${swarmStage < 5 ? (swarmStage >= 1 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
         <MenuBar userName={userName} onReplaySwarm={handleInternalReplaySwarm} />
