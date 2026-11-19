@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import FirebaseImage from './FirebaseImage';
+import FigmaLoadingScreen from './FigmaLoadingScreen';
 import './FigmaApp.css';
 
 const CREATIVE_NOTES = [
@@ -615,6 +616,7 @@ const FigmaApp = ({ isInteracting, userName, onOpenApp }) => {
   const [isWireframeMode, setIsWireframeMode] = useState(false);
   const [activeTool, setActiveTool] = useState('select'); // 'select' | 'hand'
   const [isSpacePressed, setIsSpacePressed] = useState(false);
+  const [isAppLoading, setIsAppLoading] = useState(true);
   const startPanRef = useRef({ x: 0, y: 0 });
 
   // Dynamic Selected Node & Live Editable Properties
@@ -1144,6 +1146,18 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
 
   return (
     <div className={`lovable-figma-portfolio theme-${currentTheme}`}>
+      {/* Authentic Figma File Loading Screen */}
+      {isAppLoading && (
+        <FigmaLoadingScreen
+          fileName="Varun_Sehgal_Portfolio.fig"
+          duration={1300}
+          onLoaded={() => {
+            setIsAppLoading(false);
+            centerCanvasView(activeTab);
+          }}
+        />
+      )}
+
       {/* =========================================================================
           1. GlobalNav (Top Navbar matching backup/lovable-portfolio)
           ========================================================================= */}
@@ -1232,23 +1246,23 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
 
           {/* Canvas Zoom & Center Controls */}
           <div className="canvas-zoom-pill">
-            <button 
-              type="button" 
+            <button
+              type="button"
               className="canvas-zoom-btn"
               onClick={() => setZoom(z => Math.max(0.4, Number((z - 0.1).toFixed(2))))}
               title="Zoom out"
             >
               −
             </button>
-            <span 
-              className="canvas-zoom-val" 
+            <span
+              className="canvas-zoom-val"
               onClick={() => { setZoom(1); centerCanvasView(activeTab); }}
               title="Reset Zoom to 100% and Center View"
             >
               {Math.round(zoom * 100)}%
             </span>
-            <button 
-              type="button" 
+            <button
+              type="button"
               className="canvas-zoom-btn"
               onClick={() => setZoom(z => Math.min(2.5, Number((z + 0.1).toFixed(2))))}
               title="Zoom in"
@@ -1267,7 +1281,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
         </div>
 
         <div className="nav-right-section">
-          <button 
+          <button
             type="button"
             className="nav-email-btn"
             onClick={() => {
@@ -1633,7 +1647,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
 
               {/* Central Glass Artboard */}
               <div className="view-content-wrapper home-content-wrapper" style={{ padding: '30px 40px 140px', minWidth: '1280px', display: 'flex', justifyContent: 'center' }}>
-                <div 
+                <div
                   className={`artboard-container figma-selectable-node ${selectedNodeId === 'root-canvas' ? 'is-selected' : ''}`}
                   data-node-id="root-canvas"
                   data-node-name="Varun_Sehgal_Portfolio"
@@ -1647,150 +1661,150 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     flexDirection: autoLayoutDir === 'vertical' ? 'column' : 'row',
                     backgroundColor: fillVisible ? fillColor : 'transparent',
                     opacity: isFrameVisible ? (Number(layerOpacity) / 100) : 0.08,
-                  border: strokeVisible ? `${strokeWidth}px solid ${strokeColor}` : 'none',
-                  backdropFilter: blurVisible ? `blur(${blurAmount}px)` : 'none',
-                  WebkitBackdropFilter: blurVisible ? `blur(${blurAmount}px)` : 'none',
-                  boxShadow: shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none',
-                  overflow: clipContent ? 'hidden' : 'visible',
-                  transform: `rotate(${frameAngle}deg)`,
-                  transition: 'all 0.2s ease'
-                }}
-              >
-                {/* Artboard Frame Header */}
-                <div className="artboard-frame-header">
-                  <div className="frame-header-left">
-                    <span className="material-symbols-outlined text-[16px] text-[#ffb5a1]">layers</span>
-                    <span className="frame-file-title">Varun_Sehgal_Portfolio.fig</span>
+                    border: strokeVisible ? `${strokeWidth}px solid ${strokeColor}` : 'none',
+                    backdropFilter: blurVisible ? `blur(${blurAmount}px)` : 'none',
+                    WebkitBackdropFilter: blurVisible ? `blur(${blurAmount}px)` : 'none',
+                    boxShadow: shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none',
+                    overflow: clipContent ? 'hidden' : 'visible',
+                    transform: `rotate(${frameAngle}deg)`,
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  {/* Artboard Frame Header */}
+                  <div className="artboard-frame-header">
+                    <div className="frame-header-left">
+                      <span className="material-symbols-outlined text-[16px] text-[#ffb5a1]">layers</span>
+                      <span className="frame-file-title">Varun_Sehgal_Portfolio.fig</span>
+                    </div>
+                    <div className="frame-view-badge">
+                      Artboard view
+                    </div>
                   </div>
-                  <div className="frame-view-badge">
-                    Artboard view
-                  </div>
+
+                  {/* Ambient Radial Glows */}
+                  <div className="ambient-glow glow-top"></div>
+                  <div className="ambient-glow glow-bottom"></div>
+
+                  {/* Hero Section */}
+                  <section className="artboard-hero-grid">
+                    <div className="hero-left-column">
+                      <div className="hero-badge-row">
+                        <div className="hero-author-pill">
+                          <div className="author-thumb">
+                            <FirebaseImage
+                              storagePath="profile/varun.jpg"
+                              fallbackSrc="/varun.jpg"
+                              alt="Varun"
+                              onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                            />
+                            <span className="author-fallback">VS</span>
+                          </div>
+                          <span>Varun Sehgal</span>
+                        </div>
+                        <div className="hero-status-pill">
+                          <span className="pulsing-green-dot"></span>
+                          <span>Product Designer</span>
+                        </div>
+                      </div>
+
+                      <h1 className="hero-main-title">
+                        I design digital products<br />
+                        that make complex things feel <span className="hero-italic-accent">simple.</span>
+                      </h1>
+
+                      <p className="hero-tagline">
+                        UI/UX · SaaS · AI Products · Design Systems
+                      </p>
+
+                      <div className="hero-cta-group">
+                        <button className="cta-btn primary" onClick={() => setActiveTab('projects')}>
+                          See My Work <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+                        </button>
+                        <button className="cta-btn secondary" onClick={() => setActiveTab('about')}>
+                          <span className="material-symbols-outlined text-[18px]">person</span> About Me
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Right Column "Now" Panel */}
+                    <div className="hero-right-column">
+                      <div className="now-card-panel">
+                        <div className="now-card-accent-line"></div>
+                        <h3 className="now-card-header">
+                          <span className="material-symbols-outlined text-[16px]">update</span> Now
+                        </h3>
+                        <ul className="now-card-list">
+                          <li>
+                            <span className="material-symbols-outlined icon">design_services</span>
+                            <div><strong>Designing</strong> AI-powered SaaS interfaces</div>
+                          </li>
+                          <li>
+                            <span className="material-symbols-outlined icon">token</span>
+                            <div><strong>Building</strong> scalable design systems in Figma</div>
+                          </li>
+                          <li>
+                            <span className="material-symbols-outlined icon">work</span>
+                            <div><strong>Open</strong> for product design roles & freelance</div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* Featured Projects Bento Cards */}
+                  <section className="featured-projects-section">
+                    <div className="section-title-header">
+                      <h2>Featured Work</h2>
+                      <p>Selected design systems and product prototypes.</p>
+                    </div>
+
+                    <div className="featured-cards-grid">
+                      {ALL_PROJECTS.slice(0, 4).map((proj) => (
+                        <div key={proj.id} className="featured-project-card">
+                          <div className="project-preview-wrap">
+                            <FirebaseImage
+                              storagePath={`projects/${proj.id}.png`}
+                              fallbackSrc={proj.image}
+                              alt={proj.name}
+                              className="project-preview-img"
+                            />
+                            <span className="project-badge-pill">{proj.badge}</span>
+                          </div>
+
+                          <div className="project-body">
+                            <div className="project-meta-row">
+                              <span className="project-cat">{proj.category}</span>
+                              <span className="project-metric-stat">{proj.metric}</span>
+                            </div>
+
+                            <h3 className="project-name">{proj.name}</h3>
+                            <p className="project-desc">{proj.desc}</p>
+
+                            <div className="project-tags-row">
+                              {proj.tags.map((tag, i) => (
+                                <span key={i} className="project-tag-pill">{tag}</span>
+                              ))}
+                            </div>
+
+                            <div className="project-card-actions">
+                              <a
+                                href={proj.link}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="open-in-figma-link"
+                              >
+                                Open in Figma <span className="material-symbols-outlined text-[16px]">open_in_new</span>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
                 </div>
-
-                {/* Ambient Radial Glows */}
-                <div className="ambient-glow glow-top"></div>
-                <div className="ambient-glow glow-bottom"></div>
-
-                {/* Hero Section */}
-                <section className="artboard-hero-grid">
-                  <div className="hero-left-column">
-                    <div className="hero-badge-row">
-                      <div className="hero-author-pill">
-                        <div className="author-thumb">
-                          <FirebaseImage
-                            storagePath="profile/varun.jpg"
-                            fallbackSrc="/varun.jpg"
-                            alt="Varun"
-                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                          />
-                          <span className="author-fallback">VS</span>
-                        </div>
-                        <span>Varun Sehgal</span>
-                      </div>
-                      <div className="hero-status-pill">
-                        <span className="pulsing-green-dot"></span>
-                        <span>Product Designer</span>
-                      </div>
-                    </div>
-
-                    <h1 className="hero-main-title">
-                      I design digital products<br />
-                      that make complex things feel <span className="hero-italic-accent">simple.</span>
-                    </h1>
-
-                    <p className="hero-tagline">
-                      UI/UX · SaaS · AI Products · Design Systems
-                    </p>
-
-                    <div className="hero-cta-group">
-                      <button className="cta-btn primary" onClick={() => setActiveTab('projects')}>
-                        See My Work <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
-                      </button>
-                      <button className="cta-btn secondary" onClick={() => setActiveTab('about')}>
-                        <span className="material-symbols-outlined text-[18px]">person</span> About Me
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Right Column "Now" Panel */}
-                  <div className="hero-right-column">
-                    <div className="now-card-panel">
-                      <div className="now-card-accent-line"></div>
-                      <h3 className="now-card-header">
-                        <span className="material-symbols-outlined text-[16px]">update</span> Now
-                      </h3>
-                      <ul className="now-card-list">
-                        <li>
-                          <span className="material-symbols-outlined icon">design_services</span>
-                          <div><strong>Designing</strong> AI-powered SaaS interfaces</div>
-                        </li>
-                        <li>
-                          <span className="material-symbols-outlined icon">token</span>
-                          <div><strong>Building</strong> scalable design systems in Figma</div>
-                        </li>
-                        <li>
-                          <span className="material-symbols-outlined icon">work</span>
-                          <div><strong>Open</strong> for product design roles & freelance</div>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </section>
-
-                {/* Featured Projects Bento Cards */}
-                <section className="featured-projects-section">
-                  <div className="section-title-header">
-                    <h2>Featured Work</h2>
-                    <p>Selected design systems and product prototypes.</p>
-                  </div>
-
-                  <div className="featured-cards-grid">
-                    {ALL_PROJECTS.slice(0, 4).map((proj) => (
-                      <div key={proj.id} className="featured-project-card">
-                        <div className="project-preview-wrap">
-                          <FirebaseImage
-                            storagePath={`projects/${proj.id}.png`}
-                            fallbackSrc={proj.image}
-                            alt={proj.name}
-                            className="project-preview-img"
-                          />
-                          <span className="project-badge-pill">{proj.badge}</span>
-                        </div>
-
-                        <div className="project-body">
-                          <div className="project-meta-row">
-                            <span className="project-cat">{proj.category}</span>
-                            <span className="project-metric-stat">{proj.metric}</span>
-                          </div>
-
-                          <h3 className="project-name">{proj.name}</h3>
-                          <p className="project-desc">{proj.desc}</p>
-
-                          <div className="project-tags-row">
-                            {proj.tags.map((tag, i) => (
-                              <span key={i} className="project-tag-pill">{tag}</span>
-                            ))}
-                          </div>
-
-                          <div className="project-card-actions">
-                            <a
-                              href={proj.link}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="open-in-figma-link"
-                            >
-                              Open in Figma <span className="material-symbols-outlined text-[16px]">open_in_new</span>
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </section>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
           {/* =========================================================================
               VIEW 2: WORK / PROJECTS (Infinite Canvas Bento Grid & Selectable Nodes)
@@ -1968,8 +1982,8 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                         const isSelected = selectedNodeId === expNodeId;
                         const props = nodeProps[expNodeId] || {};
                         return (
-                          <div 
-                            key={item.id} 
+                          <div
+                            key={item.id}
                             className={`zigzag-timeline-row ${isRight ? 'align-right' : 'align-left'}`}
                           >
                             {/* Center Node Icon pinned on spine */}
@@ -2037,17 +2051,17 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
 
                                 {item.link && (
                                   <div className="zigzag-actions-row">
-                                    <a 
-                                      href={item.link} 
-                                      target="_blank" 
-                                      rel="noreferrer" 
+                                    <a
+                                      href={item.link}
+                                      target="_blank"
+                                      rel="noreferrer"
                                       className="cert-action-btn primary"
                                       title="Open link in browser"
                                     >
                                       <span>{item.actionLabel || 'Verify'}</span>
                                       <span className="material-symbols-outlined text-[13px]">open_in_new</span>
                                     </a>
-                                    <button 
+                                    <button
                                       type="button"
                                       className="cert-action-btn secondary"
                                       onClick={() => handleCopyLink(item.link, `${item.highlight} link`)}
@@ -2092,10 +2106,10 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                               <span className="flow-period">{item.period}</span>
                               <h3 className="flow-role">{item.role}</h3>
                               <div className="timeline-meta-row">
-                                <a 
-                                  href={item.link} 
-                                  target="_blank" 
-                                  rel="noreferrer" 
+                                <a
+                                  href={item.link}
+                                  target="_blank"
+                                  rel="noreferrer"
                                   className="timeline-company-link"
                                 >
                                   {item.company}
@@ -2126,10 +2140,10 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                                 </div>
                                 <h3 className="flow-role">{hack.title}</h3>
                                 <div className="timeline-meta-row">
-                                  <a 
-                                    href={hack.link} 
-                                    target="_blank" 
-                                    rel="noreferrer" 
+                                  <a
+                                    href={hack.link}
+                                    target="_blank"
+                                    rel="noreferrer"
                                     className="timeline-company-link"
                                   >
                                     {hack.issuer}
@@ -2160,19 +2174,19 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                               <span className="cert-id-badge">ID: {cert.credentialId}</span>
                             )}
                             <p className="cert-desc">{cert.desc}</p>
-                            
+
                             <div className="cert-actions-row">
-                              <a 
-                                href={cert.link} 
-                                target="_blank" 
-                                rel="noreferrer" 
+                              <a
+                                href={cert.link}
+                                target="_blank"
+                                rel="noreferrer"
                                 className="cert-action-btn primary"
                                 title="Open verified credential in browser"
                               >
                                 <span>Verify Credential</span>
                                 <span className="material-symbols-outlined text-[13px]">open_in_new</span>
                               </a>
-                              <button 
+                              <button
                                 type="button"
                                 className="cert-action-btn secondary"
                                 onClick={() => handleCopyLink(cert.link, `${cert.title} link`)}
@@ -2551,272 +2565,272 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
 
                   <div className="figma-resume-sheet-container">
                     <div className="figma-resume-two-col">
-                    {/* Left Column: Contact, Education, Skills */}
-                    <aside className="figma-resume-sidebar">
-                      {/* Contact */}
-                      <div>
-                        <h4 className="figma-resume-section-title">
-                          <span className="text-[#ffb5a1]">#</span> CONTACT
-                        </h4>
-                        <ul className="figma-resume-contact-list">
-                          <li>
-                            <span className="material-symbols-outlined text-[14px]">call</span>
-                            <span>+91 9399361193</span>
-                          </li>
-                          <li>
-                            <span className="material-symbols-outlined text-[14px]">mail</span>
-                            <a href="mailto:varun.sehgal02@gmail.com">varun.sehgal02@gmail.com</a>
-                          </li>
-                          <li>
-                            <span className="material-symbols-outlined text-[14px]">location_on</span>
-                            <span>Gwalior, MP, India</span>
-                          </li>
-                          <li>
-                            <span className="material-symbols-outlined text-[14px]">language</span>
-                            <a href="https://varunsehgal.runs-on.dev" target="_blank" rel="noreferrer">varunsehgal.runs-on.dev</a>
-                          </li>
-                          <li>
-                            <span className="material-symbols-outlined text-[14px]">work</span>
-                            <a href="https://linkedin.com/in/varunsehgal02" target="_blank" rel="noreferrer">linkedin.com/in/varunsehgal02</a>
-                          </li>
-                          <li>
-                            <span className="material-symbols-outlined text-[14px]">palette</span>
-                            <a href="https://behance.net/varunsehgal3" target="_blank" rel="noreferrer">behance.net/varunsehgal3</a>
-                          </li>
-                          <li>
-                            <span className="material-symbols-outlined text-[14px]">code</span>
-                            <a href="https://github.com/varunsehgal05" target="_blank" rel="noreferrer">github.com/varunsehgal05</a>
-                          </li>
-                        </ul>
-                      </div>
-
-                      {/* Education */}
-                      <div>
-                        <h4 className="figma-resume-section-title">
-                          <span className="text-[#ffb5a1]">#</span> EDUCATION
-                        </h4>
-                        <div className="text-[12px] text-white font-semibold">Jaypee University of Eng. & Tech.</div>
-                        <div className="text-[11px] text-[#ffb5a1]">B.Tech in Computer Science & Eng.</div>
-                        <div className="text-[10.5px] text-zinc-500 mt-1 font-mono">Aug 2023 – May 2027 • Guna, India</div>
-                      </div>
-
-                      {/* Skills */}
-                      <div>
-                        <h4 className="figma-resume-section-title">
-                          <span className="text-[#ffb5a1]">#</span> SKILLS ARSENAL
-                        </h4>
-
-                        <div className="mb-3">
-                          <div className="text-[11px] font-bold text-zinc-300 mb-1">UI/UX Design:</div>
-                          <div className="flex flex-wrap gap-1">
-                            {['Wireframing', 'Prototyping', 'User Research', 'Usability Testing', 'Design Systems', 'Info Architecture'].map((s, i) => (
-                              <span key={i} className="cert-id-badge">{s}</span>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div className="mb-3">
-                          <div className="text-[11px] font-bold text-zinc-300 mb-1">Design Tools:</div>
-                          <div className="flex flex-wrap gap-1">
-                            {['Figma', 'Figma AI', 'Adobe XD', 'Photoshop', 'Illustrator', 'FigJam'].map((s, i) => (
-                              <span key={i} className="cert-id-badge">{s}</span>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div className="mb-3">
-                          <div className="text-[11px] font-bold text-zinc-300 mb-1">AI-Augmented Design:</div>
-                          <div className="flex flex-wrap gap-1">
-                            {['Uizard', 'Galileo AI', 'Visily', 'Figma Magician', 'Automator'].map((s, i) => (
-                              <span key={i} className="cert-id-badge">{s}</span>
-                            ))}
-                          </div>
-                        </div>
-
+                      {/* Left Column: Contact, Education, Skills */}
+                      <aside className="figma-resume-sidebar">
+                        {/* Contact */}
                         <div>
-                          <div className="text-[11px] font-bold text-zinc-300 mb-1">Tech & Prototyping:</div>
-                          <div className="flex flex-wrap gap-1">
-                            {['React.js', 'Next.js', 'TypeScript', 'Tailwind CSS', 'HTML5/CSS3', 'Git'].map((s, i) => (
-                              <span key={i} className="cert-id-badge">{s}</span>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </aside>
-
-                    {/* Right Column: Main ATS Content */}
-                    <main className="figma-resume-main">
-                      {/* Candidate Header */}
-                      <header>
-                        <div className="flex items-center justify-between gap-3">
-                          <h2 className="figma-resume-candidate-title">Varun Sehgal</h2>
-                          <span className="cert-id-badge" style={{ background: 'rgba(52, 211, 153, 0.1)', color: '#34d399', borderColor: 'rgba(52, 211, 153, 0.3)' }}>
-                            ATS-Optimized
-                          </span>
-                        </div>
-                        <p className="figma-resume-roles">UI/UX Designer • Product Designer • Frontend Engineer</p>
-                        <p className="figma-resume-summary-text">
-                          UI/UX & Product Designer with 3+ years of experience delivering high-impact SaaS and AI product experiences. Skilled in user research, wireframing, rapid prototyping, and design systems, with proven results including a 45% increase in user engagement and a 30% reduction in drop-off rates.
-                        </p>
-                      </header>
-
-                      {/* Work Experience */}
-                      <section>
-                        <h4 className="figma-resume-section-title">
-                          <span className="material-symbols-outlined text-[15px] text-[#ffb5a1]">work</span>
-                          WORK EXPERIENCE
-                        </h4>
-
-                        <div className="figma-resume-item">
-                          <div className="figma-resume-item-header">
-                            <div><strong>UI/UX Designer Intern</strong> — UniEvent (Remote)</div>
-                            <span className="figma-resume-item-date">Jun 2024 – Nov 2024</span>
-                          </div>
-                          <ul className="figma-resume-bullets">
-                            <li>Designed user-focused digital experiences and translated complex business requirements into clear, consistent interfaces for campus ticketing platform (EventFlow). Completed internship in early November 2024.</li>
-                            <li>Architected 4-step booking flow optimization, slashing transaction drop-off by 30% across 50+ modular components and checkout psychology.</li>
+                          <h4 className="figma-resume-section-title">
+                            <span className="text-[#ffb5a1]">#</span> CONTACT
+                          </h4>
+                          <ul className="figma-resume-contact-list">
+                            <li>
+                              <span className="material-symbols-outlined text-[14px]">call</span>
+                              <span>+91 9399361193</span>
+                            </li>
+                            <li>
+                              <span className="material-symbols-outlined text-[14px]">mail</span>
+                              <a href="mailto:varun.sehgal02@gmail.com">varun.sehgal02@gmail.com</a>
+                            </li>
+                            <li>
+                              <span className="material-symbols-outlined text-[14px]">location_on</span>
+                              <span>Gwalior, MP, India</span>
+                            </li>
+                            <li>
+                              <span className="material-symbols-outlined text-[14px]">language</span>
+                              <a href="https://varunsehgal.runs-on.dev" target="_blank" rel="noreferrer">varunsehgal.runs-on.dev</a>
+                            </li>
+                            <li>
+                              <span className="material-symbols-outlined text-[14px]">work</span>
+                              <a href="https://linkedin.com/in/varunsehgal02" target="_blank" rel="noreferrer">linkedin.com/in/varunsehgal02</a>
+                            </li>
+                            <li>
+                              <span className="material-symbols-outlined text-[14px]">palette</span>
+                              <a href="https://behance.net/varunsehgal3" target="_blank" rel="noreferrer">behance.net/varunsehgal3</a>
+                            </li>
+                            <li>
+                              <span className="material-symbols-outlined text-[14px]">code</span>
+                              <a href="https://github.com/varunsehgal05" target="_blank" rel="noreferrer">github.com/varunsehgal05</a>
+                            </li>
                           </ul>
                         </div>
 
-                        <div className="figma-resume-item">
-                          <div className="figma-resume-item-header">
-                            <div><strong>Assistant Head of Operations / UX Intern</strong> — Assemble (Remote)</div>
-                            <span className="figma-resume-item-date">Aug 2024 – Jan 2025</span>
-                          </div>
-                          <ul className="figma-resume-bullets">
-                            <li>Assisted in the planning and smooth execution of esports competitions, driving cross-functional coordination.</li>
-                            <li>Designed collaborative creator workspace tools and interaction prototypes in Figma.</li>
-                          </ul>
+                        {/* Education */}
+                        <div>
+                          <h4 className="figma-resume-section-title">
+                            <span className="text-[#ffb5a1]">#</span> EDUCATION
+                          </h4>
+                          <div className="text-[12px] text-white font-semibold">Jaypee University of Eng. & Tech.</div>
+                          <div className="text-[11px] text-[#ffb5a1]">B.Tech in Computer Science & Eng.</div>
+                          <div className="text-[10.5px] text-zinc-500 mt-1 font-mono">Aug 2023 – May 2027 • Guna, India</div>
                         </div>
 
-                        <div className="figma-resume-item">
-                          <div className="figma-resume-item-header">
-                            <div><strong>UI/UX Designer Intern</strong> — Knaptix Ventures (Remote)</div>
-                            <span className="figma-resume-item-date">Jan 2024 – Jun 2024</span>
+                        {/* Skills */}
+                        <div>
+                          <h4 className="figma-resume-section-title">
+                            <span className="text-[#ffb5a1]">#</span> SKILLS ARSENAL
+                          </h4>
+
+                          <div className="mb-3">
+                            <div className="text-[11px] font-bold text-zinc-300 mb-1">UI/UX Design:</div>
+                            <div className="flex flex-wrap gap-1">
+                              {['Wireframing', 'Prototyping', 'User Research', 'Usability Testing', 'Design Systems', 'Info Architecture'].map((s, i) => (
+                                <span key={i} className="cert-id-badge">{s}</span>
+                              ))}
+                            </div>
                           </div>
-                          <ul className="figma-resume-bullets">
-                            <li>Conceptualized 5+ high-fidelity UI/UX interfaces for web/mobile, achieving a 40% increase in user satisfaction scores during testing phases.</li>
-                            <li>Accelerated wireframe-to-prototype turnaround by leveraging AI-assisted Figma plugins (Magician, Automator), cutting early-stage design time by 45%.</li>
-                            <li>Facilitated design-to-engineering hand-offs, reducing implementation friction and technical errors by 15%.</li>
-                          </ul>
-                        </div>
 
-                        <div className="figma-resume-item">
-                          <div className="figma-resume-item-header">
-                            <div><strong>Freelance UI/UX Designer</strong> — Self-Employed (Remote)</div>
-                            <span className="figma-resume-item-date">Jan 2024 – Present</span>
+                          <div className="mb-3">
+                            <div className="text-[11px] font-bold text-zinc-300 mb-1">Design Tools:</div>
+                            <div className="flex flex-wrap gap-1">
+                              {['Figma', 'Figma AI', 'Adobe XD', 'Photoshop', 'Illustrator', 'FigJam'].map((s, i) => (
+                                <span key={i} className="cert-id-badge">{s}</span>
+                              ))}
+                            </div>
                           </div>
-                          <ul className="figma-resume-bullets">
-                            <li>Executed 10+ end-to-end UI/UX design projects for tech startups, maintaining a 95% client retention rate through human-centered delivery.</li>
-                            <li>Redesigned product interfaces for 4 early-stage companies, utilizing AI-assisted prototyping tools to speed concept iteration.</li>
-                          </ul>
-                        </div>
-                      </section>
 
-                      {/* Design Projects */}
-                      <section>
-                        <h4 className="figma-resume-section-title">
-                          <span className="material-symbols-outlined text-[15px] text-[#ffb5a1]">folder</span>
-                          DESIGN PROJECTS
-                        </h4>
-
-                        <div className="figma-resume-item">
-                          <div className="figma-resume-item-header">
-                            <div><strong>AI Interview & Preparation Platform</strong></div>
-                            <a href="https://www.figma.com/design/ezDh2NmBto6iv7xaQNs3Ha/AI-Interview?node-id=11-1842" target="_blank" rel="noreferrer" className="text-[#ffb5a1] text-[11px] font-semibold underline">
-                              Figma Showcase ↗
-                            </a>
+                          <div className="mb-3">
+                            <div className="text-[11px] font-bold text-zinc-300 mb-1">AI-Augmented Design:</div>
+                            <div className="flex flex-wrap gap-1">
+                              {['Uizard', 'Galileo AI', 'Visily', 'Figma Magician', 'Automator'].map((s, i) => (
+                                <span key={i} className="cert-id-badge">{s}</span>
+                              ))}
+                            </div>
                           </div>
-                          <div className="text-[11px] text-zinc-400 font-mono mb-1">Stack: Figma, SaaS Design, AI Security & Grading UX</div>
-                          <ul className="figma-resume-bullets">
-                            <li>Architected an AI-driven SaaS platform, integrating specialized "Security" and "Grading" modules to automate candidate evaluation processes.</li>
-                            <li>Streamlined dense analytical data into a clean dark-themed UI, enhancing dashboard scannability and user task efficiency by 25%.</li>
-                          </ul>
-                        </div>
 
-                        <div className="figma-resume-item">
-                          <div className="figma-resume-item-header">
-                            <div><strong>EventFlow: Event Ticketing SaaS</strong></div>
-                            <a href="https://www.figma.com/design/29nTBBWxZfoOKdFnOaQWbq/EventFlow?node-id=2-2" target="_blank" rel="noreferrer" className="text-[#ffb5a1] text-[11px] font-semibold underline">
-                              Figma Showcase ↗
-                            </a>
+                          <div>
+                            <div className="text-[11px] font-bold text-zinc-300 mb-1">Tech & Prototyping:</div>
+                            <div className="flex flex-wrap gap-1">
+                              {['React.js', 'Next.js', 'TypeScript', 'Tailwind CSS', 'HTML5/CSS3', 'Git'].map((s, i) => (
+                                <span key={i} className="cert-id-badge">{s}</span>
+                              ))}
+                            </div>
                           </div>
-                          <div className="text-[11px] text-zinc-400 font-mono mb-1">Stack: Figma, Design Systems, Modular Components</div>
-                          <ul className="figma-resume-bullets">
-                            <li>Spearheaded a 4-step booking flow optimization that minimized user drop-off by 30% through simplified checkout psychology.</li>
-                            <li>Constructed a comprehensive design system with 50+ modular components to ensure cross-platform visual consistency.</li>
-                          </ul>
                         </div>
+                      </aside>
 
-                        <div className="figma-resume-item">
-                          <div className="figma-resume-item-header">
-                            <div><strong>Expensify: Budget Tracker App</strong></div>
-                            <a href="https://www.figma.com/design/3mw8XBHEZ3b8HKNNqcs6U2/Expensify---Budget-Tracker-App?node-id=135-318" target="_blank" rel="noreferrer" className="text-[#ffb5a1] text-[11px] font-semibold underline">
-                              Figma Showcase ↗
-                            </a>
+                      {/* Right Column: Main ATS Content */}
+                      <main className="figma-resume-main">
+                        {/* Candidate Header */}
+                        <header>
+                          <div className="flex items-center justify-between gap-3">
+                            <h2 className="figma-resume-candidate-title">Varun Sehgal</h2>
+                            <span className="cert-id-badge" style={{ background: 'rgba(52, 211, 153, 0.1)', color: '#34d399', borderColor: 'rgba(52, 211, 153, 0.3)' }}>
+                              ATS-Optimized
+                            </span>
                           </div>
-                          <div className="text-[11px] text-zinc-400 font-mono mb-1">Stack: Mobile UX, Real-time Analytics, Micro-interactions</div>
-                          <ul className="figma-resume-bullets">
-                            <li>Refined 17+ screens for real-time analytics, reducing the average "Add Expense" transaction time to under 5 seconds.</li>
-                          </ul>
-                        </div>
-                      </section>
+                          <p className="figma-resume-roles">UI/UX Designer • Product Designer • Frontend Engineer</p>
+                          <p className="figma-resume-summary-text">
+                            UI/UX & Product Designer with 3+ years of experience delivering high-impact SaaS and AI product experiences. Skilled in user research, wireframing, rapid prototyping, and design systems, with proven results including a 45% increase in user engagement and a 30% reduction in drop-off rates.
+                          </p>
+                        </header>
 
-                      {/* Hackathons & Leadership */}
-                      <section>
-                        <h4 className="figma-resume-section-title">
-                          <span className="material-symbols-outlined text-[15px] text-[#ffb5a1]">emoji_events</span>
-                          HACKATHONS & LEADERSHIP
-                        </h4>
+                        {/* Work Experience */}
+                        <section>
+                          <h4 className="figma-resume-section-title">
+                            <span className="material-symbols-outlined text-[15px] text-[#ffb5a1]">work</span>
+                            WORK EXPERIENCE
+                          </h4>
 
-                        <div className="figma-resume-item">
-                          <div className="figma-resume-item-header">
-                            <div>
-                              <strong>Co-Organizer & Lead Designer</strong> — CodeSrijan Hackathon (JUET)
-                              <a href="https://lnkd.in/p/dUXQYx92" target="_blank" rel="noreferrer" className="text-[#ffb5a1] ml-2 text-[11px] font-semibold underline inline-flex items-center gap-0.5">
-                                LinkedIn Post ↗
+                          <div className="figma-resume-item">
+                            <div className="figma-resume-item-header">
+                              <div><strong>UI/UX Designer Intern</strong> — UniEvent (Remote)</div>
+                              <span className="figma-resume-item-date">Jun 2024 – Nov 2024</span>
+                            </div>
+                            <ul className="figma-resume-bullets">
+                              <li>Designed user-focused digital experiences and translated complex business requirements into clear, consistent interfaces for campus ticketing platform (EventFlow). Completed internship in early November 2024.</li>
+                              <li>Architected 4-step booking flow optimization, slashing transaction drop-off by 30% across 50+ modular components and checkout psychology.</li>
+                            </ul>
+                          </div>
+
+                          <div className="figma-resume-item">
+                            <div className="figma-resume-item-header">
+                              <div><strong>Assistant Head of Operations / UX Intern</strong> — Assemble (Remote)</div>
+                              <span className="figma-resume-item-date">Aug 2024 – Jan 2025</span>
+                            </div>
+                            <ul className="figma-resume-bullets">
+                              <li>Assisted in the planning and smooth execution of esports competitions, driving cross-functional coordination.</li>
+                              <li>Designed collaborative creator workspace tools and interaction prototypes in Figma.</li>
+                            </ul>
+                          </div>
+
+                          <div className="figma-resume-item">
+                            <div className="figma-resume-item-header">
+                              <div><strong>UI/UX Designer Intern</strong> — Knaptix Ventures (Remote)</div>
+                              <span className="figma-resume-item-date">Jan 2024 – Jun 2024</span>
+                            </div>
+                            <ul className="figma-resume-bullets">
+                              <li>Conceptualized 5+ high-fidelity UI/UX interfaces for web/mobile, achieving a 40% increase in user satisfaction scores during testing phases.</li>
+                              <li>Accelerated wireframe-to-prototype turnaround by leveraging AI-assisted Figma plugins (Magician, Automator), cutting early-stage design time by 45%.</li>
+                              <li>Facilitated design-to-engineering hand-offs, reducing implementation friction and technical errors by 15%.</li>
+                            </ul>
+                          </div>
+
+                          <div className="figma-resume-item">
+                            <div className="figma-resume-item-header">
+                              <div><strong>Freelance UI/UX Designer</strong> — Self-Employed (Remote)</div>
+                              <span className="figma-resume-item-date">Jan 2024 – Present</span>
+                            </div>
+                            <ul className="figma-resume-bullets">
+                              <li>Executed 10+ end-to-end UI/UX design projects for tech startups, maintaining a 95% client retention rate through human-centered delivery.</li>
+                              <li>Redesigned product interfaces for 4 early-stage companies, utilizing AI-assisted prototyping tools to speed concept iteration.</li>
+                            </ul>
+                          </div>
+                        </section>
+
+                        {/* Design Projects */}
+                        <section>
+                          <h4 className="figma-resume-section-title">
+                            <span className="material-symbols-outlined text-[15px] text-[#ffb5a1]">folder</span>
+                            DESIGN PROJECTS
+                          </h4>
+
+                          <div className="figma-resume-item">
+                            <div className="figma-resume-item-header">
+                              <div><strong>AI Interview & Preparation Platform</strong></div>
+                              <a href="https://www.figma.com/design/ezDh2NmBto6iv7xaQNs3Ha/AI-Interview?node-id=11-1842" target="_blank" rel="noreferrer" className="text-[#ffb5a1] text-[11px] font-semibold underline">
+                                Figma Showcase ↗
                               </a>
                             </div>
-                            <span className="figma-resume-item-date">Apr 2024</span>
+                            <div className="text-[11px] text-zinc-400 font-mono mb-1">Stack: Figma, SaaS Design, AI Security & Grading UX</div>
+                            <ul className="figma-resume-bullets">
+                              <li>Architected an AI-driven SaaS platform, integrating specialized "Security" and "Grading" modules to automate candidate evaluation processes.</li>
+                              <li>Streamlined dense analytical data into a clean dark-themed UI, enhancing dashboard scannability and user task efficiency by 25%.</li>
+                            </ul>
                           </div>
-                          <ul className="figma-resume-bullets">
-                            <li>Directed complete visual identity and design system for a 72-hour hackathon with 200+ participants; designed official event merchandise, participant ID cards, certificates, and marketing creatives.</li>
-                            <li>Architected the digital platform UI covering team formation, submission portals, and real-time mentor evaluation under 72h high-pressure conditions. Boosted registrations by 20% YoY.</li>
-                          </ul>
-                        </div>
 
-                        <div className="figma-resume-item">
-                          <div className="figma-resume-item-header">
-                            <div>
-                              <strong>2nd Runner-up (Team Pixel_Codes)</strong> — Code Conquerors Hackathon (JUET)
-                              <a href="https://www.linkedin.com/posts/pushkar-chaturvedi-a83778284_hackathon2025-codeconquerors-aiineducation-activity-7335535096017375236-DBk_" target="_blank" rel="noreferrer" className="text-[#ffb5a1] ml-2 text-[11px] font-semibold underline inline-flex items-center gap-0.5">
-                                LinkedIn Post ↗
+                          <div className="figma-resume-item">
+                            <div className="figma-resume-item-header">
+                              <div><strong>EventFlow: Event Ticketing SaaS</strong></div>
+                              <a href="https://www.figma.com/design/29nTBBWxZfoOKdFnOaQWbq/EventFlow?node-id=2-2" target="_blank" rel="noreferrer" className="text-[#ffb5a1] text-[11px] font-semibold underline">
+                                Figma Showcase ↗
                               </a>
                             </div>
-                            <span className="figma-resume-item-date">Apr 2024</span>
+                            <div className="text-[11px] text-zinc-400 font-mono mb-1">Stack: Figma, Design Systems, Modular Components</div>
+                            <ul className="figma-resume-bullets">
+                              <li>Spearheaded a 4-step booking flow optimization that minimized user drop-off by 30% through simplified checkout psychology.</li>
+                              <li>Constructed a comprehensive design system with 50+ modular components to ensure cross-platform visual consistency.</li>
+                            </ul>
                           </div>
-                          <ul className="figma-resume-bullets">
-                            <li>Led frontend development and UI design in a 12-hour offline hackathon (150+ participants), building an AI-powered quiz generator using Next.js and Tailwind CSS.</li>
-                            <li>Engineered interactive question builder workflows and dynamic answer-key verification interfaces consuming Ollama local LLM APIs, placing 3rd out of 50+ competing teams.</li>
-                          </ul>
-                        </div>
 
-                        <div className="figma-resume-item">
-                          <div className="figma-resume-item-header">
-                            <div><strong>🏆 HAckeThor Winner (1st Place)</strong> — Unstop Hackathon</div>
-                            <span className="figma-resume-item-date">Apr 2025</span>
+                          <div className="figma-resume-item">
+                            <div className="figma-resume-item-header">
+                              <div><strong>Expensify: Budget Tracker App</strong></div>
+                              <a href="https://www.figma.com/design/3mw8XBHEZ3b8HKNNqcs6U2/Expensify---Budget-Tracker-App?node-id=135-318" target="_blank" rel="noreferrer" className="text-[#ffb5a1] text-[11px] font-semibold underline">
+                                Figma Showcase ↗
+                              </a>
+                            </div>
+                            <div className="text-[11px] text-zinc-400 font-mono mb-1">Stack: Mobile UX, Real-time Analytics, Micro-interactions</div>
+                            <ul className="figma-resume-bullets">
+                              <li>Refined 17+ screens for real-time analytics, reducing the average "Add Expense" transaction time to under 5 seconds.</li>
+                            </ul>
                           </div>
-                          <ul className="figma-resume-bullets">
-                            <li>Awarded 1st place in national competitive hackathon demonstrating rapid UX prototyping, interactive user testing, and AI tool integration.</li>
-                          </ul>
-                        </div>
-                      </section>
-                    </main>
+                        </section>
+
+                        {/* Hackathons & Leadership */}
+                        <section>
+                          <h4 className="figma-resume-section-title">
+                            <span className="material-symbols-outlined text-[15px] text-[#ffb5a1]">emoji_events</span>
+                            HACKATHONS & LEADERSHIP
+                          </h4>
+
+                          <div className="figma-resume-item">
+                            <div className="figma-resume-item-header">
+                              <div>
+                                <strong>Co-Organizer & Lead Designer</strong> — CodeSrijan Hackathon (JUET)
+                                <a href="https://lnkd.in/p/dUXQYx92" target="_blank" rel="noreferrer" className="text-[#ffb5a1] ml-2 text-[11px] font-semibold underline inline-flex items-center gap-0.5">
+                                  LinkedIn Post ↗
+                                </a>
+                              </div>
+                              <span className="figma-resume-item-date">Apr 2024</span>
+                            </div>
+                            <ul className="figma-resume-bullets">
+                              <li>Directed complete visual identity and design system for a 72-hour hackathon with 200+ participants; designed official event merchandise, participant ID cards, certificates, and marketing creatives.</li>
+                              <li>Architected the digital platform UI covering team formation, submission portals, and real-time mentor evaluation under 72h high-pressure conditions. Boosted registrations by 20% YoY.</li>
+                            </ul>
+                          </div>
+
+                          <div className="figma-resume-item">
+                            <div className="figma-resume-item-header">
+                              <div>
+                                <strong>2nd Runner-up (Team Pixel_Codes)</strong> — Code Conquerors Hackathon (JUET)
+                                <a href="https://www.linkedin.com/posts/pushkar-chaturvedi-a83778284_hackathon2025-codeconquerors-aiineducation-activity-7335535096017375236-DBk_" target="_blank" rel="noreferrer" className="text-[#ffb5a1] ml-2 text-[11px] font-semibold underline inline-flex items-center gap-0.5">
+                                  LinkedIn Post ↗
+                                </a>
+                              </div>
+                              <span className="figma-resume-item-date">Apr 2024</span>
+                            </div>
+                            <ul className="figma-resume-bullets">
+                              <li>Led frontend development and UI design in a 12-hour offline hackathon (150+ participants), building an AI-powered quiz generator using Next.js and Tailwind CSS.</li>
+                              <li>Engineered interactive question builder workflows and dynamic answer-key verification interfaces consuming Ollama local LLM APIs, placing 3rd out of 50+ competing teams.</li>
+                            </ul>
+                          </div>
+
+                          <div className="figma-resume-item">
+                            <div className="figma-resume-item-header">
+                              <div><strong>🏆 HAckeThor Winner (1st Place)</strong> — Unstop Hackathon</div>
+                              <span className="figma-resume-item-date">Apr 2025</span>
+                            </div>
+                            <ul className="figma-resume-bullets">
+                              <li>Awarded 1st place in national competitive hackathon demonstrating rapid UX prototyping, interactive user testing, and AI tool integration.</li>
+                            </ul>
+                          </div>
+                        </section>
+                      </main>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
           )}
 
           {/* =========================================================================
@@ -3516,7 +3530,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                       </span>
                     </div>
                     <div className="prop-target-controls">
-                      <button 
+                      <button
                         type="button"
                         className={`prop-mini-icon-btn ${isLocked ? 'active' : 'inactive'}`}
                         onClick={() => {
@@ -3529,7 +3543,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                           {isLocked ? 'lock' : 'lock_open'}
                         </span>
                       </button>
-                      <button 
+                      <button
                         type="button"
                         className={`prop-mini-icon-btn ${isFrameVisible ? '' : 'inactive'}`}
                         onClick={() => setIsFrameVisible(!isFrameVisible)}
@@ -3544,74 +3558,74 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
 
                   {/* Alignment Toolbar */}
                   <div className="prop-section prop-alignment-bar">
-                    <button 
+                    <button
                       type="button"
                       className={`prop-align-btn ${selectedAlign === 'left' ? 'active' : ''}`}
                       onClick={() => {
                         setSelectedAlign('left');
                         setPan(prev => ({ ...prev, x: 150 }));
                         showToast('Aligned Left');
-                      }} 
+                      }}
                       title="Align Left"
                     >
                       <span className="material-symbols-outlined text-[15px]">align_horizontal_left</span>
                     </button>
-                    <button 
+                    <button
                       type="button"
                       className={`prop-align-btn ${selectedAlign === 'hcenter' ? 'active' : ''}`}
                       onClick={() => {
                         setSelectedAlign('hcenter');
                         setPan(prev => ({ ...prev, x: 0 }));
                         showToast('Aligned Horizontal Center');
-                      }} 
+                      }}
                       title="Align Horizontal Center"
                     >
                       <span className="material-symbols-outlined text-[15px]">align_horizontal_center</span>
                     </button>
-                    <button 
+                    <button
                       type="button"
                       className={`prop-align-btn ${selectedAlign === 'right' ? 'active' : ''}`}
                       onClick={() => {
                         setSelectedAlign('right');
                         setPan(prev => ({ ...prev, x: -150 }));
                         showToast('Aligned Right');
-                      }} 
+                      }}
                       title="Align Right"
                     >
                       <span className="material-symbols-outlined text-[15px]">align_horizontal_right</span>
                     </button>
-                    <button 
+                    <button
                       type="button"
                       className={`prop-align-btn ${selectedAlign === 'top' ? 'active' : ''}`}
                       onClick={() => {
                         setSelectedAlign('top');
                         setPan(prev => ({ ...prev, y: 100 }));
                         showToast('Aligned Top');
-                      }} 
+                      }}
                       title="Align Top"
                     >
                       <span className="material-symbols-outlined text-[15px]">align_vertical_top</span>
                     </button>
-                    <button 
+                    <button
                       type="button"
                       className={`prop-align-btn ${selectedAlign === 'vcenter' ? 'active' : ''}`}
                       onClick={() => {
                         setSelectedAlign('vcenter');
                         setPan(prev => ({ ...prev, y: 0 }));
                         showToast('Aligned Vertical Center');
-                      }} 
+                      }}
                       title="Align Vertical Center"
                     >
                       <span className="material-symbols-outlined text-[15px]">align_vertical_center</span>
                     </button>
-                    <button 
+                    <button
                       type="button"
                       className={`prop-align-btn ${selectedAlign === 'bottom' ? 'active' : ''}`}
                       onClick={() => {
                         setSelectedAlign('bottom');
                         setPan(prev => ({ ...prev, y: -100 }));
                         showToast('Aligned Bottom');
-                      }} 
+                      }}
                       title="Align Bottom"
                     >
                       <span className="material-symbols-outlined text-[15px]">align_vertical_bottom</span>
@@ -3624,70 +3638,70 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     <div className="prop-grid-2x2">
                       <div className="prop-input-wrap">
                         <span className="prop-input-label">X</span>
-                        <input 
-                          type="number" 
-                          value={selectedNode.x !== undefined ? selectedNode.x : frameX} 
-                          onChange={(e) => updateSelectedProp('x', Number(e.target.value) || 0)} 
-                          className="prop-num-input" 
+                        <input
+                          type="number"
+                          value={selectedNode.x !== undefined ? selectedNode.x : frameX}
+                          onChange={(e) => updateSelectedProp('x', Number(e.target.value) || 0)}
+                          className="prop-num-input"
                         />
                       </div>
                       <div className="prop-input-wrap">
                         <span className="prop-input-label">Y</span>
-                        <input 
-                          type="number" 
-                          value={selectedNode.y !== undefined ? selectedNode.y : frameY} 
-                          onChange={(e) => updateSelectedProp('y', Number(e.target.value) || 0)} 
-                          className="prop-num-input" 
+                        <input
+                          type="number"
+                          value={selectedNode.y !== undefined ? selectedNode.y : frameY}
+                          onChange={(e) => updateSelectedProp('y', Number(e.target.value) || 0)}
+                          className="prop-num-input"
                         />
                       </div>
                       <div className="prop-input-wrap">
                         <span className="prop-input-label">W</span>
-                        <input 
-                          type="number" 
-                          value={selectedNode.w !== undefined ? selectedNode.w : frameW} 
-                          onChange={(e) => updateSelectedProp('w', Number(e.target.value) || 0)} 
-                          className="prop-num-input" 
+                        <input
+                          type="number"
+                          value={selectedNode.w !== undefined ? selectedNode.w : frameW}
+                          onChange={(e) => updateSelectedProp('w', Number(e.target.value) || 0)}
+                          className="prop-num-input"
                         />
                       </div>
                       <div className="prop-input-wrap">
                         <span className="prop-input-label">H</span>
-                        <input 
-                          type="number" 
-                          value={selectedNode.h !== undefined ? selectedNode.h : frameH} 
-                          onChange={(e) => updateSelectedProp('h', Number(e.target.value) || 0)} 
-                          className="prop-num-input" 
+                        <input
+                          type="number"
+                          value={selectedNode.h !== undefined ? selectedNode.h : frameH}
+                          onChange={(e) => updateSelectedProp('h', Number(e.target.value) || 0)}
+                          className="prop-num-input"
                         />
                       </div>
                     </div>
                     <div className="prop-grid-2x2 mt-2">
                       <div className="prop-input-wrap">
                         <span className="prop-input-label">∠</span>
-                        <input 
-                          type="number" 
-                          value={frameAngle} 
-                          onChange={(e) => setFrameAngle(Number(e.target.value) || 0)} 
-                          className="prop-num-input" 
+                        <input
+                          type="number"
+                          value={frameAngle}
+                          onChange={(e) => setFrameAngle(Number(e.target.value) || 0)}
+                          className="prop-num-input"
                         />
                       </div>
                       <div className="prop-input-wrap">
                         <span className="prop-input-label">
                           <span className="material-symbols-outlined text-[13px]">rounded_corner</span>
                         </span>
-                        <input 
-                          type="number" 
-                          value={selectedNode.radius !== undefined ? selectedNode.radius : frameRadius} 
-                          onChange={(e) => updateSelectedProp('radius', Number(e.target.value) || 0)} 
-                          className="prop-num-input" 
+                        <input
+                          type="number"
+                          value={selectedNode.radius !== undefined ? selectedNode.radius : frameRadius}
+                          onChange={(e) => updateSelectedProp('radius', Number(e.target.value) || 0)}
+                          className="prop-num-input"
                         />
                       </div>
                     </div>
                     <div className="prop-checkbox-row">
                       <label className="prop-checkbox-label">
-                        <input 
-                          type="checkbox" 
-                          checked={clipContent} 
-                          onChange={(e) => setClipContent(e.target.checked)} 
-                          className="prop-checkbox cursor-pointer" 
+                        <input
+                          type="checkbox"
+                          checked={clipContent}
+                          onChange={(e) => setClipContent(e.target.checked)}
+                          className="prop-checkbox cursor-pointer"
                         />
                         <span>Clip content</span>
                       </label>
@@ -3698,7 +3712,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   <div className="prop-section">
                     <div className="prop-section-header">
                       <span className="prop-section-title">Auto layout</span>
-                      <button 
+                      <button
                         type="button"
                         className="prop-header-icon-btn"
                         onClick={() => {
@@ -3714,17 +3728,17 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     </div>
                     <div className="prop-autolayout-controls">
                       <div className="autolayout-dir-group">
-                        <button 
+                        <button
                           type="button"
-                          className={`prop-icon-btn ${autoLayoutDir === 'vertical' ? 'active' : ''}`} 
+                          className={`prop-icon-btn ${autoLayoutDir === 'vertical' ? 'active' : ''}`}
                           onClick={() => setAutoLayoutDir('vertical')}
                           title="Vertical Direction"
                         >
                           <span className="material-symbols-outlined text-[14px]">arrow_downward</span>
                         </button>
-                        <button 
+                        <button
                           type="button"
-                          className={`prop-icon-btn ${autoLayoutDir === 'horizontal' ? 'active' : ''}`} 
+                          className={`prop-icon-btn ${autoLayoutDir === 'horizontal' ? 'active' : ''}`}
                           onClick={() => setAutoLayoutDir('horizontal')}
                           title="Horizontal Direction"
                         >
@@ -3733,31 +3747,31 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                       </div>
                       <div className="prop-input-wrap flex-1">
                         <span className="prop-input-label">Gap</span>
-                        <input 
-                          type="number" 
-                          value={autoLayoutGap} 
-                          onChange={(e) => setAutoLayoutGap(Number(e.target.value) || 0)} 
-                          className="prop-num-input" 
+                        <input
+                          type="number"
+                          value={autoLayoutGap}
+                          onChange={(e) => setAutoLayoutGap(Number(e.target.value) || 0)}
+                          className="prop-num-input"
                         />
                       </div>
                     </div>
                     <div className="prop-grid-2x2 mt-2">
                       <div className="prop-input-wrap">
                         <span className="prop-input-label">Pad X</span>
-                        <input 
-                          type="number" 
-                          value={padX} 
-                          onChange={(e) => setPadX(Number(e.target.value) || 0)} 
-                          className="prop-num-input" 
+                        <input
+                          type="number"
+                          value={padX}
+                          onChange={(e) => setPadX(Number(e.target.value) || 0)}
+                          className="prop-num-input"
                         />
                       </div>
                       <div className="prop-input-wrap">
                         <span className="prop-input-label">Pad Y</span>
-                        <input 
-                          type="number" 
-                          value={padY} 
-                          onChange={(e) => setPadY(Number(e.target.value) || 0)} 
-                          className="prop-num-input" 
+                        <input
+                          type="number"
+                          value={padY}
+                          onChange={(e) => setPadY(Number(e.target.value) || 0)}
+                          className="prop-num-input"
                         />
                       </div>
                     </div>
@@ -3767,9 +3781,9 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   <div className="prop-section">
                     <div className="prop-section-title">Layer</div>
                     <div className="prop-flex-row">
-                      <select 
-                        className="prop-select flex-1 cursor-pointer" 
-                        value={blendMode} 
+                      <select
+                        className="prop-select flex-1 cursor-pointer"
+                        value={blendMode}
                         onChange={(e) => setBlendMode(e.target.value)}
                       >
                         <option>Pass through</option>
@@ -3781,13 +3795,13 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                         <option>Lighten</option>
                       </select>
                       <div className="prop-input-wrap w-16">
-                        <input 
-                          type="number" 
-                          min="0" 
-                          max="100" 
-                          value={selectedNode.opacity !== undefined ? selectedNode.opacity : layerOpacity} 
-                          onChange={(e) => updateSelectedProp('opacity', Math.min(100, Math.max(0, Number(e.target.value) || 0)))} 
-                          className="prop-num-input text-right" 
+                        <input
+                          type="number"
+                          min="0"
+                          max="100"
+                          value={selectedNode.opacity !== undefined ? selectedNode.opacity : layerOpacity}
+                          onChange={(e) => updateSelectedProp('opacity', Math.min(100, Math.max(0, Number(e.target.value) || 0)))}
+                          className="prop-num-input text-right"
                         />
                       </div>
                     </div>
@@ -3797,7 +3811,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   <div className="prop-section">
                     <div className="prop-section-header">
                       <span className="prop-section-title">Fill</span>
-                      <button 
+                      <button
                         type="button"
                         className="prop-header-icon-btn"
                         onClick={() => setShowColorPicker(!showColorPicker)}
@@ -3807,22 +3821,22 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                       </button>
                     </div>
                     <div className="prop-color-row">
-                      <input 
-                        type="color" 
-                        value={(selectedNode.fill || fillColor).startsWith('#') && (selectedNode.fill || fillColor).length === 7 ? (selectedNode.fill || fillColor) : '#1E2020'} 
+                      <input
+                        type="color"
+                        value={(selectedNode.fill || fillColor).startsWith('#') && (selectedNode.fill || fillColor).length === 7 ? (selectedNode.fill || fillColor) : '#1E2020'}
                         onChange={(e) => updateSelectedProp('fill', e.target.value)}
                         className="color-picker-input-native"
                         title="Pick fill color"
                       />
-                      <input 
-                        type="text" 
-                        value={(selectedNode.fill || fillColor).toUpperCase()} 
+                      <input
+                        type="text"
+                        value={(selectedNode.fill || fillColor).toUpperCase()}
                         onChange={(e) => updateSelectedProp('fill', e.target.value)}
                         className="color-hex-input"
                         title="Hex color code"
                       />
                       <span className="color-opacity-text">{fillOpacity}%</span>
-                      <button 
+                      <button
                         type="button"
                         className="prop-eye-toggle-btn ml-auto"
                         onClick={() => setFillVisible(!fillVisible)}
@@ -3837,8 +3851,8 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     {showColorPicker && (
                       <div className="color-presets-popover">
                         {['#1E2020', '#0a0a0c', '#1e1e2f', '#0f172a', '#241442', '#14201e'].map(hex => (
-                          <div 
-                            key={hex} 
+                          <div
+                            key={hex}
                             className="color-preset-dot"
                             style={{ background: hex }}
                             onClick={() => {
@@ -3856,7 +3870,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   <div className="prop-section">
                     <div className="prop-section-header">
                       <span className="prop-section-title">Stroke</span>
-                      <button 
+                      <button
                         type="button"
                         className="prop-header-icon-btn"
                         onClick={() => {
@@ -3869,22 +3883,22 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                       </button>
                     </div>
                     <div className="prop-color-row">
-                      <input 
-                        type="color" 
-                        value={(selectedNode.stroke || strokeColor).startsWith('#') && (selectedNode.stroke || strokeColor).length === 7 ? (selectedNode.stroke || strokeColor) : '#FFFFFF'} 
+                      <input
+                        type="color"
+                        value={(selectedNode.stroke || strokeColor).startsWith('#') && (selectedNode.stroke || strokeColor).length === 7 ? (selectedNode.stroke || strokeColor) : '#FFFFFF'}
                         onChange={(e) => updateSelectedProp('stroke', e.target.value)}
                         className="color-picker-input-native"
                         title="Pick stroke color"
                       />
-                      <input 
-                        type="text" 
-                        value={(selectedNode.stroke || strokeColor).toUpperCase()} 
+                      <input
+                        type="text"
+                        value={(selectedNode.stroke || strokeColor).toUpperCase()}
                         onChange={(e) => updateSelectedProp('stroke', e.target.value)}
                         className="color-hex-input"
                         title="Stroke hex color"
                       />
                       <span className="color-opacity-text">{strokeOpacity}%</span>
-                      <button 
+                      <button
                         type="button"
                         className="prop-eye-toggle-btn ml-auto"
                         onClick={() => setStrokeVisible(!strokeVisible)}
@@ -3898,19 +3912,19 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     <div className="prop-grid-2x2 mt-2">
                       <div className="prop-input-wrap">
                         <span className="prop-input-label">Width</span>
-                        <input 
-                          type="number" 
-                          min="0" 
-                          max="20" 
-                          value={selectedNode.strokeWidth !== undefined ? selectedNode.strokeWidth : strokeWidth} 
-                          onChange={(e) => updateSelectedProp('strokeWidth', Number(e.target.value) || 0)} 
-                          className="prop-num-input" 
+                        <input
+                          type="number"
+                          min="0"
+                          max="20"
+                          value={selectedNode.strokeWidth !== undefined ? selectedNode.strokeWidth : strokeWidth}
+                          onChange={(e) => updateSelectedProp('strokeWidth', Number(e.target.value) || 0)}
+                          className="prop-num-input"
                         />
                       </div>
                       <div className="prop-input-wrap">
                         <span className="prop-input-label">Type</span>
-                        <select 
-                          value={strokeType} 
+                        <select
+                          value={strokeType}
                           onChange={(e) => setStrokeType(e.target.value)}
                           className="prop-select-transparent"
                         >
@@ -3926,7 +3940,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   <div className="prop-section">
                     <div className="prop-section-header">
                       <span className="prop-section-title">Effects</span>
-                      <button 
+                      <button
                         type="button"
                         className="prop-header-icon-btn"
                         onClick={() => {
@@ -3942,16 +3956,16 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     <div className="prop-effect-item">
                       <span className="material-symbols-outlined text-[13px] text-[#ffb5a1]">blur_on</span>
                       <span className="effect-name">Background Blur</span>
-                      <input 
-                        type="number" 
-                        min="0" 
-                        max="100" 
-                        value={blurAmount} 
-                        onChange={(e) => setBlurAmount(Number(e.target.value) || 0)} 
-                        className="effect-val-input" 
+                      <input
+                        type="number"
+                        min="0"
+                        max="100"
+                        value={blurAmount}
+                        onChange={(e) => setBlurAmount(Number(e.target.value) || 0)}
+                        className="effect-val-input"
                       />
                       <span className="prop-unit-suffix">px</span>
-                      <button 
+                      <button
                         type="button"
                         className="prop-eye-toggle-btn ml-auto"
                         onClick={() => setBlurVisible(!blurVisible)}
@@ -3966,7 +3980,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                       <span className="material-symbols-outlined text-[13px] text-[#ffb5a1]">shadow</span>
                       <span className="effect-name">Drop Shadow</span>
                       <span className="effect-val">0 30px 100px</span>
-                      <button 
+                      <button
                         type="button"
                         className="prop-eye-toggle-btn ml-auto"
                         onClick={() => setShadowVisible(!shadowVisible)}
@@ -4028,8 +4042,8 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     <div className="prop-device-box">
                       <span className="material-symbols-outlined text-[18px] text-zinc-400">laptop_mac</span>
                       <div className="flex-1">
-                        <select 
-                          value={selectedDevice} 
+                        <select
+                          value={selectedDevice}
                           onChange={(e) => {
                             setSelectedDevice(e.target.value);
                             showToast(`Device switched to ${e.target.value}`);
@@ -4048,7 +4062,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
 
                   <div className="prop-section">
                     <div className="prop-section-title">Interactive Triggers</div>
-                    <div 
+                    <div
                       className="prop-interaction-item clickable"
                       onClick={() => {
                         setActiveTab('projects');
@@ -4060,7 +4074,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                       <span className="interaction-arrow">→</span>
                       <span className="interaction-target">Navigate to Work</span>
                     </div>
-                    <div 
+                    <div
                       className="prop-interaction-item clickable"
                       onClick={() => {
                         setActiveTab('experience');
@@ -4072,7 +4086,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                       <span className="interaction-arrow">→</span>
                       <span className="interaction-target">Navigate to Experience</span>
                     </div>
-                    <div 
+                    <div
                       className="prop-interaction-item clickable"
                       onClick={() => {
                         setActiveTab('about');
@@ -4084,7 +4098,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                       <span className="interaction-arrow">→</span>
                       <span className="interaction-target">Navigate to About</span>
                     </div>
-                    <div 
+                    <div
                       className="prop-interaction-item clickable"
                       onClick={() => {
                         setPreviewAnimation(true);
@@ -4141,7 +4155,7 @@ gap: ${autoLayoutGap}px;
 backdrop-filter: ${blurVisible ? `blur(${blurAmount}px)` : 'none'};
 box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};`
                         ) : (
-`<div className="w-full max-w-[${frameW}px] min-h-[${frameH}px]
+                          `<div className="w-full max-w-[${frameW}px] min-h-[${frameH}px]
   ${fillVisible ? `bg-[${fillColor}]` : 'bg-transparent'}
   ${strokeVisible ? `border border-[${strokeColor}]` : ''}
   rounded-[${frameRadius}px]

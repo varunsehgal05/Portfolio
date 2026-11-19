@@ -1,0 +1,440 @@
+/* Califa Swarm Site Exact Recreation (https://califa.github.io/swarm-site/) */
+.swarm-site-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: #121417;
+  color: #ffffff;
+  overflow-y: auto;
+  overflow-x: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+  user-select: none;
+}
+
+/* Scroll track */
+.swarm-site-container::-webkit-scrollbar {
+  width: 8px;
+}
+.swarm-site-container::-webkit-scrollbar-track {
+  background: #121417;
+}
+.swarm-site-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+/* Background grid dot matrix */
+.swarm-site-grid-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(215, 218, 222, 0.08) 1.2px, transparent 1.2px);
+  background-size: 24px 24px;
+  z-index: 1;
+}
+
+/* SVG Swarm Connecting Paths Layer */
+.swarm-site-svg-layer {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.swarm-site-svg-layer path {
+  vector-effect: non-scaling-stroke;
+  stroke: #D7DADE;
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+  animation: swarmDash 1.2s linear infinite;
+  transition: opacity 0.2s ease;
+}
+
+@keyframes swarmDash {
+  to { stroke-dashoffset: -12; }
+}
+
+/* Sticky top notification & orchestration bar */
+.swarm-site-top-bar {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  background: rgba(18, 20, 23, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(215, 218, 222, 0.12);
+  padding: 10px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.swarm-meta-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: #a1a1aa;
+}
+
+.swarm-live-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  animation: swarmPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes swarmPulse {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.7; }
+}
+
+.swarm-narrative-tag {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.swarm-orchestrator-stats {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 11px;
+}
+
+.swarm-queue-badge {
+  background: rgba(162, 89, 255, 0.15);
+  border: 1px solid rgba(162, 89, 255, 0.35);
+  color: #c084fc;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-family: monospace;
+}
+
+.swarm-replicas-badge {
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: #38bdf8;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-family: monospace;
+}
+
+/* Swarm Cursors Overlay */
+.swarm-site-cursors-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 25;
+}
+
+.califa-cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  will-change: transform;
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  transition: opacity 0.2s ease;
+}
+
+.califa-cursor-pointer {
+  width: 14px;
+  height: 14px;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
+}
+
+.califa-cursor-tag {
+  font-size: 9.5px;
+  font-weight: 600;
+  color: #ffffff;
+  padding: 1px 5px;
+  border-radius: 4px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  letter-spacing: 0.2px;
+}
+
+.califa-cursor-replicas {
+  opacity: 0.8;
+  font-size: 8.5px;
+  font-weight: 400;
+  margin-left: 3px;
+}
+
+/* Main scrollable content */
+.swarm-site-content {
+  position: relative;
+  z-index: 10;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 60px 32px 140px;
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+}
+
+/* Hero Section */
+.swarm-site-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 20px;
+  padding-top: 40px;
+}
+
+.swarm-hero-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  padding: 4px 12px;
+  border-radius: 999px;
+}
+
+.swarm-hero-title {
+  font-size: 56px;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  line-height: 1.08;
+  color: #ffffff;
+  margin: 0;
+}
+
+.swarm-hero-title span {
+  background: linear-gradient(135deg, #38bdf8 0%, #a855f7 50%, #ec4899 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.swarm-hero-desc {
+  font-size: 18px;
+  color: #94a3b8;
+  max-width: 680px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.swarm-action-group {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 10px;
+}
+
+.swarm-btn-primary {
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.swarm-btn-primary:hover {
+  background: #f1f5f9;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
+}
+
+.swarm-btn-secondary {
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.swarm-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Agent Replicas Breakdown Strip */
+.swarm-replicas-strip {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+}
+
+.replica-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.replica-color-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.replica-chip strong {
+  color: #ffffff;
+}
+
+/* Section: Interactive YAML Agent Pipeline */
+.swarm-pipeline-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.section-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: #a1a1aa;
+}
+
+.swarm-yaml-card {
+  background: #0d0f12;
+  border: 1px solid rgba(215, 218, 222, 0.15);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+.yaml-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 18px;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.yaml-header-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-family: monospace;
+  color: #d4d4d8;
+}
+
+.yaml-live-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #10b981;
+}
+
+.yaml-code-block {
+  padding: 20px 24px;
+  margin: 0;
+  font-family: 'SF Mono', Monaco, Menlo, Consolas, monospace;
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: #e4e4e7;
+  overflow-x: auto;
+}
+
+.yaml-key { color: #38bdf8; }
+.yaml-str { color: #facc15; }
+.yaml-num { color: #a855f7; }
+.yaml-comment { color: #64748b; font-style: italic; }
+
+/* Section: 3-Column Architecture Features */
+.swarm-features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.swarm-feature-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(215, 218, 222, 0.1);
+  border-radius: 14px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.swarm-feature-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(56, 189, 248, 0.35);
+}
+
+.feature-icon-badge {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.swarm-feature-card h3 {
+  font-size: 17px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}
+
+.swarm-feature-card p {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.feature-stat-pill {
+  margin-top: auto;
+  font-size: 11px;
+  font-family: monospace;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+  padding: 4px 8px;
+  border-radius: 6px;
+  align-self: flex-start;
+}
+
+/* Footer note matching califa.github.io */
+.swarm-site-footer {
+  text-align: center;
+  font-size: 12px;
+  color: #64748b;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 30px;
+}

@@ -212,6 +212,17 @@ const smootherstep = (t) => {
   return c * c * c * (c * (c * 6 - 15) + 10);
 };
 
+// 43 Distributed Swarm Replicas (Bringing total with 5 leads to 48 agents)
+const REPLICA_WORKERS = [
+  ...Array.from({ length: 12 }, (_, i) => ({ id: `rep-research-${i+1}`, label: `agent/research-${i+1}`, color: '#38bdf8', role: 'research' })),
+  ...Array.from({ length: 4 }, (_, i) => ({ id: `rep-writer-${i+1}`, label: `agent/writer-${i+1}`, color: '#facc15', role: 'writer' })),
+  ...Array.from({ length: 8 }, (_, i) => ({ id: `rep-designer-${i+1}`, label: `agent/designer-${i+1}`, color: '#ec4899', role: 'designer' })),
+  ...Array.from({ length: 6 }, (_, i) => ({ id: `rep-review-${i+1}`, label: `agent/review-${i+1}`, color: '#10b981', role: 'review' })),
+  ...Array.from({ length: 4 }, (_, i) => ({ id: `rep-deploy-${i+1}`, label: `agent/deploy-${i+1}`, color: '#f97316', role: 'deploy' })),
+  ...Array.from({ length: 2 }, (_, i) => ({ id: `rep-optimizer-${i+1}`, label: `agent/optimizer-${i+1}`, color: '#8b5cf6', role: 'optimizer' })),
+  ...Array.from({ length: 7 }, (_, i) => ({ id: `rep-eval-${i+1}`, label: `agent/eval-${i+1}`, color: '#06b6d4', role: 'eval' }))
+];
+
 const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) => {
   const [statusMessage, setStatusMessage] = useState('Initializing swarm agents...');
   const [speedMultiplier, setSpeedMultiplier] = useState(1); // 1x or 2x
@@ -221,6 +232,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
   const [wireframeData, setWireframeData] = useState(null);
   const [activeGuides, setActiveGuides] = useState([]);
   const [ripples, setRipples] = useState([]);
+  const [replicas, setReplicas] = useState([]);
+  const [networkPaths, setNetworkPaths] = useState([]);
 
   const animFrameRef = useRef(null);
   const startTimeRef = useRef(Date.now());
@@ -230,6 +243,13 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
   const lastTimeRef = useRef(Date.now());
   const lastStampedIndexRef = useRef(-1);
   const physicsRef = useRef(null);
+  const replicasStateRef = useRef(REPLICA_WORKERS.map((w, idx) => ({
+    ...w,
+    x: 200 + ((idx * 67) % 800),
+    y: 120 + ((idx * 47) % 550),
+    vx: 0,
+    vy: 0
+  })));
 
   // Screen dimensions
   const [dims, setDims] = useState({
@@ -851,7 +871,45 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         };
       });
 
+      // Update 43 replica workers around active stage centroid
+      const centroidX = Object.values(agentTargets).reduce((acc, c) => acc + c.x, 0) / 5;
+      const centroidY = Object.values(agentTargets).reduce((acc, c) => acc + c.y, 0) / 5;
+
+      const currentReps = replicasStateRef.current;
+      const updatedReps = currentReps.map((rep, idx) => {
+        const orbitAngle = (t * 2.2 + (idx * Math.PI * 2) / currentReps.length);
+        const orbitRadius = 110 + ((idx * 21) % 220);
+        const targetX = centroidX + Math.cos(orbitAngle) * orbitRadius;
+        const targetY = centroidY + Math.sin(orbitAngle) * (orbitRadius * 0.65);
+
+        rep.x += (targetX - rep.x) * 0.08;
+        rep.y += (targetY - rep.y) * 0.08;
+        return rep;
+      });
+
+      // Compute dynamic SVG network paths between nearby replicas (< 130px)
+      const netPaths = [];
+      for (let i = 0; i < updatedReps.length; i += 3) {
+        for (let j = i + 1; j < updatedReps.length; j += 4) {
+          const a = updatedReps[i];
+          const b = updatedReps[j];
+          const dist = Math.hypot(a.x - b.x, a.y - b.y);
+          if (dist < 130) {
+            netPaths.push({
+              d: `M ${a.x.toFixed(1)} ${a.y.toFixed(1)} L ${b.x.toFixed(1)} ${b.y.toFixed(1)}`,
+              color: a.color,
+              opacity: (1 - dist / 130) * 0.35
+            });
+            if (netPaths.length >= 18) break;
+          }
+        }
+        if (netPaths.length >= 18) break;
+      }
+
       setCursors(updatedCursors);
+      setReplicas([...updatedReps]);
+      setNetworkPaths(netPaths);
+
       animFrameRef.current = requestAnimationFrame(loop);
     };
 
@@ -866,7 +924,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
       {/* Blueprint Coordinates Indicator (Bottom-Left) */}
       <div className="swarm-blueprint-indicator">
         <span className="blueprint-tag">⚡ SWARM REBUILD ENGINE v3.5</span>
-        <span className="blueprint-coords">AUTONOMOUS MULTIPLAYER RECONSTRUCTION • 5 AGENTS</span>
+        <span className="blueprint-coords">AUTONOMOUS MULTIPLAYER RECONSTRUCTION • 48 AGENTS (18 tasks queued)</span>
       </div>
 
       {/* Viewport Info Readout (Bottom-Right) */}
@@ -874,8 +932,20 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         <span>VIEWPORT: {dims.w} × {dims.h} px • 60 FPS</span>
       </div>
 
-      {/* SVG Canvas for smart guide lines & measurements */}
+      {/* SVG Canvas for smart guide lines, measurements & dynamic swarm network paths */}
       <svg className="swarm-vector-canvas" width={dims.w} height={dims.h}>
+        {/* Dynamic network connector lines between nearby swarm agents (califa swarm site style) */}
+        {networkPaths.map((np, idx) => (
+          <path
+            key={`np-${idx}`}
+            d={np.d}
+            stroke={np.color || '#ec4899'}
+            strokeWidth="1"
+            strokeDasharray="3 3"
+            opacity={np.opacity || 0.25}
+            vectorEffect="non-scaling-stroke"
+          />
+        ))}
         {activeGuides.map((g, idx) => (
           <g key={idx} className="swarm-guide-group">
             <line
@@ -1041,7 +1111,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         );
       })}
 
-      {/* Active Multiplayer Cursors */}
+      {/* Active Multiplayer Cursors (5 Lead Agents) */}
       {Object.entries(cursors).map(([key, cursor]) => (
         <SwarmCursor
           key={key}
@@ -1056,6 +1126,30 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           dupBadge={cursor.dupBadge}
           trail={cursor.trail}
         />
+      ))}
+
+      {/* 43 Swarm Replica Workers (Califa Swarm Site Recreation) */}
+      {replicas.map((rep) => (
+        <div
+          key={`rep-${rep.id}`}
+          className="swarm-replica-agent"
+          style={{
+            transform: `translate3d(${rep.x.toFixed(1)}px, ${rep.y.toFixed(1)}px, 0)`
+          }}
+        >
+          <svg className="swarm-replica-pointer" width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path
+              d="M1 1L6.5 14.5L9.2 8.8L15 6L1 1Z"
+              fill={rep.color}
+              stroke="#0a0a0c"
+              strokeWidth="1.2"
+              strokeLinejoin="round"
+            />
+          </svg>
+          <span className="swarm-replica-tag" style={{ backgroundColor: rep.color }}>
+            {rep.label}
+          </span>
+        </div>
       ))}
     </div>
   );

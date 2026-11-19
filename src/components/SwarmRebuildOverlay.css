@@ -14,6 +14,32 @@
   opacity: 0;
 }
 
+/* Swarm 48 Replicas Layer (Califa Swarm Site Recreation) */
+.swarm-replica-agent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 999998;
+  display: flex;
+  align-items: flex-start;
+  gap: 3px;
+  will-change: transform;
+  transition: opacity 0.2s ease;
+}
+
+.swarm-replica-tag {
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+  font-size: 8.5px;
+  font-weight: 600;
+  color: #ffffff;
+  padding: 1px 4px;
+  border-radius: 3px;
+  white-space: nowrap;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  opacity: 0.88;
+}
+
 /* ============================================================
    Bottom Technical Indicators
    ============================================================ */

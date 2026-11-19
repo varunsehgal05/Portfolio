@@ -20,15 +20,18 @@ import {
   Layers,
   Compass
 } from 'lucide-react';
+import FigmaLoadingScreen from './FigmaLoadingScreen';
+import SwarmSiteView from './SwarmSiteView';
 import './SafariApp.css';
 
 const BOOKMARKS = [
+  { id: 'swarm', label: '⚡ Swarm Site', url: 'https://califa.github.io/swarm-site' },
+  { id: 'figma', label: '🎨 Figma Web', url: 'https://figma.com/@varunsehgal' },
   { id: 'portfolio', label: '🌐 Portfolio Live', url: 'https://varunsehgal.runs-on.dev' },
   { id: 'github', label: '🐙 GitHub', url: 'https://github.com/varunsehgal05' },
   { id: 'linkedin', label: '💼 LinkedIn', url: 'https://linkedin.com/in/varunsehgal02' },
   { id: 'behance', label: '🎨 Behance', url: 'https://behance.net/varunsehgal3' },
-  { id: 'google', label: '🔍 Google', url: 'https://www.google.com' },
-  { id: 'wikipedia', label: '📖 Wikipedia (UX)', url: 'https://en.wikipedia.org/wiki/User_experience_design' }
+  { id: 'google', label: '🔍 Google', url: 'https://www.google.com' }
 ];
 
 const PINNED_REPOS = [
@@ -98,24 +101,35 @@ const BEHANCE_PROJECTS = [
 ];
 
 const INITIAL_TABS = [
-  { id: 'tab-1', title: 'Varun Sehgal (varunsehgal05) · GitHub', url: 'https://github.com/varunsehgal05', type: 'github' },
-  { id: 'tab-2', title: 'Varun Sehgal — Live Portfolio', url: 'https://varunsehgal.runs-on.dev', type: 'portfolio' },
-  { id: 'tab-3', title: 'Google Search', url: 'https://www.google.com', type: 'google' }
+  { id: 'tab-swarm', title: 'Swarm — 48 Agents Orchestration', url: 'https://califa.github.io/swarm-site', type: 'swarm' },
+  { id: 'tab-figma', title: 'Figma — Varun Sehgal Portfolio', url: 'https://figma.com/@varunsehgal', type: 'figma' },
+  { id: 'tab-1', title: 'Varun Sehgal (varunsehgal05) · GitHub', url: 'https://github.com/varunsehgal05', type: 'github' }
 ];
 
 const SafariApp = () => {
   const [tabs, setTabs] = useState(INITIAL_TABS);
-  const [activeTabId, setActiveTabId] = useState('tab-1');
-  const [urlInput, setUrlInput] = useState('https://github.com/varunsehgal05');
+  const [activeTabId, setActiveTabId] = useState('tab-swarm');
+  const [urlInput, setUrlInput] = useState('https://califa.github.io/swarm-site');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
+  const [pageLoading, setPageLoading] = useState(false);
+  const [showFigmaLoading, setShowFigmaLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('Varun Sehgal UI UX designer');
 
   const activeTab = tabs.find(t => t.id === activeTabId) || tabs[0];
 
+  const triggerPageLoad = () => {
+    setPageLoading(true);
+    setTimeout(() => setPageLoading(false), 650);
+  };
+
   const handleSelectTab = (tab) => {
     setActiveTabId(tab.id);
     setUrlInput(tab.url);
+    triggerPageLoad();
+    if (tab.type === 'figma' || tab.url.includes('figma.com')) {
+      setShowFigmaLoading(true);
+    }
   };
 
   const handleAddTab = () => {
@@ -129,6 +143,7 @@ const SafariApp = () => {
     setTabs(prev => [...prev, newTab]);
     setActiveTabId(newId);
     setUrlInput(newTab.url);
+    triggerPageLoad();
   };
 
   const handleCloseTab = (e, tabId) => {
@@ -139,6 +154,7 @@ const SafariApp = () => {
     if (activeTabId === tabId) {
       setActiveTabId(remaining[0].id);
       setUrlInput(remaining[0].url);
+      triggerPageLoad();
     }
   };
 
@@ -146,10 +162,19 @@ const SafariApp = () => {
     let target = newUrl.trim();
     if (!target) return;
 
+    triggerPageLoad();
+
     let targetType = 'web';
     let targetTitle = target;
 
-    if (target.includes('github.com')) {
+    if (target.includes('swarm-site') || target.includes('califa.github.io')) {
+      targetType = 'swarm';
+      targetTitle = 'Swarm — 48 Agents Orchestration';
+    } else if (target.includes('figma.com')) {
+      targetType = 'figma';
+      targetTitle = 'Figma — Varun Sehgal Portfolio';
+      setShowFigmaLoading(true);
+    } else if (target.includes('github.com')) {
       targetType = 'github';
       targetTitle = 'Varun Sehgal · GitHub';
     } else if (target.includes('runs-on.dev') || target.includes('portfolio')) {
@@ -233,6 +258,7 @@ const SafariApp = () => {
 
       {/* 2. Safari Unified Navigation Bar */}
       <div className="safari-nav-bar">
+        {pageLoading && <div className="safari-top-progress-bar" />}
         <div className="safari-history-buttons">
           <button className="safari-icon-btn" onClick={() => navigateTo('https://github.com/varunsehgal05')} title="Back">
             <ArrowLeft size={14} />
@@ -295,6 +321,99 @@ const SafariApp = () => {
 
       {/* 4. Safari Main Viewport Area */}
       <div className="safari-viewport">
+        {/* VIEW: CALIFA SWARM SITE (48 Agents Flocking Simulation) */}
+        {activeTab.type === 'swarm' && (
+          <SwarmSiteView />
+        )}
+
+        {/* VIEW: FIGMA WEB WORKSPACE WITH AUTHENTIC LOADING SCREEN */}
+        {activeTab.type === 'figma' && (
+          showFigmaLoading ? (
+            <FigmaLoadingScreen
+              fileName="Figma_Web_Varun_Portfolio.fig"
+              duration={1300}
+              onLoaded={() => setShowFigmaLoading(false)}
+            />
+          ) : (
+            <div className="safari-figma-web-view">
+              <div className="safari-figma-header">
+                <div className="safari-figma-title-group">
+                  <div className="safari-figma-logo-badge">
+                    <svg width="18" height="27" viewBox="0 0 38 57" fill="none">
+                      <path d="M19 0H9.5C4.25 0 0 4.25 0 9.5S4.25 19 9.5 19H19V0Z" fill="#F24E1E"/>
+                      <path d="M19 0H28.5C33.75 0 38 4.25 38 9.5S33.75 19 28.5 19H19V0Z" fill="#FF7262"/>
+                      <path d="M0 28.5C0 23.25 4.25 19 9.5 19H19V38H9.5C4.25 38 0 33.75 0 28.5Z" fill="#A259FF"/>
+                      <circle cx="28.5" cy="28.5" r="9.5" fill="#1ABCFE"/>
+                      <path d="M0 47.5C0 42.25 4.25 38 9.5 38H19V47.5C19 52.75 14.75 57 9.5 57S0 52.75 0 47.5Z" fill="#0ACF83"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <h2 className="safari-figma-title">Varun Sehgal — Figma Web Workspace</h2>
+                    <p className="safari-figma-desc">Interactive cloud artboards, case study frames & components</p>
+                  </div>
+                </div>
+                <a href="https://figma.com/@varunsehgal" target="_blank" rel="noreferrer" className="btn-launch-external">
+                  <span>Open in Figma App ↗</span>
+                </a>
+              </div>
+
+              <div className="safari-figma-artboards-grid">
+                <div className="safari-figma-artboard-card">
+                  <div className="safari-figma-artboard-preview">
+                    <img src="/figma_AI_Interview.png" alt="AI Interview" />
+                  </div>
+                  <div className="safari-figma-artboard-info">
+                    <h3 className="safari-figma-artboard-title">AI Interview Prep System</h3>
+                    <p className="safari-figma-artboard-meta">40+ Components • SaaS Design System</p>
+                    <a href="https://www.figma.com/design/ezDh2NmBto6iv7xaQNs3Ha/AI-Interview?node-id=11-1842" target="_blank" rel="noreferrer" className="safari-figma-open-pill">
+                      Open Frame ↗
+                    </a>
+                  </div>
+                </div>
+
+                <div className="safari-figma-artboard-card">
+                  <div className="safari-figma-artboard-preview">
+                    <img src="/figma_EventFlow.png" alt="EventFlow" />
+                  </div>
+                  <div className="safari-figma-artboard-info">
+                    <h3 className="safari-figma-artboard-title">EventFlow Experience Platform</h3>
+                    <p className="safari-figma-artboard-meta">30% Less Dropoff • Ticketing Flow</p>
+                    <a href="https://www.figma.com/design/29nTBBWxZfoOKdFnOaQWbq/EventFlow?node-id=2-2" target="_blank" rel="noreferrer" className="safari-figma-open-pill">
+                      Open Frame ↗
+                    </a>
+                  </div>
+                </div>
+
+                <div className="safari-figma-artboard-card">
+                  <div className="safari-figma-artboard-preview">
+                    <img src="/figma_CodeSrijan.png" alt="CodeSrijan" />
+                  </div>
+                  <div className="safari-figma-artboard-info">
+                    <h3 className="safari-figma-artboard-title">CodeSrijan Hackathon Portal</h3>
+                    <p className="safari-figma-artboard-meta">800+ Attendees • National Hackathon</p>
+                    <a href="https://www.figma.com/design/3mw8XBHEZ3b8HKNNqcs6U2/Expensify---Budget-Tracker-App?node-id=135-318" target="_blank" rel="noreferrer" className="safari-figma-open-pill">
+                      Open Frame ↗
+                    </a>
+                  </div>
+                </div>
+
+                <div className="safari-figma-artboard-card">
+                  <div className="safari-figma-artboard-preview">
+                    <img src="/figma_LandingPage.png" alt="Landing Page" />
+                  </div>
+                  <div className="safari-figma-artboard-info">
+                    <h3 className="safari-figma-artboard-title">Conversion SaaS Landing Page</h3>
+                    <p className="safari-figma-artboard-meta">High Conversion Velocity • Brand Typography</p>
+                    <a href="https://www.figma.com/@varunsehgal" target="_blank" rel="noreferrer" className="safari-figma-open-pill">
+                      Open Frame ↗
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )
+        )}
+
         {/* VIEW: GITHUB PROFILE */}
         {activeTab.type === 'github' && (
           <div className="safari-github-view">
