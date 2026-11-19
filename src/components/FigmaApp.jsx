@@ -18,39 +18,6 @@ const INITIAL_SHAPES = [];
 
 const ALL_PROJECTS = [
   {
-    id: 'ai-interview',
-    name: 'AI Interview Prep System',
-    category: 'SaaS / Web',
-    badge: '40+ Components',
-    metric: '40+ Components • Real-time Scoring',
-    image: '/figma_AI_Interview.png',
-    desc: 'Automated technical & behavioral mock interview platform with real-time AI scoring, candidate evaluation, and grading matrix.',
-    tags: ['Figma', 'SaaS', 'AI UX', 'Dark Mode'],
-    link: 'https://www.figma.com/design/ezDh2NmBto6iv7xaQNs3Ha/AI-Interview?node-id=11-1842&t=siyh0b32g2XWrRNe-1'
-  },
-  {
-    id: 'movie-tickets',
-    name: 'Movie Ticket Booking App',
-    category: 'Mobile App',
-    badge: '12+ User Flows',
-    metric: '3-Step Checkout • 12+ Flows',
-    image: '/figma_Movie_Tickets.png',
-    desc: 'Cinema booking mobile UX prototype streamlining seat selection, theater schedules, and payment completion.',
-    tags: ['Mobile UX', 'Seat Map', 'Micro-interactions'],
-    link: 'https://www.figma.com/design/0cJQWX8qYssPfK4hmPtdVj/Movie-Ticket-Booking-App-Design?node-id=31-86&t=Jd933TVzkrlBb4MQ-1'
-  },
-  {
-    id: 'expensify',
-    name: 'Expensify - Budget Tracker',
-    category: 'Mobile App',
-    badge: '17+ Screens',
-    metric: 'Sub-5s Logging • 17+ Screens',
-    image: '/figma_Expensify.png',
-    desc: 'Personal finance analytics app bringing average "Add Expense" transaction logging time below 5 seconds.',
-    tags: ['FinTech', 'Analytics', 'Dashboard', 'Figma'],
-    link: 'https://www.figma.com/design/3mw8XBHEZ3b8HKNNqcs6U2/Expensify---Budget-Tracker-App?node-id=135-318&t=gUJEMUlyDc8ERNeR-1'
-  },
-  {
     id: 'codesrijan',
     name: 'CodeSrijan Hackathon Portal',
     category: 'SaaS / Web',
@@ -93,6 +60,39 @@ const ALL_PROJECTS = [
     desc: 'Complex data visualization telemetry suite with role-based access, dark mode analytics, and filtering.',
     tags: ['Dashboard', 'Analytics', 'Enterprise'],
     link: 'https://www.figma.com/design/PbO4QNnkgAyrPtkuyduZFE/sas?node-id=0-1&t=yHd7NxOZzn7AZUuw-0'
+  },
+  {
+    id: 'ai-interview',
+    name: 'AI Interview Prep System',
+    category: 'SaaS / Web',
+    badge: '40+ Components',
+    metric: '40+ Components • Real-time Scoring',
+    image: '/figma_AI_Interview.png',
+    desc: 'Automated technical & behavioral mock interview platform with real-time AI scoring, candidate evaluation, and grading matrix.',
+    tags: ['Figma', 'SaaS', 'AI UX', 'Dark Mode'],
+    link: 'https://www.figma.com/design/ezDh2NmBto6iv7xaQNs3Ha/AI-Interview?node-id=11-1842&t=siyh0b32g2XWrRNe-1'
+  },
+  {
+    id: 'movie-tickets',
+    name: 'Movie Ticket Booking App',
+    category: 'Mobile App',
+    badge: '12+ User Flows',
+    metric: '3-Step Checkout • 12+ Flows',
+    image: '/figma_Movie_Tickets.png',
+    desc: 'Cinema booking mobile UX prototype streamlining seat selection, theater schedules, and payment completion.',
+    tags: ['Mobile UX', 'Seat Map', 'Micro-interactions'],
+    link: 'https://www.figma.com/design/0cJQWX8qYssPfK4hmPtdVj/Movie-Ticket-Booking-App-Design?node-id=31-86&t=Jd933TVzkrlBb4MQ-1'
+  },
+  {
+    id: 'expensify',
+    name: 'Expensify - Budget Tracker',
+    category: 'Mobile App',
+    badge: '17+ Screens',
+    metric: 'Sub-5s Logging • 17+ Screens',
+    image: '/figma_Expensify.png',
+    desc: 'Personal finance analytics app bringing average "Add Expense" transaction logging time below 5 seconds.',
+    tags: ['FinTech', 'Analytics', 'Dashboard', 'Figma'],
+    link: 'https://www.figma.com/design/3mw8XBHEZ3b8HKNNqcs6U2/Expensify---Budget-Tracker-App?node-id=135-318&t=gUJEMUlyDc8ERNeR-1'
   }
 ];
 
@@ -1762,11 +1762,17 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                       {ALL_PROJECTS.slice(0, 4).map((proj) => (
                         <div key={proj.id} className="featured-project-card">
                           <div className="project-preview-wrap">
-                            <FirebaseImage
-                              storagePath={`projects/${proj.id}.png`}
-                              fallbackSrc={proj.image}
+                            <img
+                              src={proj.image}
                               alt={proj.name}
                               className="project-preview-img"
+                              loading="lazy"
+                              onError={(e) => {
+                                if (!e.currentTarget.dataset.fallbackApplied) {
+                                  e.currentTarget.dataset.fallbackApplied = 'true';
+                                  e.currentTarget.src = '/figma_LandingPage.png';
+                                }
+                              }}
                             />
                             <span className="project-badge-pill">{proj.badge}</span>
                           </div>

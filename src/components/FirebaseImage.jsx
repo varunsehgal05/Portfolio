@@ -6,16 +6,27 @@ import { getFirebaseImageUrl } from '../services/firebase';
  */
 export const useFirebaseImage = (storagePath, fallbackUrl) => {
   const [src, setSrc] = useState(fallbackUrl || storagePath);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
-    getFirebaseImageUrl(storagePath, fallbackUrl).then((url) => {
-      if (isMounted) {
-        setSrc(url);
-        setLoading(false);
-      }
-    });
+    if (!storagePath) {
+      setSrc(fallbackUrl);
+      return;
+    }
+    getFirebaseImageUrl(storagePath, fallbackUrl)
+      .then((url) => {
+        if (isMounted) {
+          setSrc(url || fallbackUrl);
+          setLoading(false);
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setSrc(fallbackUrl);
+          setLoading(false);
+        }
+      });
     return () => {
       isMounted = false;
     };
@@ -27,16 +38,22 @@ export const useFirebaseImage = (storagePath, fallbackUrl) => {
 /**
  * Image component that loads from Firebase Cloud Storage with instant fallback
  */
-export const FirebaseImage = ({ storagePath, fallbackSrc, alt = '', className = '', ...props }) => {
+export const FirebaseImage = ({ storagePath, fallbackSrc, alt = '', className = '', onError, ...props }) => {
   const { src } = useFirebaseImage(storagePath, fallbackSrc);
   const [hasError, setHasError] = useState(false);
 
   return (
     <img 
-      src={hasError ? fallbackSrc : src}
+      src={hasError ? fallbackSrc : (src || fallbackSrc)}
       alt={alt}
       className={className}
-      onError={() => setHasError(true)}
+      onError={(e) => {
+        if (!hasError && fallbackSrc) {
+          setHasError(true);
+        } else if (onError) {
+          onError(e);
+        }
+      }}
       {...props}
     />
   );

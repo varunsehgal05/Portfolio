@@ -360,12 +360,16 @@ const SafariApp = () => {
               <div className="safari-figma-artboards-grid">
                 <div className="safari-figma-artboard-card">
                   <div className="safari-figma-artboard-preview">
-                    <img src="/figma_AI_Interview.png" alt="AI Interview" />
+                    <img
+                      src="/figma_CodeSrijan.png"
+                      alt="CodeSrijan Hackathon Portal"
+                      onError={(e) => { e.currentTarget.src = '/figma_LandingPage.png'; }}
+                    />
                   </div>
                   <div className="safari-figma-artboard-info">
-                    <h3 className="safari-figma-artboard-title">AI Interview Prep System</h3>
-                    <p className="safari-figma-artboard-meta">40+ Components • SaaS Design System</p>
-                    <a href="https://www.figma.com/design/ezDh2NmBto6iv7xaQNs3Ha/AI-Interview?node-id=11-1842" target="_blank" rel="noreferrer" className="safari-figma-open-pill">
+                    <h3 className="safari-figma-artboard-title">CodeSrijan Hackathon Portal</h3>
+                    <p className="safari-figma-artboard-meta">800+ Attendees • National Hackathon</p>
+                    <a href="https://www.figma.com/design/hCaNWKm2qTY2kQ0KOZRywa/M-1?node-id=40-2" target="_blank" rel="noreferrer" className="safari-figma-open-pill">
                       Open Frame ↗
                     </a>
                   </div>
@@ -373,7 +377,11 @@ const SafariApp = () => {
 
                 <div className="safari-figma-artboard-card">
                   <div className="safari-figma-artboard-preview">
-                    <img src="/figma_EventFlow.png" alt="EventFlow" />
+                    <img
+                      src="/figma_EventFlow.png"
+                      alt="EventFlow Experience Platform"
+                      onError={(e) => { e.currentTarget.src = '/figma_LandingPage.png'; }}
+                    />
                   </div>
                   <div className="safari-figma-artboard-info">
                     <h3 className="safari-figma-artboard-title">EventFlow Experience Platform</h3>
@@ -386,12 +394,16 @@ const SafariApp = () => {
 
                 <div className="safari-figma-artboard-card">
                   <div className="safari-figma-artboard-preview">
-                    <img src="/figma_CodeSrijan.png" alt="CodeSrijan" />
+                    <img
+                      src="/figma_LandingPage.png"
+                      alt="Conversion Landing Page"
+                      onError={(e) => { e.currentTarget.src = '/figma_SaasDashboard.png'; }}
+                    />
                   </div>
                   <div className="safari-figma-artboard-info">
-                    <h3 className="safari-figma-artboard-title">CodeSrijan Hackathon Portal</h3>
-                    <p className="safari-figma-artboard-meta">800+ Attendees • National Hackathon</p>
-                    <a href="https://www.figma.com/design/3mw8XBHEZ3b8HKNNqcs6U2/Expensify---Budget-Tracker-App?node-id=135-318" target="_blank" rel="noreferrer" className="safari-figma-open-pill">
+                    <h3 className="safari-figma-artboard-title">Conversion SaaS Landing Page</h3>
+                    <p className="safari-figma-artboard-meta">High Conversion Velocity • Brand Typography</p>
+                    <a href="https://www.figma.com/design/WfUzGPYsE7UFYS9YaQp5v6/home-page?node-id=0-1" target="_blank" rel="noreferrer" className="safari-figma-open-pill">
                       Open Frame ↗
                     </a>
                   </div>
@@ -399,12 +411,16 @@ const SafariApp = () => {
 
                 <div className="safari-figma-artboard-card">
                   <div className="safari-figma-artboard-preview">
-                    <img src="/figma_LandingPage.png" alt="Landing Page" />
+                    <img
+                      src="/figma_SaasDashboard.png"
+                      alt="Enterprise SaaS Dashboard"
+                      onError={(e) => { e.currentTarget.src = '/figma_LandingPage.png'; }}
+                    />
                   </div>
                   <div className="safari-figma-artboard-info">
-                    <h3 className="safari-figma-artboard-title">Conversion SaaS Landing Page</h3>
-                    <p className="safari-figma-artboard-meta">High Conversion Velocity • Brand Typography</p>
-                    <a href="https://www.figma.com/@varunsehgal" target="_blank" rel="noreferrer" className="safari-figma-open-pill">
+                    <h3 className="safari-figma-artboard-title">Enterprise SaaS Dashboard</h3>
+                    <p className="safari-figma-artboard-meta">Enterprise UI • Telemetry</p>
+                    <a href="https://www.figma.com/design/PbO4QNnkgAyrPtkuyduZFE/sas?node-id=0-1" target="_blank" rel="noreferrer" className="safari-figma-open-pill">
                       Open Frame ↗
                     </a>
                   </div>
