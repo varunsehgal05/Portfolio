@@ -563,3 +563,414 @@
 .settings-toggle-btn.active .toggle-slider-knob {
   transform: translateX(20px);
 }
+
+/* ========================================================
+   ABOUT VARUN SEHGAL & VARUNOS (HIGH-ENGAGEMENT SHOWCASE)
+   ======================================================== */
+.about-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* 1. Hero Architect Card */
+.about-architect-card {
+  display: flex;
+  gap: 20px;
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.45) 0%, rgba(15, 23, 42, 0.6) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 22px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(12px);
+}
+
+.architect-avatar-wrap {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  flex-shrink: 0;
+}
+
+.architect-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #0284c7;
+  box-shadow: 0 0 16px rgba(2, 132, 199, 0.4);
+}
+
+.architect-status-ring {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #22c55e;
+  border: 2.5px solid #0f172a;
+  box-shadow: 0 0 8px #22c55e;
+}
+
+.architect-info-col {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.architect-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.status-pill-green {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #4ade80;
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.experience-tag {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.architect-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -0.3px;
+}
+
+.architect-headline {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.architect-bio {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #cbd5e1;
+  margin: 4px 0 6px;
+}
+
+.architect-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 11px;
+  color: #94a3b8;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.meta-icon {
+  color: #38bdf8;
+}
+
+/* Quick Action Buttons */
+.architect-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.about-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s ease;
+}
+
+.about-btn.primary {
+  background: #0284c7;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.35);
+}
+
+.about-btn.primary:hover {
+  background: #0369a1;
+  transform: translateY(-1px);
+}
+
+.about-btn.secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: #f1f5f9;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.about-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.about-btn.secondary.copied {
+  border-color: #22c55e;
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+}
+
+.about-btn.icon-only {
+  padding: 6px 9px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #94a3b8;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.about-btn.icon-only:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.3);
+}
+
+/* 2. Stats Grid */
+.about-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.about-stat-box {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 10px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s ease;
+}
+
+.about-stat-box:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.stat-icon-wrap {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.stat-icon-wrap.amber { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+.stat-icon-wrap.blue { background: rgba(14, 165, 233, 0.15); color: #0ea5e9; }
+.stat-icon-wrap.emerald { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+.stat-icon-wrap.purple { background: rgba(168, 85, 247, 0.15); color: #a855f7; }
+
+.stat-number {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.2px;
+}
+
+.stat-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #e2e8f0;
+  margin: 2px 0;
+}
+
+.stat-sub {
+  font-size: 10px;
+  color: #94a3b8;
+  line-height: 1.35;
+}
+
+/* 3. Section Card (Under the Hood) */
+.about-section-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.section-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.section-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.section-badge {
+  font-size: 9.5px;
+  font-weight: 600;
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  padding: 2px 7px;
+  border-radius: 999px;
+}
+
+.section-sub {
+  font-size: 11.5px;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.tech-chips-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.tech-chip-btn {
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tech-chip-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.tech-chip-btn.active {
+  background: #0284c7;
+  border-color: #38bdf8;
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.35);
+}
+
+.tech-detail-banner {
+  background: rgba(2, 132, 199, 0.08);
+  border: 1px solid rgba(2, 132, 199, 0.25);
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tech-detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: #38bdf8;
+}
+
+.tech-status-dot {
+  font-size: 10px;
+  color: #4ade80;
+}
+
+.tech-detail-text {
+  font-size: 11.5px;
+  color: #e2e8f0;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* 4. Fact & Insight Shuffler */
+.about-fact-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(90deg, rgba(168, 85, 247, 0.1) 0%, rgba(56, 189, 248, 0.1) 100%);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  border-radius: 10px;
+  padding: 14px 18px;
+  gap: 16px;
+}
+
+.fact-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.fact-tag {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #c084fc;
+  letter-spacing: 0.5px;
+}
+
+.fact-text {
+  font-size: 12px;
+  color: #f1f5f9;
+  font-style: italic;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.fact-next-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(168, 85, 247, 0.2);
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.fact-next-btn:hover {
+  background: rgba(168, 85, 247, 0.35);
+  transform: translateX(2px);
+}

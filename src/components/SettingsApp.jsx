@@ -9,14 +9,47 @@ import {
   Monitor,
   Sun,
   Moon,
-  Palette
+  Palette,
+  ExternalLink,
+  Copy,
+  FileText,
+  Mail,
+  MapPin,
+  GraduationCap,
+  Zap,
+  Code2,
+  Layers,
+  Award,
+  Flame,
+  ArrowRight
 } from 'lucide-react';
 import { desktopWallpapers, terminalWallpapers } from '../config/wallpapers';
 import './SettingsApp.css';
 
+const DESIGN_FACTS = [
+  "Varun bridges UI/UX design with autonomous AI vibecoding — turning complex architectures into intuitive, weightless products.",
+  "Every sound in VarunOS is synthesized live in-browser using the Web Audio API — 0 pre-recorded audio files needed!",
+  "The 48-agent Swarm Engine recreates Joel Califa's viral boid flocking simulation, following your mouse and scroll at 60fps.",
+  "EventFlow's 4-step ticketing checkout redesign reduced participant drop-off by 30% via micro-interaction feedback.",
+  "Varun architected the CodeSrijan Hackathon Portal, powering 800+ attendees and 50+ project submissions in 72 hours."
+];
+
+const TECH_DETAILS = {
+  'React 18': 'Modular component hierarchy, custom hooks, and decoupled state management.',
+  'Web Audio API': 'Procedurally synthesized mechanical clicks and chord chimes directly in audio buffers.',
+  'Califa Swarm': '48 autonomous agents calculating boid cohesion, separation, and dashed SVG vector lines.',
+  'Figma Tokens': 'System design tokens matching authentic Figma Electric Blue (#0d99ff) and dark canvas standards.',
+  'Vibecoding': 'Full-stack AI-assisted rapid development from design conception to deployed production.'
+};
+
 const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
-  const [activeTab, setActiveTab] = useState('appearance');
+  const [activeTab, setActiveTab] = useState('about'); // Defaults to 'about' so user immediately sees the rich info!
   const [wallpaperSection, setWallpaperSection] = useState('desktop'); // 'desktop' | 'terminal'
+
+  // Interactive Easter Egg & Fact states
+  const [copiedEmail, setCopiedEmail] = useState(false);
+  const [activeFactIdx, setActiveFactIdx] = useState(0);
+  const [selectedTech, setSelectedTech] = useState('React 18');
 
   // Theme mode: 'dark' | 'light' | 'auto'
   const [themeMode, setThemeMode] = useState(() => {
@@ -27,7 +60,7 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
     }
   });
 
-  // Live Swarm Mouse Flocking: true | false (defaults to true)
+  // Live Swarm Mouse Flocking: true | false
   const [swarmFollowEnabled, setSwarmFollowEnabled] = useState(() => {
     try {
       const saved = localStorage.getItem('varunos_swarm_follow_mouse');
@@ -77,6 +110,18 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
       localStorage.setItem('varunos_swarm_follow_mouse', String(nextState));
     } catch {}
     window.dispatchEvent(new CustomEvent('varunos-toggle-swarm-follow', { detail: { enabled: nextState } }));
+  };
+
+  const handleCopyEmail = () => {
+    try {
+      navigator.clipboard?.writeText('varun.sehgal02@gmail.com');
+      setCopiedEmail(true);
+      setTimeout(() => setCopiedEmail(false), 2200);
+    } catch {}
+  };
+
+  const handleNextFact = () => {
+    setActiveFactIdx((prev) => (prev + 1) % DESIGN_FACTS.length);
   };
 
   useEffect(() => {
@@ -131,6 +176,14 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
 
         <div className="settings-nav">
           <button 
+            className={`settings-nav-item ${activeTab === 'about' ? 'active' : ''}`}
+            onClick={() => setActiveTab('about')}
+          >
+            <Info size={15} />
+            <span>About Varun & OS</span>
+          </button>
+
+          <button 
             className={`settings-nav-item ${activeTab === 'appearance' ? 'active' : ''}`}
             onClick={() => setActiveTab('appearance')}
           >
@@ -153,20 +206,193 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
             <Sparkles size={15} />
             <span>Swarm Engine</span>
           </button>
-
-          <button 
-            className={`settings-nav-item ${activeTab === 'about' ? 'active' : ''}`}
-            onClick={() => setActiveTab('about')}
-          >
-            <Info size={15} />
-            <span>About VarunOS</span>
-          </button>
         </div>
       </aside>
 
       {/* Main Settings Panel */}
       <main className="settings-main">
-        {/* TAB 1: APPEARANCE (DARK / LIGHT / AUTO) */}
+        {/* ====================================================================
+            TAB 1: ABOUT VARUN SEHGAL & VARUNOS (FASCINATING & ENGAGING INFO)
+            ==================================================================== */}
+        {activeTab === 'about' && (
+          <div className="settings-panel about-panel">
+            {/* 1. ARCHITECT PROFILE HERO */}
+            <div className="about-architect-card">
+              <div className="architect-avatar-wrap">
+                <img 
+                  src="/varun.jpg" 
+                  alt="Varun Sehgal" 
+                  className="architect-avatar-img"
+                  onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                />
+                <span className="architect-status-ring" title="Available for Roles & Projects" />
+              </div>
+
+              <div className="architect-info-col">
+                <div className="architect-badge-row">
+                  <span className="status-pill-green">🟢 Open to Full-Time Design Roles</span>
+                  <span className="experience-tag">3+ Years Experience</span>
+                </div>
+
+                <h1 className="architect-name">Varun Sehgal</h1>
+                <p className="architect-headline">
+                  Lead UI/UX Designer & Vibecoded Product Engineer
+                </p>
+
+                <p className="architect-bio">
+                  Architecting modern SaaS systems, design tokens, and AI-accelerated workflows. Passionate about turning intricate engineering problems into fluid, human-centric interfaces.
+                </p>
+
+                <div className="architect-meta-row">
+                  <span className="meta-item">
+                    <MapPin size={12} className="meta-icon" />
+                    <span>Gwalior, MP, India (Remote)</span>
+                  </span>
+                  <span className="meta-item">
+                    <GraduationCap size={12} className="meta-icon" />
+                    <span>B.Tech in CSE @ Jaypee University (JUET)</span>
+                  </span>
+                </div>
+
+                {/* Quick Action Buttons */}
+                <div className="architect-actions-row">
+                  <a 
+                    href="/Varun_Sehgal_Resume_Updated.pdf" 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="about-btn primary"
+                  >
+                    <FileText size={13} />
+                    <span>View Resume PDF</span>
+                  </a>
+
+                  <button 
+                    type="button"
+                    className={`about-btn secondary ${copiedEmail ? 'copied' : ''}`}
+                    onClick={handleCopyEmail}
+                  >
+                    {copiedEmail ? <Check size={13} color="#4ade80" /> : <Copy size={13} />}
+                    <span>{copiedEmail ? 'Email Copied!' : 'Copy Email'}</span>
+                  </button>
+
+                  <a 
+                    href="https://linkedin.com/in/varunsehgal02" 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="about-btn icon-only"
+                    title="LinkedIn Profile"
+                  >
+                    <ExternalLink size={13} />
+                  </a>
+
+                  <a 
+                    href="https://github.com/varunsehgal05" 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="about-btn icon-only"
+                    title="GitHub Repositories"
+                  >
+                    <Code2 size={13} />
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* 2. REAL SUPERPOWER METRICS (INTERESTING IMPACT STATS) */}
+            <div className="about-stats-grid">
+              <div className="about-stat-box">
+                <div className="stat-icon-wrap amber">
+                  <Zap size={16} />
+                </div>
+                <div className="stat-number">10×</div>
+                <div className="stat-label">Vibecoded Speed</div>
+                <div className="stat-sub">From concept & prompt to full production React code</div>
+              </div>
+
+              <div className="about-stat-box">
+                <div className="stat-icon-wrap blue">
+                  <Layers size={16} />
+                </div>
+                <div className="stat-number">50+</div>
+                <div className="stat-label">Design Tokens</div>
+                <div className="stat-sub">Modular Figma component system & atomic tokens</div>
+              </div>
+
+              <div className="about-stat-box">
+                <div className="stat-icon-wrap emerald">
+                  <Award size={16} />
+                </div>
+                <div className="stat-number">-30%</div>
+                <div className="stat-label">Drop-off Reduction</div>
+                <div className="stat-sub">EventFlow 4-step streamlined checkout flow</div>
+              </div>
+
+              <div className="about-stat-box">
+                <div className="stat-icon-wrap purple">
+                  <Flame size={16} />
+                </div>
+                <div className="stat-number">800+</div>
+                <div className="stat-label">Developers Impacted</div>
+                <div className="stat-sub">CodeSrijan Hackathon Portal ecosystem</div>
+              </div>
+            </div>
+
+            {/* 3. UNDER THE HOOD: TECH ARSENAL EXPLORER */}
+            <div className="about-section-card">
+              <div className="section-header-row">
+                <div className="section-title-wrap">
+                  <Sparkles size={15} className="text-sky-400" />
+                  <h3 className="section-title">Under The Hood of VarunOS</h3>
+                </div>
+                <span className="section-badge">Interactive Tech Stack</span>
+              </div>
+
+              <p className="section-sub">
+                Click any core technology below to see how VarunOS was built with zero fluff:
+              </p>
+
+              <div className="tech-chips-row">
+                {Object.keys(TECH_DETAILS).map((tech) => (
+                  <button
+                    key={tech}
+                    type="button"
+                    className={`tech-chip-btn ${selectedTech === tech ? 'active' : ''}`}
+                    onClick={() => setSelectedTech(tech)}
+                  >
+                    <span>{tech}</span>
+                  </button>
+                ))}
+              </div>
+
+              <div className="tech-detail-banner">
+                <div className="tech-detail-header">
+                  <strong>{selectedTech}</strong>
+                  <span className="tech-status-dot">● Active in this browser</span>
+                </div>
+                <p className="tech-detail-text">{TECH_DETAILS[selectedTech]}</p>
+              </div>
+            </div>
+
+            {/* 4. DESIGN PHILOSOPHY & FACT SHUFFLER */}
+            <div className="about-fact-card">
+              <div className="fact-content">
+                <div className="fact-tag">💡 INSIGHT & PHILOSOPHY</div>
+                <p className="fact-text">"{DESIGN_FACTS[activeFactIdx]}"</p>
+              </div>
+              <button 
+                type="button" 
+                className="fact-next-btn"
+                onClick={handleNextFact}
+                title="Shuffle insight"
+              >
+                <span>Next Insight</span>
+                <ArrowRight size={13} />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 2: APPEARANCE (DARK / LIGHT / AUTO) */}
         {activeTab === 'appearance' && (
           <div className="settings-panel">
             <h2 className="settings-panel-title">Appearance</h2>
@@ -272,7 +498,7 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
           </div>
         )}
 
-        {/* TAB 2: WALLPAPERS */}
+        {/* TAB 3: WALLPAPERS */}
         {activeTab === 'wallpaper' && (
           <div className="settings-panel">
             <div className="settings-panel-header">
@@ -362,7 +588,7 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
           </div>
         )}
 
-        {/* TAB 3: SWARM ENGINE */}
+        {/* TAB 4: SWARM ENGINE */}
         {activeTab === 'swarm' && (
           <div className="settings-panel">
             <h2 className="settings-panel-title">Swarm Engine</h2>
@@ -376,7 +602,7 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
                 <div className="settings-row-text">
                   <span className="row-title">Live Mouse Flocking (Califa Swarm)</span>
                   <span className="row-sub">
-                    32 autonomous agent cursors with boid flocking & dashed network lines follow your mouse across the desktop.
+                    48 autonomous agent cursors with boid flocking & dashed network lines follow your mouse and scroll across the desktop.
                   </span>
                 </div>
                 <button 
@@ -412,43 +638,6 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
                   <span className="row-sub">v3.5 • Autonomous Flocking Cursors & Web Audio Synthesizer</span>
                 </div>
                 <span className="settings-badge">Califa Swarm Active</span>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* TAB 4: ABOUT VARUNOS */}
-        {activeTab === 'about' && (
-          <div className="settings-panel">
-            <h2 className="settings-panel-title">About VarunOS</h2>
-            <p className="settings-panel-desc">System specifications and environment (inspired by macOS).</p>
-
-            <div className="about-specs-card">
-              <div className="about-apple-badge">⚡</div>
-              <h3 className="about-os-name">VarunOS Sequoia</h3>
-              <span className="about-os-version">Version 15.0 (inspired by macOS)</span>
-
-              <div className="about-specs-list">
-                <div className="about-spec-row">
-                  <span className="spec-label">Environment</span>
-                  <span className="spec-val">VarunOS Workstation (inspired by macOS)</span>
-                </div>
-                <div className="about-spec-row">
-                  <span className="spec-label">System Architecture</span>
-                  <span className="spec-val">Apple M3 Max Architecture (16-core CPU, 40-core GPU)</span>
-                </div>
-                <div className="about-spec-row">
-                  <span className="spec-label">Memory</span>
-                  <span className="spec-val">32 GB Unified LPDDR5</span>
-                </div>
-                <div className="about-spec-row">
-                  <span className="spec-label">Architect & Designer</span>
-                  <span className="spec-val">Varun Sehgal</span>
-                </div>
-                <div className="about-spec-row">
-                  <span className="spec-label">Collaborator</span>
-                  <span className="spec-val">{userName || 'Guest'}</span>
-                </div>
               </div>
             </div>
           </div>
