@@ -188,6 +188,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
             minimizedWindows={minimizedWindows}
             activeWindow={activeWindow}
             bouncingAppProp={bouncingApp}
+            isFullScreenActive={isFullScreenActive}
             onAppClick={handleDockClick}
           />
         </div>

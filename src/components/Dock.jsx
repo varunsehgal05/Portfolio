@@ -94,16 +94,46 @@ const DOCK_ITEMS = [
   { id: 'trash', name: 'Trash', icon: TrashDockIcon }
 ];
 
-const Dock = ({ openWindows = [], minimizedWindows = [], activeWindow, bouncingAppProp = null, onAppClick }) => {
+const Dock = ({ 
+  openWindows = [], 
+  minimizedWindows = [], 
+  activeWindow, 
+  bouncingAppProp = null, 
+  isFullScreenActive = false,
+  onAppClick 
+}) => {
   const [mouseX, setMouseX] = useState(null);
   const [bouncingApp, setBouncingApp] = useState(null);
-  const [isDockVisible, setIsDockVisible] = useState(false);
+  // Dock is permanently visible unless an app is currently open in full screen
+  const [isDockVisible, setIsDockVisible] = useState(!isFullScreenActive);
   const isHoveringRef = useRef(false);
   const hideTimerRef = useRef(null);
   const dockRef = useRef(null);
 
-  // Global mouse tracking: pops up when mouse touches bottom edge (like Windows / macOS auto-hide)
+  // Sync dock visibility immediately when full-screen state changes
   useEffect(() => {
+    if (!isFullScreenActive) {
+      if (hideTimerRef.current) {
+        clearTimeout(hideTimerRef.current);
+        hideTimerRef.current = null;
+      }
+      setIsDockVisible(true);
+    } else {
+      // In full-screen mode, dock hides unless currently hovered or bouncing
+      if (!isHoveringRef.current && !bouncingApp && !bouncingAppProp) {
+        setIsDockVisible(false);
+      }
+    }
+  }, [isFullScreenActive, bouncingApp, bouncingAppProp]);
+
+  // Global mouse tracking: ONLY auto-hides when an app is in full screen!
+  useEffect(() => {
+    // If NOT in full-screen mode, dock must NEVER hide!
+    if (!isFullScreenActive) {
+      setIsDockVisible(true);
+      return;
+    }
+
     const handleGlobalMouseMove = (e) => {
       const bottomThreshold = window.innerHeight - 14; // within 14px of bottom edge
 
@@ -114,10 +144,10 @@ const Dock = ({ openWindows = [], minimizedWindows = [], activeWindow, bouncingA
         }
         setIsDockVisible(true);
       } else if (e.clientY < window.innerHeight - 80 && !isHoveringRef.current) {
-        // Mouse moved well above the bottom bar
+        // Mouse moved well above the bottom bar while in full-screen
         if (!hideTimerRef.current && isDockVisible) {
           hideTimerRef.current = setTimeout(() => {
-            if (!isHoveringRef.current) {
+            if (!isHoveringRef.current && isFullScreenActive) {
               setIsDockVisible(false);
             }
           }, 350);
@@ -132,7 +162,7 @@ const Dock = ({ openWindows = [], minimizedWindows = [], activeWindow, bouncingA
         clearTimeout(hideTimerRef.current);
       }
     };
-  }, [isDockVisible]);
+  }, [isFullScreenActive, isDockVisible]);
 
   // Keep dock visible while an app is bouncing
   useEffect(() => {
@@ -153,9 +183,13 @@ const Dock = ({ openWindows = [], minimizedWindows = [], activeWindow, bouncingA
   const handleMouseLeaveDock = () => {
     isHoveringRef.current = false;
     setMouseX(null);
+    // NEVER hide dock on mouse leave unless an app is active in full screen!
+    if (!isFullScreenActive) {
+      return;
+    }
     if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
     hideTimerRef.current = setTimeout(() => {
-      if (!isHoveringRef.current) {
+      if (!isHoveringRef.current && isFullScreenActive) {
         setIsDockVisible(false);
       }
     }, 400);
@@ -183,14 +217,16 @@ const Dock = ({ openWindows = [], minimizedWindows = [], activeWindow, bouncingA
 
   return (
     <>
-      {/* Invisible bottom edge sensor hotspot */}
-      <div 
-        className="dock-edge-sensor"
-        onMouseEnter={() => {
-          if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
-          setIsDockVisible(true);
-        }}
-      />
+      {/* Invisible bottom edge sensor hotspot (active only in full-screen to reveal dock on mouse hover) */}
+      {isFullScreenActive && (
+        <div 
+          className="dock-edge-sensor"
+          onMouseEnter={() => {
+            if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+            setIsDockVisible(true);
+          }}
+        />
+      )}
 
       <div 
         className={`dock-container ${isDockVisible ? 'dock-visible' : 'dock-hidden'}`}

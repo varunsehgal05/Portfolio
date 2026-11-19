@@ -209,7 +209,7 @@ const Window = ({
     }
   };
 
-  const maximizedHeight = Math.max(300, windowDimensions.height - MENUBAR_HEIGHT - DOCK_CLEARANCE);
+  const maximizedHeight = Math.max(300, windowDimensions.height - MENUBAR_HEIGHT);
   const maximizedWidth = windowDimensions.width;
 
   useEffect(() => {
