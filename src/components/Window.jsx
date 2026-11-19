@@ -120,7 +120,7 @@ const Window = ({
         osc.start();
         osc.stop(ctx.currentTime + 0.14);
       }
-    } catch {}
+    } catch { }
   };
 
   const handleClose = (e) => {
@@ -356,7 +356,7 @@ const Window = ({
       case 'contact':
         return <ContactApp />;
       case 'trash':
-        return <TrashApp />;
+        return <TrashApp onClose={handleClose} onOpenApp={onOpenApp} />;
       default:
         return <div className="window-content-inner"><p>Loading...</p></div>;
     }

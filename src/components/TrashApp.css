@@ -807,3 +807,474 @@
   background: #0d99ff;
   color: #ffffff;
 }
+
+/* ==========================================================================
+   AI SENTINEL, FILE INTERCEPTION & VIRTUAL MOUSE CONTROLLER (VarunOS)
+   ========================================================================== */
+
+/* 1. AI Sentinel Banner on Trash Open */
+.trash-ai-sentinel-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.12) 0%, rgba(168, 85, 247, 0.12) 100%);
+  border-bottom: 1px solid rgba(56, 189, 248, 0.3);
+  padding: 12px 18px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  animation: slideDownBanner 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  z-index: 10;
+}
+
+[data-theme="light"] .trash-ai-sentinel-banner {
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.1) 0%, rgba(168, 85, 247, 0.08) 100%);
+  border-bottom: 1px solid rgba(14, 165, 233, 0.25);
+}
+
+@keyframes slideDownBanner {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ai-sentinel-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ai-sentinel-avatar-wrap {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1.5px solid #38bdf8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #38bdf8;
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.4);
+  flex-shrink: 0;
+}
+
+.ai-avatar-beacon-pulse {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #22c55e;
+  border: 1.5px solid #0f172a;
+  box-shadow: 0 0 8px #22c55e;
+  animation: beaconPulse 1.6s infinite ease-in-out;
+}
+
+.ai-sentinel-text-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ai-sentinel-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ai-sentinel-badge {
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.12);
+  padding: 1px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(56, 189, 248, 0.25);
+}
+
+.ai-sentinel-status {
+  font-size: 10px;
+  color: #4ade80;
+  font-weight: 600;
+}
+
+.ai-sentinel-msg {
+  margin: 0;
+  font-size: 12.5px;
+  color: #f1f5f9;
+  line-height: 1.35;
+}
+
+[data-theme="light"] .ai-sentinel-msg {
+  color: #1e293b;
+}
+
+.ai-sentinel-msg strong {
+  color: #38bdf8;
+  font-weight: 700;
+}
+
+.ai-sentinel-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.ai-sentinel-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ai-sentinel-btn.primary {
+  background: #0284c7;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.35);
+}
+
+.ai-sentinel-btn.primary:hover {
+  background: #0369a1;
+  transform: translateY(-1px);
+}
+
+.ai-sentinel-btn.secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+[data-theme="light"] .ai-sentinel-btn.secondary {
+  background: rgba(0, 0, 0, 0.05);
+  color: #334155;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.ai-sentinel-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.ai-sentinel-btn.dismiss {
+  background: transparent;
+  color: #94a3b8;
+  padding: 4px;
+}
+
+.ai-sentinel-btn.dismiss:hover {
+  color: #f1f5f9;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Toolbar AI Close Button */
+.trash-action-btn.ai-close-btn {
+  background: rgba(6, 182, 212, 0.12);
+  border-color: rgba(6, 182, 212, 0.3);
+  color: #22d3ee;
+}
+
+.trash-action-btn.ai-close-btn:hover {
+  background: rgba(6, 182, 212, 0.22);
+  border-color: #22d3ee;
+  box-shadow: 0 0 10px rgba(34, 211, 238, 0.3);
+}
+
+/* 2. File Preview AI Interception Card */
+.trash-ai-interception-card {
+  background: linear-gradient(135deg, rgba(30, 27, 75, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%);
+  border-bottom: 1.5px solid rgba(168, 85, 247, 0.35);
+  padding: 18px 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="light"] .trash-ai-interception-card {
+  background: linear-gradient(135deg, rgba(238, 242, 255, 0.95) 0%, rgba(243, 244, 246, 0.95) 100%);
+  border-bottom: 1.5px solid rgba(168, 85, 247, 0.3);
+}
+
+.trash-ai-interception-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #ec4899, #a855f7, #38bdf8);
+}
+
+.ai-interception-badge-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.ai-interception-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.ai-interception-tag {
+  font-size: 10px;
+  color: #f43f5e;
+  font-weight: 700;
+  background: rgba(244, 63, 94, 0.12);
+  border: 1px solid rgba(244, 63, 94, 0.25);
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+.ai-interception-headline {
+  margin: 0 0 6px 0;
+  font-size: 16px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+}
+
+[data-theme="light"] .ai-interception-headline {
+  color: #0f172a;
+}
+
+.ai-interception-sub {
+  margin: 0 0 14px 0;
+  font-size: 11.5px;
+  color: #cbd5e1;
+  line-height: 1.45;
+}
+
+[data-theme="light"] .ai-interception-sub {
+  color: #475569;
+}
+
+.ai-interception-sub code {
+  color: #ec4899;
+  background: rgba(236, 72, 153, 0.12);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  font-size: 11px;
+}
+
+.ai-interception-actions-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.ai-interception-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.ai-interception-action-btn.figma-action {
+  background: #0284c7;
+  color: #ffffff;
+  box-shadow: 0 2px 10px rgba(2, 132, 199, 0.35);
+}
+
+.ai-interception-action-btn.figma-action:hover {
+  background: #0369a1;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.5);
+}
+
+.ai-interception-action-btn.resume-action {
+  background: rgba(168, 85, 247, 0.15);
+  color: #d8b4fe;
+  border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+[data-theme="light"] .ai-interception-action-btn.resume-action {
+  background: rgba(168, 85, 247, 0.1);
+  color: #7e22ce;
+}
+
+.ai-interception-action-btn.resume-action:hover {
+  background: rgba(168, 85, 247, 0.25);
+  transform: translateY(-1px);
+}
+
+.ai-interception-action-btn.hire-action {
+  background: rgba(16, 185, 129, 0.15);
+  color: #6ee7b7;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+[data-theme="light"] .ai-interception-action-btn.hire-action {
+  background: rgba(16, 185, 129, 0.1);
+  color: #047857;
+}
+
+.ai-interception-action-btn.hire-action:hover {
+  background: rgba(16, 185, 129, 0.25);
+  transform: translateY(-1px);
+}
+
+/* AI Takeover Countdown Bar */
+.ai-takeover-countdown-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 6px;
+  padding: 6px 12px;
+}
+
+[data-theme="light"] .ai-takeover-countdown-bar {
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(14, 165, 233, 0.25);
+}
+
+.ai-takeover-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #93c5fd;
+}
+
+[data-theme="light"] .ai-takeover-info {
+  color: #0369a1;
+}
+
+.ai-takeover-ctrl-btns {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ai-close-now-pill {
+  background: #38bdf8;
+  color: #0f172a;
+  border: none;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ai-close-now-pill:hover {
+  background: #7dd3fc;
+  transform: scale(1.02);
+}
+
+.ai-pause-pill {
+  background: transparent;
+  color: #94a3b8;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.ai-pause-pill:hover {
+  color: #f1f5f9;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* 3. Virtual AI Mouse Pointer (Portaled across full desktop) */
+.virtual-ai-mouse-layer {
+  user-select: none;
+  pointer-events: none;
+}
+
+.virtual-ai-mouse-pointer {
+  position: absolute;
+  pointer-events: none;
+  z-index: 99999999;
+}
+
+.virtual-ai-mouse-badge {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(15, 23, 42, 0.96);
+  border: 1px solid #38bdf8;
+  color: #e0f2fe;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5), 0 0 12px rgba(56, 189, 248, 0.4);
+  animation: badgePop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes badgePop {
+  from {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Click Ripple Effect */
+.virtual-ai-click-ripple {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #38bdf8;
+  background: rgba(56, 189, 248, 0.3);
+  transform: translate(-50%, -50%) scale(0.2);
+  animation: clickRippleAnim 0.45s ease-out forwards;
+  pointer-events: none;
+  z-index: 99999998;
+}
+
+@keyframes clickRippleAnim {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(2.2);
+  }
+}
