@@ -109,7 +109,14 @@ const Window = ({
     }, 220); // 220ms smooth macOS dismiss animation
   };
 
-  const handleMaximize = () => {
+  const handleMinimizeClick = (e) => {
+    if (e) e.stopPropagation();
+    updateGenieCoords();
+    onMinimize?.();
+  };
+
+  const handleMaximize = (e) => {
+    if (e) e.stopPropagation();
     setIsZooming(true);
     setTimeout(() => setIsZooming(false), 380);
 
@@ -223,7 +230,7 @@ const Window = ({
     }
   };
 
-  const maximizedHeight = Math.max(300, windowDimensions.height - MENUBAR_HEIGHT - 76);
+  const maximizedHeight = Math.max(300, windowDimensions.height - MENUBAR_HEIGHT);
   const maximizedWidth = windowDimensions.width;
 
   useEffect(() => {
@@ -282,10 +289,7 @@ const Window = ({
               className="mac-btn minimize"
               onMouseDown={(e) => e.stopPropagation()}
               onTouchStart={(e) => e.stopPropagation()}
-              onClick={(e) => {
-                e.stopPropagation();
-                onMinimize?.();
-              }}
+              onClick={handleMinimizeClick}
               title="Minimize"
             >
               <span className="mac-symbol">–</span>
@@ -294,13 +298,10 @@ const Window = ({
               className="mac-btn maximize"
               onMouseDown={(e) => e.stopPropagation()}
               onTouchStart={(e) => e.stopPropagation()}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleMaximize();
-              }}
-              title={isMaximized ? "Restore Window" : "Full Screen"}
+              onClick={handleMaximize}
+              title={isMaximized ? "Exit Full Screen" : "Full Screen"}
             >
-              <span className="mac-symbol">+</span>
+              <span className="mac-symbol">{isMaximized ? '⤢' : '+'}</span>
             </button>
           </div>
 

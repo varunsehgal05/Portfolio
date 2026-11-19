@@ -1,46 +1,46 @@
 .app-window {
   border-radius: 12px;
-  overflow: hidden;
+  overflow: visible;
   box-shadow: 0 12px 40px rgba(0,0,0,0.4);
   display: flex;
   transform-origin: center center;
 }
 
-/* Subtle macOS Window Open Animation */
-.app-window:not(.minimized):not(.closing):not(.minimizing):not(.restoring):not(.maximized) {
-  animation: macWindowOpen 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+/* Subtle macOS Window Open Animation on inner container (doesn't touch Rnd translate) */
+.app-window:not(.minimized):not(.closing):not(.minimizing):not(.restoring):not(.maximized) .window-inner {
+  animation: macWindowOpen 0.24s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes macWindowOpen {
   0% {
     opacity: 0;
-    transform: scale(0.92);
-    filter: blur(4px);
+    transform: scale(0.95);
   }
   100% {
     opacity: 1;
     transform: scale(1);
-    filter: blur(0px);
   }
 }
 
-/* Smooth macOS Window Dismiss/Close Animation */
+/* Smooth macOS Window Dismiss/Close Animation on inner container */
 .app-window.closing {
   pointer-events: none !important;
-  animation: macWindowClose 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
-  will-change: transform, opacity, filter;
+}
+
+.window-inner.closing {
+  pointer-events: none !important;
+  animation: macWindowClose 0.20s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+  will-change: transform, opacity;
 }
 
 @keyframes macWindowClose {
   0% {
     opacity: 1;
     transform: scale(1);
-    filter: blur(0px);
   }
   100% {
     opacity: 0;
-    transform: scale(0.88);
-    filter: blur(4px);
+    transform: scale(0.93);
   }
 }
 

@@ -104,13 +104,8 @@
   top: 0;
   left: 0;
   right: 0;
-  bottom: 86px; /* Clean workspace clearance above the macOS Dock */
-  pointer-events: none;
-  transition: bottom 0.25s ease;
-}
-
-body.has-fullscreen-window .desktop-windows-layer {
   bottom: 0;
+  pointer-events: none;
 }
 
 .desktop-windows-layer > * {
