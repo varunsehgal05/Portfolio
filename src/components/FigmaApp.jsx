@@ -621,6 +621,21 @@ const FigmaApp = ({ isInteracting, userName, onOpenApp }) => {
   const [isAppLoading, setIsAppLoading] = useState(true);
   const startPanRef = useRef({ x: 0, y: 0 });
 
+  // FigJam Process Board state (Image 1)
+  const [isPlayingTape, setIsPlayingTape] = useState(false);
+  const [painPointReactions, setPainPointReactions] = useState(6);
+  const [processToolbarTool, setProcessToolbarTool] = useState('select');
+
+  // About Blueprint state (Image 2)
+  const [isPlayingAudioNote, setIsPlayingAudioNote] = useState(false);
+
+  // Plugin Ecosystem state (Image 3)
+  const [pluginFilter, setPluginFilter] = useState('all');
+  const [tokenChroma, setTokenChroma] = useState(0.82);
+  const [tokenRadius, setTokenRadius] = useState(0.78);
+  const [isHotReloading, setIsHotReloading] = useState(false);
+  const [isShaderProceduralOpen, setIsShaderProceduralOpen] = useState(false);
+
   const handleZoomIn = () => {
     setZoom(z => {
       const next = Math.min(2.5, Number((z + 0.1).toFixed(2)));
@@ -955,10 +970,10 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
       case 'home': return { width: 1240, height: 880 };
       case 'projects': return { width: 1340, height: 960 };
       case 'experience': return { width: 1240, height: 1360 };
-      case 'about': return { width: 1340, height: 940 };
+      case 'about': return { width: 1380, height: 1220 };
       case 'resume': return { width: 1100, height: 1420 };
-      case 'process': return { width: 1360, height: 960 };
-      case 'plugins': return { width: 1300, height: 980 };
+      case 'process': return { width: 1400, height: 960 };
+      case 'plugins': return { width: 1440, height: 1100 };
       default: return { width: 1240, height: 880 };
     }
   };
@@ -2399,8 +2414,8 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
             </div>
           )}
 
-          {/* =========================================================================
-              VIEW 4: ABOUT (Infinite Canvas Radial Traits with Image 3 Connectors)
+                    {/* =========================================================================
+              VIEW 4: ABOUT (Design Engineering Vision & Identity Blueprint - Image 2)
               ========================================================================= */}
           {activeTab === 'about' && (
             <div
@@ -2411,408 +2426,316 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
               }}
             >
               <div className="view-content-wrapper" style={{ padding: '36px 40px 140px' }}>
-                {/* Framed Artboard Box for About */}
+                {/* About Blueprint Canvas matching Image 2 */}
                 <div
-                  className={`figma-artboard-box about-artboard-box figma-selectable-node ${selectedNodeId === 'about-artboard' ? 'is-selected' : ''}`}
+                  className={`figma-artboard-box about-blueprint-artboard figma-selectable-node ${selectedNodeId === 'about-artboard' ? 'is-selected' : ''}`}
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleSelectNode('about-artboard', 'About Varun Sehgal Frame', 'Frame');
+                    handleSelectNode('about-artboard', 'Varun_Sehgal_Identity Frame', 'Frame');
                   }}
                 >
                   <div className="figma-artboard-header-tag">
                     <span className="artboard-hash">#</span>
-                    <span className="artboard-name">About Varun Sehgal</span>
-                    <span className="artboard-dims">[1340 × 940]</span>
+                    <span className="artboard-name">Varun_Sehgal_Identity.fig — Lead Product Designer &amp; Design Technologist</span>
+                    <span className="artboard-dims">[1380 × 1220]</span>
                   </div>
 
                   {selectedNodeId === 'about-artboard' && (
                     <div className="figma-selection-overlay">
-                      <div className="selection-tag">❖ About Varun Sehgal [1340×940]</div>
+                      <div className="selection-tag">❖ Varun_Sehgal_Identity [1380×1220]</div>
                       <div className="selection-handle tl" /><div className="selection-handle tr" />
                       <div className="selection-handle bl" /><div className="selection-handle br" />
                     </div>
                   )}
 
-                  <header className="view-page-header">
-                    <div className="about-header-flex">
-                      <div>
-                        <h1 className="view-page-title">About Varun Sehgal</h1>
-                        <p className="view-page-desc">Design philosophy, superpowers, growth vectors, and architectural toolkit.</p>
+                  {/* Canvas Header & Breadcrumbs matching Image 2 */}
+                  <div className="about-canvas-top-status">
+                    <div className="top-status-left">
+                      <span className="material-symbols-outlined text-[16px] text-sky-400">code</span>
+                      <span className="top-doc-title">Varun_Sehgal_Portfolio.fig</span>
+                      <span className="top-version-badge">v2.4</span>
+                    </div>
+
+                    <div className="top-status-right">
+                      <div className="figma-cursor-tag cursor-elena-viewing">
+                        <svg className="cursor-arrow-icon" width="14" height="14" viewBox="0 0 16 16" fill="none">
+                          <path d="M0 0L6 14L8.5 8.5L14 6L0 0Z" fill="#a855f7" />
+                        </svg>
+                        <span className="cursor-author-name">Elena (Product Lead) [Live Viewing]</span>
+                      </div>
+                      <div className="top-zoom-badge">100%</div>
+                      <button className="top-share-btn" onClick={() => showToast('Share Link Copied!')}>Share</button>
+                    </div>
+                  </div>
+
+                  {/* 1. TOP ROW: Philosophy & Status (2 Wide Cards) */}
+                  <div className="about-top-cards-row">
+                    {/* Top-Left Card: PHILOSOPHY */}
+                    <div className="about-wide-card philosophy-card">
+                      <div className="card-top-tag tag-orange">
+                        <span className="tag-text">PHILOSOPHY</span>
+                        <span className="tag-ver">v2.4</span>
+                      </div>
+                      <h2 className="wide-card-title">Design Engineering Vision</h2>
+                      <p className="wide-card-desc">
+                        Bridging the deep chasm between Figma multiplayer ergonomics and production React 19/Tailwind codebases. I build interfaces where design tokens are executable contracts, not static documentation.
+                      </p>
+                      <div className="wide-card-badges-row">
+                        <span className="spec-badge">Zero Handoff Friction</span>
+                        <span className="spec-badge">Design Systems at Scale</span>
                       </div>
                     </div>
-                  </header>
 
-                  <div className="about-radial-canvas-container">
-                    {/* SVG Radiating Curved Dashed Connectors Layer with Gradient Glow */}
-                    <svg className="about-connector-svg-layer" viewBox="0 0 1240 860" fill="none">
-                      <defs>
-                        <linearGradient id="aboutGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stopColor="#38bdf8" />
-                          <stop offset="100%" stopColor="#34d399" />
-                        </linearGradient>
-                        <linearGradient id="aboutGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stopColor="#38bdf8" />
-                          <stop offset="100%" stopColor="#fbbf24" />
-                        </linearGradient>
-                        <linearGradient id="aboutGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stopColor="#38bdf8" />
-                          <stop offset="100%" stopColor="#818cf8" />
-                        </linearGradient>
-                        <linearGradient id="aboutGrad4" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stopColor="#38bdf8" />
-                          <stop offset="100%" stopColor="#38bdf8" />
-                        </linearGradient>
-                        <linearGradient id="aboutGrad5" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stopColor="#38bdf8" />
-                          <stop offset="100%" stopColor="#ec4899" />
-                        </linearGradient>
-                      </defs>
+                    {/* Top-Right Card: STATUS */}
+                    <div className="about-wide-card status-card">
+                      <div className="card-top-tag tag-teal">
+                        <span className="tag-dot-pulse" />
+                        <span className="tag-text">STATUS</span>
+                        <span className="tag-sub">Seeking gigs</span>
+                      </div>
+                      <h2 className="wide-card-title">Lead Product Designer</h2>
+                      <p className="wide-card-desc">
+                        Independent consultant partnering with Seed to Series-A venture-backed AI &amp; Developer-Tooling founders. Architecting zero-to-one product experiences, component architectures, and fluid desktop apps.
+                      </p>
+                      <div className="wide-card-badges-row">
+                        <span className="spec-badge">San Francisco / Remote</span>
+                        <span className="spec-badge status-active">Global Remote · Active</span>
+                      </div>
+                    </div>
+                  </div>
 
-                      {/* Path 1: Center -> Top Left (Core Strengths) */}
-                      <path
-                        d="M 520,380 C 440,380 400,280 400,200"
-                        stroke="url(#aboutGrad1)"
-                        strokeWidth="2.5"
-                        strokeDasharray="6 6"
-                      />
-                      <circle cx="400" cy="200" r="5" fill="#34d399" />
+                  {/* Section Wireframe Label */}
+                  <div className="about-section-wire-label">
+                    <span>[CENTER HERO NODE] ←—→ Impact Metrics</span>
+                  </div>
 
-                      {/* Path 2: Center -> Top Right (Weaknesses & Growth Vectors) */}
-                      <path
-                        d="M 720,380 C 800,380 840,280 840,200"
-                        stroke="url(#aboutGrad2)"
-                        strokeWidth="2.5"
-                        strokeDasharray="6 6"
-                      />
-                      <circle cx="840" cy="200" r="5" fill="#fbbf24" />
+                  {/* 2. MIDDLE ROW: Built On, Center Hero Photo Frame, Experience Impact Metrics */}
+                  <div className="about-middle-hero-row">
+                    {/* Left Column: BUILT ON Stack & Capabilities */}
+                    <div className="about-middle-col stack-col">
+                      <div className="figjam-cursor-tag cursor-marcus">
+                        <svg className="cursor-arrow-icon" width="14" height="14" viewBox="0 0 16 16" fill="none">
+                          <path d="M0 0L6 14L8.5 8.5L14 6L0 0Z" fill="#06b6d4" />
+                        </svg>
+                        <span className="cursor-author-name">Marcus (Top Glancer)</span>
+                      </div>
 
-                      {/* Path 3: Center -> Bottom Left (Design Philosophy) */}
-                      <path
-                        d="M 520,460 C 440,460 400,520 400,580"
-                        stroke="url(#aboutGrad3)"
-                        strokeWidth="2.5"
-                        strokeDasharray="6 6"
-                      />
-                      <circle cx="400" cy="580" r="5" fill="#818cf8" />
+                      <div className="card-top-tag tag-purple">
+                        <span className="tag-text">BUILT ON</span>
+                      </div>
+                      <h3 className="col-header-title">STACK &amp; CAPABILITIES</h3>
 
-                      {/* Path 4: Center -> Bottom Right (Technical Stack) */}
-                      <path
-                        d="M 720,460 C 800,460 840,520 840,580"
-                        stroke="url(#aboutGrad4)"
-                        strokeWidth="2.5"
-                        strokeDasharray="6 6"
-                      />
-                      <circle cx="840" cy="580" r="5" fill="#38bdf8" />
-
-                      {/* Path 5: Center -> Bottom Center (Education & Hackathons) */}
-                      <path
-                        d="M 620,530 C 620,560 620,580 620,600"
-                        stroke="url(#aboutGrad5)"
-                        strokeWidth="2.5"
-                        strokeDasharray="6 6"
-                      />
-                      <circle cx="620" cy="600" r="5" fill="#ec4899" />
-                    </svg>
-
-                    {/* 1. Recreated Interactive Center Designer Cockpit / Hub */}
-                    <div
-                      className={`about-center-avatar-node recreated-center-hub figma-selectable-node ${selectedNodeId === 'about-avatar' ? 'is-selected' : ''}`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleSelectNode('about-avatar', 'Varun_Designer_Core_Hub', 'Component');
-                      }}
-                      style={{
-                        borderRadius: nodeProps['about-avatar']?.radius ? `${nodeProps['about-avatar'].radius}px` : undefined,
-                        backgroundColor: nodeProps['about-avatar']?.fill || undefined,
-                        borderColor: nodeProps['about-avatar']?.stroke || undefined,
-                        opacity: nodeProps['about-avatar']?.opacity !== undefined ? nodeProps['about-avatar'].opacity / 100 : undefined
-                      }}
-                    >
-                      {selectedNodeId === 'about-avatar' && (
-                        <div className="figma-selection-overlay">
-                          <div className="selection-tag">❖ Varun_Designer_Core_Hub [280×300]</div>
-                          <div className="selection-handle tl" /><div className="selection-handle tr" />
-                          <div className="selection-handle bl" /><div className="selection-handle br" />
+                      <div className="stack-specs-list">
+                        <div className="stack-spec-item">
+                          <span className="spec-name">Figma Auto Layout v5</span>
+                          <span className="spec-level text-sky-400">Advanced</span>
                         </div>
-                      )}
-
-                      {/* Dual Concentric Orbital Rings */}
-                      <div className="about-orbital-ring ring-outer">
-                        <div className="orbit-particle p1" />
-                        <div className="orbit-particle p2" />
+                        <div className="stack-spec-item">
+                          <span className="spec-name">Design Tokens Studio</span>
+                          <span className="spec-level text-emerald-400">W3C Spec</span>
+                        </div>
+                        <div className="stack-spec-item">
+                          <span className="spec-name">React 19 &amp; Next.js</span>
+                          <span className="spec-level text-purple-400">Production</span>
+                        </div>
+                        <div className="stack-spec-item">
+                          <span className="spec-name">TypeScript + Tailwind v4</span>
+                          <span className="spec-level text-amber-400">Modular</span>
+                        </div>
+                        <div className="stack-spec-item">
+                          <span className="spec-name">WebGL / Three.js</span>
+                          <span className="spec-level text-pink-400">Interactive</span>
+                        </div>
                       </div>
-                      <div className="about-orbital-ring ring-inner">
-                        <div className="orbit-particle p3" />
-                      </div>
+                    </div>
 
-                      {/* Center Avatar Orb */}
-                      <div className="about-avatar-orb-container">
-                        <div className="about-avatar-glow-ring" />
-                        <img
-                          src="/varun.jpg"
-                          alt="Varun Sehgal"
-                          className="about-avatar-img-recreated"
-                          onError={(e) => { e.currentTarget.src = '/profile/varun.jpg'; }}
-                        />
-                        <div className="avatar-live-status-pill">
-                          <span className="status-live-beacon" />
-                          <span>Online in VarunOS</span>
+                    {/* Center Column: HERO PHOTO NODE Varun_Sehgal_Identity [240 × 240] */}
+                    <div className="about-middle-col hero-photo-col">
+                      <div className="figma-photo-bounding-frame">
+                        <div className="photo-corner-handle ch-tl" />
+                        <div className="photo-corner-handle ch-tr" />
+                        <div className="photo-corner-handle ch-bl" />
+                        <div className="photo-corner-handle ch-br" />
+
+                        <div className="photo-selection-badge">
+                          <span className="material-symbols-outlined text-[12px]">crop</span>
+                          <span>Varun_Sehgal_Identity · 240 × 240</span>
+                        </div>
+
+                        <div className="hero-photo-img-wrap">
+                          <img
+                            src="/varun.jpg"
+                            alt="Varun Sehgal"
+                            className="hero-photo-img"
+                            onError={(e) => { e.currentTarget.src = '/hero.png'; }}
+                          />
                         </div>
                       </div>
 
-                      {/* Identity & Specs Info */}
-                      <div className="about-avatar-info-panel">
-                        <h3 className="about-avatar-name-bold">Varun Sehgal</h3>
-                        <div className="about-avatar-role-pill">
-                          <span className="material-symbols-outlined text-[13px]">verified</span>
-                          <span>Lead UI/UX &amp; Product Designer</span>
+                      {/* Photo Caption Card below */}
+                      <div className="hero-identity-caption-card">
+                        <div className="caption-name-row">
+                          <h3 className="identity-fullname">Varun Sehgal</h3>
+                          <span className="identity-pro-badge">PRO ARCHITECT</span>
                         </div>
-
-                        <div className="about-avatar-specs-row">
-                          <span className="spec-token">3+ Yrs Exp</span>
-                          <span className="spec-sep">•</span>
-                          <span className="spec-token">10+ Releases</span>
-                          <span className="spec-sep">•</span>
-                          <span className="spec-token text-amber-300">1st HackThor</span>
+                        <div className="identity-job-role">
+                          Lead Product Designer &amp; Design Technologist
                         </div>
+                        <div className="identity-timeline-meta">
+                          Jaypee Univ. 2021–2025 · Antigravity Studio Spec
+                        </div>
+                      </div>
+                    </div>
 
-                        {/* Interactive Radar Quick Chips */}
-                        <div className="about-avatar-chips-grid">
-                          <span
-                            className="radar-chip"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleSelectNode('about-strengths', 'Core Strengths', 'Frame');
-                            }}
-                          >
-                            ⚡ Design Systems
+                    {/* Right Column: EXPERIENCE Impact & Metrics */}
+                    <div className="about-middle-col experience-col">
+                      <div className="card-top-tag tag-cyan">
+                        <span className="tag-text">EXPERIENCE</span>
+                      </div>
+                      <h3 className="col-header-title">IMPACT &amp; METRICS</h3>
+
+                      <div className="metrics-2x2-grid">
+                        <div className="metric-cell">
+                          <div className="metric-number text-sky-400">4+</div>
+                          <div className="metric-label">Years Crafting Complex SaaS</div>
+                        </div>
+                        <div className="metric-cell">
+                          <div className="metric-number text-purple-400">12+</div>
+                          <div className="metric-label">Shipped Web &amp; Native Apps</div>
+                        </div>
+                        <div className="metric-cell">
+                          <div className="metric-number text-emerald-400">99.4%</div>
+                          <div className="metric-label">Token Parity (Figma/Code)</div>
+                        </div>
+                        <div className="metric-cell">
+                          <div className="metric-number text-amber-400">25k+</div>
+                          <div className="metric-label">Figma Community Installs</div>
+                        </div>
+                      </div>
+
+                      <div className="creator-verified-row">
+                        <div className="figma-color-icon">
+                          <span className="figma-dot d1" />
+                          <span className="figma-dot d2" />
+                          <span className="figma-dot d3" />
+                          <span className="figma-dot d4" />
+                          <span className="figma-dot d5" />
+                        </div>
+                        <span className="creator-text">Official Figma Community Creator</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Section Wireframe Label */}
+                  <div className="about-section-wire-label">
+                    <span>Export &amp; Social Action Card →</span>
+                  </div>
+
+                  {/* 3. BOTTOM ROW: Audio Note & Connect Dossier */}
+                  <div className="about-bottom-cards-row">
+                    {/* Left Bottom Card: AUDIO NOTE */}
+                    <div className="about-bottom-card audio-note-card">
+                      <div className="card-top-tag tag-orange">
+                        <span className="tag-text">AUDIO NOTE</span>
+                        <span className="tag-sub">48kHz Spatial</span>
+                      </div>
+                      <h3 className="bottom-card-title">"Why I Design Directly in Code"</h3>
+                      <p className="bottom-card-desc">
+                        A quick audio memo on how thinking in ASTs and flexbox prevents unbuildable Figma dreams.
+                      </p>
+
+                      <div className="audio-player-widget">
+                        <button
+                          className="audio-play-round-btn"
+                          onClick={() => {
+                            setIsPlayingAudioNote(!isPlayingAudioNote);
+                            showToast(isPlayingAudioNote ? 'Audio Paused' : 'Playing "Why I Design Directly in Code"');
+                          }}
+                        >
+                          <span className="material-symbols-outlined text-[18px]">
+                            {isPlayingAudioNote ? 'pause' : 'play_arrow'}
                           </span>
-                          <span
-                            className="radar-chip"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleSelectNode('about-philosophy', 'Design Philosophy', 'Frame');
-                            }}
-                          >
-                            🧠 UX Psychology
-                          </span>
-                          <span
-                            className="radar-chip"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleSelectNode('about-technical', 'Technical Stack', 'Frame');
-                            }}
-                          >
-                            📱 Prototyping
-                          </span>
-                          <span
-                            className="radar-chip"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleSelectNode('about-education', 'Education', 'Frame');
-                            }}
-                          >
-                            🏆 Hackathons
-                          </span>
+                        </button>
+
+                        <div className={`audio-equalizer-bars ${isPlayingAudioNote ? 'active' : ''}`}>
+                          {[40, 75, 95, 60, 30, 85, 100, 50, 70, 90, 45, 65, 80, 55, 95, 35, 75, 50].map((h, i) => (
+                            <span
+                              key={i}
+                              className="eq-bar"
+                              style={{
+                                height: `${h}%`,
+                                animationDelay: `${i * 0.08}s`
+                              }}
+                            />
+                          ))}
                         </div>
+
+                        <span className="audio-duration-meta">01:14 / 02:45</span>
                       </div>
                     </div>
 
-                    {/* 2. Top-Left: Core Strengths & Superpowers */}
-                  <div
-                    className={`about-trait-card figma-selectable-node ${selectedNodeId === 'about-strengths' ? 'is-selected' : ''}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSelectNode('about-strengths', 'Core_Strengths & Superpowers', 'Frame');
-                    }}
-                    style={{
-                      left: '40px',
-                      top: '40px',
-                      width: `${nodeProps['about-strengths']?.w || 360}px`,
-                      borderRadius: nodeProps['about-strengths']?.radius ? `${nodeProps['about-strengths'].radius}px` : undefined,
-                      backgroundColor: nodeProps['about-strengths']?.fill || undefined,
-                      borderColor: nodeProps['about-strengths']?.stroke || undefined,
-                      borderWidth: nodeProps['about-strengths']?.strokeWidth ? `${nodeProps['about-strengths'].strokeWidth}px` : undefined,
-                      opacity: nodeProps['about-strengths']?.opacity !== undefined ? nodeProps['about-strengths'].opacity / 100 : undefined
-                    }}
-                  >
-                    {selectedNodeId === 'about-strengths' && (
-                      <div className="figma-selection-overlay">
-                        <div className="selection-tag">❖ Core_Strengths [360×260]</div>
-                        <div className="selection-handle tl" />
-                        <div className="selection-handle tr" />
-                        <div className="selection-handle bl" />
-                        <div className="selection-handle br" />
+                    {/* Right Bottom Card: CONNECT */}
+                    <div className="about-bottom-card connect-action-card">
+                      <div className="card-top-tag tag-teal">
+                        <span className="tag-text">CONNECT</span>
                       </div>
-                    )}
-                    <div className="about-trait-title text-[#34d399]">
-                      <span className="material-symbols-outlined text-[17px]">bolt</span>
-                      <span>Core Strengths & Superpowers</span>
-                    </div>
-                    <ul className="about-trait-list">
-                      <li>⚡ <strong>Design Systems & Tokens:</strong> Architect of token studio pipelines with nested components and dark/light modes.</li>
-                      <li>🎯 <strong>Frictionless UX Flows:</strong> Slashed transaction drop-off by 30% via 4-step optimized booking psychology.</li>
-                      <li>🔮 <strong>Micro-Interactions:</strong> Authentic haptic springs, fluid physics, and interactive prototyping.</li>
-                      <li>💻 <strong>Frontend Empathy:</strong> Understands React, CSS flex/grid, and dev handoff realities.</li>
-                    </ul>
-                  </div>
+                      <h3 className="bottom-card-title">Request Dossier &amp; Collaboration</h3>
+                      <p className="bottom-card-desc">
+                        Get immediate access to comprehensive resume, design system specs, and availability schedule.
+                      </p>
 
-                  {/* 3. Top-Right: Weaknesses & Growth Vectors */}
-                  <div
-                    className={`about-trait-card figma-selectable-node ${selectedNodeId === 'about-weaknesses' ? 'is-selected' : ''}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSelectNode('about-weaknesses', 'Weaknesses & Growth Vectors', 'Frame');
-                    }}
-                    style={{
-                      left: '840px',
-                      top: '40px',
-                      width: `${nodeProps['about-weaknesses']?.w || 360}px`,
-                      borderRadius: nodeProps['about-weaknesses']?.radius ? `${nodeProps['about-weaknesses'].radius}px` : undefined,
-                      backgroundColor: nodeProps['about-weaknesses']?.fill || undefined,
-                      borderColor: nodeProps['about-weaknesses']?.stroke || undefined,
-                      borderWidth: nodeProps['about-weaknesses']?.strokeWidth ? `${nodeProps['about-weaknesses'].strokeWidth}px` : undefined,
-                      opacity: nodeProps['about-weaknesses']?.opacity !== undefined ? nodeProps['about-weaknesses'].opacity / 100 : undefined
-                    }}
-                  >
-                    {selectedNodeId === 'about-weaknesses' && (
-                      <div className="figma-selection-overlay">
-                        <div className="selection-tag">❖ Weaknesses_Vectors [360×260]</div>
-                        <div className="selection-handle tl" />
-                        <div className="selection-handle tr" />
-                        <div className="selection-handle bl" />
-                        <div className="selection-handle br" />
-                      </div>
-                    )}
-                    <div className="about-trait-title text-[#f59e0b]">
-                      <span className="material-symbols-outlined text-[17px]">adjust</span>
-                      <span>Weaknesses & Growth Vectors</span>
-                    </div>
-                    <ul className="about-trait-list">
-                      <li>🔍 <strong>Sub-Pixel Perfectionism:</strong> Spends extra time aligning 1px sub-pixel grids before publishing drafts.</li>
-                      <li>🚀 <strong>Reluctance for Raw Roughs:</strong> Dislikes showing half-baked wireframes; prefers quick hi-fi prototypes before review.</li>
-                      <li>🌐 <strong>Edge-Case Maximalism:</strong> Tendency to design 15+ edge states for simple MVP prototypes.</li>
-                      <li>📈 <strong>Growth Action:</strong> Actively practicing timeboxed rapid paper sketch iterations and public builds.</li>
-                    </ul>
-                  </div>
+                      <div className="connect-actions-row">
+                        <button
+                          className="connect-resume-primary-btn"
+                          onClick={() => {
+                            if (onOpenApp) onOpenApp('resume');
+                            showToast('Opening Resume Application...');
+                          }}
+                        >
+                          <span className="material-symbols-outlined text-[16px]">description</span>
+                          <span>Resume (2.1 MB)</span>
+                        </button>
 
-                  {/* 4. Bottom-Left: Design Philosophy */}
-                  <div
-                    className={`about-trait-card figma-selectable-node ${selectedNodeId === 'about-philosophy' ? 'is-selected' : ''}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSelectNode('about-philosophy', 'Design_Philosophy & Heuristics', 'Frame');
-                    }}
-                    style={{
-                      left: '40px',
-                      top: '450px',
-                      width: `${nodeProps['about-philosophy']?.w || 360}px`,
-                      borderRadius: nodeProps['about-philosophy']?.radius ? `${nodeProps['about-philosophy'].radius}px` : undefined,
-                      backgroundColor: nodeProps['about-philosophy']?.fill || undefined,
-                      borderColor: nodeProps['about-philosophy']?.stroke || undefined,
-                      borderWidth: nodeProps['about-philosophy']?.strokeWidth ? `${nodeProps['about-philosophy'].strokeWidth}px` : undefined,
-                      opacity: nodeProps['about-philosophy']?.opacity !== undefined ? nodeProps['about-philosophy'].opacity / 100 : undefined
-                    }}
-                  >
-                    {selectedNodeId === 'about-philosophy' && (
-                      <div className="figma-selection-overlay">
-                        <div className="selection-tag">❖ Design_Philosophy [360×260]</div>
-                        <div className="selection-handle tl" />
-                        <div className="selection-handle tr" />
-                        <div className="selection-handle bl" />
-                        <div className="selection-handle br" />
-                      </div>
-                    )}
-                    <div className="about-trait-title text-[#818cf8]">
-                      <span className="material-symbols-outlined text-[17px]">lightbulb</span>
-                      <span>Design Philosophy & Heuristics</span>
-                    </div>
-                    <ul className="about-trait-list">
-                      <li>📐 <strong>Form Follows Frictionlessness:</strong> Aesthetic delight serves functional comprehension.</li>
-                      <li>🧠 <strong>Cognitive Load Minimization:</strong> Chunking complex data so users never pause or guess.</li>
-                      <li>🔄 <strong>Atomic Consistency:</strong> Strict adherence to design tokens across web, mobile, and desktop.</li>
-                      <li>🧪 <strong>Continuous Validation:</strong> Rapid qualitative user interviews and telemetry feedback loops.</li>
-                    </ul>
-                  </div>
+                        <button
+                          className="connect-icon-btn"
+                          onClick={() => {
+                            navigator.clipboard?.writeText('varun.sehgal02@gmail.com');
+                            showToast('Email copied: varun.sehgal02@gmail.com');
+                          }}
+                          title="Copy Email"
+                        >
+                          <span className="material-symbols-outlined text-[16px]">mail</span>
+                        </button>
 
-                  {/* 5. Bottom-Right: Technical Stack & Toolkit */}
-                  <div
-                    className={`about-trait-card figma-selectable-node ${selectedNodeId === 'about-toolkit' ? 'is-selected' : ''}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSelectNode('about-toolkit', 'Technical_Stack & Toolkit', 'Frame');
-                    }}
-                    style={{
-                      left: '840px',
-                      top: '450px',
-                      width: `${nodeProps['about-toolkit']?.w || 360}px`,
-                      borderRadius: nodeProps['about-toolkit']?.radius ? `${nodeProps['about-toolkit'].radius}px` : undefined,
-                      backgroundColor: nodeProps['about-toolkit']?.fill || undefined,
-                      borderColor: nodeProps['about-toolkit']?.stroke || undefined,
-                      borderWidth: nodeProps['about-toolkit']?.strokeWidth ? `${nodeProps['about-toolkit'].strokeWidth}px` : undefined,
-                      opacity: nodeProps['about-toolkit']?.opacity !== undefined ? nodeProps['about-toolkit'].opacity / 100 : undefined
-                    }}
-                  >
-                    {selectedNodeId === 'about-toolkit' && (
-                      <div className="figma-selection-overlay">
-                        <div className="selection-tag">❖ Technical_Stack [360×260]</div>
-                        <div className="selection-handle tl" />
-                        <div className="selection-handle tr" />
-                        <div className="selection-handle bl" />
-                        <div className="selection-handle br" />
-                      </div>
-                    )}
-                    <div className="about-trait-title text-[#38bdf8]">
-                      <span className="material-symbols-outlined text-[17px]">terminal</span>
-                      <span>Technical & Creative Arsenal</span>
-                    </div>
-                    <ul className="about-trait-list">
-                      <li>🎨 <strong>Design Tools:</strong> Figma, Tokens Studio, Framer, FigJam, Adobe Illustrator.</li>
-                      <li>⚡ <strong>Frontend Engineering:</strong> React.js, Tailwind CSS, TypeScript, Vite, Next.js.</li>
-                      <li>🤖 <strong>AI Prototyping:</strong> Cursor, Antigravity IDE, Claude, Ollama local LLMs.</li>
-                      <li>📊 <strong>Handoff & Specs:</strong> Auto Layout 5.0, Git version control, Figma Inspect.</li>
-                    </ul>
-                  </div>
+                        <button
+                          className="connect-icon-btn"
+                          onClick={() => window.open('https://github.com/varunsehgal05', '_blank')}
+                          title="GitHub Profile"
+                        >
+                          <span className="material-symbols-outlined text-[16px]">terminal</span>
+                        </button>
 
-                  {/* 6. Bottom-Center: Education & Hackathons */}
-                  <div
-                    className={`about-trait-card figma-selectable-node ${selectedNodeId === 'about-education' ? 'is-selected' : ''}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSelectNode('about-education', 'Education & Hackathons', 'Frame');
-                    }}
-                    style={{
-                      left: '440px',
-                      top: '600px',
-                      width: `${nodeProps['about-education']?.w || 360}px`,
-                      borderRadius: nodeProps['about-education']?.radius ? `${nodeProps['about-education'].radius}px` : undefined,
-                      backgroundColor: nodeProps['about-education']?.fill || undefined,
-                      borderColor: nodeProps['about-education']?.stroke || undefined,
-                      borderWidth: nodeProps['about-education']?.strokeWidth ? `${nodeProps['about-education'].strokeWidth}px` : undefined,
-                      opacity: nodeProps['about-education']?.opacity !== undefined ? nodeProps['about-education'].opacity / 100 : undefined
-                    }}
-                  >
-                    {selectedNodeId === 'about-education' && (
-                      <div className="figma-selection-overlay">
-                        <div className="selection-tag">❖ Education_Hackathons [360×240]</div>
-                        <div className="selection-handle tl" />
-                        <div className="selection-handle tr" />
-                        <div className="selection-handle bl" />
-                        <div className="selection-handle br" />
+                        <button
+                          className="connect-icon-btn"
+                          onClick={() => window.open('https://twitter.com', '_blank')}
+                          title="Twitter / X"
+                        >
+                          <span className="material-symbols-outlined text-[16px]">share</span>
+                        </button>
+
+                        <button
+                          className="connect-icon-btn"
+                          onClick={() => {
+                            navigator.clipboard?.writeText(window.location.href);
+                            showToast('Portfolio Link Copied!');
+                          }}
+                          title="Copy Share Link"
+                        >
+                          <span className="material-symbols-outlined text-[16px]">link</span>
+                        </button>
                       </div>
-                    )}
-                    <div className="about-trait-title text-[#ec4899]">
-                      <span className="material-symbols-outlined text-[17px]">school</span>
-                      <span>Education & Hackathon Honors</span>
                     </div>
-                    <ul className="about-trait-list">
-                      <li>🎓 <strong>JUET B.Tech CSE:</strong> Jaypee University of Eng. & Tech. (2023–2027).</li>
-                      <li>🏆 <strong>HAckeThor Winner:</strong> 1st Place National Hackathon Winner by Unstop.</li>
-                      <li>⚡ <strong>CodeSrijan Organizer:</strong> Led UI/UX & identity for 200+ participants.</li>
-                      <li>🎖️ <strong>Imagine Hackathon:</strong> Top National Finalist for collaborative design.</li>
-                    </ul>
                   </div>
-                </div>
                 </div>
               </div>
             </div>
@@ -3163,8 +3086,8 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
             </div>
           )}
 
-          {/* =========================================================================
-              VIEW 6: PROCESS (Infinite Canvas Left-to-Right Horizontal Flow)
+                    {/* =========================================================================
+              VIEW 6: PROCESS (FigJam Interactive Sprint Process Board - Image 1)
               ========================================================================= */}
           {activeTab === 'process' && (
             <div
@@ -3175,190 +3098,356 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
               }}
             >
               <div className="view-content-wrapper" style={{ padding: '36px 40px 140px' }}>
-                {/* Framed Artboard Box for Process */}
+                {/* FigJam Process Board Canvas matching Image 1 */}
                 <div
-                  className={`figma-artboard-box process-artboard-box figma-selectable-node ${selectedNodeId === 'process-artboard' ? 'is-selected' : ''}`}
+                  className={`figma-artboard-box figjam-process-artboard figma-selectable-node ${selectedNodeId === 'process-artboard' ? 'is-selected' : ''}`}
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleSelectNode('process-artboard', 'Process & Methodology Frame', 'Frame');
+                    handleSelectNode('process-artboard', 'FigJam Process Board', 'Frame');
                   }}
                 >
                   <div className="figma-artboard-header-tag">
                     <span className="artboard-hash">#</span>
-                    <span className="artboard-name">Process &amp; Design Methodology Flow</span>
-                    <span className="artboard-dims">[1360 × 960]</span>
+                    <span className="artboard-name">Varun_Sehgal_Portfolio.fig — FigJam Process Board (Interactive Sprint)</span>
+                    <span className="artboard-dims">[1400 × 960]</span>
                   </div>
 
                   {selectedNodeId === 'process-artboard' && (
                     <div className="figma-selection-overlay">
-                      <div className="selection-tag">❖ Process_Methodology_Flow [1360×960]</div>
+                      <div className="selection-tag">❖ FigJam_Process_Sprint_04 [1400×960]</div>
                       <div className="selection-handle tl" /><div className="selection-handle tr" />
                       <div className="selection-handle bl" /><div className="selection-handle br" />
                     </div>
                   )}
 
-                  <header className="view-page-header">
-                    <div className="about-header-flex">
-                      <div>
-                        <h1 className="view-page-title">Process &amp; Methodology</h1>
-                        <p className="view-page-desc">Dynamic non-linear UX workflow: from discovery, mental models, and design tokens to verified telemetry handoff.</p>
+                  {/* Top Canvas Bar matching Image 1 */}
+                  <div className="figjam-canvas-topbar">
+                    <div className="figjam-topbar-left">
+                      <div className="figjam-sprint-badge">
+                        <span className="sprint-status-dot" />
+                        <span className="sprint-title-text">Sprint 04: Omni-Checkout Friction Analysis</span>
+                        <span className="sprint-live-tag">Live Canvas</span>
                       </div>
+                      <div className="sprint-subtext">Varun Sehgal / Staff Product Designer Canvas Room</div>
                     </div>
-                  </header>
 
-                  {/* 2-Tier S-Curve Flow (Non-straight, fits comfortably inside the Frame Box with Notes) */}
-                  <div className="process-scurve-canvas">
-                    {/* SVG Bezier Flow Pipeline between Phases */}
-                    <svg className="process-flow-svg-overlay" viewBox="0 0 1260 760" fill="none">
+                    <div className="figjam-topbar-right">
+                      <button className="figjam-pill-control" onClick={() => showToast('Focus: Deep Elements')}>
+                        <span className="material-symbols-outlined text-[15px] text-sky-400">equalizer</span>
+                        <span>Focus: Deep Elements</span>
+                        <span className="inline-block w-2 h-2 rounded bg-sky-400/60 ml-0.5" />
+                      </button>
+
+                      <div className="figjam-pill-control timer">
+                        <span className="material-symbols-outlined text-[15px] text-amber-400">schedule</span>
+                        <span>12:18</span>
+                      </div>
+
+                      {/* Multiplayer Avatars */}
+                      <div className="figjam-avatar-stack">
+                        <div className="figjam-avatar av-1" title="Varun Sehgal">VS</div>
+                        <div className="figjam-avatar av-2" title="Elena Rostova (PM)">ER</div>
+                        <div className="figjam-avatar av-3" title="Marcus Vance">M1</div>
+                        <div className="figjam-avatar-counter">+4</div>
+                      </div>
+
+                      <button
+                        className="figjam-export-findings-btn"
+                        onClick={() => {
+                          handleExportFrame();
+                          showToast('Exporting Sprint 04 Telemetry Findings...');
+                        }}
+                      >
+                        <span className="material-symbols-outlined text-[15px]">file_upload</span>
+                        <span>Export Findings</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Center Hypothesis Frame Header */}
+                  <div className="figjam-hypothesis-header">
+                    <div className="hypothesis-tag-pill">
+                      <span className="material-symbols-outlined text-[14px]">search</span>
+                      <span>HYPOTHESIS FRAME 01</span>
+                    </div>
+                    <h1 className="hypothesis-main-title">
+                      Enterprise Multi-Seat Checkout Telemetry
+                    </h1>
+                    <p className="hypothesis-subtitle">
+                      Synthesizing 28 customer interviews, biometric engagement signals, and funnel analytics to diagnose a 34% terminal checkout bounce among SOC2 compliance officers.
+                    </p>
+                  </div>
+
+                  {/* FigJam Interactive Whiteboard Canvas with SVG Connectors & Sticky Nodes */}
+                  <div className="figjam-canvas-stage">
+                    {/* SVG Connector Paths */}
+                    <svg className="figjam-connectors-svg" viewBox="0 0 1320 620" fill="none">
                       <defs>
-                        <linearGradient id="flowGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
-                          <stop offset="0%" stopColor="#0d99ff" />
-                          <stop offset="100%" stopColor="#c084fc" />
+                        <linearGradient id="figjamGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#fde047" />
+                          <stop offset="100%" stopColor="#64748b" />
                         </linearGradient>
-                        <linearGradient id="flowGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
-                          <stop offset="0%" stopColor="#c084fc" />
-                          <stop offset="100%" stopColor="#38bdf8" />
+                        <linearGradient id="figjamGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#fef08a" />
+                          <stop offset="100%" stopColor="#64748b" />
                         </linearGradient>
-                        <linearGradient id="flowLoopGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                          <stop offset="0%" stopColor="#38bdf8" />
-                          <stop offset="50%" stopColor="#f59e0b" />
-                          <stop offset="100%" stopColor="#fb923c" />
+                        <linearGradient id="figjamGrad3" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stopColor="#64748b" />
+                          <stop offset="100%" stopColor="#86efac" />
                         </linearGradient>
-                        <linearGradient id="flowGrad3" x1="0%" y1="0%" x2="100%" y2="0%">
-                          <stop offset="0%" stopColor="#fb923c" />
-                          <stop offset="100%" stopColor="#a855f7" />
-                        </linearGradient>
-                        <linearGradient id="flowGrad4" x1="0%" y1="0%" x2="100%" y2="0%">
-                          <stop offset="0%" stopColor="#a855f7" />
-                          <stop offset="100%" stopColor="#10b981" />
+                        <linearGradient id="figjamGrad4" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#64748b" />
+                          <stop offset="100%" stopColor="#f472b6" />
                         </linearGradient>
                       </defs>
 
-                      {/* Path 1 -> 2 */}
-                      <path d="M 370,180 C 410,180 430,180 470,180" stroke="url(#flowGrad1)" strokeWidth="3" strokeDasharray="6 6" />
-                      <circle cx="470" cy="180" r="5" fill="#c084fc" />
+                      {/* Path from Pain Point 01 to Seat Audit */}
+                      <path
+                        d="M 540,160 C 600,160 620,270 660,270"
+                        stroke="url(#figjamGrad1)"
+                        strokeWidth="2.5"
+                        strokeDasharray="6 6"
+                      />
+                      <circle cx="660" cy="270" r="4.5" fill="#fde047" />
 
-                      {/* Path 2 -> 3 */}
-                      <path d="M 830,180 C 870,180 890,180 930,180" stroke="url(#flowGrad2)" strokeWidth="3" strokeDasharray="6 6" />
-                      <circle cx="930" cy="180" r="5" fill="#38bdf8" />
+                      {/* Path from Customer Quote to Seat Audit */}
+                      <path
+                        d="M 560,370 C 600,370 620,310 660,310"
+                        stroke="url(#figjamGrad2)"
+                        strokeWidth="2.5"
+                        strokeDasharray="6 6"
+                      />
+                      <circle cx="660" cy="310" r="4.5" fill="#fef08a" />
 
-                      {/* S-Curve Loop Dropping from Row 1 to Row 2 */}
-                      <path d="M 1120,240 C 1240,240 1240,460 1120,460" stroke="url(#flowLoopGrad)" strokeWidth="3.5" strokeDasharray="6 6" />
-                      <circle cx="1120" cy="460" r="5" fill="#fb923c" />
+                      {/* Path from Seat Audit to Opportunity */}
+                      <path
+                        d="M 760,280 C 820,280 840,150 900,150"
+                        stroke="url(#figjamGrad3)"
+                        strokeWidth="2.5"
+                        strokeDasharray="6 6"
+                      />
+                      <circle cx="900" cy="150" r="4.5" fill="#86efac" />
 
-                      {/* Path 4 -> 5 -> 6 */}
-                      <path d="M 470,520 C 430,520 410,520 370,520" stroke="url(#flowGrad3)" strokeWidth="3" strokeDasharray="6 6" />
-                      <circle cx="370" cy="520" r="5" fill="#fb923c" />
-
-                      <path d="M 930,520 C 890,520 870,520 830,520" stroke="url(#flowGrad4)" strokeWidth="3" strokeDasharray="6 6" />
-                      <circle cx="830" cy="520" r="5" fill="#10b981" />
+                      {/* Path from Seat Audit to Behavioral Nudge */}
+                      <path
+                        d="M 760,320 C 830,320 850,400 920,400"
+                        stroke="url(#figjamGrad4)"
+                        strokeWidth="2.5"
+                        strokeDasharray="6 6"
+                      />
+                      <circle cx="920" cy="400" r="4.5" fill="#f472b6" />
                     </svg>
 
-                    {/* TOP TIER: Discovery, Architecture, Wireframing */}
-                    <div className="process-tier-row top-tier">
-                      {/* Phase 01: Ideation & Framing */}
-                      <div className="process-step-card phase-1">
-                        <div className="phase-badge-pill text-[#0d99ff]">Phase 01</div>
-                        <h3 className="step-title">Ideation &amp; Problem Framing</h3>
-                        <p className="step-desc">Mapping the chaotic void. Conducting stakeholder interviews, user empathy maps, and competitive UX audits.</p>
-                        <div className="step-deliverables-pill">
-                          <span className="material-symbols-outlined text-[13px]">lightbulb</span>
-                          <span>User Personas &amp; Journey Maps</span>
+                    {/* 1. User Field Tape Card */}
+                    <div className="figjam-node field-tape-card">
+                      <div className="tape-card-header">
+                        <div className="tape-header-left">
+                          <span className="material-symbols-outlined text-[16px] text-amber-400">mic</span>
+                          <span className="tape-tag-title">USER FIELD TAPE</span>
                         </div>
-
-                        {/* Pinned Critique Sticky Note 1 */}
-                        <div className="process-sticky-pinned sticky-yellow note-pos-1">
-                          <div className="sticky-tape-stamp" />
-                          <p>💡 <strong>Note:</strong> Start with raw low-fi roughs before jumping to hi-fi polish.</p>
+                        <div className="tape-rec-badge">
+                          <span className="rec-red-dot" />
+                          <span>REC - 04:22</span>
                         </div>
                       </div>
 
-                      {/* Phase 02: Information Architecture */}
-                      <div className="process-step-card phase-2">
-                        <div className="phase-badge-pill text-[#c084fc]">Phase 02</div>
-                        <h3 className="step-title">Architecture &amp; User Flows</h3>
-                        <p className="step-desc">Synthesizing mental models, edge-case routing, checkout pipelines, and sitemaps.</p>
-                        <div className="step-deliverables-pill">
-                          <span className="material-symbols-outlined text-[13px]">schema</span>
-                          <span>Task Flows &amp; IA Trees</span>
-                        </div>
-
-                        {/* Pinned Critique Sticky Note 2 */}
-                        <div className="process-sticky-pinned sticky-cyan note-pos-2">
-                          <div className="sticky-tape-stamp" />
-                          <p>📌 <strong>Heuristic:</strong> 4-step booking flow slashed drop-offs by 30%.</p>
-                        </div>
+                      <div className="tape-quote-bold">
+                        "Session 14 - Checkout friction discovery with Global FinTech CISO"
+                      </div>
+                      <div className="tape-timestamp-note">
+                        Timestamp 02:44: "I cannot submit PO approval without seat-level audit permissions in step 3."
                       </div>
 
-                      {/* Phase 03: Wireframing */}
-                      <div className="process-step-card phase-3">
-                        <div className="phase-badge-pill text-[#38bdf8]">Phase 03</div>
-                        <h3 className="step-title">Wireframing &amp; Structure</h3>
-                        <p className="step-desc">Translating cognitive flows into layout scaffolds, visual hierarchy, and sub-pixel grid alignments.</p>
-                        <div className="step-deliverables-pill">
-                          <span className="material-symbols-outlined text-[13px]">grid_view</span>
-                          <span>8pt Grid Layouts &amp; Roughs</span>
-                        </div>
+                      {/* Waveform Visualizer */}
+                      <div className={`tape-waveform-row ${isPlayingTape ? 'playing' : ''}`}>
+                        {[35, 60, 85, 45, 95, 70, 40, 65, 90, 100, 50, 75, 40, 80, 95, 60, 45, 70, 85, 30].map((h, i) => (
+                          <div
+                            key={i}
+                            className="wave-bar"
+                            style={{
+                              height: `${h}%`,
+                              animationDelay: `${i * 0.06}s`
+                            }}
+                          />
+                        ))}
+                      </div>
 
-                        {/* Pinned Critique Sticky Note 3 */}
-                        <div className="process-sticky-pinned sticky-pink note-pos-3">
-                          <div className="sticky-tape-stamp" />
-                          <p>⚡ <strong>Rule:</strong> Strict 8pt spatial rhythm across all viewports.</p>
+                      <div className="tape-footer-row">
+                        <button
+                          className="tape-play-btn"
+                          onClick={() => {
+                            setIsPlayingTape(!isPlayingTape);
+                            showToast(isPlayingTape ? 'Audio Paused' : 'Playing Field Tape (David M.)');
+                          }}
+                        >
+                          <span className="material-symbols-outlined text-[16px]">
+                            {isPlayingTape ? 'pause' : 'play_arrow'}
+                          </span>
+                          <span>{isPlayingTape ? 'Pause (2m clip)' : 'Listen (2m clip)'}</span>
+                        </button>
+                        <span className="tape-speaker-tag">Speaker: David M.</span>
+                      </div>
+                    </div>
+
+                    {/* 2. Pain Point 01 Sticky Note */}
+                    <div className="figjam-node sticky-note yellow-sticky pain-point-sticky">
+                      {/* Floating Multiplayer Cursor */}
+                      <div className="figjam-cursor-tag cursor-elena">
+                        <svg className="cursor-arrow-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M0 0L6 14L8.5 8.5L14 6L0 0Z" fill="#a855f7" />
+                        </svg>
+                        <span className="cursor-author-name">Elena (PM)</span>
+                      </div>
+
+                      <div className="sticky-header">
+                        <span className="sticky-label">PAIN POINT 01</span>
+                        <span className="sticky-emoji-badge">💀</span>
+                      </div>
+
+                      <p className="sticky-body-text">
+                        Procurement leads get locked out if tax exemption require manual approval queue.
+                      </p>
+
+                      <div className="sticky-footer">
+                        <span className="sticky-mention">@varun</span>
+                        <button
+                          className="sticky-reaction-pill"
+                          onClick={() => {
+                            setPainPointReactions(prev => prev + 1);
+                            showToast(`Reaction added: 🔥 ${painPointReactions + 1}`);
+                          }}
+                        >
+                          <span>🔥</span>
+                          <span>{painPointReactions}</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* 3. Customer Quote Sticky Note */}
+                    <div className="figjam-node sticky-note cream-sticky quote-sticky">
+                      <div className="sticky-header">
+                        <span className="sticky-label">CUSTOMER QUOTE</span>
+                        <span className="sticky-emoji-badge">🗣️</span>
+                      </div>
+                      <p className="sticky-body-text">
+                        "Why can't I invite our legal counsel before typing my corporate credit card numbers?"
+                      </p>
+                      <div className="sticky-footer">
+                        <span className="sticky-mention">#soc2-blocker</span>
+                      </div>
+                    </div>
+
+                    {/* 4. Seat Audit Decision Diamond */}
+                    <div className="figjam-node decision-diamond-node">
+                      <div className="diamond-inner-content">
+                        <div className="diamond-icon-wrap">
+                          <span className="material-symbols-outlined text-[20px] text-sky-400">balance</span>
+                        </div>
+                        <h4 className="diamond-title">SEAT AUDIT</h4>
+                        <span className="diamond-sub">Gatekeeper?</span>
+                        <div className="diamond-telemetry-badge">
+                          <span>Drop-off: <strong>34.2%</strong></span>
                         </div>
                       </div>
                     </div>
 
-                    {/* BOTTOM TIER: Design Systems, Hi-Fi Prototyping, Production Handoff */}
-                    <div className="process-tier-row bottom-tier">
-                      {/* Phase 04: Design Systems & Tokens */}
-                      <div className="process-step-card phase-4">
-                        <div className="phase-badge-pill text-[#fb923c]">Phase 04</div>
-                        <h3 className="step-title">Design System &amp; Tokens</h3>
-                        <p className="step-desc">Building atomic component matrices, dark/light token palettes, typography ramps, and state variants in Tokens Studio.</p>
-                        <div className="step-deliverables-pill">
-                          <span className="material-symbols-outlined text-[13px]">layers</span>
-                          <span>Tokens Studio &amp; Auto Layout 5.0</span>
-                        </div>
+                    {/* 5. Opportunity Sticky Note */}
+                    <div className="figjam-node sticky-note mint-sticky opportunity-sticky">
+                      <div className="sticky-header">
+                        <span className="sticky-label">OPPORTUNITY</span>
+                        <span className="sticky-emoji-badge">💡</span>
+                      </div>
+                      <p className="sticky-body-text">
+                        "Shadow Approval System: Allow instant trial provisioning with 14-day async invoice generation."
+                      </p>
+                      <div className="sticky-footer">
+                        <span className="sticky-mention">@varun</span>
+                        <span className="sticky-tag-sm">High Impact</span>
+                      </div>
+                    </div>
 
-                        {/* Pinned Critique Sticky Note 4 */}
-                        <div className="process-sticky-pinned sticky-orange note-pos-4">
-                          <div className="sticky-tape-stamp" />
-                          <p>🎨 <strong>System:</strong> Nested components with dark/light mode token sync.</p>
-                        </div>
+                    {/* 6. Behavioral Nudge Sticky Note */}
+                    <div className="figjam-node sticky-note pink-sticky nudge-sticky">
+                      <div className="sticky-header">
+                        <span className="sticky-label">BEHAVIORAL NUDGE</span>
+                        <span className="sticky-emoji-badge">⚡</span>
+                      </div>
+                      <p className="sticky-body-text">
+                        One-click PO generation dispatch directly paired with DocuSign.
+                      </p>
+                      <div className="sticky-footer">
+                        <span className="sticky-mention">@marcus</span>
+                        <span className="sticky-tag-sm">Auto-Route</span>
+                      </div>
+                    </div>
+
+                    {/* Bottom Floating FigJam Toolbar matching Image 1 */}
+                    <div className="figjam-floating-toolbar">
+                      <div className="toolbar-tools-group">
+                        <button
+                          className={`figjam-tool-btn ${processToolbarTool === 'select' ? 'active' : ''}`}
+                          onClick={() => {
+                            setProcessToolbarTool('select');
+                            showToast('Move Tool Selected');
+                          }}
+                          title="Select Tool"
+                        >
+                          <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M0 0L6 14L8.5 8.5L14 6L0 0Z" />
+                          </svg>
+                        </button>
+
+                        <button
+                          className={`figjam-tool-btn ${processToolbarTool === 'hand' ? 'active' : ''}`}
+                          onClick={() => {
+                            setProcessToolbarTool('hand');
+                            showToast('Hand Pan Tool');
+                          }}
+                          title="Pan Hand Tool"
+                        >
+                          <span className="material-symbols-outlined text-[16px]">pan_tool</span>
+                        </button>
+
+                        <button
+                          className={`figjam-tool-btn ${processToolbarTool === 'sticky' ? 'active' : ''}`}
+                          onClick={() => {
+                            setProcessToolbarTool('sticky');
+                            showToast('Click anywhere to place Sticky Note');
+                          }}
+                          title="Sticky Note Tool"
+                        >
+                          <span className="material-symbols-outlined text-[16px]">sticky_note_2</span>
+                        </button>
+
+                        <button
+                          className={`figjam-tool-btn ${processToolbarTool === 'connector' ? 'active' : ''}`}
+                          onClick={() => {
+                            setProcessToolbarTool('connector');
+                            showToast('Connector Tool Active');
+                          }}
+                          title="Connector Tool"
+                        >
+                          <span className="material-symbols-outlined text-[16px]">timeline</span>
+                        </button>
                       </div>
 
-                      {/* Phase 05: Prototyping */}
-                      <div className="process-step-card phase-5">
-                        <div className="phase-badge-pill text-[#a855f7]">Phase 05</div>
-                        <h3 className="step-title">Hi-Fi Prototyping &amp; Springs</h3>
-                        <p className="step-desc">Injecting authentic haptic feedback, fluid spring physics, interactive micro-states, and animated transitions.</p>
-                        <div className="step-deliverables-pill">
-                          <span className="material-symbols-outlined text-[13px]">animation</span>
-                          <span>60fps Interactive Prototype</span>
-                        </div>
+                      <div className="toolbar-divider" />
 
-                        {/* Pinned Critique Sticky Note 5 */}
-                        <div className="process-sticky-pinned sticky-purple note-pos-5">
-                          <div className="sticky-tape-stamp" />
-                          <p>🎯 <strong>Testing:</strong> 200+ hackathon participants tested flow live.</p>
-                        </div>
+                      {/* Emoji Reactions */}
+                      <div className="toolbar-reactions-group">
+                        <button className="figjam-emoji-btn" onClick={() => showToast('❤️ Reaction Added')} title="Love">❤️</button>
+                        <button className="figjam-emoji-btn" onClick={() => showToast('🔥 Reaction Added')} title="Fire">🔥</button>
+                        <button className="figjam-emoji-btn" onClick={() => showToast('🚀 Sprint Velocity!')} title="Rocket">🚀</button>
+                        <button className="figjam-emoji-btn" onClick={() => showToast('💬 Comment Stamp')} title="Comment">💬</button>
                       </div>
 
-                      {/* Phase 06: Production Handoff */}
-                      <div className="process-step-card phase-6">
-                        <div className="phase-badge-pill text-[#10b981]">Phase 06</div>
-                        <h3 className="step-title">Dev Handoff &amp; Telemetry</h3>
-                        <p className="step-desc">Figma Inspect mode redlines, React/Tailwind component parity, zero layout shift, and live accessibility verification.</p>
-                        <div className="step-deliverables-pill">
-                          <span className="material-symbols-outlined text-[13px]">verified</span>
-                          <span>React/Tailwind &amp; WCAG AA Pass</span>
-                        </div>
+                      <div className="toolbar-divider" />
 
-                        {/* Pinned Critique Sticky Note 6 */}
-                        <div className="process-sticky-pinned sticky-green note-pos-6">
-                          <div className="sticky-tape-stamp" />
-                          <p>🚀 <strong>Status:</strong> Zero layout shift &amp; 100% component parity.</p>
-                        </div>
+                      {/* Zoom Controls */}
+                      <div className="toolbar-zoom-group">
+                        <button className="zoom-adjust-btn" onClick={handleZoomOut} title="Zoom Out">−</button>
+                        <span className="zoom-percentage-text">{Math.round(zoom * 100)}%</span>
+                        <button className="zoom-adjust-btn" onClick={handleZoomIn} title="Zoom In">+</button>
                       </div>
                     </div>
                   </div>
@@ -3367,8 +3456,8 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
             </div>
           )}
 
-          {/* =========================================================================
-              VIEW 7: PLUGINS (Creative Figma Community Ecosystem & Direct Web Launch)
+                    {/* =========================================================================
+              VIEW 7: PLUGINS (Creative Figma Community Ecosystem & Dev Console - Image 3)
               ========================================================================= */}
           {activeTab === 'plugins' && (
             <div
@@ -3379,473 +3468,420 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
               }}
             >
               <div className="view-content-wrapper" style={{ padding: '36px 40px 140px' }}>
-                {/* Framed Artboard Box for Plugins */}
+                {/* Plugins Ecosystem Canvas matching Image 3 */}
                 <div
-                  className={`figma-artboard-box plugins-artboard-box figma-selectable-node ${selectedNodeId === 'plugins-artboard' ? 'is-selected' : ''}`}
+                  className={`figma-artboard-box plugins-ecosystem-artboard figma-selectable-node ${selectedNodeId === 'plugins-artboard' ? 'is-selected' : ''}`}
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleSelectNode('plugins-artboard', 'Figma Community Plugins Frame', 'Frame');
+                    handleSelectNode('plugins-artboard', 'Varuns_Plugin_Lab_Ecosystem', 'Frame');
                   }}
                 >
                   <div className="figma-artboard-header-tag">
                     <span className="artboard-hash">#</span>
-                    <span className="artboard-name">Figma Community &amp; Creative Extensions Lab</span>
-                    <span className="artboard-dims">[1300 × 980]</span>
+                    <span className="artboard-name">COMMUNITY + EXTENSIONS / Varun's Plugin Lab &amp; Ecosystem [Verified Creator]</span>
+                    <span className="artboard-dims">[1440 × 1100]</span>
                   </div>
 
                   {selectedNodeId === 'plugins-artboard' && (
                     <div className="figma-selection-overlay">
-                      <div className="selection-tag">❖ Figma_Community_Plugins_Lab [1300×980]</div>
+                      <div className="selection-tag">❖ Varuns_Plugin_Lab_Ecosystem [1440×1100]</div>
                       <div className="selection-handle tl" /><div className="selection-handle tr" />
                       <div className="selection-handle bl" /><div className="selection-handle br" />
                     </div>
                   )}
 
-                  <header className="view-page-header">
-                    <div className="about-header-flex">
-                      <div>
-                        <h1 className="view-page-title">Figma Community &amp; Creative Extensions</h1>
-                        <p className="view-page-desc">Interactive testing bench and power-user toolkit for Tokens Studio, Stark, Magician AI, and AutoFlow.</p>
-                      </div>
-                    </div>
-                  </header>
-
-                  {/* CENTERPIECE: Interactive Creative Plugin Studio & Testing Lab */}
-                  <div className="plugins-center-lab-container">
-                    <div className="plugin-lab-header">
-                      <div className="lab-title-group">
-                        <span className="material-symbols-outlined text-sky-400 text-[20px]">science</span>
-                        <h3 className="lab-title">Figma Plugin Testing Bench (Live Interactive Simulator)</h3>
-                      </div>
-                      <div className="lab-tabs-row">
-                        <button
-                          type="button"
-                          className={`lab-tab-pill ${(!activeSimulatorPlugin || activeSimulatorPlugin.id === 'tokens') ? 'active' : ''}`}
-                          onClick={() => setActiveSimulatorPlugin({ id: 'tokens', name: 'Tokens Studio for Figma' })}
-                        >
-                          <span className="material-symbols-outlined text-[14px]">palette</span>
-                          <span>Tokens Studio</span>
-                        </button>
-                        <button
-                          type="button"
-                          className={`lab-tab-pill ${activeSimulatorPlugin?.id === 'magician' ? 'active' : ''}`}
-                          onClick={() => setActiveSimulatorPlugin({ id: 'magician', name: 'Magician AI' })}
-                        >
-                          <span className="material-symbols-outlined text-[14px]">auto_fix_high</span>
-                          <span>Magician AI</span>
-                        </button>
-                        <button
-                          type="button"
-                          className={`lab-tab-pill ${activeSimulatorPlugin?.id === 'stark' ? 'active' : ''}`}
-                          onClick={() => setActiveSimulatorPlugin({ id: 'stark', name: 'Stark Accessibility' })}
-                        >
-                          <span className="material-symbols-outlined text-[14px]">visibility</span>
-                          <span>Stark WCAG</span>
-                        </button>
-                        <button
-                          type="button"
-                          className={`lab-tab-pill ${activeSimulatorPlugin?.id === 'autoflow' ? 'active' : ''}`}
-                          onClick={() => setActiveSimulatorPlugin({ id: 'autoflow', name: 'AutoFlow Diagrams' })}
-                        >
-                          <span className="material-symbols-outlined text-[14px]">schema</span>
-                          <span>AutoFlow</span>
-                        </button>
-                      </div>
+                  {/* Top Header Banner matching Image 3 */}
+                  <div className="plugins-top-banner-row">
+                    <div className="banner-badge-group">
+                      <span className="material-symbols-outlined text-orange-400 text-[18px]">extension</span>
+                      <span className="banner-breadcrumb-text">
+                        <strong>COMMUNITY + EXTENSIONS</strong> / Varun's Plugin Lab &amp; Ecosystem
+                      </span>
+                      <span className="verified-creator-pill">Verified Creator</span>
                     </div>
 
-                    {/* Live Plugin Canvas Workbench */}
-                    <div className="plugin-lab-workbench">
-                      {/* 1. Tokens Studio Interactive Test Drive */}
-                      {(!activeSimulatorPlugin || activeSimulatorPlugin.id === 'tokens') && (
-                        <div className="lab-demo-pane tokens-demo">
-                          <div className="demo-controls-sidebar">
-                            <h4 className="demo-sidebar-heading">Active Design Tokens</h4>
-                            <div className="token-control-group">
-                              <label>Primary Brand Hue</label>
-                              <div className="token-swatches-row">
-                                {['#0d99ff', '#10b981', '#a855f7', '#f97316'].map(color => (
-                                  <button
-                                    key={color}
-                                    type="button"
-                                    className={`swatch-btn ${fillColor === color ? 'selected' : ''}`}
-                                    style={{ background: color }}
-                                    onClick={() => setFillColor(color)}
-                                  />
-                                ))}
-                              </div>
-                            </div>
-
-                            <div className="token-control-group">
-                              <label>Corner Radius Scale</label>
-                              <div className="token-pill-buttons">
-                                {[4, 8, 16, 999].map(rad => (
-                                  <button
-                                    key={rad}
-                                    type="button"
-                                    className={`rad-btn ${frameRadius === rad ? 'selected' : ''}`}
-                                    onClick={() => setFrameRadius(rad)}
-                                  >
-                                    {rad === 999 ? 'Pill' : `${rad}px`}
-                                  </button>
-                                ))}
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="demo-preview-stage">
-                            <div
-                              className="token-live-preview-card"
-                              style={{
-                                borderColor: fillColor,
-                                borderRadius: `${frameRadius}px`,
-                                boxShadow: `0 8px 32px ${fillColor}25`
-                              }}
-                            >
-                              <div className="preview-badge" style={{ background: `${fillColor}20`, color: fillColor }}>
-                                ❖ Auto-Synced Token
-                              </div>
-                              <h3 className="preview-card-title">Tokenized Component Matrix</h3>
-                              <p className="preview-card-text">
-                                When design tokens change in Tokens Studio, all nested Figma components and Tailwind classes update instantly with zero layout drift.
-                              </p>
-                              <button
-                                type="button"
-                                className="preview-action-btn"
-                                style={{
-                                  background: fillColor,
-                                  borderRadius: `${frameRadius}px`
-                                }}
-                              >
-                                Test-Drive Component
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* 2. Magician AI Vector & Copy Lab */}
-                      {activeSimulatorPlugin?.id === 'magician' && (
-                        <div className="lab-demo-pane magician-demo">
-                          <div className="magician-prompt-row">
-                            <input
-                              type="text"
-                              defaultValue="High-conversion event booking badge"
-                              className="magician-input-field"
-                            />
-                            <button
-                              type="button"
-                              className="magician-cast-btn"
-                              onClick={() => showToast('✨ Magic Cast! Vector badge generated.')}
-                            >
-                              <span className="material-symbols-outlined text-[15px]">auto_awesome</span>
-                              <span>Cast Magic</span>
-                            </button>
-                          </div>
-                          <div className="magician-results-stage">
-                            <div className="ai-result-badge">
-                              <span className="material-symbols-outlined text-purple-400 text-[24px]">verified</span>
-                              <div>
-                                <h4 className="font-bold text-white text-sm">EventFlow Instant Access Pass</h4>
-                                <p className="text-xs text-zinc-400">Zero drop-off guaranteed • Powered by Magician AI</p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* 3. Stark Accessibility Contrast Checker */}
-                      {activeSimulatorPlugin?.id === 'stark' && (
-                        <div className="lab-demo-pane stark-demo">
-                          <div className="stark-telemetry-grid">
-                            <div className="stark-metric-box">
-                              <span className="stark-score-val text-emerald-400">16.4 : 1</span>
-                              <span className="stark-score-lbl">Contrast Ratio (AAA Pass)</span>
-                            </div>
-                            <div className="stark-checks-list">
-                              <div className="check-row">
-                                <span className="text-emerald-400">✓</span>
-                                <span>Normal Text (WCAG AAA)</span>
-                              </div>
-                              <div className="check-row">
-                                <span className="text-emerald-400">✓</span>
-                                <span>Large Text &amp; Icons (WCAG AAA)</span>
-                              </div>
-                              <div className="check-row">
-                                <span className="text-emerald-400">✓</span>
-                                <span>UI Components &amp; Graphical Objects (3.0:1 Pass)</span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* 4. AutoFlow Diagram Connector */}
-                      {activeSimulatorPlugin?.id === 'autoflow' && (
-                        <div className="lab-demo-pane autoflow-demo">
-                          <div className="autoflow-stage-preview">
-                            <div className="flow-node node-a">Screen A: Event List</div>
-                            <div className="flow-arrow-beam">
-                              <span>➔ 4-Step Checkout ➔</span>
-                            </div>
-                            <div className="flow-node node-b">Screen B: QR Pass</div>
-                          </div>
-                        </div>
-                      )}
+                    <div className="banner-status-group">
+                      <div className="figjam-avatar-stack sm">
+                        <div className="figjam-avatar av-1">VS</div>
+                        <div className="figjam-avatar av-2">ER</div>
+                        <div className="figjam-avatar-counter">+6</div>
+                      </div>
+                      <span className="realtime-active-indicator">
+                        <span className="active-dot" />
+                        <span>Realtime Active</span>
+                      </span>
                     </div>
                   </div>
 
-                  {/* Filter Toolbar & Search */}
-                  <div className="plugins-filter-toolbar mt-8">
-                    <div className="activity-filter-pills">
-                      {['All', 'AI & Automation', 'Diagramming', 'Accessibility', 'Content'].map(cat => (
-                        <button
-                          key={cat}
-                          type="button"
-                          className={`activity-filter-btn ${pluginCategory === cat ? 'active' : ''}`}
-                          onClick={() => setPluginCategory(cat)}
-                        >
-                          {cat}
-                        </button>
-                      ))}
-                    </div>
-
-                    <div className="plugins-search-box">
-                      <span className="material-symbols-outlined text-[16px] text-zinc-400">search</span>
-                      <input
-                        type="text"
-                        placeholder="Search 8+ creative plugins..."
-                        value={pluginSearch}
-                        onChange={(e) => setPluginSearch(e.target.value)}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Curated Community Plugins Grid */}
-                  <div className="plugins-creative-grid">
-                    {filteredPlugins.map(plugin => {
-                      const pluginNodeId = `plugin-${plugin.id}`;
-                      const isSelected = selectedNodeId === pluginNodeId;
-                      return (
-                        <div
-                          key={plugin.id}
-                          className={`plugin-creative-card figma-selectable-node ${isSelected ? 'is-selected' : ''}`}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleSelectNode(pluginNodeId, plugin.name, 'Component');
-                          }}
-                        >
-                          {isSelected && (
-                            <div className="figma-selection-overlay">
-                              <div className="selection-tag">❖ {plugin.name}</div>
-                              <div className="selection-handle tl" /><div className="selection-handle tr" />
-                              <div className="selection-handle bl" /><div className="selection-handle br" />
-                            </div>
-                          )}
-                          <div
-                            className="plugin-card-banner"
-                            style={{ background: plugin.bannerGradient }}
-                          >
-                            <span className="plugin-banner-badge">{plugin.badge}</span>
-                          </div>
-
-                          <div className="plugin-card-body">
-                            <div className="plugin-title-row">
-                              <div className="plugin-icon-avatar">
-                                <span className="material-symbols-outlined text-[20px]">{plugin.icon}</span>
-                              </div>
-                              <div className="plugin-names-wrap">
-                                <h3 className="plugin-main-name">{plugin.name}</h3>
-                                <p className="plugin-author-label">by {plugin.author}</p>
-                              </div>
-                            </div>
-
-                            <p className="plugin-card-desc">{plugin.desc}</p>
-
-                            <div className="flex flex-wrap gap-1 my-1">
-                              {plugin.tags.map((t, idx) => (
-                                <span key={idx} className="cert-id-badge">{t}</span>
-                              ))}
-                            </div>
-
-                            <div className="plugin-stats-row">
-                              <span>
-                                <span className="material-symbols-outlined text-[13px] text-amber-400">star</span>
-                                {plugin.rating}
-                              </span>
-                              <span>
-                                <span className="material-symbols-outlined text-[13px]">download</span>
-                                {plugin.installs} installs
-                              </span>
-                            </div>
-
-                            <div className="plugin-card-actions">
-                              <button
-                                type="button"
-                                className="plugin-test-btn"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setActiveSimulatorPlugin(plugin);
-                                  showToast(`Testing ${plugin.name} in Lab!`);
-                                }}
-                              >
-                                Test Drive Live
-                              </button>
-                              <a
-                                href={plugin.link}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="plugin-run-btn"
-                                onClick={() => {
-                                  window.open(plugin.link, '_blank');
-                                }}
-                              >
-                                <span className="material-symbols-outlined text-[14px]">open_in_new</span>
-                                <span>Open in Figma ↗</span>
-                              </a>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-
-              {/* Interactive Plugin Simulator Modal */}
-              {activeSimulatorPlugin && (
-                <div className="plugin-modal-overlay" onClick={() => setActiveSimulatorPlugin(null)}>
-                  <div className="plugin-simulator-window" onClick={(e) => e.stopPropagation()}>
-                    <div className="simulator-window-titlebar">
-                      <div className="simulator-title-left">
-                        <span className="material-symbols-outlined text-[16px] text-[#0d99ff]">
-                          {activeSimulatorPlugin.icon}
-                        </span>
-                        <span>{activeSimulatorPlugin.name}</span>
-                      </div>
+                  {/* Filter Tabs & Search Bar */}
+                  <div className="plugins-filters-row">
+                    <div className="filter-pills-group">
                       <button
-                        type="button"
-                        className="simulator-close-btn"
-                        onClick={() => setActiveSimulatorPlugin(null)}
+                        className={`filter-pill ${pluginFilter === 'all' ? 'active' : ''}`}
+                        onClick={() => setPluginFilter('all')}
                       >
-                        <span className="material-symbols-outlined text-[16px]">close</span>
+                        All Plugins (12)
+                      </button>
+                      <button
+                        className={`filter-pill ${pluginFilter === 'featured' ? 'active' : ''}`}
+                        onClick={() => setPluginFilter('featured')}
+                      >
+                        Featured &amp; Community Picks
+                      </button>
+                      <button
+                        className={`filter-pill ${pluginFilter === 'published' ? 'active' : ''}`}
+                        onClick={() => setPluginFilter('published')}
+                      >
+                        Published by Varun
+                      </button>
+                      <button
+                        className={`filter-pill ${pluginFilter === 'dev' ? 'active' : ''}`}
+                        onClick={() => setPluginFilter('dev')}
+                      >
+                        In Development
                       </button>
                     </div>
 
-                    <div className="simulator-body">
-                      {/* 1. STARK ACCESSIBILITY AUDIT */}
-                      {activeSimulatorPlugin.id === 'stark' && (
-                        <div>
-                          <div className="text-[12px] font-semibold text-white mb-2">Live WCAG AA / AAA Contrast Checker</div>
-                          <div className="simulator-result-box flex flex-col gap-3">
-                            <div className="flex items-center justify-between">
-                              <span className="text-[12px] text-zinc-300">Background vs Text</span>
-                              <span className="text-[15px] font-bold text-emerald-400">15.8 : 1 (AAA)</span>
+                    <div className="plugins-search-bar-wrap">
+                      <span className="material-symbols-outlined text-[15px] text-zinc-400">search</span>
+                      <input
+                        type="text"
+                        placeholder="Filter plugins, runtimes, APIs..."
+                        value={pluginSearch}
+                        onChange={(e) => setPluginSearch(e.target.value)}
+                        className="plugins-search-input"
+                      />
+                      <div className="view-mode-icons">
+                        <span className="material-symbols-outlined text-[16px] text-sky-400">grid_view</span>
+                        <span className="material-symbols-outlined text-[16px] text-zinc-500">view_list</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 2-COLUMN MAIN CONTENT: Wide Left Showcase + Right Dev Console */}
+                  <div className="plugins-main-layout-grid">
+                    {/* LEFT COLUMN: Featured Cards */}
+                    <div className="plugins-left-column">
+                      {/* 1. TOP FEATURED CARD: Spectral Token Bridge */}
+                      <div className="plugin-card featured-token-bridge-card">
+                        <div className="featured-card-header">
+                          <div className="plugin-icon-wrap bg-gradient-to-br from-orange-500/20 to-red-500/20 text-orange-400">
+                            <span className="material-symbols-outlined text-[20px]">layers</span>
+                          </div>
+                          <div className="plugin-headline-block">
+                            <div className="title-row">
+                              <h3 className="plugin-title">Spectral Token Bridge</h3>
+                              <span className="plugin-version-tag">v2.4</span>
                             </div>
-                            <div className="flex items-center gap-2">
-                              <div className="w-6 h-6 rounded border border-white/20" style={{ background: fillColor }}></div>
-                              <span className="text-[11px] text-zinc-400 font-mono">Fill: {fillColor}</span>
-                              <span className="text-zinc-600">/</span>
-                              <div className="w-6 h-6 rounded bg-white border border-white/20"></div>
-                              <span className="text-[11px] text-zinc-400 font-mono">Text: #FFFFFF</span>
-                            </div>
-                            <div className="flex gap-2 text-[10px] font-semibold">
-                              <span className="px-2 py-1 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Normal Text: PASS AAA</span>
-                              <span className="px-2 py-1 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Large Text: PASS AAA</span>
-                            </div>
+                            <p className="plugin-short-desc">
+                              Real-time bi-directional synchronization between Figma design tokens, Tailwind v4, and React Native AST.
+                            </p>
                           </div>
                         </div>
-                      )}
 
-                      {/* 2. FIGMA MAGICIAN AI */}
-                      {activeSimulatorPlugin.id === 'magician' && (
-                        <div>
-                          <div className="text-[12px] font-semibold text-white mb-2">Multimodal Generative Copy & Icons</div>
-                          <div className="simulator-result-box flex flex-col gap-2">
-                            <span className="text-[11px] text-zinc-400">Prompt: "High-converting SaaS CTA"</span>
-                            <div className="p-2 rounded bg-white/5 border border-white/10 text-[12px] text-white">
-                              ⚡ "Experience Seamless Event Ticketing — Start in 30 Seconds"
+                        <div className="plugin-stats-pills-row">
+                          <span className="stat-pill staff-pick">
+                            <span className="material-symbols-outlined text-[12px]">verified</span>
+                            <span>Staff Pick</span>
+                          </span>
+                          <span className="stat-pill runs">38.8k Runs</span>
+                          <span className="stat-pill rating">★ 4.95</span>
+                        </div>
+
+                        {/* Embedded Interactive Token Sandbox */}
+                        <div className="token-sandbox-inner-panel">
+                          <div className="sandbox-header-tabs">
+                            <div className="tab-left">
+                              <span className="dot dot-red" />
+                              <span className="dot dot-yellow" />
+                              <span className="dot dot-green" />
+                              <span className="sandbox-title">Live Token Sandbox · Variable Sync Simulator</span>
                             </div>
-                            <div className="flex gap-2 mt-1">
-                              <span className="cert-id-badge cursor-pointer hover:border-white">Variant A: Claim Pass</span>
-                              <span className="cert-id-badge cursor-pointer hover:border-white">Variant B: Reserve Now</span>
+                            <div className="tab-right">
+                              <span className="sandbox-engine-tag">Engine: V8 Sandbox</span>
+                              <button
+                                className="sandbox-run-btn"
+                                onClick={() => showToast('Syncing 120 Figma Variables to Code...')}
+                              >
+                                <span className="material-symbols-outlined text-[13px]">play_arrow</span>
+                                <span>Run Plugin</span>
+                              </button>
                             </div>
                           </div>
-                        </div>
-                      )}
 
-                      {/* 3. CONTENT REEL */}
-                      {activeSimulatorPlugin.id === 'contentreel' && (
-                        <div>
-                          <div className="text-[12px] font-semibold text-white mb-2">Persona & Dummy Data Injector</div>
-                          <div className="simulator-result-box flex flex-col gap-2">
-                            <div className="flex items-center gap-3 p-2 rounded bg-white/5">
-                              <div className="w-8 h-8 rounded-full bg-indigo-500/30 flex items-center justify-center text-[12px] font-bold text-white">VS</div>
-                              <div>
-                                <div className="text-[12px] font-bold text-white">Varun Sehgal</div>
-                                <div className="text-[10px] text-zinc-400">Lead Product Designer • Bangalore</div>
+                          <div className="sandbox-controls-and-code-grid">
+                            {/* Sliders on Left */}
+                            <div className="sandbox-sliders-col">
+                              <div className="slider-control-group">
+                                <div className="slider-label-row">
+                                  <span>Luminance Chroma</span>
+                                  <strong className="text-orange-400">{tokenChroma}</strong>
+                                </div>
+                                <input
+                                  type="range"
+                                  min="0.1"
+                                  max="1"
+                                  step="0.02"
+                                  value={tokenChroma}
+                                  onChange={(e) => setTokenChroma(parseFloat(e.target.value))}
+                                  className="token-range-slider"
+                                />
+                              </div>
+
+                              <div className="slider-control-group">
+                                <div className="slider-label-row">
+                                  <span>Radius Baseline (px)</span>
+                                  <strong className="text-sky-400">{tokenRadius}rem</strong>
+                                </div>
+                                <input
+                                  type="range"
+                                  min="0.2"
+                                  max="2"
+                                  step="0.04"
+                                  value={tokenRadius}
+                                  onChange={(e) => setTokenRadius(parseFloat(e.target.value))}
+                                  className="token-range-slider"
+                                />
+                              </div>
+
+                              <div className="sync-status-indicator">
+                                <span className="material-symbols-outlined text-[14px] text-emerald-400">check_circle</span>
+                                <span>Matching 120 Figma Variables on Canvas</span>
                               </div>
                             </div>
-                            <div className="flex items-center gap-3 p-2 rounded bg-white/5">
-                              <div className="w-8 h-8 rounded-full bg-pink-500/30 flex items-center justify-center text-[12px] font-bold text-white">AR</div>
-                              <div>
-                                <div className="text-[12px] font-bold text-white">Anya Rao</div>
-                                <div className="text-[10px] text-zinc-400">Senior UX Researcher • San Francisco</div>
-                              </div>
+
+                            {/* Live Code Box on Right */}
+                            <div className="sandbox-code-preview-col">
+                              <div className="code-header-pill">Generated AST Output</div>
+                              <pre className="token-code-block font-mono text-[11px] leading-tight">
+{`export const tokens = {
+  chroma: ${tokenChroma},
+  radius: "${tokenRadius}rem",
+  spectralGlow: "rgba(255, 87, 51, ${(tokenChroma * 0.35).toFixed(2)})",
+  synthetic: "%7F10A---2"
+};`}
+                              </pre>
+                            </div>
+                          </div>
+
+                          <div className="sandbox-footer-row">
+                            <span className="last-sync-text">Last compiled: 12 min ago · Zero Drifts</span>
+                            <div className="sandbox-actions-group">
+                              <button
+                                className="sandbox-sub-btn"
+                                onClick={() => showToast('Manifest JSON Downloaded')}
+                              >
+                                Export Manifest
+                              </button>
                             </div>
                           </div>
                         </div>
-                      )}
+                      </div>
 
-                      {/* 4. AUTOFLOW */}
-                      {activeSimulatorPlugin.id === 'autoflow' && (
-                        <div>
-                          <div className="text-[12px] font-semibold text-white mb-2">Smart Connector Engine</div>
-                          <div className="simulator-result-box flex flex-col items-center gap-2 py-4">
-                            <div className="flex items-center gap-4">
-                              <span className="px-3 py-1.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30 text-[11px] font-mono">Screen A</span>
-                              <span className="text-[#38bdf8] font-mono font-bold">───▶</span>
-                              <span className="px-3 py-1.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30 text-[11px] font-mono">Screen B</span>
+                      {/* 2. TWO-CARD GRID ROW: ShaderLab Pro & AutoGraph Flow */}
+                      <div className="plugins-subgrid-row">
+                        {/* Card 1: ShaderLab Pro */}
+                        <div className="plugin-subcard shaderlab-card">
+                          <div className="subcard-header">
+                            <div className="title-block">
+                              <h4 className="subcard-title">ShaderLab Pro</h4>
+                              <span className="subcard-ver text-purple-400">v2.0.1 GLSL / Three.js</span>
                             </div>
-                            <span className="text-[10px] text-zinc-400 mt-1">Smart bezier collision avoidance enabled</span>
+                            <span className="subcard-downloads">18.5k</span>
+                          </div>
+
+                          <p className="subcard-desc">
+                            In-canvas procedural GLSL noise, displacement mesh generator and real-time ray-marched canvas exporter.
+                          </p>
+
+                          {/* Gradient Mesh Canvas Preview */}
+                          <div className="shader-preview-banner">
+                            <div className="shader-animated-waves" />
+                            <span className="shader-tag">GPU Accelerated</span>
+                          </div>
+
+                          <div className="subcard-footer">
+                            <span className="subcard-meta">Three.js Powered</span>
+                            <button
+                              className="subcard-action-btn"
+                              onClick={() => {
+                                setIsShaderProceduralOpen(!isShaderProceduralOpen);
+                                showToast(isShaderProceduralOpen ? 'Closed ShaderLab' : 'ShaderLab Pro: Live Mesh Active');
+                              }}
+                            >
+                              <span>{isShaderProceduralOpen ? 'Close Mesh' : 'Open Procedural ↗'}</span>
+                            </button>
                           </div>
                         </div>
-                      )}
 
-                      {/* 5. DEFAULT / OTHER PLUGINS */}
-                      {!['stark', 'magician', 'contentreel', 'autoflow'].includes(activeSimulatorPlugin.id) && (
-                        <div>
-                          <div className="text-[12px] font-semibold text-white mb-2">{activeSimulatorPlugin.name} In-Canvas Engine</div>
-                          <div className="simulator-result-box flex flex-col gap-2">
-                            <p className="text-[12px] text-zinc-300">{activeSimulatorPlugin.desc}</p>
-                            <span className="text-[11px] text-emerald-400 font-mono">✓ Ready to inject into active canvas artboard</span>
+                        {/* Card 2: AutoGraph Flow */}
+                        <div className="plugin-subcard autograph-card">
+                          <div className="subcard-header">
+                            <div className="title-block">
+                              <h4 className="subcard-title">AutoGraph Flow</h4>
+                              <span className="subcard-ver text-sky-400">v1.1.0 Smart Connectors</span>
+                            </div>
+                            <span className="subcard-downloads">22.1k</span>
+                          </div>
+
+                          <p className="subcard-desc">
+                            State machine graph and user flow connector generator with obstacle-avoidance routing and FigJam sticky sync.
+                          </p>
+
+                          {/* Node Diagram Preview */}
+                          <div className="autograph-diagram-preview">
+                            <div className="mini-node n-start">Origin</div>
+                            <span className="mini-connector" />
+                            <div className="mini-node n-route">Route</div>
+                            <span className="mini-connector" />
+                            <div className="mini-node n-target">Target</div>
+                          </div>
+
+                          <div className="subcard-footer">
+                            <span className="subcard-meta">Figma Best of 2024</span>
+                            <button
+                              className="subcard-action-btn"
+                              onClick={() => showToast('Flow Inspector Opened')}
+                            >
+                              <span>Inspect Flow ↗</span>
+                            </button>
                           </div>
                         </div>
-                      )}
+                      </div>
 
-                      <div className="simulator-footer-actions">
-                        <button
-                          type="button"
-                          className="cert-action-btn secondary"
-                          onClick={() => setActiveSimulatorPlugin(null)}
-                        >
-                          Close
-                        </button>
-                        <button
-                          type="button"
-                          className="cert-action-btn primary"
-                          onClick={() => {
-                            showToast(`Applied ${activeSimulatorPlugin.name} changes to canvas!`);
-                            setActiveSimulatorPlugin(null);
-                          }}
-                        >
-                          <span>Apply to Canvas</span>
-                          <span className="material-symbols-outlined text-[13px]">check</span>
-                        </button>
+                      {/* 3. BOTTOM BANNER CARD: Fluid Type & Grid Calculator */}
+                      <div className="plugin-bottom-banner-card">
+                        <div className="banner-left-info">
+                          <div className="icon-and-title">
+                            <span className="material-symbols-outlined text-amber-400 text-[18px]">format_size</span>
+                            <h4 className="banner-card-title">Fluid Type &amp; Grid Calculator</h4>
+                            <span className="banner-ver-tag">v0.9.1 beta</span>
+                          </div>
+                          <p className="banner-desc">
+                            Calculates mathematical CSS clamp() modular scales and writes baseline Figma typography styles instantly.
+                          </p>
+                        </div>
+
+                        <div className="banner-right-action">
+                          <div className="formula-pill font-mono">clamp(1rem, 2.4vw, 3.25rem)</div>
+                          <button
+                            className="banner-open-btn"
+                            onClick={() => showToast('Type Scale Inspector Loaded')}
+                          >
+                            Open Calculator
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* RIGHT COLUMN: PLUGIN DEV CONSOLE */}
+                    <div className="plugins-right-console">
+                      <div className="console-panel-box">
+                        <div className="console-header-bar">
+                          <div className="console-title-group">
+                            <span className="material-symbols-outlined text-[15px] text-sky-400">terminal</span>
+                            <span className="console-title-text">PLUGIN DEV CONSOLE</span>
+                          </div>
+                          <div className="console-ipc-status">
+                            <span className="ipc-dot" />
+                            <span>IPC Connected</span>
+                          </div>
+                        </div>
+
+                        {/* Manifest Inspector Header */}
+                        <div className="manifest-sub-header">
+                          <span className="plugin-name-bold">Spectral Token Bridge</span>
+                          <span className="plugin-id-tag">id: 74812</span>
+                        </div>
+
+                        {/* Manifest JSON Syntax Highlighter */}
+                        <div className="manifest-json-viewport">
+                          <div className="json-filename-tag">manifest.json (read-only)</div>
+                          <pre className="manifest-code-content font-mono text-[10.5px]">
+{`{
+  "name": "Spectral Token Bridge",
+  "id": "1403010530",
+  "api": "1.0.0",
+  "main": "code.js",
+  "ui": "ui.html",
+  "editorType": ["figma", "figjam"],
+  "permissions": ["currentuser", "activeuser"],
+  "networkAccess": {
+    "allowedDomains": ["https://api.github.com"]
+  }
+}`}
+                          </pre>
+                        </div>
+
+                        {/* Live IPC Bridge Telemetry */}
+                        <div className="telemetry-metrics-section">
+                          <div className="telemetry-header">LIVE IPC BRIDGE TELEMETRY</div>
+                          <div className="telemetry-metrics-row">
+                            <div className="telemetry-metric-pill">
+                              <span className="metric-k">MEMORY</span>
+                              <span className="metric-v">64.8 MB</span>
+                            </div>
+                            <div className="telemetry-metric-pill">
+                              <span className="metric-k">IPC LATENCY</span>
+                              <span className="metric-v">0.4 ms</span>
+                            </div>
+                            <div className="telemetry-metric-pill">
+                              <span className="metric-k">SOCKET</span>
+                              <span className="metric-v">127.0.0.1</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="console-actions-group">
+                          <button
+                            className={`console-reload-btn ${isHotReloading ? 'reloading' : ''}`}
+                            onClick={() => {
+                              setIsHotReloading(true);
+                              showToast('Hot Reloading Plugin in Figma Sandbox...');
+                              setTimeout(() => setIsHotReloading(false), 800);
+                            }}
+                          >
+                            <span className={`material-symbols-outlined text-[15px] ${isHotReloading ? 'animate-spin' : ''}`}>
+                              sync
+                            </span>
+                            <span>Hot Reload in Figma Sandbox</span>
+                          </button>
+
+                          <button
+                            className="console-publish-primary-btn"
+                            onClick={() => showToast('Published Spectral Token Bridge v2.4 to Community!')}
+                          >
+                            <span className="material-symbols-outlined text-[15px]">publish</span>
+                            <span>Publish v2.4</span>
+                          </button>
+
+                          <button
+                            className="console-github-btn"
+                            onClick={() => window.open('https://github.com/varunsehgal05', '_blank')}
+                          >
+                            <span className="material-symbols-outlined text-[15px]">code</span>
+                            <span>GitHub Repo</span>
+                          </button>
+                        </div>
+
+                        {/* Philosophy Callout Card */}
+                        <div className="console-philosophy-card">
+                          <h5 className="philosophy-title">Varun's Open Tooling Philosophy</h5>
+                          <p className="philosophy-quote">
+                            "Bridging zero-loss creative design with executable software runtimes."
+                          </p>
+                          <div className="philosophy-stats-row">
+                            <span>75,000+ Total Installs</span>
+                            <span>•</span>
+                            <span>★ 4.9 Avg Rating</span>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              )}
+              </div>
             </div>
           )}
 
