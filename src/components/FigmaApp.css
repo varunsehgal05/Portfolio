@@ -4408,20 +4408,21 @@
 }
 
 .canvas-zoom-pill {
+  position: relative;
   display: flex;
   align-items: center;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 6px;
-  overflow: hidden;
+  height: 28px;
 }
 
 .canvas-center-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 100%;
   background: transparent;
   border: none;
   border-left: 1px solid rgba(255, 255, 255, 0.1);
@@ -4436,11 +4437,16 @@
 }
 
 .canvas-zoom-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: transparent;
   border: none;
   color: #a1a1aa;
-  padding: 3px 7px;
-  font-size: 13px;
+  padding: 0 8px;
+  height: 100%;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease;
 }
@@ -4450,16 +4456,155 @@
   color: #ffffff;
 }
 
-.canvas-zoom-val {
+.canvas-zoom-val-btn {
+  display: flex;
+  align-items: center;
+  gap: 2px;
   padding: 0 6px;
+  height: 100%;
+  background: transparent;
+  border: none;
   font-size: 11px;
-  font-family: monospace;
+  font-family: -apple-system, BlinkMacSystemFont, monospace;
+  font-weight: 600;
   color: #d4d4d8;
   cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease;
 }
 
-.canvas-zoom-val:hover {
+.canvas-zoom-val-btn:hover {
   color: #38bdf8;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Figma Zoom Dropdown Menu */
+.figma-zoom-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  width: 175px;
+  background: #181920;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.65), 0 2px 8px rgba(0, 0, 0, 0.4);
+  padding: 5px 0;
+  z-index: 999999;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  animation: fadeInZoom 0.12s ease;
+}
+
+@keyframes fadeInZoom {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.zoom-menu-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  background: transparent;
+  border: none;
+  color: #e4e4e7;
+  font-size: 11.5px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.zoom-menu-item:hover {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+}
+
+.zoom-menu-item.active {
+  color: #38bdf8;
+  font-weight: 600;
+}
+
+.zoom-shortcut {
+  font-size: 10px;
+  color: #71717a;
+  font-family: monospace;
+}
+
+.zoom-menu-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 4px 0;
+}
+
+/* Floating Canvas Zoom & Viewport HUD */
+.figma-floating-zoom-hud {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: rgba(24, 25, 32, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  padding: 4px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.2);
+  user-select: none;
+}
+
+.hud-zoom-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: none;
+  border-radius: 5px;
+  color: #a1a1aa;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.hud-zoom-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.hud-zoom-btn:active {
+  transform: scale(0.92);
+}
+
+.hud-zoom-label {
+  padding: 0 8px;
+  font-size: 11.5px;
+  font-family: -apple-system, BlinkMacSystemFont, monospace;
+  font-weight: 600;
+  color: #e4e4e7;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  transition: all 0.15s ease;
+}
+
+.hud-zoom-label:hover {
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+}
+
+.hud-divider {
+  width: 1px;
+  height: 16px;
+  background: rgba(255, 255, 255, 0.12);
+  margin: 0 2px;
 }
 
 /* About Page Radial Layout */

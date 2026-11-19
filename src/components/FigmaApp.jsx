@@ -612,12 +612,51 @@ const FigmaApp = ({ isInteracting, userName, onOpenApp }) => {
   // Canvas pan & zoom state
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
+  const [showZoomMenu, setShowZoomMenu] = useState(false);
+  const zoomMenuRef = useRef(null);
   const [isPanning, setIsPanning] = useState(false);
   const [isWireframeMode, setIsWireframeMode] = useState(false);
   const [activeTool, setActiveTool] = useState('select'); // 'select' | 'hand'
   const [isSpacePressed, setIsSpacePressed] = useState(false);
   const [isAppLoading, setIsAppLoading] = useState(true);
   const startPanRef = useRef({ x: 0, y: 0 });
+
+  const handleZoomIn = () => {
+    setZoom(z => {
+      const next = Math.min(2.5, Number((z + 0.1).toFixed(2)));
+      showToast(`Zoom: ${Math.round(next * 100)}%`);
+      return next;
+    });
+  };
+
+  const handleZoomOut = () => {
+    setZoom(z => {
+      const next = Math.max(0.4, Number((z - 0.1).toFixed(2)));
+      showToast(`Zoom: ${Math.round(next * 100)}%`);
+      return next;
+    });
+  };
+
+  const handleResetZoom = () => {
+    setZoom(1);
+    centerCanvasView(activeTab);
+    showToast('Zoom: 100% (Centered)');
+  };
+
+  // Close Zoom Menu on outside click
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (zoomMenuRef.current && !zoomMenuRef.current.contains(e.target)) {
+        setShowZoomMenu(false);
+      }
+    };
+    if (showZoomMenu) {
+      document.addEventListener('mousedown', handleOutsideClick);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, [showZoomMenu]);
 
   // Dynamic Selected Node & Live Editable Properties
   const [selectedNodeId, setSelectedNodeId] = useState('root-canvas');
@@ -971,6 +1010,17 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
         centerCanvasView(activeTab);
         showToast('Canvas Centered (100%)');
       }
+      // Zoom shortcuts: Cmd/Ctrl + '+', '-', '0'
+      if ((e.ctrlKey || e.metaKey) && (e.key === '=' || e.key === '+')) {
+        e.preventDefault();
+        handleZoomIn();
+      } else if ((e.ctrlKey || e.metaKey) && (e.key === '-' || e.key === '_')) {
+        e.preventDefault();
+        handleZoomOut();
+      } else if ((e.ctrlKey || e.metaKey) && e.key === '0') {
+        e.preventDefault();
+        handleResetZoom();
+      }
     };
 
     const handleKeyUp = (e) => {
@@ -1243,44 +1293,113 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
             <span className="material-symbols-outlined text-[15px]">grid_on</span>
             <span>Wireframe</span>
           </button>
+        </div>
 
-          {/* Canvas Zoom & Center Controls */}
-          <div className="canvas-zoom-pill">
+        <div className="nav-right-section">
+          {/* Authentic Figma Top-Right Zoom Control with Dropdown Menu */}
+          <div className="canvas-zoom-pill" ref={zoomMenuRef}>
             <button
               type="button"
               className="canvas-zoom-btn"
-              onClick={() => setZoom(z => Math.max(0.4, Number((z - 0.1).toFixed(2))))}
-              title="Zoom out"
+              onClick={handleZoomOut}
+              title="Zoom out (Ctrl -)"
             >
               −
             </button>
-            <span
-              className="canvas-zoom-val"
-              onClick={() => { setZoom(1); centerCanvasView(activeTab); }}
-              title="Reset Zoom to 100% and Center View"
+            <button
+              type="button"
+              className="canvas-zoom-val-btn"
+              onClick={() => setShowZoomMenu(!showZoomMenu)}
+              title="Zoom Options & Presets"
             >
-              {Math.round(zoom * 100)}%
-            </span>
+              <span>{Math.round(zoom * 100)}%</span>
+              <span className="material-symbols-outlined text-[14px]">arrow_drop_down</span>
+            </button>
             <button
               type="button"
               className="canvas-zoom-btn"
-              onClick={() => setZoom(z => Math.min(2.5, Number((z + 0.1).toFixed(2))))}
-              title="Zoom in"
+              onClick={handleZoomIn}
+              title="Zoom in (Ctrl +)"
             >
               +
             </button>
             <button
               type="button"
               className="canvas-center-btn"
-              onClick={() => { centerCanvasView(activeTab); showToast('Canvas Centered'); }}
+              onClick={() => { centerCanvasView(activeTab); showToast('Canvas Centered (Shift+1)'); }}
               title="Center View (Shift+1)"
             >
               <span className="material-symbols-outlined text-[14px]">center_focus_strong</span>
             </button>
-          </div>
-        </div>
 
-        <div className="nav-right-section">
+            {/* Dropdown Menu for Zoom presets */}
+            {showZoomMenu && (
+              <div className="figma-zoom-dropdown-menu">
+                <button
+                  type="button"
+                  className="zoom-menu-item"
+                  onClick={() => {
+                    handleZoomIn();
+                    setShowZoomMenu(false);
+                  }}
+                >
+                  <span>Zoom In</span>
+                  <span className="zoom-shortcut">Ctrl +</span>
+                </button>
+                <button
+                  type="button"
+                  className="zoom-menu-item"
+                  onClick={() => {
+                    handleZoomOut();
+                    setShowZoomMenu(false);
+                  }}
+                >
+                  <span>Zoom Out</span>
+                  <span className="zoom-shortcut">Ctrl -</span>
+                </button>
+                <button
+                  type="button"
+                  className="zoom-menu-item"
+                  onClick={() => {
+                    handleResetZoom();
+                    setShowZoomMenu(false);
+                  }}
+                >
+                  <span>Zoom to 100%</span>
+                  <span className="zoom-shortcut">Ctrl 0</span>
+                </button>
+                <button
+                  type="button"
+                  className="zoom-menu-item"
+                  onClick={() => {
+                    centerCanvasView(activeTab);
+                    setShowZoomMenu(false);
+                  }}
+                >
+                  <span>Zoom to Fit / Center</span>
+                  <span className="zoom-shortcut">Shift 1</span>
+                </button>
+                <div className="zoom-menu-divider" />
+                {[50, 75, 100, 125, 150, 200].map((pct) => (
+                  <button
+                    key={pct}
+                    type="button"
+                    className={`zoom-menu-item ${Math.round(zoom * 100) === pct ? 'active' : ''}`}
+                    onClick={() => {
+                      setZoom(pct / 100);
+                      setShowZoomMenu(false);
+                      showToast(`Zoom: ${pct}%`);
+                    }}
+                  >
+                    <span>{pct}%</span>
+                    {Math.round(zoom * 100) === pct && (
+                      <span className="material-symbols-outlined text-[14px] text-[#38bdf8]">check</span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
           <button
             type="button"
             className="nav-email-btn"
@@ -3483,6 +3602,43 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
               )}
             </div>
           )}
+
+          {/* Floating Canvas Zoom & Viewport Navigation HUD */}
+          <div className="figma-floating-zoom-hud" onClick={(e) => e.stopPropagation()}>
+            <button
+              type="button"
+              className="hud-zoom-btn"
+              onClick={handleZoomOut}
+              title="Zoom Out (Ctrl -)"
+            >
+              <span className="material-symbols-outlined text-[15px]">remove</span>
+            </button>
+            <button
+              type="button"
+              className="hud-zoom-label"
+              onClick={handleResetZoom}
+              title="Click to reset zoom to 100% and re-center"
+            >
+              {Math.round(zoom * 100)}%
+            </button>
+            <button
+              type="button"
+              className="hud-zoom-btn"
+              onClick={handleZoomIn}
+              title="Zoom In (Ctrl +)"
+            >
+              <span className="material-symbols-outlined text-[15px]">add</span>
+            </button>
+            <div className="hud-divider" />
+            <button
+              type="button"
+              className="hud-zoom-btn"
+              onClick={() => { centerCanvasView(activeTab); showToast('Canvas Centered (Shift+1)'); }}
+              title="Zoom to Fit / Center View (Shift+1)"
+            >
+              <span className="material-symbols-outlined text-[15px]">center_focus_strong</span>
+            </button>
+          </div>
         </main>
 
         {/* Right Sidebar ("Design / Prototype / Inspect" Inspector Panel) */}
