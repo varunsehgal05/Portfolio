@@ -384,3 +384,182 @@
   color: #ffffff;
   font-weight: 500;
 }
+
+/* ========================================================
+   APPEARANCE THEME SELECTOR & PREVIEW CARDS
+   ======================================================== */
+.appearance-theme-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.theme-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.theme-card-preview {
+  height: 100px;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transition: all 0.2s ease;
+}
+
+.theme-card:hover .theme-card-preview {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.theme-card.active .theme-card-preview {
+  border-color: #0284c7;
+  box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.4);
+}
+
+/* Mini macOS Window Mockup inside Theme Card */
+.preview-mini-menubar {
+  height: 16px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding-left: 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.preview-mini-menubar.light {
+  background: #f1f5f9;
+}
+
+.preview-mini-menubar.dark {
+  background: #181822;
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.mini-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.mini-dot.red { background: #ff5f56; }
+.mini-dot.yellow { background: #ffbd2e; }
+.mini-dot.green { background: #27c93f; }
+
+.preview-mini-body {
+  flex: 1;
+  display: flex;
+}
+
+.preview-mini-body.light {
+  background: #ffffff;
+}
+
+.preview-mini-body.dark {
+  background: #0f1015;
+}
+
+.preview-mini-sidebar {
+  width: 32px;
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+}
+.preview-mini-sidebar.light {
+  background: #f8fafc;
+}
+.preview-mini-sidebar.dark {
+  background: #15161c;
+  border-right-color: rgba(255, 255, 255, 0.06);
+}
+
+.preview-mini-content {
+  flex: 1;
+  background: transparent;
+}
+
+/* Auto Split Preview */
+.theme-auto-preview {
+  display: flex;
+  flex-direction: row;
+}
+
+.preview-auto-split {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.theme-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.theme-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: #e2e8f0;
+}
+
+.theme-check-icon {
+  color: #38bdf8;
+}
+
+/* Accent Color Row */
+.accent-color-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.accent-circle-btn {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.accent-circle-btn:hover {
+  transform: scale(1.15);
+}
+
+/* iOS/macOS Style Toggle Button */
+.settings-toggle-btn {
+  width: 44px;
+  height: 24px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  cursor: pointer;
+  position: relative;
+  padding: 2px;
+  transition: background 0.25s ease;
+}
+
+.settings-toggle-btn.active {
+  background: #0284c7;
+  box-shadow: 0 0 8px rgba(2, 132, 199, 0.4);
+}
+
+.toggle-slider-knob {
+  display: block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.settings-toggle-btn.active .toggle-slider-knob {
+  transform: translateX(20px);
+}

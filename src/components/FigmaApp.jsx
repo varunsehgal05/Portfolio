@@ -821,7 +821,7 @@ const FigmaApp = ({ isInteracting, userName, onOpenApp }) => {
       if (format === 'svg') {
         const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="${frameW}" height="${frameH}" viewBox="0 0 ${frameW} ${frameH}">
   <rect width="100%" height="100%" fill="${fillColor}" rx="${frameRadius}"/>
-  <text x="60" y="80" fill="#ffb5a1" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="32" font-weight="bold">Varun Sehgal Portfolio</text>
+  <text x="60" y="80" fill="#0d99ff" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="32" font-weight="bold">Varun Sehgal Portfolio</text>
   <text x="60" y="120" fill="#9ca3af" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="18">UI/UX Designer | Product Designer</text>
   <text x="60" y="170" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="22" font-weight="600">Active View: ${activeTab.toUpperCase()}</text>
 </svg>`;
@@ -842,7 +842,7 @@ const FigmaApp = ({ isInteracting, userName, onOpenApp }) => {
         if (ctx) {
           ctx.fillStyle = fillColor || '#181920';
           ctx.fillRect(0, 0, canvas.width, canvas.height);
-          ctx.fillStyle = '#ffb5a1';
+          ctx.fillStyle = '#0d99ff';
           ctx.font = 'bold 36px sans-serif';
           ctx.fillText('Varun Sehgal Portfolio', 60, 100);
           ctx.fillStyle = '#9ca3af';
@@ -1801,7 +1801,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   {/* Artboard Frame Header */}
                   <div className="artboard-frame-header">
                     <div className="frame-header-left">
-                      <span className="material-symbols-outlined text-[16px] text-[#ffb5a1]">layers</span>
+                      <span className="material-symbols-outlined text-[16px] text-[#0d99ff]">layers</span>
                       <span className="frame-file-title">Varun_Sehgal_Portfolio.fig</span>
                     </div>
                     <div className="frame-view-badge">
@@ -2299,7 +2299,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                         {CERTIFICATIONS.map(cert => (
                           <div key={cert.id} className="cert-flow-card">
                             <div className="cert-card-top">
-                              <span className="material-symbols-outlined text-[#ffb5a1] text-[20px]">verified</span>
+                              <span className="material-symbols-outlined text-[#0d99ff] text-[20px]">verified</span>
                               <span className="cert-date">{cert.date}</span>
                             </div>
                             <h3 className="cert-title">{cert.title}</h3>
@@ -2704,7 +2704,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                         {/* Contact */}
                         <div>
                           <h4 className="figma-resume-section-title">
-                            <span className="text-[#ffb5a1]">#</span> CONTACT
+                            <span className="text-[#0d99ff]">#</span> CONTACT
                           </h4>
                           <ul className="figma-resume-contact-list">
                             <li>
@@ -2741,17 +2741,17 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                         {/* Education */}
                         <div>
                           <h4 className="figma-resume-section-title">
-                            <span className="text-[#ffb5a1]">#</span> EDUCATION
+                            <span className="text-[#0d99ff]">#</span> EDUCATION
                           </h4>
                           <div className="text-[12px] text-white font-semibold">Jaypee University of Eng. & Tech.</div>
-                          <div className="text-[11px] text-[#ffb5a1]">B.Tech in Computer Science & Eng.</div>
+                          <div className="text-[11px] text-[#0d99ff]">B.Tech in Computer Science & Eng.</div>
                           <div className="text-[10.5px] text-zinc-500 mt-1 font-mono">Aug 2023 – May 2027 • Guna, India</div>
                         </div>
 
                         {/* Skills */}
                         <div>
                           <h4 className="figma-resume-section-title">
-                            <span className="text-[#ffb5a1]">#</span> SKILLS ARSENAL
+                            <span className="text-[#0d99ff]">#</span> SKILLS ARSENAL
                           </h4>
 
                           <div className="mb-3">
@@ -2811,7 +2811,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                         {/* Work Experience */}
                         <section>
                           <h4 className="figma-resume-section-title">
-                            <span className="material-symbols-outlined text-[15px] text-[#ffb5a1]">work</span>
+                            <span className="material-symbols-outlined text-[15px] text-[#0d99ff]">work</span>
                             WORK EXPERIENCE
                           </h4>
 
@@ -2864,14 +2864,14 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                         {/* Design Projects */}
                         <section>
                           <h4 className="figma-resume-section-title">
-                            <span className="material-symbols-outlined text-[15px] text-[#ffb5a1]">folder</span>
+                            <span className="material-symbols-outlined text-[15px] text-[#0d99ff]">folder</span>
                             DESIGN PROJECTS
                           </h4>
 
                           <div className="figma-resume-item">
                             <div className="figma-resume-item-header">
                               <div><strong>AI Interview & Preparation Platform</strong></div>
-                              <a href="https://www.figma.com/design/ezDh2NmBto6iv7xaQNs3Ha/AI-Interview?node-id=11-1842" target="_blank" rel="noreferrer" className="text-[#ffb5a1] text-[11px] font-semibold underline">
+                              <a href="https://www.figma.com/design/ezDh2NmBto6iv7xaQNs3Ha/AI-Interview?node-id=11-1842" target="_blank" rel="noreferrer" className="text-[#0d99ff] text-[11px] font-semibold underline">
                                 Figma Showcase ↗
                               </a>
                             </div>
@@ -2885,7 +2885,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                           <div className="figma-resume-item">
                             <div className="figma-resume-item-header">
                               <div><strong>EventFlow: Event Ticketing SaaS</strong></div>
-                              <a href="https://www.figma.com/design/29nTBBWxZfoOKdFnOaQWbq/EventFlow?node-id=2-2" target="_blank" rel="noreferrer" className="text-[#ffb5a1] text-[11px] font-semibold underline">
+                              <a href="https://www.figma.com/design/29nTBBWxZfoOKdFnOaQWbq/EventFlow?node-id=2-2" target="_blank" rel="noreferrer" className="text-[#0d99ff] text-[11px] font-semibold underline">
                                 Figma Showcase ↗
                               </a>
                             </div>
@@ -2899,7 +2899,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                           <div className="figma-resume-item">
                             <div className="figma-resume-item-header">
                               <div><strong>Expensify: Budget Tracker App</strong></div>
-                              <a href="https://www.figma.com/design/3mw8XBHEZ3b8HKNNqcs6U2/Expensify---Budget-Tracker-App?node-id=135-318" target="_blank" rel="noreferrer" className="text-[#ffb5a1] text-[11px] font-semibold underline">
+                              <a href="https://www.figma.com/design/3mw8XBHEZ3b8HKNNqcs6U2/Expensify---Budget-Tracker-App?node-id=135-318" target="_blank" rel="noreferrer" className="text-[#0d99ff] text-[11px] font-semibold underline">
                                 Figma Showcase ↗
                               </a>
                             </div>
@@ -2913,7 +2913,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                         {/* Hackathons & Leadership */}
                         <section>
                           <h4 className="figma-resume-section-title">
-                            <span className="material-symbols-outlined text-[15px] text-[#ffb5a1]">emoji_events</span>
+                            <span className="material-symbols-outlined text-[15px] text-[#0d99ff]">emoji_events</span>
                             HACKATHONS & LEADERSHIP
                           </h4>
 
@@ -2921,7 +2921,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                             <div className="figma-resume-item-header">
                               <div>
                                 <strong>Co-Organizer & Lead Designer</strong> — CodeSrijan Hackathon (JUET)
-                                <a href="https://lnkd.in/p/dUXQYx92" target="_blank" rel="noreferrer" className="text-[#ffb5a1] ml-2 text-[11px] font-semibold underline inline-flex items-center gap-0.5">
+                                <a href="https://lnkd.in/p/dUXQYx92" target="_blank" rel="noreferrer" className="text-[#0d99ff] ml-2 text-[11px] font-semibold underline inline-flex items-center gap-0.5">
                                   LinkedIn Post ↗
                                 </a>
                               </div>
@@ -2937,7 +2937,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                             <div className="figma-resume-item-header">
                               <div>
                                 <strong>2nd Runner-up (Team Pixel_Codes)</strong> — Code Conquerors Hackathon (JUET)
-                                <a href="https://www.linkedin.com/posts/pushkar-chaturvedi-a83778284_hackathon2025-codeconquerors-aiineducation-activity-7335535096017375236-DBk_" target="_blank" rel="noreferrer" className="text-[#ffb5a1] ml-2 text-[11px] font-semibold underline inline-flex items-center gap-0.5">
+                                <a href="https://www.linkedin.com/posts/pushkar-chaturvedi-a83778284_hackathon2025-codeconquerors-aiineducation-activity-7335535096017375236-DBk_" target="_blank" rel="noreferrer" className="text-[#0d99ff] ml-2 text-[11px] font-semibold underline inline-flex items-center gap-0.5">
                                   LinkedIn Post ↗
                                 </a>
                               </div>
@@ -3012,7 +3012,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                       </div>
                     )}
                     <div className="phase-header-block mb-3">
-                      <h2 className="phase-title-large text-[#ffb5a1]">Phase 01: Ideation</h2>
+                      <h2 className="phase-title-large text-[#0d99ff]">Phase 01: Ideation</h2>
                       <p className="phase-desc-muted">
                         Unstructured thoughts, user journey mapping, and early structural wireframes. Mapping the chaotic void before styling.
                       </p>
@@ -3344,7 +3344,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   <div className="plugins-hero-banner">
                     <div className="plugins-hero-text">
                       <h2>
-                        <span className="material-symbols-outlined text-[24px] text-[#ffb5a1]">extension</span>
+                        <span className="material-symbols-outlined text-[24px] text-[#0d99ff]">extension</span>
                         Figma Community & Creative Extensions
                       </h2>
                       <p>
@@ -3480,7 +3480,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   <div className="plugin-simulator-window" onClick={(e) => e.stopPropagation()}>
                     <div className="simulator-window-titlebar">
                       <div className="simulator-title-left">
-                        <span className="material-symbols-outlined text-[16px] text-[#ffb5a1]">
+                        <span className="material-symbols-outlined text-[16px] text-[#0d99ff]">
                           {activeSimulatorPlugin.icon}
                         </span>
                         <span>{activeSimulatorPlugin.name}</span>
@@ -4125,7 +4125,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                       </button>
                     </div>
                     <div className="prop-effect-item">
-                      <span className="material-symbols-outlined text-[13px] text-[#ffb5a1]">blur_on</span>
+                      <span className="material-symbols-outlined text-[13px] text-[#0d99ff]">blur_on</span>
                       <span className="effect-name">Background Blur</span>
                       <input
                         type="number"
@@ -4148,7 +4148,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                       </button>
                     </div>
                     <div className="prop-effect-item mt-1">
-                      <span className="material-symbols-outlined text-[13px] text-[#ffb5a1]">shadow</span>
+                      <span className="material-symbols-outlined text-[13px] text-[#0d99ff]">shadow</span>
                       <span className="effect-name">Drop Shadow</span>
                       <span className="effect-val">0 30px 100px</span>
                       <button
@@ -4199,7 +4199,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     <div className="prop-section-title">Prototype Flow</div>
                     <div className="prop-prototype-card">
                       <div className="flow-badge-row">
-                        <span className="material-symbols-outlined text-[15px] text-[#ffb5a1]">play_circle</span>
+                        <span className="material-symbols-outlined text-[15px] text-[#0d99ff]">play_circle</span>
                         <span className="font-semibold text-white text-[12px]">{activeFlow}</span>
                       </div>
                       <p className="text-[11px] text-zinc-400 mt-1">

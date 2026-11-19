@@ -7,8 +7,9 @@ import './index.css';
 const IDLE_TIMEOUT = 180000; // 3 minutes
 
 function App() {
-  const [bootState, setBootState] = useState('swarm'); // starts in swarm mode on reload
-  const [swarmStage, setSwarmStage] = useState(0); // 0 (blank/blueprint) to 5 (complete)
+  // Desktop is ready on startup/reload (prevents getting stuck on blank blueprint)
+  const [bootState, setBootState] = useState('ready');
+  const [swarmStage, setSwarmStage] = useState(5); // 5 = fully loaded and operational
   const [userName, setUserName] = useState(() => {
     try {
       return localStorage.getItem('varunos_user_name') || 'Varun';
@@ -16,6 +17,14 @@ function App() {
       return 'Varun';
     }
   });
+
+  // Theme mode initialization (Light / Dark)
+  useEffect(() => {
+    try {
+      const savedTheme = localStorage.getItem('varunos_theme_mode') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    } catch {}
+  }, []);
 
   const [isIdle, setIsIdle] = useState(false);
   const idleTimerRef = useRef(null);

@@ -15,7 +15,9 @@ import {
   Code2,
   FolderOpen,
   Eye,
-  Info
+  Info,
+  Sun,
+  Moon
 } from 'lucide-react';
 import './MenuBar.css';
 
@@ -59,6 +61,62 @@ const MenuBar = ({ userName = 'Guest', onReplaySwarm }) => {
     if (onReplaySwarm) {
       onReplaySwarm();
     }
+  };
+
+  // Swarm Follow Mouse State
+  const [isSwarmFollow, setIsSwarmFollow] = useState(() => {
+    try {
+      return localStorage.getItem('varunos_swarm_follow_mouse') === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  // Current Theme (Light / Dark)
+  const [currentTheme, setCurrentTheme] = useState(() => {
+    try {
+      return localStorage.getItem('varunos_theme_mode') || 'dark';
+    } catch {
+      return 'dark';
+    }
+  });
+
+  useEffect(() => {
+    const handleSwarmToggle = (e) => {
+      if (typeof e.detail?.enabled === 'boolean') {
+        setIsSwarmFollow(e.detail.enabled);
+      }
+    };
+    const handleThemeChange = (e) => {
+      if (e.detail?.mode) {
+        setCurrentTheme(e.detail.mode);
+      }
+    };
+    window.addEventListener('varunos-toggle-swarm-follow', handleSwarmToggle);
+    window.addEventListener('varunos-theme-change', handleThemeChange);
+    return () => {
+      window.removeEventListener('varunos-toggle-swarm-follow', handleSwarmToggle);
+      window.removeEventListener('varunos-theme-change', handleThemeChange);
+    };
+  }, []);
+
+  const handleToggleSwarmFollow = () => {
+    const nextState = !isSwarmFollow;
+    setIsSwarmFollow(nextState);
+    try {
+      localStorage.setItem('varunos_swarm_follow_mouse', String(nextState));
+    } catch {}
+    window.dispatchEvent(new CustomEvent('varunos-toggle-swarm-follow', { detail: { enabled: nextState } }));
+  };
+
+  const handleToggleTheme = () => {
+    const nextTheme = currentTheme === 'light' ? 'dark' : 'light';
+    setCurrentTheme(nextTheme);
+    try {
+      localStorage.setItem('varunos_theme_mode', nextTheme);
+    } catch {}
+    document.documentElement.setAttribute('data-theme', nextTheme);
+    window.dispatchEvent(new CustomEvent('varunos-theme-change', { detail: { mode: nextTheme } }));
   };
 
   return (
@@ -236,6 +294,25 @@ const MenuBar = ({ userName = 'Guest', onReplaySwarm }) => {
         >
           <Sparkles size={12} />
           <span>Swarm Rebuild</span>
+        </button>
+
+        {/* Quick Califa Swarm Follow Toggle */}
+        <button 
+          className={`menu-swarm-follow-btn ${isSwarmFollow ? 'active' : ''}`}
+          onClick={handleToggleSwarmFollow} 
+          title={isSwarmFollow ? "Swarm Mouse Following: Active (Click to Disable)" : "Swarm Mouse Following: Inactive (Click to Enable)"}
+        >
+          <Sparkles size={11} />
+          <span>{isSwarmFollow ? "Swarm Follow: ON" : "Swarm Follow"}</span>
+        </button>
+
+        {/* Quick Light/Dark Mode Switcher */}
+        <button
+          className="menu-icon-btn theme-toggle-btn"
+          onClick={handleToggleTheme}
+          title={currentTheme === 'light' ? "Switch to Dark Mode" : "Switch to Light Mode"}
+        >
+          {currentTheme === 'light' ? <Sun size={13} /> : <Moon size={13} />}
         </button>
 
         {/* Functional Sound / Volume */}

@@ -459,3 +459,45 @@
   background: #10b981;
 }
 
+/* Swarm Follow Button in MenuBar */
+.menu-swarm-follow-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  background: rgba(162, 89, 255, 0.1);
+  border: 1px solid rgba(162, 89, 255, 0.25);
+  border-radius: 999px;
+  color: #c084fc;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.menu-swarm-follow-btn:hover {
+  background: rgba(162, 89, 255, 0.2);
+  border-color: rgba(162, 89, 255, 0.4);
+  color: #ffffff;
+}
+
+.menu-swarm-follow-btn.active {
+  background: #a259ff;
+  border-color: #c084fc;
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(162, 89, 255, 0.5);
+}
+
+/* Theme Toggle Button */
+.theme-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #e2e8f0;
+  transition: all 0.2s ease;
+}
+
+.theme-toggle-btn:hover {
+  color: #facc15;
+}
+

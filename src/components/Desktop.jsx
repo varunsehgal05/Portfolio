@@ -6,6 +6,7 @@ import Dock from './Dock';
 import PixelAssistant from './PixelAssistant';
 import { portfolioApps, desktopIconIds } from '../config/apps';
 import { desktopWallpapers } from '../config/wallpapers';
+import LiveMouseSwarm from './LiveMouseSwarm';
 import './Desktop.css';
 
 const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) => {
@@ -51,6 +52,25 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
     }
   });
   const [wallpaperToast, setWallpaperToast] = useState(null);
+
+  // Live Califa Swarm Mouse Flocking State
+  const [isSwarmFollowEnabled, setIsSwarmFollowEnabled] = useState(() => {
+    try {
+      return localStorage.getItem('varunos_swarm_follow_mouse') === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  useEffect(() => {
+    const handleSwarmFollowToggle = (e) => {
+      if (typeof e.detail?.enabled === 'boolean') {
+        setIsSwarmFollowEnabled(e.detail.enabled);
+      }
+    };
+    window.addEventListener('varunos-toggle-swarm-follow', handleSwarmFollowToggle);
+    return () => window.removeEventListener('varunos-toggle-swarm-follow', handleSwarmFollowToggle);
+  }, []);
 
   const applyDesktopWallpaper = (id, showToast = false) => {
     const found = desktopWallpapers.find(w => w.id === id) || desktopWallpapers[0];
@@ -194,6 +214,9 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
           <span>{wallpaperToast}</span>
         </div>
       )}
+
+      {/* Califa Swarm Site Live Mouse Flocking Layer */}
+      <LiveMouseSwarm isEnabled={isSwarmFollowEnabled && swarmStage >= 5} agentCount={32} />
 
       {/* Top MenuBar wrapper */}
       <div className={`desktop-menubar-wrap ${swarmStage < 5 ? (swarmStage >= 1 ? 'stage-revealed' : 'stage-hidden') : ''}`}>

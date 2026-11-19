@@ -1,0 +1,113 @@
+/* ========================================================
+   Live Mouse-Following Swarm Engine Overlay
+   Authentic recreation of Joel Califa's Swarm Site physics
+   100% Non-blocking (pointer-events: none)
+   ======================================================== */
+
+.live-mouse-swarm-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9998; /* Under topmost system dialogs, above desktop */
+  overflow: hidden;
+  user-select: none;
+}
+
+.live-swarm-svg-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.live-swarm-agent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 2px;
+  will-change: transform;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.live-swarm-pointer-svg {
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.45));
+  flex-shrink: 0;
+}
+
+.live-swarm-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  color: #ffffff;
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  margin-top: 10px;
+  margin-left: 2px;
+}
+
+.live-swarm-name {
+  line-height: 1.2;
+}
+
+/* Subtle Live Status Indicator */
+.live-swarm-status-badge {
+  position: fixed;
+  bottom: 84px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(162, 89, 255, 0.35);
+  border-radius: 999px;
+  color: #e2e8f0;
+  font-size: 10px;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  animation: badgeFadeIn 0.3s ease;
+}
+
+.live-swarm-pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #a259ff;
+  box-shadow: 0 0 8px #a259ff;
+  animation: pulseDot 1.4s ease-in-out infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% {
+    transform: scale(0.9);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 1;
+  }
+}
+
+@keyframes badgeFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
