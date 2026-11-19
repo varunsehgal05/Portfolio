@@ -449,3 +449,153 @@
   justify-content: center;
   color: #888;
 }
+
+/* ========================================================
+   Windows Aero Snap & Drag-to-Restore from Full Screen
+   ======================================================== */
+
+.window-titlebar.is-maximized-titlebar {
+  cursor: grab;
+  position: relative;
+}
+
+.window-titlebar.is-maximized-titlebar:active {
+  cursor: grabbing;
+}
+
+.titlebar-fullscreen-pull-handle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 3px 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  cursor: grab;
+  user-select: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.window-titlebar.is-maximized-titlebar:hover .titlebar-fullscreen-pull-handle {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: rgba(56, 189, 248, 0.45);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
+  transform: translate(-50%, -50%) scale(1.02);
+}
+
+.pull-handle-bar {
+  width: 22px;
+  height: 3.5px;
+  background: rgba(255, 255, 255, 0.65);
+  border-radius: 2px;
+  transition: background 0.2s ease;
+}
+
+.window-titlebar.is-maximized-titlebar:hover .pull-handle-bar {
+  background: #38bdf8;
+}
+
+.pull-handle-hint {
+  font-size: 10.5px;
+  font-weight: 500;
+  color: #94a3b8;
+  letter-spacing: 0.25px;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+.window-titlebar.is-maximized-titlebar:hover .pull-handle-hint {
+  color: #ffffff;
+}
+
+/* Snap Preview Overlay */
+.window-snap-preview {
+  pointer-events: none;
+  z-index: 99999;
+  user-select: none;
+}
+
+.window-snap-preview.maximize-snap {
+  position: fixed;
+  top: 28px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.snap-preview-box {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  background: rgba(56, 189, 248, 0.12);
+  border: 2px dashed rgba(56, 189, 248, 0.65);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: 0 0 32px rgba(56, 189, 248, 0.25), inset 0 0 24px rgba(56, 189, 248, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: snapPulse 1.2s infinite ease-in-out;
+}
+
+.snap-preview-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(15, 23, 42, 0.85);
+  padding: 8px 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  color: #38bdf8;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.window-snap-preview.minimize-snap {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.snap-preview-dock-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(234, 179, 8, 0.25);
+  border: 2px dashed rgba(234, 179, 8, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 9px 24px;
+  border-radius: 24px;
+  color: #fef08a;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 0 28px rgba(234, 179, 8, 0.35), 0 4px 16px rgba(0, 0, 0, 0.4);
+  animation: snapPulse 1.2s infinite ease-in-out;
+}
+
+.snap-icon {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+@keyframes snapPulse {
+  0%, 100% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.015);
+  }
+}
+
