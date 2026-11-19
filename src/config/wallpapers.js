@@ -10,7 +10,7 @@ export const desktopWallpapers = [
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
-      imageRendering: '-webkit-optimize-contrast'
+      imageRendering: 'auto'
     }
   },
   {
@@ -24,7 +24,7 @@ export const desktopWallpapers = [
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
-      imageRendering: '-webkit-optimize-contrast'
+      imageRendering: 'auto'
     }
   },
   {
@@ -115,7 +115,7 @@ export const terminalWallpapers = [
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
-      imageRendering: '-webkit-optimize-contrast'
+      imageRendering: 'auto'
     }
   },
   {
@@ -129,7 +129,7 @@ export const terminalWallpapers = [
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
-      imageRendering: '-webkit-optimize-contrast'
+      imageRendering: 'auto'
     }
   },
   {
@@ -143,7 +143,7 @@ export const terminalWallpapers = [
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
-      imageRendering: '-webkit-optimize-contrast'
+      imageRendering: 'auto'
     }
   }
 ];
