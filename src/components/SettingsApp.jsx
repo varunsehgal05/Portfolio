@@ -87,6 +87,23 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
     }
   });
 
+  // Accent Color & Window Vibrancy State
+  const [activeAccent, setActiveAccent] = useState(() => {
+    try {
+      return localStorage.getItem('varunos_accent_color') || '#0d99ff';
+    } catch {
+      return '#0d99ff';
+    }
+  });
+
+  const [windowVibrancy, setWindowVibrancy] = useState(() => {
+    try {
+      return localStorage.getItem('varunos_window_vibrancy') || 'high';
+    } catch {
+      return 'high';
+    }
+  });
+
   // Apply theme mode to documentElement
   const handleSelectTheme = (mode) => {
     setThemeMode(mode);
@@ -102,6 +119,41 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
     document.documentElement.setAttribute('data-theme', effectiveTheme);
     window.dispatchEvent(new CustomEvent('varunos-theme-change', { detail: { mode: effectiveTheme } }));
   };
+
+  const handleSelectAccent = (color, id) => {
+    setActiveAccent(color);
+    try {
+      localStorage.setItem('varunos_accent_color', color);
+    } catch {}
+    document.documentElement.style.setProperty('--accent', color);
+    document.documentElement.style.setProperty('--system-accent', color);
+    window.dispatchEvent(new CustomEvent('varunos-accent-change', { detail: { color, id } }));
+  };
+
+  const handleSelectVibrancy = (level) => {
+    setWindowVibrancy(level);
+    try {
+      localStorage.setItem('varunos_window_vibrancy', level);
+    } catch {}
+    const blurVal = level === 'subtle' ? 'blur(8px)' : level === 'medium' ? 'blur(16px)' : 'blur(28px)';
+    document.documentElement.style.setProperty('--blur', blurVal);
+  };
+
+  // Restore saved accent and vibrancy on mount
+  useEffect(() => {
+    try {
+      const savedAccent = localStorage.getItem('varunos_accent_color');
+      if (savedAccent) {
+        document.documentElement.style.setProperty('--accent', savedAccent);
+        document.documentElement.style.setProperty('--system-accent', savedAccent);
+      }
+      const savedVibrancy = localStorage.getItem('varunos_window_vibrancy');
+      if (savedVibrancy) {
+        const blurVal = savedVibrancy === 'subtle' ? 'blur(8px)' : savedVibrancy === 'medium' ? 'blur(16px)' : 'blur(28px)';
+        document.documentElement.style.setProperty('--blur', blurVal);
+      }
+    } catch {}
+  }, []);
 
   // Toggle Live Mouse Swarm
   const handleToggleSwarmFollow = () => {
@@ -173,6 +225,37 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
             <span className="settings-name">VarunOS</span>
             <span className="settings-sub">User: {userName}</span>
           </div>
+        </div>
+
+        {/* Quick Theme Switcher in Sidebar */}
+        <div className="settings-sidebar-theme-switch">
+          <button 
+            type="button" 
+            className={`sidebar-theme-pill ${themeMode === 'light' ? 'active' : ''}`}
+            onClick={() => handleSelectTheme('light')}
+            title="Switch to Light Mode"
+          >
+            <Sun size={11} />
+            <span>Light</span>
+          </button>
+          <button 
+            type="button" 
+            className={`sidebar-theme-pill ${themeMode === 'dark' ? 'active' : ''}`}
+            onClick={() => handleSelectTheme('dark')}
+            title="Switch to Dark Mode"
+          >
+            <Moon size={11} />
+            <span>Dark</span>
+          </button>
+          <button 
+            type="button" 
+            className={`sidebar-theme-pill ${themeMode === 'auto' ? 'active' : ''}`}
+            onClick={() => handleSelectTheme('auto')}
+            title="Solar Daylight Schedule"
+          >
+            <span style={{ fontSize: '11px' }}>🌓</span>
+            <span>Auto</span>
+          </button>
         </div>
 
         <div className="settings-nav">
@@ -477,33 +560,139 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
                   {themeMode === 'auto' && <Check size={13} className="theme-check-icon" />}
                 </div>
               </div>
+
+              {/* Midnight OLED Mode Card */}
+              <div 
+                className={`theme-card ${themeMode === 'oled' ? 'active' : ''}`}
+                onClick={() => handleSelectTheme('oled')}
+              >
+                <div className="theme-card-preview theme-oled-preview">
+                  <div className="preview-mini-menubar oled">
+                    <span className="mini-dot red" />
+                    <span className="mini-dot yellow" />
+                    <span className="mini-dot green" />
+                  </div>
+                  <div className="preview-mini-body oled">
+                    <div className="preview-mini-sidebar oled" />
+                    <div className="preview-mini-content oled" />
+                  </div>
+                </div>
+                <div className="theme-card-footer">
+                  <span className="theme-icon oled">🖤</span>
+                  <span className="theme-name">Midnight OLED</span>
+                  {themeMode === 'oled' && <Check size={13} className="theme-check-icon" />}
+                </div>
+              </div>
+            </div>
+
+            {/* Live Interactive OS Preview */}
+            <div className="settings-group appearance-preview-box" style={{ marginTop: '20px' }}>
+              <div className="preview-box-header">
+                <span className="preview-header-title">Live Interface Simulation</span>
+                <span className="preview-header-mode">
+                  Mode: <strong>{themeMode.toUpperCase()}</strong> • Accent: <span style={{ color: activeAccent, fontWeight: 700 }}>{activeAccent}</span>
+                </span>
+              </div>
+              <div className={`live-preview-window ${themeMode}`}>
+                <div className="live-preview-titlebar">
+                  <div className="live-traffic-lights">
+                    <span className="live-traffic-dot red" />
+                    <span className="live-traffic-dot yellow" />
+                    <span className="live-traffic-dot green" />
+                  </div>
+                  <span className="live-window-title">VarunOS — Active Workspace</span>
+                  <div style={{ width: 40 }} />
+                </div>
+                <div className="live-preview-body">
+                  <div className="live-preview-sidebar">
+                    <div className="live-sidebar-item active" style={{ backgroundColor: `${activeAccent}25`, color: activeAccent, borderLeft: `2px solid ${activeAccent}` }}>
+                      Projects
+                    </div>
+                    <div className="live-sidebar-item">Components</div>
+                    <div className="live-sidebar-item">Tokens</div>
+                  </div>
+                  <div className="live-preview-content">
+                    <h4 className="live-content-headline">High-Contrast macOS Aesthetics</h4>
+                    <p className="live-content-sub">Clean typography, frosted acrylic glass, and seamless light/dark mode transitions.</p>
+                    <div className="live-content-actions">
+                      <button type="button" className="live-accent-btn" style={{ backgroundColor: activeAccent }}>
+                        Primary Action
+                      </button>
+                      <button type="button" className="live-secondary-btn">
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Accent Color Section */}
-            <div className="settings-group" style={{ marginTop: '24px' }}>
+            <div className="settings-group" style={{ marginTop: '20px' }}>
               <div className="settings-row">
                 <div className="settings-row-text">
                   <span className="row-title">Accent Color</span>
-                  <span className="row-sub">System focus color for controls, buttons, and traffic highlights</span>
+                  <span className="row-sub">System focus color for controls, buttons, active layers, and traffic highlights</span>
                 </div>
                 <div className="accent-color-row">
                   {[
-                    { id: 'blue', color: '#0284c7' },
-                    { id: 'purple', color: '#9333ea' },
-                    { id: 'pink', color: '#ec4899' },
-                    { id: 'green', color: '#10b981' },
-                    { id: 'orange', color: '#f97316' },
-                    { id: 'slate', color: '#64748b' }
-                  ].map((acc) => (
+                    { id: 'figma-blue', name: 'Electric Blue', color: '#0d99ff' },
+                    { id: 'purple', name: 'Royal Purple', color: '#a855f7' },
+                    { id: 'emerald', name: 'Emerald Mint', color: '#10b981' },
+                    { id: 'amber', name: 'Sunset Amber', color: '#f59e0b' },
+                    { id: 'rose', name: 'Coral Rose', color: '#f43f5e' },
+                    { id: 'slate', name: 'Stealth Graphite', color: '#64748b' }
+                  ].map((acc) => {
+                    const isSelected = activeAccent.toLowerCase() === acc.color.toLowerCase();
+                    return (
+                      <button
+                        key={acc.id}
+                        type="button"
+                        className={`accent-circle-btn ${isSelected ? 'active' : ''}`}
+                        style={{ backgroundColor: acc.color }}
+                        onClick={() => handleSelectAccent(acc.color, acc.id)}
+                        title={`${acc.name} (${acc.color})`}
+                      >
+                        {isSelected && <Check size={11} color="#ffffff" />}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Window Vibrancy */}
+              <div className="settings-row">
+                <div className="settings-row-text">
+                  <span className="row-title">Window Vibrancy & Glass Blur</span>
+                  <span className="row-sub">Control backdrop blur intensity and translucent acrylic refraction</span>
+                </div>
+                <div className="vibrancy-pill-group">
+                  {[
+                    { id: 'subtle', label: 'Subtle (60%)' },
+                    { id: 'medium', label: 'Balanced (80%)' },
+                    { id: 'high', label: 'Crystal Glass (95%)' }
+                  ].map((vib) => (
                     <button
-                      key={acc.id}
+                      key={vib.id}
                       type="button"
-                      className="accent-circle-btn"
-                      style={{ backgroundColor: acc.color }}
-                      title={acc.id}
-                    />
+                      className={`vibrancy-pill-btn ${windowVibrancy === vib.id ? 'active' : ''}`}
+                      onClick={() => handleSelectVibrancy(vib.id)}
+                    >
+                      {vib.label}
+                    </button>
                   ))}
                 </div>
+              </div>
+
+              {/* Daylight Schedule Info */}
+              <div className="settings-row">
+                <div className="settings-row-text">
+                  <span className="row-title">Solar Schedule (Auto Mode)</span>
+                  <span className="row-sub">Daylight hours (07:00 – 19:00): Light Mode • Night hours (19:00 – 07:00): Dark Mode</span>
+                </div>
+                <span className="settings-badge">
+                  {new Date().getHours() >= 7 && new Date().getHours() < 19 ? '☀️ Currently Day (Light)' : '🌙 Currently Night (Dark)'}
+                </span>
               </div>
             </div>
           </div>

@@ -256,3 +256,61 @@ body {
 [data-theme="light"] .card-desc {
   color: #64748b !important;
 }
+
+/* ========================================================
+   MIDNIGHT OLED THEME [data-theme="oled"]
+   True pitch black #000000 for maximum contrast & OLED displays
+   ======================================================== */
+[data-theme="oled"] {
+  --text-primary: #ffffff;
+  --bg-glass: rgba(0, 0, 0, 0.95);
+  --border-glass: rgba(255, 255, 255, 0.16);
+}
+
+[data-theme="oled"] body {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+[data-theme="oled"] .menu-bar {
+  background: rgba(0, 0, 0, 0.95) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+[data-theme="oled"] .window-inner {
+  background: #000000 !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+[data-theme="oled"] .window-titlebar {
+  background: #080808 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-theme="oled"] .window-content {
+  background: #000000 !important;
+}
+
+[data-theme="oled"] .dock {
+  background: rgba(0, 0, 0, 0.9) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+}
+
+[data-theme="oled"] .settings-container {
+  background: #000000 !important;
+}
+
+[data-theme="oled"] .settings-sidebar {
+  background: #050505 !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-theme="oled"] .finder-sidebar {
+  background: #050505 !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-theme="oled"] .finder-content {
+  background: #000000 !important;
+}
+

@@ -11,7 +11,7 @@
   --color-surface: #2c2c2c;
   --color-surface-container: #252525;
   --color-surface-variant: #383838;
-  --color-on-background: #e2e2e2;
+  --color-on-background: #ffffff;
   --color-on-surface-variant: #b3b3b3;
 
   display: flex;
@@ -82,7 +82,7 @@
   overflow: hidden;
   border: 1.5px solid rgba(13, 153, 255, 0.5);
   box-shadow: 0 0 10px rgba(13, 153, 255, 0.3);
-  background: #18181b;
+  background: #2c2c2c;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -269,7 +269,7 @@
   border-radius: 50%;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  background: #18181b;
+  background: #2c2c2c;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -441,7 +441,7 @@
   top: 0;
   bottom: 0;
   width: 250px;
-  background: #181a1a;
+  background: #2c2c2c;
   border-right: 1px solid rgba(255, 255, 255, 0.1);
   padding: 16px;
   z-index: 40;
@@ -671,7 +671,7 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #181a1a;
+  background: #2c2c2c;
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: #ffffff;
   display: flex;
@@ -815,7 +815,7 @@
   height: 22px;
   border-radius: 50%;
   overflow: hidden;
-  background: #18181b;
+  background: #2c2c2c;
   border: 1px solid var(--color-primary);
   display: flex;
   align-items: center;
@@ -1058,7 +1058,7 @@
   position: relative;
   width: 100%;
   height: 140px;
-  background: #141414;
+  background: #2c2c2c;
   overflow: hidden;
 }
 
@@ -1216,7 +1216,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #181a1a;
+  background: #2c2c2c;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 7px;
   padding: 7px 12px;
@@ -1273,7 +1273,7 @@
 }
 
 .bento-card {
-  background: #181a1a;
+  background: #2c2c2c;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 10px;
   overflow: hidden;
@@ -1425,7 +1425,7 @@
 }
 
 .flow-content-card {
-  background: #181a1a;
+  background: #2c2c2c;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
   padding: 14px;
@@ -1465,7 +1465,7 @@
 }
 
 .cert-flow-card {
-  background: #181a1a;
+  background: #2c2c2c;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
   padding: 14px;
@@ -1527,7 +1527,7 @@
 
 .variant-btn {
   padding: 4px 10px;
-  background: #181a1a;
+  background: #2c2c2c;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 5px;
   color: #9ca3af;
@@ -1556,7 +1556,7 @@
 }
 
 .about-profile-card {
-  background: #181a1a;
+  background: #2c2c2c;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 10px;
   padding: 20px;
@@ -1575,7 +1575,7 @@
   overflow: hidden;
   border: 2px solid var(--color-primary);
   box-shadow: 0 0 20px rgba(var(--color-primary-rgb), 0.4);
-  background: #18181b;
+  background: #2c2c2c;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1651,7 +1651,7 @@
 }
 
 .spec-tile {
-  background: #181a1a;
+  background: #2c2c2c;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
   padding: 14px;
@@ -1714,7 +1714,7 @@
 }
 
 .resume-sheet-card {
-  background: #181a1a;
+  background: #2c2c2c;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 10px;
   padding: 24px 28px;
@@ -1802,7 +1802,7 @@
 }
 
 .process-card {
-  background: #181a1a;
+  background: #2c2c2c;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
   padding: 18px;
@@ -1856,7 +1856,7 @@
   align-items: flex-start;
   gap: 14px;
   padding: 16px;
-  background: #181a1a;
+  background: #2c2c2c;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 10px;
   text-decoration: none;
@@ -2396,7 +2396,7 @@
 
 .prop-fmt-pill.active {
   background: var(--color-primary);
-  color: #18181b;
+  color: #2c2c2c;
   border-color: var(--color-primary);
 }
 
@@ -2419,7 +2419,7 @@
 
 .prop-export-action-btn:hover {
   background: var(--color-primary);
-  color: #18181b;
+  color: #2c2c2c;
   box-shadow: 0 4px 12px rgba(var(--color-primary-rgb), 0.3);
 }
 
@@ -2687,7 +2687,7 @@
 }
 
 .prop-device-select option {
-  background: #181920;
+  background: #2c2c2c;
   color: #ffffff;
 }
 
@@ -3000,14 +3000,14 @@
 .zigzag-timeline-row:hover .zigzag-node-icon {
   border-color: #0d99ff;
   color: #0d99ff;
-  background: #181920;
+  background: #2c2c2c;
   transform: translate(-50%, -50%) scale(1.12);
   box-shadow: 0 0 18px rgba(13, 153, 255, 0.35);
 }
 
 /* The Activity/Experience Card */
 .zigzag-card {
-  background: #14151b;
+  background: #2c2c2c;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
   padding: 18px 22px;
@@ -3283,7 +3283,7 @@
 }
 
 .figjam-sticky-card {
-  background: #14151c;
+  background: #2c2c2c;
   border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 12px;
   padding: 18px 22px;
@@ -3705,7 +3705,7 @@
 }
 
 .plugin-creative-card {
-  background: #14151b;
+  background: #2c2c2c;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
   overflow: hidden;
@@ -3846,7 +3846,7 @@
 
 .plugin-run-btn:hover {
   background: #0d99ff;
-  color: #121318;
+  color: #2c2c2c;
 }
 
 .plugin-external-btn {
@@ -3962,7 +3962,7 @@
 .figma-resume-sheet-container {
   max-width: 900px;
   margin: 0 auto;
-  background: #121318;
+  background: #2c2c2c;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 32px;
@@ -4100,7 +4100,7 @@
    Matching User Reference (media_1795014737232_cdcafb30.png)
    -------------------------------------------------------------------------- */
 .figjam-phase-card {
-  background: #14151c;
+  background: #2c2c2c;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 18px;
   padding: 32px 32px 36px;
@@ -4491,7 +4491,7 @@
   top: calc(100% + 6px);
   right: 0;
   width: 175px;
-  background: #181920;
+  background: #2c2c2c;
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 8px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.65), 0 2px 8px rgba(0, 0, 0, 0.4);
