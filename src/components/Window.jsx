@@ -64,14 +64,13 @@ const Window = ({
 
   const getInitialPosition = () => {
     if (typeof window === 'undefined') return { x: 40, y: 40 };
-    const availableHeight = Math.max(300, window.innerHeight - MENUBAR_HEIGHT - DOCK_CLEARANCE);
+    const curW = window.innerWidth;
+    const curH = window.innerHeight;
+    const availableHeight = Math.max(200, curH - MENUBAR_HEIGHT - DOCK_CLEARANCE);
     const size = getDefaultSize();
-    const centerX = Math.max(20, (window.innerWidth - size.width) / 2);
-    const centerY = Math.max(10, (availableHeight - size.height) / 2);
-    if (app.id === 'finder' || app.id === 'figma' || app.id === 'vscode') {
-      return { x: centerX, y: centerY };
-    }
-    return { x: Math.max(30, centerX + (Math.random() * 60 - 30)), y: Math.max(15, centerY + (Math.random() * 40 - 20)) };
+    const centerX = Math.max(10, Math.round((curW - size.width) / 2));
+    const centerY = Math.max(MENUBAR_HEIGHT + 10, Math.round(MENUBAR_HEIGHT + (availableHeight - size.height) / 2));
+    return { x: centerX, y: centerY };
   };
 
   const [position, setPosition] = useState(getInitialPosition());
@@ -85,6 +84,21 @@ const Window = ({
   const isInitialMount = useRef(true);
   const windowInnerRef = useRef(null);
   const preMaxRef = useRef({ size: getDefaultSize(), position: getInitialPosition() });
+
+  // Center on initial mount / reload
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const curW = window.innerWidth;
+      const curH = window.innerHeight;
+      const availableHeight = Math.max(200, curH - MENUBAR_HEIGHT - DOCK_CLEARANCE);
+      const winSize = getDefaultSize();
+      const centerX = Math.max(10, Math.round((curW - winSize.width) / 2));
+      const centerY = Math.max(MENUBAR_HEIGHT + 10, Math.round(MENUBAR_HEIGHT + (availableHeight - winSize.height) / 2));
+      setPosition({ x: centerX, y: centerY });
+      setSize(winSize);
+      preMaxRef.current = { size: winSize, position: { x: centerX, y: centerY } };
+    }
+  }, []);
 
   const handleClose = (e) => {
     if (e) e.stopPropagation();

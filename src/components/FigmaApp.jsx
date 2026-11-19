@@ -613,6 +613,8 @@ const FigmaApp = ({ isInteracting, userName, onOpenApp }) => {
   const [zoom, setZoom] = useState(1);
   const [isPanning, setIsPanning] = useState(false);
   const [isWireframeMode, setIsWireframeMode] = useState(false);
+  const [activeTool, setActiveTool] = useState('select'); // 'select' | 'hand'
+  const [isSpacePressed, setIsSpacePressed] = useState(false);
   const startPanRef = useRef({ x: 0, y: 0 });
 
   // Dynamic Selected Node & Live Editable Properties
@@ -906,34 +908,172 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
     setFloatingShapes(prev => prev.filter(s => s.id !== id));
   };
 
-  // Canvas Mouse Down for Panning & Stage Selection
-  const handleCanvasMouseDown = (e) => {
-    if (e.target.closest('.figma-selectable-node') || e.target.closest('button') || e.target.closest('a') || e.target.closest('input') || e.target.closest('textarea') || e.target.closest('.sticky-note-textarea')) {
-      return;
+  // Centering dimensions per tab
+  const getTabDimensions = (tab) => {
+    switch (tab) {
+      case 'home': return { width: 1240, height: 880 };
+      case 'projects': return { width: 1350, height: 950 };
+      case 'experience': return { width: 1200, height: 950 };
+      case 'about': return { width: 1350, height: 920 };
+      case 'resume': return { width: 1160, height: 1100 };
+      case 'process': return { width: 900, height: 850 };
+      case 'plugins': return { width: 1200, height: 900 };
+      default: return { width: 1200, height: 850 };
     }
-    // Clicked background -> select root canvas artboard
-    setSelectedNodeId('root-canvas');
-    setSelectedLayerId(null);
-    setSelectedNodeLabel('Varun_Sehgal_Portfolio');
-    setSelectedNodeType('Frame');
-
-    setIsPanning(true);
-    startPanRef.current = {
-      x: e.pageX - pan.x,
-      y: e.pageY - pan.y
-    };
   };
 
-  const handleCanvasMouseMove = (e) => {
-    if (!isPanning) return;
-    setPan({
-      x: e.pageX - startPanRef.current.x,
-      y: e.pageY - startPanRef.current.y
-    });
+  const centerCanvasView = (tab = activeTab) => {
+    if (!containerRef.current) return;
+    const stageW = containerRef.current.clientWidth || 900;
+    const stageH = containerRef.current.clientHeight || 650;
+    const dim = getTabDimensions(tab);
+
+    let targetX = Math.round((stageW - dim.width * zoom) / 2);
+    let targetY = Math.round((stageH - dim.height * zoom) / 2);
+
+    if (tab === 'process') {
+      targetX = Math.max(40, Math.round((stageW - 900 * zoom) / 2));
+      targetY = 24;
+    } else {
+      targetY = Math.max(16, targetY);
+    }
+
+    setPan({ x: targetX, y: targetY });
+  };
+
+  // Center on tab switch & initial mount
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      centerCanvasView(activeTab);
+    }, 60);
+    return () => clearTimeout(timer);
+  }, [activeTab]);
+
+  // Keyboard navigation: Spacebar for Hand/Pan, H for Hand tool, V for Move tool, Shift+1 for Center
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
+      if (e.code === 'Space') {
+        e.preventDefault();
+        setIsSpacePressed(true);
+      }
+      if (e.key === 'h' || e.key === 'H') {
+        setActiveTool('hand');
+        showToast('Hand Tool (Pan active)');
+      }
+      if (e.key === 'v' || e.key === 'V') {
+        setActiveTool('select');
+        showToast('Move Tool (Select active)');
+      }
+      if (e.shiftKey && (e.key === '1' || e.key === '!')) {
+        centerCanvasView(activeTab);
+        showToast('Canvas Centered (100%)');
+      }
+    };
+
+    const handleKeyUp = (e) => {
+      if (e.code === 'Space') {
+        setIsSpacePressed(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, [activeTab, zoom]);
+
+  // Robust Canvas Mouse Down for Panning & Stage Selection
+  const isDraggingCanvasRef = useRef(false);
+  const dragStartRef = useRef({ pageX: 0, pageY: 0, panX: 0, panY: 0 });
+
+  const handleCanvasMouseDown = (e) => {
+    const isMiddleClick = e.button === 1;
+    const isPanMode = isMiddleClick || isSpacePressed || activeTool === 'hand';
+
+    // If clicking an interactive form input, button, or link, don't initiate pan unless Middle Click or Space
+    if (!isPanMode) {
+      if (
+        e.target.closest('input') ||
+        e.target.closest('textarea') ||
+        e.target.closest('select') ||
+        e.target.closest('button') ||
+        e.target.closest('a') ||
+        e.target.closest('.sticky-note-textarea') ||
+        e.target.closest('.lovable-workspace-bottom-nav') ||
+        e.target.closest('.lovable-sidebar') ||
+        e.target.closest('.lovable-properties-sidebar')
+      ) {
+        return;
+      }
+    }
+
+    if (isMiddleClick) {
+      e.preventDefault();
+    }
+
+    isDraggingCanvasRef.current = false;
+    dragStartRef.current = {
+      pageX: e.pageX,
+      pageY: e.pageY,
+      panX: pan.x,
+      panY: pan.y
+    };
+
+    setIsPanning(true);
+
+    const targetNodeEl = e.target.closest('.figma-selectable-node');
+    const targetNodeId = targetNodeEl ? targetNodeEl.getAttribute('data-node-id') : null;
+
+    const handleWindowMouseMove = (moveEvt) => {
+      const dx = moveEvt.pageX - dragStartRef.current.pageX;
+      const dy = moveEvt.pageY - dragStartRef.current.pageY;
+      const dist = Math.hypot(dx, dy);
+
+      if (dist > 3) {
+        isDraggingCanvasRef.current = true;
+      }
+
+      setPan({
+        x: Math.round(dragStartRef.current.panX + dx),
+        y: Math.round(dragStartRef.current.panY + dy)
+      });
+    };
+
+    const handleWindowMouseUp = () => {
+      window.removeEventListener('mousemove', handleWindowMouseMove);
+      window.removeEventListener('mouseup', handleWindowMouseUp);
+      setIsPanning(false);
+
+      // If user did NOT drag (>3px), treat as selection click
+      if (!isDraggingCanvasRef.current) {
+        if (targetNodeId) {
+          setSelectedNodeId(targetNodeId);
+          setSelectedLayerId(targetNodeId);
+          const nodeName = targetNodeEl?.getAttribute('data-node-name') || targetNodeId;
+          setSelectedNodeLabel(nodeName);
+          showToast(`Selected: ${nodeName}`);
+        } else {
+          setSelectedNodeId('root-canvas');
+          setSelectedLayerId(null);
+          setSelectedNodeLabel('Varun_Sehgal_Portfolio');
+          setSelectedNodeType('Frame');
+        }
+      }
+    };
+
+    window.addEventListener('mousemove', handleWindowMouseMove);
+    window.addEventListener('mouseup', handleWindowMouseUp);
+  };
+
+  const handleCanvasMouseMove = () => {
+    // Handled dynamically via window mousemove in handleCanvasMouseDown
   };
 
   const handleCanvasMouseUp = () => {
-    setIsPanning(false);
+    // Handled dynamically via window mouseup in handleCanvasMouseDown
   };
 
   const handleCanvasWheel = (e) => {
@@ -1056,6 +1196,26 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
             )}
           </div>
 
+          {/* Tool Selector: Move (V) vs Hand (H) */}
+          <div className="canvas-tool-pill">
+            <button
+              type="button"
+              className={`canvas-tool-btn ${activeTool === 'select' ? 'active' : ''}`}
+              onClick={() => { setActiveTool('select'); showToast('Move Tool (V) active'); }}
+              title="Move Tool (V) - Click to select, drag to pan"
+            >
+              <span className="material-symbols-outlined text-[15px]">near_me</span>
+            </button>
+            <button
+              type="button"
+              className={`canvas-tool-btn ${activeTool === 'hand' ? 'active' : ''}`}
+              onClick={() => { setActiveTool('hand'); showToast('Hand Tool (H) active - Drag anywhere'); }}
+              title="Hand Tool (H) - Pan canvas"
+            >
+              <span className="material-symbols-outlined text-[15px]">pan_tool</span>
+            </button>
+          </div>
+
           {/* Wireframe View Mode Toggle */}
           <button
             type="button"
@@ -1064,13 +1224,13 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
               setIsWireframeMode(!isWireframeMode);
               showToast(isWireframeMode ? 'Wireframe mode off' : 'Wireframe blueprint mode active');
             }}
-            title="Toggle Figma Blueprint Wireframe View"
+            title="Toggle Figma Blueprint Wireframe View (Shift+O)"
           >
             <span className="material-symbols-outlined text-[15px]">grid_on</span>
             <span>Wireframe</span>
           </button>
 
-          {/* Canvas Zoom & Pan Controls */}
+          {/* Canvas Zoom & Center Controls */}
           <div className="canvas-zoom-pill">
             <button 
               type="button" 
@@ -1082,8 +1242,8 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
             </button>
             <span 
               className="canvas-zoom-val" 
-              onClick={() => { setZoom(1); setPan({ x: 0, y: 0 }); }}
-              title="Reset Zoom & Pan to 100%"
+              onClick={() => { setZoom(1); centerCanvasView(activeTab); }}
+              title="Reset Zoom to 100% and Center View"
             >
               {Math.round(zoom * 100)}%
             </span>
@@ -1094,6 +1254,14 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
               title="Zoom in"
             >
               +
+            </button>
+            <button
+              type="button"
+              className="canvas-center-btn"
+              onClick={() => { centerCanvasView(activeTab); showToast('Canvas Centered'); }}
+              title="Center View (Shift+1)"
+            >
+              <span className="material-symbols-outlined text-[14px]">center_focus_strong</span>
             </button>
           </div>
         </div>
@@ -1405,10 +1573,8 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
         {/* Center Main Stage */}
         <main
           ref={containerRef}
-          className={`lovable-canvas-stage ${isPanning ? 'panning' : ''} ${isWireframeMode ? 'wireframe-mode-stage' : ''}`}
+          className={`lovable-canvas-stage ${isPanning ? 'panning' : ''} ${activeTool === 'hand' || isSpacePressed ? 'tool-hand' : ''} ${isWireframeMode ? 'wireframe-mode-stage' : ''}`}
           onMouseDown={handleCanvasMouseDown}
-          onMouseMove={handleCanvasMouseMove}
-          onMouseUp={handleCanvasMouseUp}
           onWheel={handleCanvasWheel}
         >
           {/* Dot Grid Background */}
@@ -1466,17 +1632,21 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
               </div>
 
               {/* Central Glass Artboard */}
-              <div 
-                className="artboard-container"
-                style={{
-                  maxWidth: `${frameW}px`,
-                  minHeight: `${frameH}px`,
-                  borderRadius: `${frameRadius}px`,
-                  padding: `${padY}px ${padX}px`,
-                  gap: `${autoLayoutGap}px`,
-                  flexDirection: autoLayoutDir === 'vertical' ? 'column' : 'row',
-                  backgroundColor: fillVisible ? fillColor : 'transparent',
-                  opacity: isFrameVisible ? (Number(layerOpacity) / 100) : 0.08,
+              <div className="view-content-wrapper home-content-wrapper" style={{ padding: '30px 40px 140px', minWidth: '1280px', display: 'flex', justifyContent: 'center' }}>
+                <div 
+                  className={`artboard-container figma-selectable-node ${selectedNodeId === 'root-canvas' ? 'is-selected' : ''}`}
+                  data-node-id="root-canvas"
+                  data-node-name="Varun_Sehgal_Portfolio"
+                  style={{
+                    width: `${frameW}px`,
+                    maxWidth: `${frameW}px`,
+                    minHeight: `${frameH}px`,
+                    borderRadius: `${frameRadius}px`,
+                    padding: `${padY}px ${padX}px`,
+                    gap: `${autoLayoutGap}px`,
+                    flexDirection: autoLayoutDir === 'vertical' ? 'column' : 'row',
+                    backgroundColor: fillVisible ? fillColor : 'transparent',
+                    opacity: isFrameVisible ? (Number(layerOpacity) / 100) : 0.08,
                   border: strokeVisible ? `${strokeWidth}px solid ${strokeColor}` : 'none',
                   backdropFilter: blurVisible ? `blur(${blurAmount}px)` : 'none',
                   WebkitBackdropFilter: blurVisible ? `blur(${blurAmount}px)` : 'none',
@@ -1619,7 +1789,8 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 </section>
               </div>
             </div>
-          )}
+          </div>
+        )}
 
           {/* =========================================================================
               VIEW 2: WORK / PROJECTS (Infinite Canvas Bento Grid & Selectable Nodes)

@@ -557,10 +557,18 @@
   background-color: #0a0a0a;
   overflow: hidden;
   cursor: default;
+  user-select: none;
 }
 
-.lovable-canvas-stage.panning {
+.lovable-canvas-stage.tool-hand {
+  cursor: grab !important;
+  cursor: -webkit-grab !important;
+}
+
+.lovable-canvas-stage.panning,
+.lovable-canvas-stage.tool-hand:active {
   cursor: grabbing !important;
+  cursor: -webkit-grabbing !important;
 }
 
 .lovable-dot-grid {
@@ -672,13 +680,11 @@
 
 /* Central Artboard Container */
 .artboard-container {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 90%;
+  position: relative;
+  width: 1200px;
   max-width: 1200px;
-  height: 88%;
+  min-height: 850px;
+  margin: 36px auto 140px;
   background: rgba(30, 32, 32, 0.35);
   backdrop-filter: blur(40px);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -4366,6 +4372,41 @@
   box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
 }
 
+.canvas-tool-pill {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  overflow: hidden;
+  padding: 1px;
+  gap: 1px;
+}
+
+.canvas-tool-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 24px;
+  border-radius: 4px;
+  background: transparent;
+  border: none;
+  color: #a1a1aa;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.canvas-tool-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.canvas-tool-btn.active {
+  background: #38bdf8;
+  color: #0b1120;
+}
+
 .canvas-zoom-pill {
   display: flex;
   align-items: center;
@@ -4373,6 +4414,25 @@
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 6px;
   overflow: hidden;
+}
+
+.canvas-center-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  border: none;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  color: #a1a1aa;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.canvas-center-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #38bdf8;
 }
 
 .canvas-zoom-btn {
