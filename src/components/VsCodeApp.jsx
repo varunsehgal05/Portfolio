@@ -340,12 +340,14 @@ export const VsCodeApp = () => {
     return () => window.removeEventListener('click', handleGlobalClick);
   }, []);
 
-  const currentFile = projectFiles[activeFile] || projectFiles['FinderApp.css'] || {};
-  const currentCode = currentFile.code || '';
+  const hasActiveFile = Boolean(activeFile && openTabs.includes(activeFile));
+  const currentFile = hasActiveFile ? (projectFiles[activeFile] || null) : null;
+  const currentCode = currentFile ? (currentFile.code || '') : '';
   const codeLines = currentCode ? currentCode.split('\n') : [''];
 
   // Handle Code Changes in Active File
   const handleCodeChange = (e) => {
+    if (!activeFile) return;
     const newCode = e.target.value;
     setProjectFiles(prev => ({
       ...prev,
@@ -358,11 +360,17 @@ export const VsCodeApp = () => {
 
   // Close Tab
   const handleCloseTab = (e, fileName) => {
-    e.stopPropagation();
-    const remaining = openTabs.filter(t => t !== fileName);
+    if (e && e.stopPropagation) e.stopPropagation();
+    const targetFile = fileName || activeFile;
+    if (!targetFile) return;
+    const remaining = openTabs.filter(t => t !== targetFile);
     setOpenTabs(remaining);
-    if (activeFile === fileName && remaining.length > 0) {
-      setActiveFile(remaining[0]);
+    if (activeFile === targetFile) {
+      if (remaining.length > 0) {
+        setActiveFile(remaining[remaining.length - 1]);
+      } else {
+        setActiveFile(null);
+      }
     }
   };
 
@@ -401,6 +409,12 @@ export const VsCodeApp = () => {
   // REAL CODE EXECUTION ENGINE
   // =========================================================================
   const executeCode = (codeToRun = currentCode, fileName = activeFile) => {
+    if (!fileName || !codeToRun) {
+      setTerminalOpen(true);
+      setTerminalTab('output');
+      setOutputLogs(prev => (prev ? prev + '\n' : '') + `[Runner] No open editor or file to execute. Select a file from Explorer to run.`);
+      return;
+    }
     setIsRunning(true);
     setTerminalOpen(true);
     setTerminalTab('output');
@@ -661,10 +675,10 @@ export const VsCodeApp = () => {
                   <div className="vscode-menu-item" onClick={() => { setActiveTopMenu(null); }}>
                     <span>Save</span> <span className="menu-shortcut">Ctrl+S</span>
                   </div>
-                  <div className="vscode-menu-item" onClick={() => { handleCloseTab({ stopPropagation: () => {} }, activeFile); setActiveTopMenu(null); }}>
+                  <div className="vscode-menu-item" onClick={() => { if (activeFile) handleCloseTab(null, activeFile); setActiveTopMenu(null); }}>
                     <span>Close Editor</span> <span className="menu-shortcut">Ctrl+W</span>
                   </div>
-                  <div className="vscode-menu-item" onClick={() => { setOpenTabs([]); setActiveTopMenu(null); }}>
+                  <div className="vscode-menu-item" onClick={() => { setOpenTabs([]); setActiveFile(null); setActiveTopMenu(null); }}>
                     <span>Close All Editors</span> <span className="menu-shortcut">Ctrl+K W</span>
                   </div>
                 </div>
@@ -833,7 +847,7 @@ export const VsCodeApp = () => {
 
         <div className="titlebar-center">
           <span className="titlebar-file-label">
-            destop-portflio · Antigravity IDE · {activeFile}
+            destop-portflio · Antigravity IDE{hasActiveFile && activeFile ? ` · ${activeFile}` : ''}
           </span>
         </div>
 
@@ -1332,11 +1346,12 @@ export const VsCodeApp = () => {
             {/* Top-Right Editor Tools featuring RUN CODE button */}
             <div className="tabs-right-tools">
               <button 
-                className="editor-run-code-btn"
-                onClick={() => executeCode()}
-                title="Run Active File (Ctrl+Enter)"
+                className={`editor-run-code-btn ${!hasActiveFile ? 'opacity-50 cursor-not-allowed' : ''}`}
+                onClick={() => hasActiveFile && executeCode()}
+                title={hasActiveFile ? "Run Active File (Ctrl+Enter)" : "Open a file to run code"}
+                disabled={!hasActiveFile}
               >
-                <Play size={12} fill="#22c55e" color="#22c55e" />
+                <Play size={12} fill={hasActiveFile ? "#22c55e" : "#64748b"} color={hasActiveFile ? "#22c55e" : "#64748b"} />
                 <span>Run Code</span>
               </button>
 
@@ -1355,123 +1370,214 @@ export const VsCodeApp = () => {
             </div>
           </div>
 
-          {/* Breadcrumbs Row */}
-          <div className="vscode-breadcrumbs-row">
-            <span className="crumb-text">{currentFile.path ? currentFile.path.split(' > ')[0] : 'src'}</span>
-            <span className="crumb-chevron">&gt;</span>
-            <span className="crumb-text">{currentFile.path ? currentFile.path.split(' > ')[1] || 'components' : 'components'}</span>
-            <span className="crumb-chevron">&gt;</span>
-            <span className="crumb-icon">{renderTabIcon(currentFile.icon)}</span>
-            <span className="crumb-text active-crumb">{currentFile.name}</span>
-            <span className="crumb-chevron">&gt;</span>
-            <span className="crumb-text muted">editable</span>
-          </div>
+          {/* Breadcrumbs Row - Only displayed when an editor file is actually open */}
+          {hasActiveFile && currentFile && (
+            <div className="vscode-breadcrumbs-row">
+              <span className="crumb-text">{currentFile.path ? currentFile.path.split(' > ')[0] : 'src'}</span>
+              <span className="crumb-chevron">&gt;</span>
+              <span className="crumb-text">{currentFile.path ? currentFile.path.split(' > ')[1] || 'components' : 'components'}</span>
+              <span className="crumb-chevron">&gt;</span>
+              <span className="crumb-icon">{renderTabIcon(currentFile.icon)}</span>
+              <span className="crumb-text active-crumb">{currentFile.name}</span>
+              <span className="crumb-chevron">&gt;</span>
+              <span className="crumb-text muted">editable</span>
+            </div>
+          )}
 
-          {/* Code Viewport with Gutter & Minimap OR Webview Preview */}
-          {currentFile.isWebview ? (
-            <div className="vscode-webview-container">
-              <div className="webview-address-bar">
-                <span className="webview-lock-icon">🔒</span>
-                <span className="webview-url-text">http://codesrijan-nine.vercel.app/</span>
-                <span className="webview-badge-tag">VERCEL PRODUCTION</span>
-                <a
-                  href="http://codesrijan-nine.vercel.app/"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="webview-external-btn"
-                >
-                  <span>Open in Chrome ↗</span>
-                </a>
-              </div>
-              <div className="webview-frame-body">
-                <div className="webview-interactive-card">
-                  <div className="interactive-card-hero">
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 text-xs font-mono mb-4">
-                      <span>⚡ National Level Hackathon Ecosystem · 72-Hour Sprint</span>
-                    </div>
-                    <h2 className="interactive-title">Srijaning the Future: Code, Innovate, Conquer</h2>
-                    <p className="interactive-desc">
-                      Live hackathon platform designed by <strong>Varun Sehgal</strong> for Jaypee University of Engineering & Technology. Powering registration, real-time rubric evaluation, and team matching for 200+ hackathon participants across 50+ universities.
-                    </p>
-                    <div className="interactive-stats-row">
-                      <div className="stat-box">
-                        <div className="stat-val">200+</div>
-                        <div className="stat-lbl">Hackers Registered</div>
+          {/* Code Viewport with Gutter & Minimap OR Webview Preview OR Empty Watermark */}
+          {hasActiveFile && currentFile ? (
+            currentFile.isWebview ? (
+              <div className="vscode-webview-container">
+                <div className="webview-address-bar">
+                  <span className="webview-lock-icon">🔒</span>
+                  <span className="webview-url-text">http://codesrijan-nine.vercel.app/</span>
+                  <span className="webview-badge-tag">VERCEL PRODUCTION</span>
+                  <a
+                    href="http://codesrijan-nine.vercel.app/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="webview-external-btn"
+                  >
+                    <span>Open in Chrome ↗</span>
+                  </a>
+                </div>
+                <div className="webview-frame-body">
+                  <div className="webview-interactive-card">
+                    <div className="interactive-card-hero">
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 text-xs font-mono mb-4">
+                        <span>⚡ National Level Hackathon Ecosystem · 72-Hour Sprint</span>
                       </div>
-                      <div className="stat-box">
-                        <div className="stat-val">72h</div>
-                        <div className="stat-lbl">Live Sprint</div>
-                      </div>
-                      <div className="stat-box">
-                        <div className="stat-val">$5,000+</div>
-                        <div className="stat-lbl">Prize Matrix</div>
+                      <h2 className="interactive-title">Srijaning the Future: Code, Innovate, Conquer</h2>
+                      <p className="interactive-desc">
+                        Live hackathon platform designed by <strong>Varun Sehgal</strong> for Jaypee University of Engineering & Technology. Powering registration, real-time rubric evaluation, and team matching for 200+ hackathon participants across 50+ universities.
+                      </p>
+                      <div className="interactive-stats-row">
+                        <div className="stat-box">
+                          <div className="stat-val">200+</div>
+                          <div className="stat-lbl">Hackers Registered</div>
+                        </div>
+                        <div className="stat-box">
+                          <div className="stat-val">72h</div>
+                          <div className="stat-lbl">Live Sprint</div>
+                        </div>
+                        <div className="stat-box">
+                          <div className="stat-val">$5,000+</div>
+                          <div className="stat-lbl">Prize Matrix</div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ) : (
-            <div className="vscode-code-viewport">
-              {/* Interactive Code Editor with synchronized Line Gutter */}
-              <div className="code-editor-scrollable">
-                <div className="code-editor-container">
-                  {/* Line Numbers Gutter */}
-                  <div className="editor-gutter">
-                    {codeLines.map((_, idx) => (
-                      <div 
-                        key={idx} 
-                        className={`gutter-line-number ${idx + 1 === cursorLine ? 'active' : ''}`}
-                      >
-                        {idx + 1}
-                      </div>
+            ) : (
+              <div className="vscode-code-viewport">
+                {/* Interactive Code Editor with synchronized Line Gutter */}
+                <div className="code-editor-scrollable">
+                  <div className="code-editor-container">
+                    {/* Line Numbers Gutter */}
+                    <div className="editor-gutter">
+                      {codeLines.map((_, idx) => (
+                        <div 
+                          key={idx} 
+                          className={`gutter-line-number ${idx + 1 === cursorLine ? 'active' : ''}`}
+                        >
+                          {idx + 1}
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Fully Editable Code Textarea */}
+                    <div className="editor-textarea-wrap">
+                      <textarea
+                        ref={editorTextareaRef}
+                        value={currentCode}
+                        onChange={handleCodeChange}
+                        onClick={(e) => {
+                          const target = e.target;
+                          const textBefore = target.value.substring(0, target.selectionStart);
+                          const linesBefore = textBefore.split('\n');
+                          setCursorLine(linesBefore.length);
+                          setCursorCol(linesBefore[linesBefore.length - 1].length + 1);
+                        }}
+                        onKeyUp={(e) => {
+                          const target = e.target;
+                          const textBefore = target.value.substring(0, target.selectionStart);
+                          const linesBefore = textBefore.split('\n');
+                          setCursorLine(linesBefore.length);
+                          setCursorCol(linesBefore[linesBefore.length - 1].length + 1);
+                        }}
+                        className="editor-code-textarea"
+                        spellCheck={false}
+                        autoCapitalize="off"
+                        autoCorrect="off"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Code Minimap (Right side) */}
+                <div className="vscode-minimap-pane">
+                  <div className="minimap-viewport-slider" />
+                  <div className="minimap-content">
+                    {codeLines.slice(0, 80).map((l, idx) => (
+                      <div
+                        key={idx}
+                        className="minimap-bar-line"
+                        style={{
+                          width: `${Math.min(95, Math.max(10, l.length * 1.4))}%`,
+                          backgroundColor: l.includes('function') || l.includes('const') ? '#38bdf8' : l.includes('console') ? '#facc15' : 'rgba(255,255,255,0.18)'
+                        }}
+                      />
                     ))}
                   </div>
+                </div>
+              </div>
+            )
+          ) : (
+            <div className="vscode-empty-viewport">
+              <div className="empty-watermark-icon-wrap">
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" className="text-[#38bdf8]">
+                  <polyline points="16 18 22 12 16 6" />
+                  <polyline points="8 6 2 12 8 18" />
+                </svg>
+              </div>
 
-                  {/* Fully Editable Code Textarea */}
-                  <div className="editor-textarea-wrap">
-                    <textarea
-                      ref={editorTextareaRef}
-                      value={currentCode}
-                      onChange={handleCodeChange}
-                      onClick={(e) => {
-                        const target = e.target;
-                        const textBefore = target.value.substring(0, target.selectionStart);
-                        const linesBefore = textBefore.split('\n');
-                        setCursorLine(linesBefore.length);
-                        setCursorCol(linesBefore[linesBefore.length - 1].length + 1);
-                      }}
-                      onKeyUp={(e) => {
-                        const target = e.target;
-                        const textBefore = target.value.substring(0, target.selectionStart);
-                        const linesBefore = textBefore.split('\n');
-                        setCursorLine(linesBefore.length);
-                        setCursorCol(linesBefore[linesBefore.length - 1].length + 1);
-                      }}
-                      className="editor-code-textarea"
-                      spellCheck={false}
-                      autoCapitalize="off"
-                      autoCorrect="off"
-                    />
+              <div className="empty-watermark-title">Antigravity IDE · No Editors Open</div>
+
+              <div className="empty-shortcuts-list">
+                <div className="empty-shortcut-row">
+                  <span className="empty-shortcut-label">Show All Commands</span>
+                  <div className="empty-shortcut-keys">
+                    <kbd className="empty-key-badge">Ctrl</kbd>
+                    <kbd className="empty-key-badge">Shift</kbd>
+                    <kbd className="empty-key-badge">P</kbd>
+                  </div>
+                </div>
+
+                <div className="empty-shortcut-row">
+                  <span className="empty-shortcut-label">Go to File / Explorer</span>
+                  <div className="empty-shortcut-keys">
+                    <kbd className="empty-key-badge">Ctrl</kbd>
+                    <kbd className="empty-key-badge">P</kbd>
+                  </div>
+                </div>
+
+                <div className="empty-shortcut-row">
+                  <span className="empty-shortcut-label">Find in Files</span>
+                  <div className="empty-shortcut-keys">
+                    <kbd className="empty-key-badge">Ctrl</kbd>
+                    <kbd className="empty-key-badge">Shift</kbd>
+                    <kbd className="empty-key-badge">F</kbd>
+                  </div>
+                </div>
+
+                <div className="empty-shortcut-row">
+                  <span className="empty-shortcut-label">Toggle Integrated Terminal</span>
+                  <div className="empty-shortcut-keys">
+                    <kbd className="empty-key-badge">Ctrl</kbd>
+                    <kbd className="empty-key-badge">`</kbd>
+                  </div>
+                </div>
+
+                <div className="empty-shortcut-row">
+                  <span className="empty-shortcut-label">Toggle Primary Side Bar</span>
+                  <div className="empty-shortcut-keys">
+                    <kbd className="empty-key-badge">Ctrl</kbd>
+                    <kbd className="empty-key-badge">B</kbd>
                   </div>
                 </div>
               </div>
 
-              {/* Code Minimap (Right side) */}
-              <div className="vscode-minimap-pane">
-                <div className="minimap-viewport-slider" />
-                <div className="minimap-content">
-                  {codeLines.slice(0, 80).map((l, idx) => (
-                    <div
-                      key={idx}
-                      className="minimap-bar-line"
-                      style={{
-                        width: `${Math.min(95, Math.max(10, l.length * 1.4))}%`,
-                        backgroundColor: l.includes('function') || l.includes('const') ? '#38bdf8' : l.includes('console') ? '#facc15' : 'rgba(255,255,255,0.18)'
-                      }}
-                    />
-                  ))}
-                </div>
+              <div className="empty-actions-row">
+                <button 
+                  className="empty-action-btn"
+                  onClick={() => {
+                    if (!openTabs.includes('portfolio.config.ts')) setOpenTabs(prev => [...prev, 'portfolio.config.ts']);
+                    setActiveFile('portfolio.config.ts');
+                  }}
+                >
+                  <Code size={13} />
+                  <span>Open portfolio.config.ts</span>
+                </button>
+
+                <button 
+                  className="empty-action-btn"
+                  onClick={() => {
+                    if (!openTabs.includes('FinderApp.css')) setOpenTabs(prev => [...prev, 'FinderApp.css']);
+                    setActiveFile('FinderApp.css');
+                  }}
+                >
+                  <Code size={13} />
+                  <span>Open FinderApp.css</span>
+                </button>
+
+                <button 
+                  className="empty-action-btn"
+                  onClick={() => handleCreateNewFile('app.js')}
+                >
+                  <Plus size={13} />
+                  <span>New Scratch Script (app.js)</span>
+                </button>
               </div>
             </div>
           )}

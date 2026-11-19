@@ -1859,4 +1859,121 @@
   margin: 0;
 }
 
+/* ========================================================
+   VS Code Empty Editor Watermark Screen
+   ======================================================== */
+.vscode-empty-viewport {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #1e1e1e;
+  user-select: none;
+  padding: 40px 20px;
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+}
+
+.empty-watermark-icon-wrap {
+  margin-bottom: 20px;
+  opacity: 0.18;
+  filter: drop-shadow(0 4px 16px rgba(56, 189, 248, 0.25));
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.empty-watermark-icon-wrap:hover {
+  opacity: 0.35;
+  transform: scale(1.05);
+}
+
+.empty-watermark-title {
+  font-size: 14.5px;
+  font-weight: 500;
+  color: #cbd5e1;
+  margin-bottom: 22px;
+  letter-spacing: -0.2px;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
+}
+
+.empty-shortcuts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 360px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+
+.empty-shortcut-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 12px;
+}
+
+.empty-shortcut-label {
+  color: #858585;
+  font-weight: 400;
+}
+
+.empty-shortcut-keys {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.empty-key-badge {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  padding: 1.5px 6.5px;
+  font-size: 10.5px;
+  font-family: 'SF Mono', Monaco, Consolas, monospace;
+  color: #cbd5e1;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+.empty-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.empty-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  color: #38bdf8;
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.empty-action-btn:hover {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: #38bdf8;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+}
+
+.empty-action-btn:active {
+  transform: translateY(0);
+}
+
 

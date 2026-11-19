@@ -454,51 +454,32 @@
 .titlebar-fullscreen-pull-handle {
   position: absolute;
   left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  top: 3px;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
-  gap: 7px;
-  padding: 3px 12px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 12px;
+  justify-content: center;
+  padding: 0;
+  background: transparent;
+  border: none;
   cursor: grab;
   user-select: none;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
-}
-
-.window-titlebar.is-maximized-titlebar:hover .titlebar-fullscreen-pull-handle {
-  background: rgba(56, 189, 248, 0.2);
-  border-color: rgba(56, 189, 248, 0.45);
-  box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
-  transform: translate(-50%, -50%) scale(1.02);
+  z-index: 2;
 }
 
 .pull-handle-bar {
-  width: 22px;
-  height: 3.5px;
-  background: rgba(255, 255, 255, 0.65);
+  width: 38px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.28);
   border-radius: 2px;
-  transition: background 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .window-titlebar.is-maximized-titlebar:hover .pull-handle-bar {
   background: #38bdf8;
-}
-
-.pull-handle-hint {
-  font-size: 10.5px;
-  font-weight: 500;
-  color: #94a3b8;
-  letter-spacing: 0.25px;
-  white-space: nowrap;
-  transition: color 0.2s ease;
-}
-
-.window-titlebar.is-maximized-titlebar:hover .pull-handle-hint {
-  color: #ffffff;
+  width: 48px;
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
 }
 
 /* Snap Preview Overlay */

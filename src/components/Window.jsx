@@ -470,11 +470,10 @@ const Window = ({
               <span>{app.title || (app.id === 'finder' ? 'VarunOS — Portfolio & Projects' : app.name)}</span>
             </div>
 
-            {/* Windows-style Full Screen Drag-from-Middle Handle */}
+            {/* Sleek Top Drag Notch for Full Screen Restore (Never overlaps title text) */}
             {isMaximized && (
-              <div className="titlebar-fullscreen-pull-handle" title="Drag down from middle to restore or minimize (like in Windows)">
+              <div className="titlebar-fullscreen-pull-handle" title="Drag down from top to restore window">
                 <div className="pull-handle-bar" />
-                <span className="pull-handle-hint">Drag down to restore</span>
               </div>
             )}
 
