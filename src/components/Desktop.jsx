@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import MenuBar from './MenuBar';
 import DesktopIcon from './DesktopIcon';
 import Window from './Window';
@@ -51,6 +51,9 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
       return 'roxy-calendar';
     }
   });
+  const [prevWallpaper, setPrevWallpaper] = useState(null);
+  const [isWpTransitioning, setIsWpTransitioning] = useState(false);
+  const wpTransitionTimerRef = useRef(null);
   const [wallpaperToast, setWallpaperToast] = useState(null);
 
   // Live Califa Swarm Mouse Flocking State (defaults to active so users immediately experience Califa swarm)
@@ -84,17 +87,43 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
 
   const applyDesktopWallpaper = (id, showToast = false) => {
     const found = desktopWallpapers.find(w => w.id === id) || desktopWallpapers[0];
+    if (found.id === activeWallpaperId && !isWpTransitioning) return;
+
+    const currentWp = desktopWallpapers.find(w => w.id === activeWallpaperId) || desktopWallpapers[0];
+
+    if (wpTransitionTimerRef.current) {
+      clearTimeout(wpTransitionTimerRef.current);
+    }
+
+    setPrevWallpaper(currentWp);
     setActiveWallpaperId(found.id);
+    setIsWpTransitioning(true);
+
     try {
       localStorage.setItem('varunos_desktop_wallpaper', found.id);
     } catch {}
+
     if (showToast) {
       setWallpaperToast(`Wallpaper: ${found.name}`);
       setTimeout(() => {
         setWallpaperToast(curr => (curr === `Wallpaper: ${found.name}` ? null : curr));
       }, 2200);
     }
+
+    wpTransitionTimerRef.current = setTimeout(() => {
+      setPrevWallpaper(null);
+      setIsWpTransitioning(false);
+      wpTransitionTimerRef.current = null;
+    }, 750);
   };
+
+  useEffect(() => {
+    return () => {
+      if (wpTransitionTimerRef.current) {
+        clearTimeout(wpTransitionTimerRef.current);
+      }
+    };
+  }, []);
 
   // Keyboard shortcut: Alt + 1, 2, 3, 4, 5 to quickly switch wallpapers
   useEffect(() => {
@@ -232,8 +261,25 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
   return (
     <div 
       className={`desktop ${swarmStage < 5 ? 'desktop-in-rebuild' : ''}`}
-      style={swarmStage >= 5 ? activeWallpaper.style : undefined}
     >
+      {/* Smooth Wallpaper Switching Animated Backdrop (macOS Sequoia Crossfade) */}
+      {swarmStage >= 5 && (
+        <div className="desktop-wallpaper-viewport" aria-hidden="true">
+          {prevWallpaper && (
+            <div 
+              key={`prev-wp-${prevWallpaper.id}`}
+              className="desktop-wallpaper-layer outgoing"
+              style={prevWallpaper.style}
+            />
+          )}
+          <div 
+            key={`curr-wp-${activeWallpaper.id}`}
+            className={`desktop-wallpaper-layer ${isWpTransitioning ? 'incoming' : 'active'}`}
+            style={activeWallpaper.style}
+          />
+        </div>
+      )}
+
       {/* Toast notification when switching wallpaper */}
       {wallpaperToast && (
         <div className="desktop-wallpaper-toast">

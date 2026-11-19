@@ -85,6 +85,68 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
     }
   });
 
+  const getWpStyle = (wpId, tint) => {
+    const wp = terminalWallpapers.find(w => w.id === wpId) || terminalWallpapers[0];
+    if (!wp.image) return wp.bgStyle || { backgroundColor: '#0d1117' };
+    
+    // Tint opacities: vivid (0.18 / 0.28) - crystal clear artwork without blue hue!
+    // balanced (0.36 / 0.46), norm (0.58 / 0.68)
+    const [topAlpha, bottomAlpha] = tint === 'vivid' 
+      ? ['0.18', '0.28'] 
+      : tint === 'balanced' 
+      ? ['0.36', '0.46'] 
+      : ['0.58', '0.68'];
+      
+    return {
+      backgroundImage: `linear-gradient(rgba(0, 0, 0, ${topAlpha}), rgba(0, 0, 0, ${bottomAlpha})), url(${wp.image})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      imageRendering: 'auto'
+    };
+  };
+
+  const [prevWpStyle, setPrevWpStyle] = useState(null);
+  const [isWpTransitioning, setIsWpTransitioning] = useState(false);
+  const wpTransitionTimerRef = useRef(null);
+  const isFirstMountRef = useRef(true);
+  const prevWpIdRef = useRef(activeWallpaperId);
+  const prevTintRef = useRef(tintLevel);
+
+  useEffect(() => {
+    if (isFirstMountRef.current) {
+      isFirstMountRef.current = false;
+      return;
+    }
+
+    if (prevWpIdRef.current !== activeWallpaperId || prevTintRef.current !== tintLevel) {
+      const oldStyle = getWpStyle(prevWpIdRef.current, prevTintRef.current);
+      prevWpIdRef.current = activeWallpaperId;
+      prevTintRef.current = tintLevel;
+
+      if (wpTransitionTimerRef.current) {
+        clearTimeout(wpTransitionTimerRef.current);
+      }
+
+      setPrevWpStyle(oldStyle);
+      setIsWpTransitioning(true);
+
+      wpTransitionTimerRef.current = setTimeout(() => {
+        setPrevWpStyle(null);
+        setIsWpTransitioning(false);
+        wpTransitionTimerRef.current = null;
+      }, 700);
+    }
+  }, [activeWallpaperId, tintLevel]);
+
+  useEffect(() => {
+    return () => {
+      if (wpTransitionTimerRef.current) {
+        clearTimeout(wpTransitionTimerRef.current);
+      }
+    };
+  }, []);
+
   const setTerminalWallpaper = (id) => {
     const found = terminalWallpapers.find(w => w.id === id) || terminalWallpapers[0];
     setActiveWallpaperId(found.id);
@@ -351,35 +413,29 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
     }
   };
 
-  const currentWp = terminalWallpapers.find(w => w.id === activeWallpaperId) || terminalWallpapers[0];
-
-  // Dynamic calibrated wallpaper background style
-  const getDynamicBgStyle = () => {
-    if (!currentWp.image) return currentWp.bgStyle;
-    
-    // Tint opacities: vivid (0.18 / 0.28) - crystal clear artwork without blue hue!
-    // balanced (0.36 / 0.46), norm (0.58 / 0.68)
-    const [topAlpha, bottomAlpha] = tintLevel === 'vivid' 
-      ? ['0.18', '0.28'] 
-      : tintLevel === 'balanced' 
-      ? ['0.36', '0.46'] 
-      : ['0.58', '0.68'];
-      
-    return {
-      backgroundImage: `linear-gradient(rgba(0, 0, 0, ${topAlpha}), rgba(0, 0, 0, ${bottomAlpha})), url(${currentWp.image})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      imageRendering: '-webkit-optimize-contrast'
-    };
-  };
+  const currentWpStyle = getWpStyle(activeWallpaperId, tintLevel);
 
   return (
     <div 
       className="terminal-wrapper" 
       onClick={handleContainerClick}
-      style={getDynamicBgStyle()}
     >
+      {/* Animated Terminal Wallpaper Backdrop Layers (macOS Sequoia Crossfade) */}
+      <div className="terminal-wallpaper-viewport" aria-hidden="true">
+        {prevWpStyle && (
+          <div 
+            key="terminal-wp-outgoing"
+            className="terminal-backdrop-layer outgoing"
+            style={prevWpStyle}
+          />
+        )}
+        <div 
+          key={`terminal-wp-${activeWallpaperId}-${tintLevel}`}
+          className={`terminal-backdrop-layer ${isWpTransitioning ? 'incoming' : 'active'}`}
+          style={currentWpStyle}
+        />
+      </div>
+
       {/* Top Quick Command Bar */}
       {isQuickBarVisible ? (
         <div className="terminal-quick-bar">
