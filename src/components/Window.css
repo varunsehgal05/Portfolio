@@ -1,24 +1,29 @@
 .app-window {
   border-radius: 12px;
   overflow: visible;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
   display: flex;
   transform-origin: center center;
+  contain: layout style;
 }
 
-/* Subtle macOS Window Open Animation on inner container (doesn't touch Rnd translate) */
+/* GPU-Accelerated Smooth macOS Window Open Animation */
 .app-window:not(.minimized):not(.closing):not(.minimizing):not(.restoring):not(.maximized) .window-inner {
-  animation: macWindowOpen 0.24s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: macWindowOpen 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: transform, opacity;
+  transform-origin: center center;
+  backface-visibility: hidden;
 }
 
 @keyframes macWindowOpen {
   0% {
     opacity: 0;
-    transform: scale(0.95);
+    transform: translate3d(0, 6px, 0) scale(0.97);
   }
+
   100% {
     opacity: 1;
-    transform: scale(1);
+    transform: translate3d(0, 0, 0) scale(1);
   }
 }
 
@@ -29,8 +34,9 @@
 
 .window-inner.closing {
   pointer-events: none !important;
-  animation: macWindowClose 0.20s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+  animation: macWindowClose 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
   will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 
 @keyframes macWindowClose {
@@ -38,18 +44,16 @@
     opacity: 1;
     transform: scale(1);
   }
+
   100% {
     opacity: 0;
-    transform: scale(0.93);
+    transform: scale(0.94);
   }
 }
 
-.app-window:not(.interacting):not(.react-draggable-dragging) {
-  transition: width 0.36s cubic-bezier(0.16, 1, 0.3, 1),
-              height 0.36s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.36s cubic-bezier(0.16, 1, 0.3, 1),
-              border-radius 0.28s ease,
-              box-shadow 0.28s ease;
+/* High-Performance Visual Transitions (Zero layout thrashing during drag) */
+.app-window:not(.interacting):not(.react-draggable-dragging):not(.zooming) {
+  transition: border-radius 0.22s ease, box-shadow 0.22s ease;
 }
 
 .app-window.interacting,
@@ -59,18 +63,17 @@
   will-change: transform;
 }
 
-/* Smooth macOS Zoom-in/Zoom-out Transition during Full Screen Toggle */
+/* Smooth macOS Zoom Transition during Full Screen Toggle */
 .app-window.zooming {
-  transition: width 0.38s cubic-bezier(0.16, 1, 0.3, 1),
-              height 0.38s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.38s cubic-bezier(0.16, 1, 0.3, 1),
-              border-radius 0.3s ease,
-              box-shadow 0.3s ease !important;
-  will-change: width, height, transform, border-radius;
+  transition: transform 0.30s cubic-bezier(0.16, 1, 0.3, 1),
+    width 0.30s cubic-bezier(0.16, 1, 0.3, 1),
+    height 0.30s cubic-bezier(0.16, 1, 0.3, 1),
+    border-radius 0.22s ease !important;
+  will-change: transform, width, height;
 }
 
 .app-window.active {
-  box-shadow: 0 24px 70px rgba(0,0,0,0.55);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
 }
 
 .app-window.maximized {
@@ -114,7 +117,7 @@
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
-  transition: border-radius 0.3s ease;
+  transition: border-radius 0.22s ease;
   background: #181920;
 }
 
@@ -122,79 +125,64 @@
   border-radius: 0;
 }
 
+/* Buttery-Smooth 60/120FPS GPU Genie Minimize & Restore Animations */
 .window-inner.minimizing {
   transform-origin: 50% 100%;
-  animation: macMinimizeGenie 0.38s cubic-bezier(0.25, 0.85, 0.35, 1) forwards;
+  animation: macMinimizeGenie 0.30s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
   pointer-events: none;
-  will-change: transform, opacity, filter, border-radius;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 
 .window-inner.restoring {
   transform-origin: 50% 100%;
-  animation: macRestoreGenie 0.36s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  will-change: transform, opacity, filter, border-radius;
+  animation: macRestoreGenie 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  pointer-events: none;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 
 @keyframes macMinimizeGenie {
   0% {
     opacity: 1;
     transform: translate3d(0, 0, 0) scale(1, 1);
-    border-radius: 12px;
-    filter: drop-shadow(0 20px 50px rgba(0, 0, 0, 0.5));
   }
-  30% {
-    opacity: 0.96;
-    transform: translate3d(calc(var(--genie-target-x, 0px) * 0.18), calc(var(--genie-target-y, 350px) * 0.22), 0) scale(0.84, 0.82);
-    border-radius: 14px;
-    filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.42));
+
+  35% {
+    opacity: 0.95;
+    transform: translate3d(calc(var(--genie-target-x, 0px) * 0.22), calc(var(--genie-target-y, 350px) * 0.25), 0) scale(0.82, 0.78);
   }
-  65% {
-    opacity: 0.85;
-    transform: translate3d(calc(var(--genie-target-x, 0px) * 0.58), calc(var(--genie-target-y, 350px) * 0.64), 0) scale(0.50, 0.44);
-    border-radius: 18px;
-    filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.3));
+
+  70% {
+    opacity: 0.82;
+    transform: translate3d(calc(var(--genie-target-x, 0px) * 0.65), calc(var(--genie-target-y, 350px) * 0.70), 0) scale(0.44, 0.38);
   }
-  88% {
-    opacity: 0.45;
-    transform: translate3d(calc(var(--genie-target-x, 0px) * 0.88), calc(var(--genie-target-y, 350px) * 0.90), 0) scale(0.20, 0.16);
-    border-radius: 22px;
-  }
+
   100% {
     opacity: 0;
-    transform: translate3d(var(--genie-target-x, 0px), var(--genie-target-y, 350px), 0) scale(0.03, 0.03);
-    border-radius: 24px;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    transform: translate3d(var(--genie-target-x, 0px), var(--genie-target-y, 350px), 0) scale(0.04, 0.04);
   }
 }
 
 @keyframes macRestoreGenie {
   0% {
     opacity: 0;
-    transform: translate3d(var(--genie-target-x, 0px), var(--genie-target-y, 350px), 0) scale(0.03, 0.03);
-    border-radius: 24px;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    transform: translate3d(var(--genie-target-x, 0px), var(--genie-target-y, 350px), 0) scale(0.04, 0.04);
   }
-  25% {
-    opacity: 0.55;
-    transform: translate3d(calc(var(--genie-target-x, 0px) * 0.82), calc(var(--genie-target-y, 350px) * 0.84), 0) scale(0.26, 0.22);
-    border-radius: 22px;
+
+  30% {
+    opacity: 0.75;
+    transform: translate3d(calc(var(--genie-target-x, 0px) * 0.60), calc(var(--genie-target-y, 350px) * 0.62), 0) scale(0.48, 0.44);
   }
-  60% {
-    opacity: 0.90;
-    transform: translate3d(calc(var(--genie-target-x, 0px) * 0.32), calc(var(--genie-target-y, 350px) * 0.30), 0) scale(0.76, 0.74);
-    border-radius: 16px;
-    filter: drop-shadow(0 14px 35px rgba(0, 0, 0, 0.35));
+
+  75% {
+    opacity: 0.96;
+    transform: translate3d(calc(var(--genie-target-x, 0px) * 0.12), calc(var(--genie-target-y, 350px) * 0.10), 0) scale(0.92, 0.90);
   }
-  85% {
-    opacity: 0.98;
-    transform: translate3d(calc(var(--genie-target-x, 0px) * 0.06), calc(var(--genie-target-y, 350px) * 0.05), 0) scale(0.97, 0.97);
-    border-radius: 13px;
-  }
+
   100% {
     opacity: 1;
     transform: translate3d(0, 0, 0) scale(1, 1);
-    border-radius: 12px;
-    filter: drop-shadow(0 20px 50px rgba(0, 0, 0, 0.5));
   }
 }
 
@@ -358,14 +346,14 @@
 
 .project-item {
   padding: 12px;
-  background: rgba(255,255,255,0.05);
+  background: rgba(255, 255, 255, 0.05);
   margin-bottom: 8px;
   border-radius: 8px;
   cursor: pointer;
 }
 
 .project-item:hover {
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .vscode-content {
@@ -375,9 +363,9 @@
 
 .vscode-content .sidebar {
   width: 200px;
-  background: rgba(0,0,0,0.2);
+  background: rgba(0, 0, 0, 0.2);
   padding: 10px;
-  border-right: 1px solid rgba(255,255,255,0.1);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .vscode-content .sidebar h3 {
@@ -399,11 +387,11 @@
 }
 
 .vscode-content .sidebar li:hover {
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .vscode-content .sidebar li.active-file {
-  background: rgba(255,255,255,0.15);
+  background: rgba(255, 255, 255, 0.15);
   color: #fff;
 }
 
@@ -415,7 +403,7 @@
 
 .vscode-content .editor-tab {
   padding: 8px 16px;
-  background: rgba(255,255,255,0.05);
+  background: rgba(255, 255, 255, 0.05);
   font-size: 13px;
   display: inline-block;
   border-bottom: 1px solid #007aff;
@@ -440,7 +428,7 @@
   padding: 40px;
   border-radius: 4px;
   margin-bottom: 24px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .trash-content {
@@ -598,4 +586,3 @@
     transform: scale(1.015);
   }
 }
-

@@ -39,6 +39,7 @@ const LiveMouseSwarm = ({ isEnabled = true, agentCount = 48 }) => {
 
   const agentsRef = useRef([]);
   const domNodesRef = useRef([]);
+  const linesDomRef = useRef([]);
 
   useEffect(() => {
     if (!isEnabled) return;
@@ -183,14 +184,21 @@ const LiveMouseSwarm = ({ isEnabled = true, agentCount = 48 }) => {
         }
       }
 
-      // Update SVG dashed network lines
-      if (svgLinesRef.current) {
-        svgLinesRef.current.innerHTML = lineCoords
-          .map(
-            (l) =>
-              `<line x1="${l.x1.toFixed(1)}" y1="${l.y1.toFixed(1)}" x2="${l.x2.toFixed(1)}" y2="${l.y2.toFixed(1)}" stroke="${l.color}" stroke-opacity="${l.opacity.toFixed(2)}" stroke-width="1.2" stroke-dasharray="3 3" />`
-          )
-          .join('');
+      // Direct DOM update for lines (0 innerHTML parsing - zero GC lag!)
+      for (let j = 0; j < 24; j++) {
+        const lineEl = linesDomRef.current[j];
+        if (!lineEl) continue;
+        if (j < lineCoords.length) {
+          const l = lineCoords[j];
+          lineEl.setAttribute('x1', l.x1.toFixed(1));
+          lineEl.setAttribute('y1', l.y1.toFixed(1));
+          lineEl.setAttribute('x2', l.x2.toFixed(1));
+          lineEl.setAttribute('y2', l.y2.toFixed(1));
+          lineEl.setAttribute('stroke', l.color);
+          lineEl.setAttribute('stroke-opacity', l.opacity.toFixed(2));
+        } else if (lineEl.getAttribute('stroke-opacity') !== '0') {
+          lineEl.setAttribute('stroke-opacity', '0');
+        }
       }
 
       animFrameRef.current = requestAnimationFrame(updatePhysics);
@@ -213,8 +221,18 @@ const LiveMouseSwarm = ({ isEnabled = true, agentCount = 48 }) => {
 
   return (
     <div ref={containerRef} className="live-mouse-swarm-overlay" aria-hidden="true">
-      {/* Dynamic SVG Dashed Network Layer */}
-      <svg className="live-swarm-svg-canvas" ref={svgLinesRef} />
+      {/* Dynamic SVG Dashed Network Layer (Pre-rendered for pure GPU speed) */}
+      <svg className="live-swarm-svg-canvas" ref={svgLinesRef}>
+        {Array.from({ length: 24 }).map((_, idx) => (
+          <line
+            key={idx}
+            ref={(el) => (linesDomRef.current[idx] = el)}
+            strokeWidth="1.2"
+            strokeDasharray="3 3"
+            strokeOpacity="0"
+          />
+        ))}
+      </svg>
 
       {/* Agents Layer */}
       {agents.map((agent, idx) => (

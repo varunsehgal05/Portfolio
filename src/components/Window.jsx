@@ -123,21 +123,6 @@ const Window = ({
     } catch {}
   };
 
-  // Center on initial mount / reload
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const curW = window.innerWidth;
-      const curH = window.innerHeight;
-      const availableHeight = Math.max(200, curH - MENUBAR_HEIGHT - DOCK_CLEARANCE);
-      const winSize = getDefaultSize();
-      const centerX = Math.max(10, Math.round((curW - winSize.width) / 2));
-      const centerY = Math.max(MENUBAR_HEIGHT + 10, Math.round(MENUBAR_HEIGHT + (availableHeight - winSize.height) / 2));
-      setPosition({ x: centerX, y: centerY });
-      setSize(winSize);
-      preMaxRef.current = { size: winSize, position: { x: centerX, y: centerY } };
-    }
-  }, []);
-
   const handleClose = (e) => {
     if (e) e.stopPropagation();
     if (isClosing) return;
@@ -326,7 +311,7 @@ const Window = ({
       setAnimState('minimizing');
       const timer = setTimeout(() => {
         setAnimState('hidden');
-      }, 360);
+      }, 300);
       return () => clearTimeout(timer);
     } else {
       setAnimState('restoring');
@@ -335,7 +320,7 @@ const Window = ({
       });
       const timer = setTimeout(() => {
         setAnimState('visible');
-      }, 340);
+      }, 280);
       return () => clearTimeout(timer);
     }
   }, [isMinimized]);
