@@ -63,12 +63,13 @@ const MenuBar = ({ userName = 'Guest', onReplaySwarm }) => {
     }
   };
 
-  // Swarm Follow Mouse State
+  // Swarm Follow Mouse State (defaults to true)
   const [isSwarmFollow, setIsSwarmFollow] = useState(() => {
     try {
-      return localStorage.getItem('varunos_swarm_follow_mouse') === 'true';
+      const saved = localStorage.getItem('varunos_swarm_follow_mouse');
+      return saved === null ? true : saved === 'true';
     } catch {
-      return false;
+      return true;
     }
   });
 

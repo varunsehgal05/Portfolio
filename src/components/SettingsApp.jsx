@@ -27,12 +27,13 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
     }
   });
 
-  // Live Swarm Mouse Flocking: true | false
+  // Live Swarm Mouse Flocking: true | false (defaults to true)
   const [swarmFollowEnabled, setSwarmFollowEnabled] = useState(() => {
     try {
-      return localStorage.getItem('varunos_swarm_follow_mouse') === 'true';
+      const saved = localStorage.getItem('varunos_swarm_follow_mouse');
+      return saved === null ? true : saved === 'true';
     } catch {
-      return false;
+      return true;
     }
   });
 

@@ -53,12 +53,13 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
   });
   const [wallpaperToast, setWallpaperToast] = useState(null);
 
-  // Live Califa Swarm Mouse Flocking State
+  // Live Califa Swarm Mouse Flocking State (defaults to active so users immediately experience Califa swarm)
   const [isSwarmFollowEnabled, setIsSwarmFollowEnabled] = useState(() => {
     try {
-      return localStorage.getItem('varunos_swarm_follow_mouse') === 'true';
+      const saved = localStorage.getItem('varunos_swarm_follow_mouse');
+      return saved === null ? true : saved === 'true';
     } catch {
-      return false;
+      return true;
     }
   });
 
@@ -215,8 +216,8 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
         </div>
       )}
 
-      {/* Califa Swarm Site Live Mouse Flocking Layer */}
-      <LiveMouseSwarm isEnabled={isSwarmFollowEnabled && swarmStage >= 5} agentCount={32} />
+      {/* Califa Swarm Site Live Mouse Flocking Layer (48 agents) */}
+      <LiveMouseSwarm isEnabled={isSwarmFollowEnabled && swarmStage >= 5} agentCount={48} />
 
       {/* Top MenuBar wrapper */}
       <div className={`desktop-menubar-wrap ${swarmStage < 5 ? (swarmStage >= 1 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
