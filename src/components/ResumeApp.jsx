@@ -75,311 +75,317 @@ const ResumeApp = () => {
           className="resume-scale-wrapper"
           style={{ transform: `scale(${zoomLevel / 100})`, transformOrigin: 'top center' }}
         >
-          {/* Tactile Grid Paper Canvas (Matching Image 3) */}
-          <div className="tactile-resume-paper-sheet">
-            {/* Metal binder clips at top edges */}
-            <div className="binder-clip-top-left" />
-            <div className="binder-clip-top-right" />
+          {/* Tactile Grid Paper Canvas (Pixel-perfect match to user reference Image) */}
+                  <div className="tactile-resume-paper-sheet">
+                    {/* Metal binder clips at top edges */}
+                    <div className="binder-clip-top-left" />
+                    <div className="binder-clip-top-right" />
 
-            {/* TOP ROW: Pinned ID Badge + Handwritten Note */}
-            <div className="tactile-resume-top-row">
-              {/* 1. Left Pinned ID Card with Metal Paperclip */}
-              <div className="tactile-id-badge-card">
-                {/* SVG Metal Paperclip */}
-                <div className="metal-paperclip-graphic">
-                  <svg viewBox="0 0 32 64" fill="none">
-                    <path
-                      d="M 16,4 C 24,4 28,10 28,20 L 28,48 C 28,56 22,60 16,60 C 10,60 4,56 4,48 L 4,16 C 4,10 8,6 14,6 C 20,6 22,10 22,16 L 22,46 C 22,50 18,52 16,52 C 14,52 10,50 10,46 L 10,20"
-                      stroke="#a1a1aa"
-                      strokeWidth="3.2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </div>
+                    {/* TOP ROW: Pinned ID Badge + Handwritten Note with Arrow */}
+                    <div className="tactile-resume-top-row">
+                      {/* 1. Left Pinned ID Card with Metal Paperclip */}
+                      <div className="tactile-id-badge-card">
+                        {/* Realistic SVG Metal Paperclip pinned on top left */}
+                        <div className="metal-paperclip-graphic">
+                          <svg viewBox="0 0 32 64" fill="none">
+                            <path
+                              d="M 16,4 C 24,4 28,10 28,20 L 28,48 C 28,56 22,60 16,60 C 10,60 4,56 4,48 L 4,16 C 4,10 8,6 14,6 C 20,6 22,10 22,16 L 22,46 C 22,50 18,52 16,52 C 14,52 10,50 10,46 L 10,20"
+                              stroke="#8e8e93"
+                              strokeWidth="3.2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </div>
 
-                {/* Yellow Photo Block */}
-                <div className="id-photo-yellow-block">
-                  <img
-                    src="/varun.jpg"
-                    alt="Varun Sehgal"
-                    className="id-photo-img"
-                    onError={(e) => { e.currentTarget.src = '/profile/varun.jpg'; }}
-                  />
-                </div>
+                        {/* Monochrome Photo with thin border */}
+                        <div className="id-photo-frame">
+                          <img
+                            src="/varun.jpg"
+                            alt="Varun Sehgal"
+                            className="id-photo-img"
+                            onError={(e) => { e.currentTarget.src = '/profile/varun.jpg'; }}
+                          />
+                        </div>
 
-                {/* ID Card Details */}
-                <div className="id-card-details">
-                  <h2 className="id-card-name">Varun Sehgal</h2>
-                  <p className="id-card-tagline">
-                    I craft friction-free product experiences from design systems to hi-fi interactive prototypes through user psychology and code.
-                  </p>
+                        {/* ID Card Details */}
+                        <div className="id-card-details">
+                          <h2 className="id-card-name">
+                            Varun<br/>Sehgal
+                          </h2>
+                          <p className="id-card-tagline">
+                            I craft friction-free product experiences from design systems to hi-fi interactive prototypes through user psychology and code.
+                          </p>
 
-                  <div className="id-card-meta-table">
-                    <div className="meta-cell"><span className="meta-k">DOB:</span> <span className="meta-v">02.10.2003</span></div>
-                    <div className="meta-cell"><span className="meta-k">LOC:</span> <span className="meta-v">Bengaluru / Remote</span></div>
-                    <div className="meta-cell"><span className="meta-k">📞</span> <span className="meta-v">+91 9399361193</span></div>
-                    <div className="meta-cell"><span className="meta-k">✉️</span> <a href="mailto:varun.sehgal02@gmail.com" className="meta-v">varun.sehgal02@gmail.com</a></div>
-                    <div className="meta-cell full"><span className="meta-k">Portfolio:</span> <a href="https://varunsehgal.runs-on.dev" target="_blank" rel="noreferrer" className="meta-v">varunsehgal.runs-on.dev</a></div>
-                    <div className="meta-cell full"><span className="meta-k">Lang:</span> <span className="meta-v">English (Fluent) • Hindi (Native)</span></div>
+                          {/* 3x2 Grid Meta Table */}
+                          <div className="id-card-meta-table">
+                            <div className="meta-cell"><span className="meta-k">DOB:</span> <span className="meta-v">02.10.2003</span></div>
+                            <div className="meta-cell"><span className="meta-k">LOC:</span> <span className="meta-v">Bengaluru</span></div>
+                            <div className="meta-cell"><span className="meta-k">📞</span> <span className="meta-v">+91 939936</span></div>
+                            <div className="meta-cell"><span className="meta-k">✉️</span> <a href="mailto:varun.sehgal02@gmail.com" className="meta-v">varun.sehg</a></div>
+                            <div className="meta-cell"><span className="meta-k">Portfolio:</span> <a href="https://varunsehgal.runs-on.dev" target="_blank" rel="noreferrer" className="meta-v">varunsehg</a></div>
+                            <div className="meta-cell"><span className="meta-k">Lang:</span> <span className="meta-v">English</span></div>
+                          </div>
+                        </div>
+
+                        {/* Vertical red edge tag */}
+                        <div className="id-card-vertical-tag">
+                          <span>PORTFOLIO</span>
+                        </div>
+                      </div>
+
+                      {/* 2. Top-Right Handwritten Callout with Sweeping Red Doodle Arrow */}
+                      <div className="tactile-handwritten-note">
+                        <div className="handwritten-script-text">
+                          Please don't hesitate to<br />
+                          <span className="handwritten-circle">reach me</span> if this resume<br />
+                          doesn't provide enough<br />
+                          clarification
+                        </div>
+
+                        {/* Curved swooping red arrow pointing towards contact links */}
+                        <div className="handwritten-arrow-container">
+                          <svg className="handwritten-swoop-arrow" viewBox="0 0 240 110" fill="none">
+                            <path
+                              d="M 24,18 C 36,65 92,94 196,78"
+                              stroke="#e11d48"
+                              strokeWidth="3.4"
+                              strokeLinecap="round"
+                              fill="none"
+                            />
+                            <path
+                              d="M 172,61 L 199,78 L 170,95"
+                              stroke="#e11d48"
+                              strokeWidth="3.4"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              fill="none"
+                            />
+                          </svg>
+                        </div>
+
+                        <div className="handwritten-contact-links">
+                          <div className="handwritten-phone-row">
+                            <span className="phone-icon-red">📞</span>
+                            <span className="phone-text">+91 9399361193</span>
+                          </div>
+                          <div className="handwritten-linkedin-row">
+                            <span className="linkedin-red-badge">in</span>
+                            <a
+                              href="https://linkedin.com/in/varunsehgal02"
+                              target="_blank"
+                              rel="noreferrer"
+                              className="linkedin-link-text"
+                            >
+                              linkedin.com/in/varunsehgal02
+                            </a>
+                            <div className="linkedin-red-underline" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* MAIN 2-COLUMN GRID */}
+                    <div className="tactile-resume-grid">
+                      {/* LEFT COLUMN: Experience & Education Timeline */}
+                      <div className="tactile-column-left">
+                        <div className="tactile-timeline">
+                          {/* Item 1 */}
+                          <div className="tactile-timeline-item">
+                            <div className="timeline-bullet-hollow" />
+                            <div className="timeline-time-row">SEP 2024 — NOV 2024 • 6 MOS</div>
+                            <h4 className="timeline-job-role">UI/UX Designer Intern</h4>
+                            <div className="timeline-company-row">
+                              <span className="company-name">UniEvent (EventFlow)</span>
+                              <span className="company-dot">•</span>
+                              <span className="badge-green-pill">Full-time</span>
+                            </div>
+                            <div className="timeline-loc-text">Bengaluru, Karnataka, India (Remote)</div>
+                            <p className="timeline-bullet-desc">
+                              Designed campus event ticketing platform (EventFlow). Slashed transaction drop-off by 30% across 4-step booking workflow across 50+ components.
+                            </p>
+                          </div>
+
+                          {/* Item 2 */}
+                          <div className="tactile-timeline-item">
+                            <div className="timeline-bullet-hollow" />
+                            <div className="timeline-time-row">AUG 2024 — JAN 2025 • 6 MOS</div>
+                            <h4 className="timeline-job-role">Assistant Head of Operations / UI/UX Intern</h4>
+                            <div className="timeline-company-row">
+                              <span className="company-name">Assemble</span>
+                              <span className="company-dot">•</span>
+                              <span className="badge-green-pill">Full-time</span>
+                            </div>
+                            <div className="timeline-loc-text">Remote</div>
+                            <p className="timeline-bullet-desc">
+                              Designed collaborative creator workspace tools and interaction prototypes in Figma. Coordinated operations for multi-team competitions.
+                            </p>
+                          </div>
+
+                          {/* Item 3 */}
+                          <div className="tactile-timeline-item">
+                            <div className="timeline-bullet-hollow" />
+                            <div className="timeline-time-row">JUN 2024 — AUG 2024 • 3 MOS</div>
+                            <h4 className="timeline-job-role">UI/UX Designer Intern</h4>
+                            <div className="timeline-company-row">
+                              <span className="company-name">Knaptix Ventures</span>
+                              <span className="company-dot">•</span>
+                              <span className="badge-green-pill">Internship</span>
+                            </div>
+                            <div className="timeline-loc-text">Remote</div>
+                            <p className="timeline-bullet-desc">
+                              Delivered brand identities and conversion-focused SaaS landing pages for 10+ tech startups with a 95% client retention rate.
+                            </p>
+                          </div>
+
+                          {/* Education */}
+                          <div className="tactile-timeline-item">
+                            <div className="timeline-bullet-hollow" />
+                            <div className="timeline-time-row">2023 — 2027</div>
+                            <h4 className="timeline-job-role">Jaypee University of Engineering &amp; Technology</h4>
+                            <div className="timeline-company-row">
+                              <span className="company-name">B.Tech in Computer Science &amp; Engineering</span>
+                              <span className="company-dot">•</span>
+                              <span className="badge-green-pill">CGPA 8.5</span>
+                            </div>
+                            <div className="timeline-loc-text">Guna, Madhya Pradesh, India</div>
+                          </div>
+
+                          {/* Hackathons & Honors */}
+                          <div className="tactile-timeline-item">
+                            <div className="timeline-bullet-hollow" />
+                            <div className="timeline-time-row">HACKATHONS &amp; HONORS</div>
+                            <div className="timeline-honor-item">
+                              <span className="honor-text">🏆 <strong>HACKeThor Winner</strong> (1st Place National Hackathon by Unstop)</span>
+                            </div>
+                            <div className="timeline-honor-item">
+                              <span className="honor-text">CodeSrijan Organizer (Lead UI/UX for 200+ hackers)</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* RIGHT COLUMN: Stickers Cluster + 4x2 Software Tiles */}
+                      <div className="tactile-column-right">
+                        {/* Tactile Stickers Cluster */}
+                        <div className="stickers-cluster-box">
+                          {/* 1. Kraft Tape Banner */}
+                          <div className="sticker-tape-kraft">
+                            <span className="sticker-icon">📢</span>
+                            <span>PROMOTIONAL DESIGN</span>
+                          </div>
+
+                          {/* 2. Green Ribbon Tape */}
+                          <div className="sticker-torn-green">
+                            <span>EDITORIAL &amp; DESIGN SYSTEMS</span>
+                          </div>
+
+                          {/* 3. Slanted Pink Triangle */}
+                          <div className="sticker-triangle-container">
+                            <div className="sticker-triangle-shape">
+                              <span className="triangle-inner-pill">UI DESIGN</span>
+                            </div>
+                          </div>
+
+                          {/* 4. Cyan Circle */}
+                          <div className="sticker-circle-cyan">
+                            <span>MOTION<br/>GRAPHICS</span>
+                          </div>
+
+                          {/* 5. Soft Periwinkle Capsule */}
+                          <div className="sticker-pill-indigo">
+                            <span>✦ AI UX &amp; PROTOTYPING</span>
+                          </div>
+                        </div>
+
+                        {/* 4x2 Software & Skills App Tiles (Matching Image) */}
+                        <div className="tactile-software-grid">
+                          {/* 1. After Effects */}
+                          <div className="software-app-tile">
+                            <div className="software-tile-icon adobe-ae">
+                              <span>Ae</span>
+                            </div>
+                            <span className="software-tile-name">After Effects</span>
+                          </div>
+
+                          {/* 2. Premiere Pro */}
+                          <div className="software-app-tile">
+                            <div className="software-tile-icon adobe-pr">
+                              <span>Pr</span>
+                            </div>
+                            <span className="software-tile-name">Premiere Pro</span>
+                          </div>
+
+                          {/* 3. Photoshop */}
+                          <div className="software-app-tile">
+                            <div className="software-tile-icon adobe-ps">
+                              <span>Ps</span>
+                            </div>
+                            <span className="software-tile-name">Photoshop</span>
+                          </div>
+
+                          {/* 4. Illustrator */}
+                          <div className="software-app-tile">
+                            <div className="software-tile-icon adobe-ai">
+                              <span>Ai</span>
+                            </div>
+                            <span className="software-tile-name">Illustrator</span>
+                          </div>
+
+                          {/* 5. Figma */}
+                          <div className="software-app-tile">
+                            <div className="software-tile-icon figma-icon">
+                              <svg width="18" height="26" viewBox="0 0 38 57" fill="none">
+                                <path d="M19 28.5C19 23.2533 23.2533 19 28.5 19C33.7467 19 38 23.2533 38 28.5C38 33.7467 33.7467 38 28.5 38C23.2533 38 19 33.7467 19 28.5Z" fill="#1ABCFE"/>
+                                <path d="M0 47.5C0 42.2533 4.25329 38 9.5 38H19V47.5C19 52.7467 14.7467 57 9.5 57C4.25329 57 0 52.7467 0 47.5Z" fill="#0ACF83"/>
+                                <path d="M19 0V19H28.5C33.7467 19 38 14.7467 38 9.5C38 4.25329 33.7467 0 28.5 0H19Z" fill="#FF7262"/>
+                                <path d="M0 9.5C0 14.7467 4.25329 19 9.5 19H19V0H9.5C4.25329 0 0 4.25329 0 9.5Z" fill="#F24E1E"/>
+                                <path d="M0 28.5C0 33.7467 4.25329 38 9.5 38H19V19H9.5C4.25329 19 0 23.2533 0 28.5Z" fill="#A259FF"/>
+                              </svg>
+                            </div>
+                            <span className="software-tile-name">Figma</span>
+                          </div>
+
+                          {/* 6. React / Next */}
+                          <div className="software-app-tile">
+                            <div className="software-tile-icon react-icon">
+                              <svg width="22" height="20" viewBox="0 0 115.3 100" fill="#00d8ff">
+                                <ellipse cx="57.6" cy="50" rx="15" ry="46" transform="rotate(-60 57.6 50)"/>
+                                <ellipse cx="57.6" cy="50" rx="15" ry="46"/>
+                                <ellipse cx="57.6" cy="50" rx="15" ry="46" transform="rotate(60 57.6 50)"/>
+                                <circle cx="57.6" cy="50" r="10" fill="#00d8ff"/>
+                              </svg>
+                            </div>
+                            <span className="software-tile-name">React / Next</span>
+                          </div>
+
+                          {/* 7. Tailwind CSS */}
+                          <div className="software-app-tile">
+                            <div className="software-tile-icon tailwind-icon">
+                              <svg width="24" height="16" viewBox="0 0 54 33" fill="#38bdf8">
+                                <path d="M27 0c-7.2 0-11.7 3.6-13.5 10.8 2.7-3.6 5.85-4.95 9.45-4.05 2.054.513 3.522 2.004 5.147 3.653C30.744 13.09 33.808 16.2 40.5 16.2c7.2 0 11.7-3.6 13.5-10.8-2.7 3.6-5.85 4.95-9.45 4.05-2.054-.513-3.522-2.004-5.147-3.653C36.756 3.11 33.692 0 27 0zM13.5 16.2C6.3 16.2 1.8 19.8 0 27c2.7-3.6 5.85-4.95 9.45-4.05 2.054.514 3.522 2.004 5.147 3.653C17.244 29.29 20.308 32.4 27 32.4c7.2 0 11.7-3.6 13.5-10.8-2.7 3.6-5.85 4.95-9.45 4.05-2.054-.513-3.522-2.004-5.147-3.653C23.256 19.31 20.192 16.2 13.5 16.2z"/>
+                              </svg>
+                            </div>
+                            <span className="software-tile-name">Tailwind CSS</span>
+                          </div>
+
+                          {/* 8. TypeScript */}
+                          <div className="software-app-tile">
+                            <div className="software-tile-icon ts-icon">
+                              <span>TS</span>
+                            </div>
+                            <span className="software-tile-name">TypeScript</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Bottom Accent: Yellow Highlighter Band with Software Skills Text */}
+                    <div className="tactile-bottom-accent-band">
+                      <div className="bottom-yellow-highlighter-stripe" />
+                      <div className="bottom-script-headline">Software Skills</div>
+                    </div>
                   </div>
-                </div>
-
-                {/* QR Code with vertical label */}
-                <div className="id-card-qr-box">
-                  <div className="qr-vertical-tag">portfolio</div>
-                  <img src="/qr.png" alt="Portfolio QR" className="id-qr-img" onError={(e) => { e.currentTarget.src = '/qr.png'; }} />
-                </div>
-              </div>
-
-              {/* 2. Top-Right Playful Handwritten Note with Red Doodle Arrow */}
-              <div className="tactile-handwritten-note">
-                <p className="handwritten-script-text">
-                  Please don't hesitate to <span className="handwritten-circle">reach me</span> if this resume doesn't provide enough clarification
-                </p>
-
-                {/* Hand-drawn doodle arrow SVG */}
-                <svg className="handwritten-doodle-arrow" viewBox="0 0 100 50" fill="none">
-                  <path d="M 10,10 Q 50,45 85,25" stroke="#ef4444" strokeWidth="2.5" strokeLinecap="round" fill="none" />
-                  <path d="M 75,18 L 86,25 L 78,34" stroke="#ef4444" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-                </svg>
-
-                <div className="handwritten-contact-links">
-                  <div className="handwritten-item">
-                    <span className="material-symbols-outlined text-[15px] text-red-500">call</span>
-                    <span className="font-mono text-xs text-zinc-800 font-semibold">+91 9399361193</span>
-                  </div>
-                  <div className="handwritten-item underline-red">
-                    <span className="text-red-500 font-bold font-mono text-xs">in</span>
-                    <a href="https://linkedin.com/in/varunsehgal02" target="_blank" rel="noreferrer" className="text-xs font-mono text-zinc-800 font-semibold">
-                      linkedin.com/in/varunsehgal02
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* MAIN 2-COLUMN GRID */}
-            <div className="tactile-resume-grid">
-              {/* LEFT COLUMN: Work Experiences & Education */}
-              <div className="tactile-column-left">
-                {/* SECTION 1: Work Experiences */}
-                <div className="tactile-section">
-                  <h3 className="highlighter-heading yellow-marker">
-                    <span className="highlighter-text">Work Experiences</span>
-                  </h3>
-
-                  <div className="tactile-timeline">
-                    {/* Job 1 */}
-                    <div className="tactile-timeline-item">
-                      <div className="timeline-bullet-hollow" />
-                      <div className="timeline-time-row">Sep 2024 — Nov 2024 • 6 mos</div>
-                      <h4 className="timeline-job-role">UI/UX Designer Intern</h4>
-                      <div className="timeline-company-row">
-                        <span className="font-bold text-zinc-900">UniEvent (EventFlow)</span>
-                        <span className="text-zinc-500">•</span>
-                        <span className="highlighter-badge-green">Full-time</span>
-                      </div>
-                      <div className="timeline-loc-text">Bengaluru, Karnataka, India (Remote)</div>
-                      <p className="timeline-bullet-desc">
-                        Designed campus event ticketing platform (EventFlow). Slashed transaction drop-off by 30% across 4-step booking workflow across 50+ components.
-                      </p>
-                    </div>
-
-                    {/* Job 2 */}
-                    <div className="tactile-timeline-item">
-                      <div className="timeline-bullet-hollow" />
-                      <div className="timeline-time-row">Aug 2024 — Jan 2025 • 6 mos</div>
-                      <h4 className="timeline-job-role">Assistant Head of Operations / UI/UX Intern</h4>
-                      <div className="timeline-company-row">
-                        <span className="font-bold text-zinc-900">Assemble</span>
-                        <span className="text-zinc-500">•</span>
-                        <span className="highlighter-badge-green">Full-time</span>
-                      </div>
-                      <div className="timeline-loc-text">Remote</div>
-                      <p className="timeline-bullet-desc">
-                        Designed collaborative creator workspace tools and interaction prototypes in Figma. Coordinated operations for multi-team competitions.
-                      </p>
-                    </div>
-
-                    {/* Job 3 */}
-                    <div className="tactile-timeline-item">
-                      <div className="timeline-bullet-hollow" />
-                      <div className="timeline-time-row">Jun 2024 — Aug 2024 • 3 mos</div>
-                      <h4 className="timeline-job-role">UI/UX Designer Intern</h4>
-                      <div className="timeline-company-row">
-                        <span className="font-bold text-zinc-900">Knaptix Ventures</span>
-                        <span className="text-zinc-500">•</span>
-                        <span className="highlighter-badge-green">Internship</span>
-                      </div>
-                      <div className="timeline-loc-text">Remote</div>
-                      <p className="timeline-bullet-desc">
-                        Delivered brand identities and conversion-focused SaaS landing pages for 10+ tech startups with a 95% client retention rate.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* SECTION 2: Education */}
-                <div className="tactile-section mt-6">
-                  <h3 className="highlighter-heading yellow-marker">
-                    <span className="highlighter-text">Education</span>
-                  </h3>
-
-                  <div className="tactile-timeline">
-                    <div className="tactile-timeline-item">
-                      <div className="timeline-bullet-hollow" />
-                      <div className="timeline-time-row">2023 — 2027</div>
-                      <h4 className="timeline-job-role">Jaypee University of Engineering &amp; Technology</h4>
-                      <div className="timeline-company-row">
-                        <span className="font-bold text-zinc-900">B.Tech in Computer Science &amp; Engineering</span>
-                        <span className="text-zinc-500">•</span>
-                        <span className="highlighter-badge-green">CGPA 8.5</span>
-                      </div>
-                      <div className="timeline-loc-text">Guna, Madhya Pradesh, India</div>
-                    </div>
-
-                    <div className="tactile-timeline-item">
-                      <div className="timeline-bullet-hollow" />
-                      <div className="timeline-time-row">Hackathons &amp; Honors</div>
-                      <h4 className="timeline-job-role">🏆 HACKeThor Winner (1st Place National Hackathon by Unstop)</h4>
-                      <div className="timeline-company-row">
-                        <span className="font-bold text-zinc-900">CodeSrijan Organizer (Lead UI/UX for 200+ hackers)</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* RIGHT COLUMN: Area of Expertise (Stickers) & Software Skills */}
-              <div className="tactile-column-right">
-                {/* SECTION 3: Area of Expertise (Tilted Stickers) */}
-                <div className="tactile-section">
-                  <h3 className="highlighter-heading yellow-marker">
-                    <span className="highlighter-text">Area of Expertise</span>
-                  </h3>
-
-                  <div className="stickers-cluster-box">
-                    {/* Tape 1 */}
-                    <div className="sticker-tape-kraft">
-                      <span className="material-symbols-outlined text-[16px]">campaign</span>
-                      <span>PROMOTIONAL DESIGN</span>
-                    </div>
-
-                    {/* Torn Paper 2 */}
-                    <div className="sticker-torn-green">
-                      <span>EDITORIAL &amp; DESIGN SYSTEMS</span>
-                    </div>
-
-                    {/* Red Triangle 3 */}
-                    <div className="sticker-triangle-red">
-                      <span className="triangle-inner-pill">UI DESIGN</span>
-                    </div>
-
-                    {/* Cyan Circle 4 */}
-                    <div className="sticker-circle-cyan">
-                      <div className="scribble-circle-lines" />
-                      <span>MOTION GRAPHICS</span>
-                    </div>
-
-                    {/* Pill 5 */}
-                    <div className="sticker-pill-indigo">
-                      <span>⚡ AI UX &amp; PROTOTYPING</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* SECTION 4: Software Skills (Folders with Level Bars) */}
-                <div className="tactile-section mt-8">
-                  <h3 className="highlighter-heading yellow-marker">
-                    <span className="highlighter-text">Software Skills</span>
-                  </h3>
-
-                  <div className="software-skills-grid">
-                    <div className="skill-folder-card">
-                      <div className="skill-folder-tab" style={{ background: '#300060' }}>
-                        <span className="font-bold text-xs text-purple-200">Ae</span>
-                      </div>
-                      <span className="skill-folder-name">After Effects</span>
-                      <div className="skill-battery-bar">
-                        <div className="battery-fill" style={{ width: '85%', background: '#9333ea' }} />
-                      </div>
-                    </div>
-
-                    <div className="skill-folder-card">
-                      <div className="skill-folder-tab" style={{ background: '#00005b' }}>
-                        <span className="font-bold text-xs text-indigo-200">Pr</span>
-                      </div>
-                      <span className="skill-folder-name">Premiere Pro</span>
-                      <div className="skill-battery-bar">
-                        <div className="battery-fill" style={{ width: '80%', background: '#6366f1' }} />
-                      </div>
-                    </div>
-
-                    <div className="skill-folder-card">
-                      <div className="skill-folder-tab" style={{ background: '#001e36' }}>
-                        <span className="font-bold text-xs text-sky-200">Ps</span>
-                      </div>
-                      <span className="skill-folder-name">Photoshop</span>
-                      <div className="skill-battery-bar">
-                        <div className="battery-fill" style={{ width: '92%', background: '#0284c7' }} />
-                      </div>
-                    </div>
-
-                    <div className="skill-folder-card">
-                      <div className="skill-folder-tab" style={{ background: '#330000' }}>
-                        <span className="font-bold text-xs text-orange-200">Ai</span>
-                      </div>
-                      <span className="skill-folder-name">Illustrator</span>
-                      <div className="skill-battery-bar">
-                        <div className="battery-fill" style={{ width: '88%', background: '#ea580c' }} />
-                      </div>
-                    </div>
-
-                    <div className="skill-folder-card">
-                      <div className="skill-folder-tab" style={{ background: '#1e1e1e' }}>
-                        <span className="font-bold text-xs text-emerald-300">❖</span>
-                      </div>
-                      <span className="skill-folder-name">Figma</span>
-                      <div className="skill-battery-bar">
-                        <div className="battery-fill" style={{ width: '98%', background: '#10b981' }} />
-                      </div>
-                    </div>
-
-                    <div className="skill-folder-card">
-                      <div className="skill-folder-tab" style={{ background: '#082f49' }}>
-                        <span className="font-bold text-xs text-cyan-300">⚛</span>
-                      </div>
-                      <span className="skill-folder-name">React / Next</span>
-                      <div className="skill-battery-bar">
-                        <div className="battery-fill" style={{ width: '90%', background: '#06b6d4' }} />
-                      </div>
-                    </div>
-
-                    <div className="skill-folder-card">
-                      <div className="skill-folder-tab" style={{ background: '#0c4a6e' }}>
-                        <span className="font-bold text-xs text-teal-300">≈</span>
-                      </div>
-                      <span className="skill-folder-name">Tailwind CSS</span>
-                      <div className="skill-battery-bar">
-                        <div className="battery-fill" style={{ width: '95%', background: '#14b8a6' }} />
-                      </div>
-                    </div>
-
-                    <div className="skill-folder-card">
-                      <div className="skill-folder-tab" style={{ background: '#172554' }}>
-                        <span className="font-bold text-xs text-blue-300">TS</span>
-                      </div>
-                      <span className="skill-folder-name">TypeScript</span>
-                      <div className="skill-battery-bar">
-                        <div className="battery-fill" style={{ width: '85%', background: '#3b82f6' }} />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
