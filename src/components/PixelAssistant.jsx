@@ -582,7 +582,6 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
             <div className="clippy-dialog-title">
               <span className="clippy-title-emoji">📎</span>
               <span className="clippy-title-text">Clippy • Varun's AI Guide</span>
-              <span className="clippy-dialog-badge live-gemini">✨ Gemini 2.5 Flash</span>
             </div>
 
             <div className="clippy-header-actions">
@@ -655,9 +654,6 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
                       <div className="clippy-ans-header">
                         <Sparkles size={13} className="gemini-sparkle-icon" />
                         <span>{data.topic}</span>
-                        {data.isAiGenerated && (
-                          <span className="gemini-model-tag">✨ Gemini 2.5 Flash</span>
-                        )}
                       </div>
 
                       <div className="clippy-ans-text">
