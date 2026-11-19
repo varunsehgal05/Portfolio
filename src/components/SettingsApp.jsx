@@ -25,6 +25,7 @@ import {
   Coffee
 } from 'lucide-react';
 import { desktopWallpapers, terminalWallpapers } from '../config/wallpapers';
+import AsciiPortraitStudio from './AsciiPortraitStudio';
 import './SettingsApp.css';
 
 const DESIGN_FACTS = [
@@ -263,8 +264,8 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
             className={`settings-nav-item ${activeTab === 'about' ? 'active' : ''}`}
             onClick={() => setActiveTab('about')}
           >
-            <Info size={15} />
-            <span>About Varun & OS</span>
+            <Terminal size={15} />
+            <span>About Varun (ASCII)</span>
           </button>
 
           <button 
@@ -296,193 +297,11 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
       {/* Main Settings Panel */}
       <main className="settings-main">
         {/* ====================================================================
-            TAB 1: ABOUT VARUN SEHGAL & VARUNOS (FASCINATING & ENGAGING INFO)
+            TAB 1: ABOUT VARUN SEHGAL & LIVE WORKING ASCII STUDIO (IMAGE 2)
             ==================================================================== */}
         {activeTab === 'about' && (
           <div className="settings-panel about-panel">
-            {/* 1. ARCHITECT PROFILE HERO */}
-            <div className="about-architect-card">
-              <div className="architect-avatar-wrap">
-                <img 
-                  src="/varun.jpg" 
-                  alt="Varun Sehgal" 
-                  className="architect-avatar-img"
-                  onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                />
-                <span className="architect-status-ring" title="Available for Roles & Projects" />
-              </div>
-
-              <div className="architect-info-col">
-                <div className="architect-badge-row">
-                  <span className="status-pill-green">🟢 Open to Full-Time Design Roles</span>
-                  <span className="experience-tag">3+ Years Experience</span>
-                </div>
-
-                <h1 className="architect-name">Varun Sehgal</h1>
-                <p className="architect-headline">
-                  Lead UI/UX Designer & Vibecoded Product Engineer
-                </p>
-
-                <p className="architect-bio">
-                  Architecting modern SaaS systems, design tokens, and AI-accelerated workflows. Passionate about turning intricate engineering problems into fluid, human-centric interfaces.
-                </p>
-
-                <div className="architect-meta-row">
-                  <span className="meta-item">
-                    <MapPin size={12} className="meta-icon" />
-                    <span>Gwalior, MP, India (Remote)</span>
-                  </span>
-                  <span className="meta-item">
-                    <GraduationCap size={12} className="meta-icon" />
-                    <span>B.Tech in CSE @ Jaypee University (JUET)</span>
-                  </span>
-                </div>
-
-                {/* Quick Action Buttons */}
-                <div className="architect-actions-row">
-                  <a 
-                    href="/Varun_Sehgal_Resume_Updated.pdf" 
-                    target="_blank" 
-                    rel="noreferrer"
-                    className="about-btn primary"
-                  >
-                    <FileText size={13} />
-                    <span>View Resume PDF</span>
-                  </a>
-
-                  <button 
-                    type="button"
-                    className={`about-btn secondary ${copiedEmail ? 'copied' : ''}`}
-                    onClick={handleCopyEmail}
-                  >
-                    {copiedEmail ? <Check size={13} color="#4ade80" /> : <Copy size={13} />}
-                    <span>{copiedEmail ? 'Email Copied!' : 'Copy Email'}</span>
-                  </button>
-
-                  <button 
-                    type="button"
-                    className="about-btn coffee"
-                    onClick={() => window.dispatchEvent(new CustomEvent('varunos-open-coffee-modal'))}
-                    title="Buy Varun a Coffee / Donate via UPI"
-                  >
-                    <Coffee size={13} className="text-amber-400" />
-                    <span>Buy Me a Coffee</span>
-                  </button>
-
-                  <a 
-                    href="https://linkedin.com/in/varunsehgal02" 
-                    target="_blank" 
-                    rel="noreferrer"
-                    className="about-btn icon-only"
-                    title="LinkedIn Profile"
-                  >
-                    <ExternalLink size={13} />
-                  </a>
-
-                  <a 
-                    href="https://github.com/varunsehgal05" 
-                    target="_blank" 
-                    rel="noreferrer"
-                    className="about-btn icon-only"
-                    title="GitHub Repositories"
-                  >
-                    <Code2 size={13} />
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            {/* 2. REAL SUPERPOWER METRICS (INTERESTING IMPACT STATS) */}
-            <div className="about-stats-grid">
-              <div className="about-stat-box">
-                <div className="stat-icon-wrap amber">
-                  <Zap size={16} />
-                </div>
-                <div className="stat-number">10×</div>
-                <div className="stat-label">Vibecoded Speed</div>
-                <div className="stat-sub">From concept & prompt to full production React code</div>
-              </div>
-
-              <div className="about-stat-box">
-                <div className="stat-icon-wrap blue">
-                  <Layers size={16} />
-                </div>
-                <div className="stat-number">50+</div>
-                <div className="stat-label">Design Tokens</div>
-                <div className="stat-sub">Modular Figma component system & atomic tokens</div>
-              </div>
-
-              <div className="about-stat-box">
-                <div className="stat-icon-wrap emerald">
-                  <Award size={16} />
-                </div>
-                <div className="stat-number">-30%</div>
-                <div className="stat-label">Drop-off Reduction</div>
-                <div className="stat-sub">EventFlow 4-step streamlined checkout flow</div>
-              </div>
-
-              <div className="about-stat-box">
-                <div className="stat-icon-wrap purple">
-                  <Flame size={16} />
-                </div>
-                <div className="stat-number">800+</div>
-                <div className="stat-label">Developers Impacted</div>
-                <div className="stat-sub">CodeSrijan Hackathon Portal ecosystem</div>
-              </div>
-            </div>
-
-            {/* 3. UNDER THE HOOD: TECH ARSENAL EXPLORER */}
-            <div className="about-section-card">
-              <div className="section-header-row">
-                <div className="section-title-wrap">
-                  <Sparkles size={15} className="text-sky-400" />
-                  <h3 className="section-title">Under The Hood of VarunOS</h3>
-                </div>
-                <span className="section-badge">Interactive Tech Stack</span>
-              </div>
-
-              <p className="section-sub">
-                Click any core technology below to see how VarunOS was built with zero fluff:
-              </p>
-
-              <div className="tech-chips-row">
-                {Object.keys(TECH_DETAILS).map((tech) => (
-                  <button
-                    key={tech}
-                    type="button"
-                    className={`tech-chip-btn ${selectedTech === tech ? 'active' : ''}`}
-                    onClick={() => setSelectedTech(tech)}
-                  >
-                    <span>{tech}</span>
-                  </button>
-                ))}
-              </div>
-
-              <div className="tech-detail-banner">
-                <div className="tech-detail-header">
-                  <strong>{selectedTech}</strong>
-                  <span className="tech-status-dot">● Active in this browser</span>
-                </div>
-                <p className="tech-detail-text">{TECH_DETAILS[selectedTech]}</p>
-              </div>
-            </div>
-
-            {/* 4. DESIGN PHILOSOPHY & FACT SHUFFLER */}
-            <div className="about-fact-card">
-              <div className="fact-content">
-                <div className="fact-tag">💡 INSIGHT & PHILOSOPHY</div>
-                <p className="fact-text">"{DESIGN_FACTS[activeFactIdx]}"</p>
-              </div>
-              <button 
-                type="button" 
-                className="fact-next-btn"
-                onClick={handleNextFact}
-                title="Shuffle insight"
-              >
-                <span>Next Insight</span>
-                <ArrowRight size={13} />
-              </button>
-            </div>
+            <AsciiPortraitStudio />
           </div>
         )}
 

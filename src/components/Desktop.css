@@ -5,7 +5,7 @@
   width: 100vw;
   height: 100vh;
   background-color: #0c0c10;
-  background-image: 
+  background-image:
     radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
     radial-gradient(circle at 50% 45%, #181820 0%, #0e0e14 60%, #07070a 100%);
   background-size: 24px 24px, 100% 100%;
@@ -18,7 +18,7 @@
 
 /* Blueprint mode styling while Swarm Rebuild is constructing */
 .desktop.desktop-in-rebuild {
-  background-image: 
+  background-image:
     linear-gradient(rgba(59, 130, 246, 0.06) 1px, transparent 1px),
     linear-gradient(90deg, rgba(59, 130, 246, 0.06) 1px, transparent 1px),
     radial-gradient(circle at 50% 45%, #151522 0%, #0c0c14 70%, #07070a 100%);
@@ -89,9 +89,11 @@
     opacity: 0;
     transform: scale(0.6) translateY(-14px);
   }
+
   70% {
     transform: scale(1.08) translateY(2px);
   }
+
   100% {
     opacity: 1;
     transform: scale(1) translateY(0);
@@ -108,7 +110,7 @@
   pointer-events: none;
 }
 
-.desktop-windows-layer > * {
+.desktop-windows-layer>* {
   pointer-events: auto;
 }
 
@@ -136,7 +138,7 @@
   z-index: 998;
 }
 
-.desktop-dock-wrap > * {
+.desktop-dock-wrap>* {
   pointer-events: auto;
 }
 
@@ -163,7 +165,7 @@
   z-index: 990;
 }
 
-.desktop-bot-wrap > * {
+.desktop-bot-wrap>* {
   pointer-events: auto;
 }
 
@@ -211,6 +213,7 @@
     opacity: 0;
     transform: translateY(-8px) scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);

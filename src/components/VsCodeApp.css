@@ -919,3 +919,944 @@
   margin-top: 2px;
 }
 
+/* ============================================================
+   VS Code Top Menu Dropdowns
+   ============================================================ */
+.menu-dropdown-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.vscode-dropdown-panel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 210px;
+  background: #252526;
+  border: 1px solid #454545;
+  border-radius: 4px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+  z-index: 100;
+  padding: 4px 0;
+  margin-top: 2px;
+}
+
+.vscode-menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 14px;
+  font-size: 12px;
+  color: #cccccc;
+  cursor: pointer;
+  transition: background 0.1s ease, color 0.1s ease;
+  user-select: none;
+}
+
+.vscode-menu-item:hover {
+  background: #094771;
+  color: #ffffff;
+}
+
+.vscode-menu-divider {
+  height: 1px;
+  background: #3c3c3c;
+  margin: 4px 0;
+}
+
+.menu-shortcut {
+  font-size: 11px;
+  color: #8c8c8c;
+  margin-left: 16px;
+  font-family: monospace;
+}
+
+.vscode-menu-item:hover .menu-shortcut {
+  color: #e0e0e0;
+}
+
+/* ============================================================
+   Top Bar Run Code Button
+   ============================================================ */
+.editor-run-code-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  color: #4ade80;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  margin-right: 6px;
+}
+
+.editor-run-code-btn:hover {
+  background: #22c55e;
+  color: #000000;
+  border-color: #22c55e;
+}
+
+.editor-run-code-btn:hover svg {
+  fill: #000000 !important;
+  color: #000000 !important;
+}
+
+.editor-run-code-btn:active {
+  transform: scale(0.97);
+}
+
+/* ============================================================
+   Sidebar Generic Action Buttons
+   ============================================================ */
+.sidebar-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sidebar-icon-btn {
+  background: transparent;
+  border: none;
+  color: #858585;
+  cursor: pointer;
+  padding: 3px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.12s ease;
+}
+
+.sidebar-icon-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-title {
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: #bbbbbb;
+}
+
+/* ============================================================
+   Search Sidebar Panel
+   ============================================================ */
+.sidebar-search-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.search-inputs-group {
+  padding: 10px 14px;
+}
+
+.search-input-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.sidebar-search-field {
+  width: 100%;
+  background: #3c3c3c;
+  border: 1px solid #3c3c3c;
+  border-radius: 2px;
+  color: #cccccc;
+  font-size: 12px;
+  padding: 5px 8px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.sidebar-search-field:focus {
+  border-color: #007acc;
+}
+
+.search-results-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px 10px;
+}
+
+.search-result-item {
+  padding: 6px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 4px;
+  transition: background 0.12s ease;
+}
+
+.search-result-item:hover {
+  background: #2a2d2e;
+}
+
+.search-result-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.search-snippet {
+  font-size: 11px;
+  color: #858585;
+  margin-top: 3px;
+  padding-left: 20px;
+}
+
+.sidebar-empty-state {
+  padding: 16px 12px;
+  color: #858585;
+  font-size: 11.5px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* ============================================================
+   Source Control Sidebar Panel
+   ============================================================ */
+.sidebar-git-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.sidebar-branch-tag {
+  font-size: 10px;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.12);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-family: monospace;
+}
+
+.git-commit-box {
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.git-commit-textarea {
+  width: 100%;
+  min-height: 54px;
+  background: #3c3c3c;
+  border: 1px solid #3c3c3c;
+  border-radius: 3px;
+  color: #cccccc;
+  font-size: 11.5px;
+  padding: 6px;
+  resize: vertical;
+  outline: none;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.git-commit-textarea:focus {
+  border-color: #007acc;
+}
+
+.git-commit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: #007acc;
+  color: #ffffff;
+  border: none;
+  border-radius: 3px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.git-commit-btn:hover {
+  background: #0098ff;
+}
+
+.git-changes-section {
+  padding: 10px 14px;
+}
+
+.git-section-title {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #8c8c8c;
+  margin-bottom: 6px;
+}
+
+.git-file-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 6px;
+  font-size: 11.5px;
+  color: #cccccc;
+  border-radius: 3px;
+}
+
+.git-file-row:hover {
+  background: #2a2d2e;
+}
+
+.git-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 4px;
+  border-radius: 2px;
+}
+
+.git-badge.modified {
+  color: #e2c08d;
+}
+
+/* ============================================================
+   Run and Debug Sidebar Panel
+   ============================================================ */
+.sidebar-debug-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.debug-launch-box {
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.debug-run-primary-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #238636;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.debug-run-primary-btn:hover {
+  background: #2ea043;
+}
+
+.debug-run-script-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #cccccc;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 11.5px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.debug-run-script-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.debug-section {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.debug-section-header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #8c8c8c;
+  margin-bottom: 6px;
+}
+
+.debug-item-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11.5px;
+  padding: 2px 4px;
+  font-family: monospace;
+}
+
+.var-name {
+  color: #9cdcfe;
+}
+
+.var-val {
+  color: #ce9178;
+}
+
+/* ============================================================
+   Extensions Marketplace Sidebar Panel
+   ============================================================ */
+.sidebar-extensions-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.extensions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+}
+
+.extension-card {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+  transition: background 0.12s ease;
+}
+
+.extension-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.ext-icon-square {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: #2d2d2d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #38bdf8;
+  flex-shrink: 0;
+}
+
+.ext-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.ext-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ext-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ext-ver {
+  font-size: 10px;
+  color: #71717a;
+}
+
+.ext-desc {
+  font-size: 11px;
+  color: #a1a1aa;
+  margin: 3px 0 6px 0;
+  line-height: 1.35;
+}
+
+.ext-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ext-author {
+  font-size: 10px;
+  color: #71717a;
+}
+
+.ext-toggle-btn {
+  background: #007acc;
+  color: #ffffff;
+  border: none;
+  border-radius: 3px;
+  padding: 2px 8px;
+  font-size: 10.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.ext-toggle-btn.installed {
+  background: rgba(255, 255, 255, 0.1);
+  color: #cccccc;
+}
+
+.ext-toggle-btn:hover {
+  opacity: 0.85;
+}
+
+/* ============================================================
+   Antigravity AI Agent Sidebar Panel
+   ============================================================ */
+.sidebar-agent-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.agent-chat-history {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.agent-bubble {
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 11.5px;
+  line-height: 1.45;
+  max-width: 90%;
+  word-wrap: break-word;
+}
+
+.agent-bubble.user {
+  align-self: flex-end;
+  background: #007acc;
+  color: #ffffff;
+}
+
+.agent-bubble.assistant {
+  align-self: flex-start;
+  background: #252526;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #e0e0e0;
+}
+
+.agent-quick-prompts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 6px 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.agent-prompt-chip {
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  color: #38bdf8;
+  font-size: 10.5px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.agent-prompt-chip:hover {
+  background: #38bdf8;
+  color: #000000;
+}
+
+.agent-input-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: #181818;
+}
+
+.agent-text-input {
+  flex: 1;
+  background: #2d2d2d;
+  border: 1px solid #3c3c3c;
+  border-radius: 4px;
+  padding: 5px 8px;
+  font-size: 11.5px;
+  color: #ffffff;
+  outline: none;
+}
+
+.agent-text-input:focus {
+  border-color: #38bdf8;
+}
+
+.agent-send-btn {
+  background: #38bdf8;
+  color: #000000;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ============================================================
+   Interactive Code Textarea & Gutter
+   ============================================================ */
+.code-editor-container {
+  display: flex;
+  min-height: 100%;
+  position: relative;
+}
+
+.editor-gutter {
+  width: 54px;
+  padding: 4px 8px 4px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  user-select: none;
+  color: #6e7681;
+  font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+  font-size: 13px;
+  line-height: 20px;
+  flex-shrink: 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.gutter-line-number {
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.gutter-line-number.active {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.editor-textarea-wrap {
+  flex: 1;
+  position: relative;
+  display: flex;
+}
+
+.editor-code-textarea {
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  background: transparent;
+  color: #d4d4d4;
+  border: none;
+  outline: none;
+  resize: none;
+  padding: 4px 12px;
+  font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+  font-size: 13px;
+  line-height: 20px;
+  tab-size: 2;
+  white-space: pre;
+  overflow-wrap: normal;
+  overflow-x: auto;
+  caret-color: #ffffff;
+}
+
+/* ============================================================
+   Bottom Terminal Panel Tabs & Layout
+   ============================================================ */
+.tab-counter-badge {
+  background: #007acc;
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 8px;
+  margin-left: 4px;
+}
+
+.terminal-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.terminal-badge-pill {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #cccccc;
+  font-size: 11px;
+}
+
+.terminal-badge-icon {
+  color: #38bdf8;
+  font-weight: 800;
+}
+
+.terminal-icon-btn {
+  background: transparent;
+  border: none;
+  color: #858585;
+  cursor: pointer;
+  padding: 3px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.12s ease;
+}
+
+.terminal-icon-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.terminal-content-area {
+  flex: 1;
+  min-height: 0;
+  padding: 8px 14px;
+  overflow-y: auto;
+  font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+  font-size: 12px;
+  line-height: 18px;
+  color: #cccccc;
+  background: #181818;
+}
+
+.terminal-log-line {
+  white-space: pre-wrap;
+  margin-bottom: 2px;
+}
+
+.terminal-log-line.command {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.terminal-log-line.output {
+  color: #a1a1aa;
+}
+
+.terminal-log-line.error {
+  color: #f87171;
+}
+
+.terminal-input-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.terminal-prompt-prefix {
+  color: #f59e0b;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.terminal-text-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 12px;
+  flex: 1;
+  caret-color: #ffffff;
+}
+
+/* Output Tab */
+.output-area {
+  background: #141414;
+}
+
+.output-raw-pre {
+  margin: 0;
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 18px;
+  white-space: pre-wrap;
+  color: #a1a1aa;
+}
+
+/* Debug Console Tab */
+.debug-console-area {
+  display: flex;
+  flex-direction: column;
+}
+
+.debug-log-row {
+  white-space: pre-wrap;
+  margin-bottom: 2px;
+}
+
+.debug-log-row.eval {
+  color: #9cdcfe;
+}
+
+.debug-log-row.return {
+  color: #4ade80;
+}
+
+.debug-log-row.error {
+  color: #f87171;
+}
+
+.debug-input-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.debug-prompt-char {
+  color: #38bdf8;
+  font-weight: 700;
+}
+
+.debug-eval-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 12px;
+  flex: 1;
+}
+
+/* Problems Tab */
+.problems-area {
+  padding: 10px 14px;
+}
+
+.problem-item-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  padding: 4px 0;
+  color: #f87171;
+}
+
+.problem-file {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.problem-line {
+  color: #71717a;
+}
+
+.problem-msg {
+  color: #fca5a5;
+}
+
+.problems-empty {
+  color: #4ade80;
+  font-size: 12px;
+  padding: 10px 0;
+}
+
+/* Ports Tab */
+.ports-area {
+  padding: 8px 14px;
+}
+
+.ports-table-header {
+  display: grid;
+  grid-template-columns: 80px 80px 220px 220px 120px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #71717a;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 6px;
+}
+
+.ports-table-row {
+  display: grid;
+  grid-template-columns: 80px 80px 220px 220px 120px;
+  font-size: 11.5px;
+  align-items: center;
+  padding: 4px 0;
+  color: #cccccc;
+}
+
+.port-badge {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.port-badge.active {
+  color: #4ade80;
+  background: rgba(74, 222, 128, 0.12);
+}
+
+/* Comments Tab */
+.comments-area {
+  padding: 10px 14px;
+}
+
+.comment-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+  padding: 10px 14px;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.comment-author {
+  font-size: 12px;
+  font-weight: 700;
+  color: #38bdf8;
+}
+
+.comment-time {
+  font-size: 10.5px;
+  color: #71717a;
+}
+
+.comment-text {
+  font-size: 12px;
+  color: #cccccc;
+  line-height: 1.4;
+  margin: 0;
+}
+
+
