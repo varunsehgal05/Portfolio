@@ -2,56 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { 
   Image, 
   Sparkles, 
-  Info, 
   Terminal,
-  Check, 
+  Check,
   RotateCcw,
   Monitor,
   Sun,
   Moon,
-  Palette,
-  ExternalLink,
-  Copy,
-  FileText,
-  Mail,
-  MapPin,
-  GraduationCap,
-  Zap,
-  Code2,
-  Layers,
-  Award,
-  Flame,
-  ArrowRight,
-  Coffee
+  Palette
 } from 'lucide-react';
 import { desktopWallpapers, terminalWallpapers } from '../config/wallpapers';
-import AsciiPortraitStudio from './AsciiPortraitStudio';
 import './SettingsApp.css';
 
-const DESIGN_FACTS = [
-  "Varun bridges UI/UX design with autonomous AI vibecoding — turning complex architectures into intuitive, weightless products.",
-  "Every sound in VarunOS is synthesized live in-browser using the Web Audio API — 0 pre-recorded audio files needed!",
-  "The 48-agent Swarm Engine recreates Joel Califa's viral boid flocking simulation, following your mouse and scroll at 60fps.",
-  "EventFlow's 4-step ticketing checkout redesign reduced participant drop-off by 30% via micro-interaction feedback.",
-  "Varun architected the CodeSrijan Hackathon Portal, powering 800+ attendees and 50+ project submissions in 72 hours."
-];
-
-const TECH_DETAILS = {
-  'React 18': 'Modular component hierarchy, custom hooks, and decoupled state management.',
-  'Web Audio API': 'Procedurally synthesized mechanical clicks and chord chimes directly in audio buffers.',
-  'Califa Swarm': '48 autonomous agents calculating boid cohesion, separation, and dashed SVG vector lines.',
-  'Figma Tokens': 'System design tokens matching authentic Figma Electric Blue (#0d99ff) and dark canvas standards.',
-  'Vibecoding': 'Full-stack AI-assisted rapid development from design conception to deployed production.'
-};
-
 const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
-  const [activeTab, setActiveTab] = useState('about'); // Defaults to 'about' so user immediately sees the rich info!
+  const [activeTab, setActiveTab] = useState('appearance');
   const [wallpaperSection, setWallpaperSection] = useState('desktop'); // 'desktop' | 'terminal'
-
-  // Interactive Easter Egg & Fact states
-  const [copiedEmail, setCopiedEmail] = useState(false);
-  const [activeFactIdx, setActiveFactIdx] = useState(0);
-  const [selectedTech, setSelectedTech] = useState('React 18');
 
   // Theme mode: 'dark' | 'light' | 'auto'
   const [themeMode, setThemeMode] = useState(() => {
@@ -110,7 +74,7 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
     setThemeMode(mode);
     try {
       localStorage.setItem('varunos_theme_mode', mode);
-    } catch {}
+    } catch { }
 
     let effectiveTheme = mode;
     if (mode === 'auto') {
@@ -125,7 +89,7 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
     setActiveAccent(color);
     try {
       localStorage.setItem('varunos_accent_color', color);
-    } catch {}
+    } catch { }
     document.documentElement.style.setProperty('--accent', color);
     document.documentElement.style.setProperty('--system-accent', color);
     window.dispatchEvent(new CustomEvent('varunos-accent-change', { detail: { color, id } }));
@@ -135,7 +99,7 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
     setWindowVibrancy(level);
     try {
       localStorage.setItem('varunos_window_vibrancy', level);
-    } catch {}
+    } catch { }
     const blurVal = level === 'subtle' ? 'blur(8px)' : level === 'medium' ? 'blur(16px)' : 'blur(28px)';
     document.documentElement.style.setProperty('--blur', blurVal);
   };
@@ -153,7 +117,7 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
         const blurVal = savedVibrancy === 'subtle' ? 'blur(8px)' : savedVibrancy === 'medium' ? 'blur(16px)' : 'blur(28px)';
         document.documentElement.style.setProperty('--blur', blurVal);
       }
-    } catch {}
+    } catch { }
   }, []);
 
   // Toggle Live Mouse Swarm
@@ -162,21 +126,10 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
     setSwarmFollowEnabled(nextState);
     try {
       localStorage.setItem('varunos_swarm_follow_mouse', String(nextState));
-    } catch {}
+    } catch { }
     window.dispatchEvent(new CustomEvent('varunos-toggle-swarm-follow', { detail: { enabled: nextState } }));
   };
 
-  const handleCopyEmail = () => {
-    try {
-      navigator.clipboard?.writeText('varun.sehgal02@gmail.com');
-      setCopiedEmail(true);
-      setTimeout(() => setCopiedEmail(false), 2200);
-    } catch {}
-  };
-
-  const handleNextFact = () => {
-    setActiveFactIdx((prev) => (prev + 1) % DESIGN_FACTS.length);
-  };
 
   useEffect(() => {
     const handleDesktopSync = (e) => {
@@ -204,7 +157,7 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
     setActiveWallpaper(wp.id);
     try {
       localStorage.setItem('varunos_desktop_wallpaper', wp.id);
-    } catch {}
+    } catch { }
     window.dispatchEvent(new CustomEvent('varunos-set-desktop-wallpaper', { detail: { id: wp.id } }));
   };
 
@@ -212,7 +165,7 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
     setActiveTerminalWallpaper(wp.id);
     try {
       localStorage.setItem('varunos_terminal_wallpaper', wp.id);
-    } catch {}
+    } catch { }
     window.dispatchEvent(new CustomEvent('varunos-set-terminal-wallpaper', { detail: { id: wp.id } }));
   };
 
@@ -230,8 +183,8 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
 
         {/* Quick Theme Switcher in Sidebar */}
         <div className="settings-sidebar-theme-switch">
-          <button 
-            type="button" 
+          <button
+            type="button"
             className={`sidebar-theme-pill ${themeMode === 'light' ? 'active' : ''}`}
             onClick={() => handleSelectTheme('light')}
             title="Switch to Light Mode"
@@ -239,8 +192,8 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
             <Sun size={11} />
             <span>Light</span>
           </button>
-          <button 
-            type="button" 
+          <button
+            type="button"
             className={`sidebar-theme-pill ${themeMode === 'dark' ? 'active' : ''}`}
             onClick={() => handleSelectTheme('dark')}
             title="Switch to Dark Mode"
@@ -248,8 +201,8 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
             <Moon size={11} />
             <span>Dark</span>
           </button>
-          <button 
-            type="button" 
+          <button
+            type="button"
             className={`sidebar-theme-pill ${themeMode === 'auto' ? 'active' : ''}`}
             onClick={() => handleSelectTheme('auto')}
             title="Solar Daylight Schedule"
@@ -260,15 +213,7 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
         </div>
 
         <div className="settings-nav">
-          <button 
-            className={`settings-nav-item ${activeTab === 'about' ? 'active' : ''}`}
-            onClick={() => setActiveTab('about')}
-          >
-            <Terminal size={15} />
-            <span>About Varun (ASCII)</span>
-          </button>
-
-          <button 
+          <button
             className={`settings-nav-item ${activeTab === 'appearance' ? 'active' : ''}`}
             onClick={() => setActiveTab('appearance')}
           >
@@ -276,7 +221,7 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
             <span>Appearance</span>
           </button>
 
-          <button 
+          <button
             className={`settings-nav-item ${activeTab === 'wallpaper' ? 'active' : ''}`}
             onClick={() => setActiveTab('wallpaper')}
           >
@@ -284,7 +229,7 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
             <span>Wallpapers</span>
           </button>
 
-          <button 
+          <button
             className={`settings-nav-item ${activeTab === 'swarm' ? 'active' : ''}`}
             onClick={() => setActiveTab('swarm')}
           >
@@ -296,16 +241,7 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
 
       {/* Main Settings Panel */}
       <main className="settings-main">
-        {/* ====================================================================
-            TAB 1: ABOUT VARUN SEHGAL & LIVE WORKING ASCII STUDIO (IMAGE 2)
-            ==================================================================== */}
-        {activeTab === 'about' && (
-          <div className="settings-panel about-panel">
-            <AsciiPortraitStudio />
-          </div>
-        )}
-
-        {/* TAB 2: APPEARANCE (DARK / LIGHT / AUTO) */}
+        {/* TAB 1: APPEARANCE (DARK / LIGHT / AUTO) */}
         {activeTab === 'appearance' && (
           <div className="settings-panel">
             <h2 className="settings-panel-title">Appearance</h2>
@@ -313,7 +249,7 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
 
             <div className="appearance-theme-cards-grid">
               {/* Light Mode Card */}
-              <div 
+              <div
                 className={`theme-card ${themeMode === 'light' ? 'active' : ''}`}
                 onClick={() => handleSelectTheme('light')}
               >
@@ -336,7 +272,7 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
               </div>
 
               {/* Dark Mode Card */}
-              <div 
+              <div
                 className={`theme-card ${themeMode === 'dark' ? 'active' : ''}`}
                 onClick={() => handleSelectTheme('dark')}
               >
@@ -359,7 +295,7 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
               </div>
 
               {/* Auto Mode Card */}
-              <div 
+              <div
                 className={`theme-card ${themeMode === 'auto' ? 'active' : ''}`}
                 onClick={() => handleSelectTheme('auto')}
               >
@@ -381,7 +317,7 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
               </div>
 
               {/* Midnight OLED Mode Card */}
-              <div 
+              <div
                 className={`theme-card ${themeMode === 'oled' ? 'active' : ''}`}
                 onClick={() => handleSelectTheme('oled')}
               >
@@ -556,8 +492,8 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
 
                 <div className="wallpaper-grid">
                   {desktopWallpapers.map((wp) => (
-                    <div 
-                      key={wp.id} 
+                    <div
+                      key={wp.id}
                       className={`wallpaper-card ${activeWallpaper === wp.id ? 'active' : ''}`}
                       onClick={() => applyWallpaper(wp)}
                     >
@@ -585,8 +521,8 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
 
                 <div className="wallpaper-grid">
                   {terminalWallpapers.map((wp) => (
-                    <div 
-                      key={wp.id} 
+                    <div
+                      key={wp.id}
                       className={`wallpaper-card ${activeTerminalWallpaper === wp.id ? 'active' : ''}`}
                       onClick={() => applyTerminalWallpaper(wp)}
                     >
@@ -624,7 +560,7 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
                     48 autonomous agent cursors with boid flocking & dashed network lines follow your mouse and scroll across the desktop.
                   </span>
                 </div>
-                <button 
+                <button
                   type="button"
                   className={`settings-toggle-btn ${swarmFollowEnabled ? 'active' : ''}`}
                   onClick={handleToggleSwarmFollow}
@@ -640,7 +576,7 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
                   <span className="row-title">Replay Swarm Reconstruction</span>
                   <span className="row-sub">Full 5-phase animation deconstructing and live-rebuilding the entire desktop</span>
                 </div>
-                <button 
+                <button
                   className="settings-action-btn primary"
                   onClick={() => {
                     if (onReplaySwarm) onReplaySwarm();
