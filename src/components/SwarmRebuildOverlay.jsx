@@ -1,15 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './SwarmRebuildOverlay.css';
 
-// SVG Pointer Component in authentic Figma/Swarm style with fluid particle trail (Memoized for 60fps)
+// SVG Pointer Component in authentic Figma/Kittu.pro style with fluid particle trail
 const SwarmCursor = React.memo(({
   x,
   y,
   color,
   label,
   action,
-  isDrawing,
-  isCrosshair,
+  toolKey,
+  cursorMode = 'arrow',
+  isClicking = false,
+  isDrawing = false,
   caretText,
   dupBadge,
   chatText,
@@ -36,18 +38,42 @@ const SwarmCursor = React.memo(({
       ))}
 
       <div
-        className="swarm-cursor-agent"
+        className={`swarm-cursor-agent ${isClicking ? 'is-clicking' : ''}`}
         style={{
           transform: `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`,
           '--cursor-color': color
         }}
       >
-        {/* Cursor Icon: Crosshair when drafting, Arrow when navigating */}
-        {isCrosshair ? (
+        {/* Cursor Icon: Arrow, Crosshair, Text I-Beam, Grab Hand, or Resize */}
+        {cursorMode === 'cross' ? (
           <div className="swarm-crosshair-icon" style={{ borderColor: color }}>
             <div className="ch-h" style={{ backgroundColor: color }} />
             <div className="ch-v" style={{ backgroundColor: color }} />
           </div>
+        ) : cursorMode === 'text' ? (
+          <svg width="18" height="22" viewBox="0 0 16 20" fill="none" className="swarm-pointer-svg">
+            <path d="M4 2H12M8 2V18M4 18H12" stroke={color} strokeWidth="2.5" strokeLinecap="round" />
+          </svg>
+        ) : cursorMode === 'grab' ? (
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className="swarm-pointer-svg">
+            <path
+              d="M10 5V12M14 6V12M6 8V14C6 17.3 8.7 20 12 20C15.3 20 18 17.3 18 14V8M18 11V8"
+              stroke={color}
+              strokeWidth="2"
+              strokeLinecap="round"
+              fill="rgba(255,255,255,0.2)"
+            />
+          </svg>
+        ) : cursorMode === 'resize' ? (
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" className="swarm-pointer-svg">
+            <path
+              d="M4 16L16 4M16 4H9M16 4V11M4 16H11M4 16V9"
+              stroke={color}
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
         ) : (
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className="swarm-pointer-svg">
             <path
@@ -57,6 +83,13 @@ const SwarmCursor = React.memo(({
               strokeWidth="1.5"
             />
           </svg>
+        )}
+
+        {/* Floating Tool Keyboard Shortcut Badge (Kittu.pro Style cv-key: T, F, R, V, ⌥) */}
+        {toolKey && (
+          <div className="swarm-tool-key-badge">
+            <span>{toolKey}</span>
+          </div>
         )}
 
         {/* Floating user name tag */}
@@ -80,9 +113,9 @@ const SwarmCursor = React.memo(({
           </div>
         )}
 
-        {/* Collaborative Chat Bubble (Kittu.pro Style) */}
+        {/* Collaborative Chat Bubble (Kittu.pro Style cv-chat) */}
         {chatText && (
-          <div className="swarm-chat-bubble" style={{ borderColor: color }}>
+          <div className="swarm-chat-bubble" style={{ '--cursor-color': color }}>
             <span>💬 {chatText}</span>
           </div>
         )}
@@ -204,20 +237,29 @@ class SwarmSoundSynthesizer {
 
 const soundSynth = new SwarmSoundSynthesizer();
 
-// Smooth easing formulas
+// Kittu Pro Human Motion Easing and Arc Interpolation (from module 56877)
 const easeInOutCubic = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-const easeOutBack = (t) => {
-  const c1 = 1.70158;
-  const c3 = c1 + 1;
-  return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
-};
-const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
 const lerp = (a, b, t) => a + (b - a) * t;
 
-// C² continuous Ken Perlin smootherstep (zero acceleration jerk & kick at boundaries)
-const smootherstep = (t) => {
-  const c = Math.max(0, Math.min(1, t));
-  return c * c * c * (c * (c * 6 - 15) + 10);
+// Human Arc Path Generator (matching Kittu Pro's tr function)
+// Produces natural wrist arc curves with perpendicular deviation and settle recoil
+const interpolateArc = (x1, y1, x2, y2, progress, arcDeviation = 0, overshoot = 0) => {
+  const p = Math.min(1, Math.max(0, progress));
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const dist = Math.hypot(dx, dy) || 1;
+
+  let eased = easeInOutCubic(p);
+  if (overshoot > 0 && p > 0.62) {
+    const settle = Math.sin(Math.PI * Math.min(1, (p - 0.62) / 0.38));
+    eased += settle * overshoot;
+  }
+
+  const arcOffset = Math.sin(Math.PI * p) * arcDeviation;
+  return {
+    x: x1 + dx * eased - (dy / dist) * arcOffset,
+    y: y1 + dy * eased + (dx / dist) * arcOffset
+  };
 };
 
 const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) => {
@@ -264,7 +306,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
   useEffect(() => { speedMultiplierRef.current = speedMultiplier; }, [speedMultiplier]);
   useEffect(() => { userNameRef.current = userName; }, [userName]);
 
-  // 5 Collaborative Multiplayer Cursors (Figma / Swarm Rebuild Style)
+  // 5 Collaborative Multiplayer Cursors
   const [cursors, setCursors] = useState({
     varun: { x: 40, y: 18, color: '#A259FF', label: 'Varun Sehgal', action: 'Lead Architect', isDrawing: false, boxBounds: null },
     user: { x: dims.w - 100, y: 18, color: '#1ABCFE', label: userName || 'You', action: 'Joining...', isDrawing: false, boxBounds: null },
@@ -334,7 +376,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
     }
   };
 
-  // High-fidelity continuous animation loop
+  // Human-calibrated 14-second organic animation loop (Kittu Pro Choreography)
   useEffect(() => {
     isFinishedRef.current = false;
     startTimeRef.current = Date.now();
@@ -379,43 +421,59 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
       const dockTargetX = (w - dockTargetW) / 2;
       const dockTargetY = h - 68;
 
-      const microFloat = (phase) => Math.sin(now * 0.003 + phase) * 0.9;
       let agentTargets = {};
 
       // =====================================================================
-      // Phase 1: Top MenuBar Drafting & Alignment (0.0s - 1.2s) — 2 Cursors
+      // Phase 1: Top MenuBar Drafting & Alignment (0.0s - 3.2s) — 2 Cursors
       // =====================================================================
-      if (elapsed < 1.2) {
+      if (elapsed < 3.2) {
         setStatusMessage('[1/5] Drafting macOS MenuBar wireframe...');
-        const t = Math.min(1, Math.max(0, elapsed / 1.2));
-        const eased = smootherstep(t);
+        const t = Math.min(1, Math.max(0, elapsed / 3.2));
 
-        const menuX = lerp(20, w - 20, eased);
-        const userX = lerp(w - 40, w - 220, eased);
+        // Varun curves to top-left and drags frame across top
+        const varunStart = { x: 40, y: 18 };
+        const varunEnd = { x: w - 24, y: 14 };
+        const varunArc = interpolateArc(varunStart.x, varunStart.y, varunEnd.x, varunEnd.y, Math.min(1, t * 1.3), -28, 0.04);
 
-        if (t > 0.65) {
+        // User curves across to status tray
+        const userStart = { x: w - 40, y: 24 };
+        const userEnd = { x: w - 180, y: 14 };
+        const userProgress = Math.min(1, Math.max(0, (t - 0.25) / 0.7));
+        const userArc = interpolateArc(userStart.x, userStart.y, userEnd.x, userEnd.y, userProgress, 22, 0.03);
+
+        const isVarunClicking = t > 0.16 && t < 0.24;
+        const isUserClicking = t > 0.78 && t < 0.86;
+
+        if (t > 0.8) {
           updateStage(1, 680); // Reveal MenuBar
         }
 
+        const menuDrawnW = Math.max(20, varunArc.x);
+
         agentTargets = {
           varun: {
-            x: menuX,
-            y: 14,
+            x: varunArc.x,
+            y: varunArc.y,
             color: '#A259FF',
             label: 'Varun Sehgal',
-            action: 'Drafting MenuBar',
+            action: t < 0.2 ? 'Selecting Frame' : 'Drafting MenuBar',
+            toolKey: t < 0.22 ? 'F Frame' : null,
+            cursorMode: t < 0.2 ? 'arrow' : 'cross',
+            isClicking: isVarunClicking,
             isDrawing: true,
-            isCrosshair: true,
-            chatText: 'morning! drafting top bar',
-            boxBounds: { x: 0, y: 0, w: menuX, h: 28, label: 'MenuBar 100vw × 28px • Blur(24px)' }
+            chatText: t > 0.25 && t < 0.85 ? 'morning! drafting top bar' : null,
+            boxBounds: { x: 0, y: 0, w: menuDrawnW, h: 28, label: 'MenuBar 100vw × 28px • Blur(24px)' }
           },
           user: {
-            x: userX,
-            y: 14,
+            x: userArc.x,
+            y: userArc.y,
             color: '#1ABCFE',
             label: userName || 'You',
             action: 'Aligning Status Tray',
-            chatText: 'on it, aligning tray',
+            toolKey: t > 0.25 && t < 0.45 ? 'V Move' : null,
+            cursorMode: 'arrow',
+            isClicking: isUserClicking,
+            chatText: t > 0.45 && t < 0.95 ? 'on it, aligning tray' : null,
             isDrawing: false
           },
           sarah: { hidden: true, x: 56, y: 48 },
@@ -425,7 +483,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
 
         setWireframeData({
           type: 'menubar',
-          w: menuX,
+          w: menuDrawnW,
           h: 28,
           opacity: 1
         });
@@ -435,54 +493,66 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             type: 'h',
             x1: 0,
             y1: 28,
-            x2: menuX,
+            x2: menuDrawnW,
             y2: 28,
             color: '#ec4899',
             dashed: true,
             label: 'Y: 28px (Top Bar)',
             pillText: 'Y: 28px',
-            pillX: menuX / 2,
+            pillX: menuDrawnW / 2,
             pillY: 28
           }
         ]);
       }
       // =====================================================================
-      // Phase 2: Desktop App Icons Continuous Stamping (1.2s - 2.5s) — 2 Cursors
+      // Phase 2: Desktop App Icons Stamping via ⌥ Duplicate (3.2s - 7.2s) — 2 Cursors
       // =====================================================================
-      else if (elapsed < 2.5) {
+      else if (elapsed < 7.2) {
         setStatusMessage('[2/5] Stamping & Duplicating Desktop Apps...');
-        const t = Math.min(1, Math.max(0, (elapsed - 1.2) / 1.3));
-        const eased = smootherstep(t);
+        const t = Math.min(1, Math.max(0, (elapsed - 3.2) / 4.0));
 
-        if (t > 0.65) {
+        if (t > 0.85) {
           updateStage(2, 740); // Reveal Desktop Icons
         }
 
         const iconNames = ['Figma', 'VS Code', 'Resume.pdf', 'Contact', 'Trash'];
         const iconYPositions = [48, 126, 204, 282, 360];
-        const iconIndex = Math.min(4, Math.floor(t * 5));
+        
+        // 5 icons stamped sequentially (~0.75s per icon)
+        const totalIcons = 5;
+        const iconFloat = t * totalIcons;
+        const iconIndex = Math.min(4, Math.floor(iconFloat));
+        const subProgress = iconFloat - iconIndex;
 
-        const sarahY = lerp(48, 360, eased);
-        const elenaX = 92;
-        const elenaY = sarahY;
+        // Curve movement between previous and next icon
+        const prevY = iconIndex === 0 ? 48 : iconYPositions[iconIndex - 1];
+        const nextY = iconYPositions[iconIndex];
+        const sarahPos = interpolateArc(56, prevY, 56, nextY, subProgress, -16, 0.05);
 
-        // Stamp audio & ripple trigger when reaching each icon
+        const elenaX = 96;
+        const elenaY = sarahPos.y;
+
+        const isSarahClicking = subProgress > 0.72 && subProgress < 0.95;
+
+        // Stamp audio & ripple trigger when landing on each icon
         if (lastStampedIndexRef.current !== iconIndex) {
           lastStampedIndexRef.current = iconIndex;
-          soundSynth.playDropThump(220 + iconIndex * 40);
+          soundSynth.playDropThump(220 + iconIndex * 35);
           triggerRipple(56, iconYPositions[iconIndex] + 20, '#FF7262');
         }
 
         agentTargets = {
           sarah: {
-            x: 56,
-            y: sarahY,
+            x: sarahPos.x,
+            y: sarahPos.y,
             color: '#FF7262',
             label: 'Sarah Lin',
             action: `Stamping: ${iconNames[iconIndex]}`,
+            toolKey: '⌥ Option',
+            cursorMode: subProgress < 0.65 ? 'grab' : 'arrow',
+            isClicking: isSarahClicking,
             isDrawing: true,
-            isCrosshair: true,
-            chatText: 'stamping desktop apps (⌥ dup)',
+            chatText: t < 0.75 ? 'stamping desktop apps (⌥ dup)' : null,
             dupBadge: `⌥ Duplicate +${iconIndex + 1}`,
             boxBounds: {
               x: 20,
@@ -498,7 +568,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             color: '#F59E0B',
             label: 'Elena Rostova',
             action: 'Smart Guides: 78px Gap',
-            chatText: 'checking 78px spacing',
+            cursorMode: 'arrow',
+            chatText: t > 0.25 && t < 0.85 ? 'checking 78px spacing' : null,
             isDrawing: false
           },
           varun: { hidden: true, x: winTargetX + 220, y: winTargetY + 98 },
@@ -521,52 +592,68 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             label: 'X: 92px (Column)',
             pillText: 'ΔY: 78px Equal Spacing',
             pillX: 132,
-            pillY: sarahY + 35
+            pillY: sarahPos.y + 35
           }
         ]);
       }
       // =====================================================================
-      // Phase 3: Center Finder Window & Live Headline Typing (2.5s - 4.0s) — 2 Cursors
+      // Phase 3: Center Finder Window & Live Headline Typing (7.2s - 11.4s) — 2 Cursors
       // =====================================================================
-      else if (elapsed < 4.0) {
+      else if (elapsed < 11.4) {
         setStatusMessage('[3/5] Constructing Finder Window & Typing Content...');
-        const t = Math.min(1, Math.max(0, (elapsed - 2.5) / 1.5));
-        const eased = smootherstep(t);
+        const t = Math.min(1, Math.max(0, (elapsed - 7.2) / 4.2));
 
-        const curW = lerp(80, winTargetW, eased);
-        const curH = lerp(60, winTargetH, eased);
+        // 7.2s - 9.2s: Window frame extrusion
+        const frameProgress = Math.min(1, t / 0.52);
+        const curW = lerp(80, winTargetW, easeInOutCubic(frameProgress));
+        const curH = lerp(60, winTargetH, easeInOutCubic(frameProgress));
         const curX = winTargetX;
         const curY = winTargetY;
 
-        // Smoothly reveal the real window as it reaches 82% completion
-        if (t > 0.82) {
+        // Smoothly reveal real window when frame is drawn
+        if (t > 0.52) {
           updateStage(3, 800);
         }
 
-        // Live Headline Typing Simulation
+        // 9.2s - 11.4s: Authentic human typing cadence with pauses
         const headlineText = 'Designing intuitive web apps & modern interfaces';
-        const typingProgress = Math.min(1, Math.max(0, (t - 0.15) / 0.65));
-        const charCount = Math.floor(typingProgress * headlineText.length);
+        const typingTimeProgress = Math.min(1, Math.max(0, (t - 0.54) / 0.44));
+        const charCount = Math.floor(typingTimeProgress * headlineText.length);
         const currentTyped = headlineText.substring(0, charCount);
 
-        if (typingProgress > 0 && typingProgress < 1 && Date.now() - lastTypeTimeRef.current > 75) {
+        // Tactile typewriter clicks with space and punctuation pauses
+        if (typingTimeProgress > 0 && typingTimeProgress < 1 && Date.now() - lastTypeTimeRef.current > 75) {
           soundSynth.playTypeClick(320 + Math.random() * 80);
           lastTypeTimeRef.current = Date.now();
         }
 
-        const varunX = curX + 220 + typingProgress * 290;
+        // Alex holds pivot, User extrudes frame, then Varun types headline
+        const userFrameArc = interpolateArc(curX + 80, curY + 60, curX + curW, curY + curH, frameProgress, 20, 0.04);
+        const varunX = curX + 220 + typingTimeProgress * 290;
         const varunY = curY + 98;
 
         agentTargets = {
+          alex: {
+            hidden: t > 0.58,
+            x: curX,
+            y: curY,
+            color: '#0ACF83',
+            label: 'Alex Chen',
+            action: 'Holding Pivot (0, 0)',
+            toolKey: t < 0.25 ? 'F Frame' : null,
+            cursorMode: 'arrow'
+          },
           user: {
-            x: curX + curW,
-            y: curY + curH,
+            hidden: t > 0.62,
+            x: userFrameArc.x,
+            y: userFrameArc.y,
             color: '#1ABCFE',
             label: userName || 'You',
             action: 'Extruding Window Frame',
+            toolKey: t < 0.3 ? 'V Move' : null,
+            cursorMode: 'resize',
             isDrawing: true,
-            isCrosshair: true,
-            chatText: 'scaling frame to 920×560',
+            chatText: t < 0.5 ? 'scaling frame to 920×560' : null,
             boxBounds: {
               x: curX,
               y: curY,
@@ -576,20 +663,22 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             }
           },
           varun: {
+            hidden: t < 0.48,
             x: varunX,
             y: varunY,
             color: '#A259FF',
             label: 'Varun Sehgal',
             action: 'Typing Headline...',
+            toolKey: t >= 0.48 && t < 0.6 ? 'T Text' : null,
+            cursorMode: 'text',
             caretText: currentTyped,
-            chatText: 'typing headlines & auto-layout'
+            chatText: t >= 0.55 ? 'typing headlines & auto-layout' : null
           },
           sarah: { hidden: true, x: curX + curW - 80, y: curY + 50 },
-          alex: { hidden: true, x: curX, y: curY },
           elena: { hidden: true, x: curX + curW / 2, y: curY + curH + 24 }
         };
 
-        const wireframeOpacity = t < 0.82 ? 1 : Math.max(0, 1 - (t - 0.82) / 0.18);
+        const wireframeOpacity = t < 0.52 ? 1 : Math.max(0, 1 - (t - 0.52) / 0.16);
         setWireframeData({
           type: 'window',
           x: curX,
@@ -629,32 +718,36 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         ]);
       }
       // =====================================================================
-      // Phase 4: Bottom macOS Dock Capsule (4.0s - 5.2s) — 2 Cursors
+      // Phase 4: Bottom macOS Dock Capsule (11.4s - 13.6s) — 2 Cursors
       // =====================================================================
-      else if (elapsed < 5.2) {
+      else if (elapsed < 13.6) {
         setStatusMessage('[4/5] Extruding Glass Dock Capsule...');
-        const t = Math.min(1, Math.max(0, (elapsed - 4.0) / 1.2));
-        const easedMove = smootherstep(t);
+        const t = Math.min(1, Math.max(0, (elapsed - 11.4) / 2.2));
+        const easedMove = easeInOutCubic(t);
 
         const dockSpan = lerp(60, dockTargetW, easedMove);
         const curLeft = (w - dockSpan) / 2;
         const curRight = (w + dockSpan) / 2;
         const curDockY = dockTargetY;
 
-        if (t > 0.45) {
+        if (t > 0.5) {
           updateStage(4, 880); // Reveal Dock
         }
 
+        const alexArc = interpolateArc(w / 2, curDockY + 28, curRight, curDockY + 28, t, 18, 0.04);
+        const userArc = interpolateArc(w / 2 - 120, curDockY + 14, curLeft + dockSpan * 0.45, curDockY + 12, t, -16, 0.04);
+
         agentTargets = {
           alex: {
-            x: curRight,
-            y: curDockY + 28,
+            x: alexArc.x,
+            y: alexArc.y,
             color: '#0ACF83',
             label: 'Alex Chen',
             action: 'Extruding Glass Capsule',
-            chatText: 'extruding glass dock capsule',
+            toolKey: t < 0.28 ? 'R Rectangle' : null,
+            cursorMode: 'cross',
+            chatText: t < 0.75 ? 'extruding glass dock capsule' : null,
             isDrawing: true,
-            isCrosshair: true,
             boxBounds: {
               x: curLeft,
               y: curDockY,
@@ -664,12 +757,14 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             }
           },
           user: {
-            x: curLeft + dockSpan * 0.5,
-            y: curDockY + 12,
+            x: userArc.x,
+            y: userArc.y,
             color: '#1ABCFE',
             label: userName || 'You',
             action: 'Deploying Dock Apps',
-            chatText: 'snapping dock apps'
+            toolKey: t < 0.35 ? 'V Move' : null,
+            cursorMode: 'arrow',
+            chatText: t > 0.35 && t < 0.85 ? 'snapping dock apps' : null
           },
           sarah: { hidden: true, x: curLeft, y: curDockY + 28 },
           varun: { hidden: true, x: w - 75, y: h - 85 },
@@ -695,11 +790,11 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         ]);
       }
       // =====================================================================
-      // Phase 5: Built live, by a crowd of cursors! (5.2s - 6.2s) — 2 Cursors
+      // Phase 5: Built live, by a crowd of cursors! (13.6s - 15.0s) — Celebration
       // =====================================================================
-      else if (elapsed < 6.2) {
+      else if (elapsed < 15.0) {
         setStatusMessage('[5/5] Built live, by a crowd of cursors!');
-        const t = Math.min(1, Math.max(0, (elapsed - 5.2) / 1.0));
+        const t = Math.min(1, Math.max(0, (elapsed - 13.6) / 1.4));
         const centerX = w / 2;
         const centerY = h / 2;
 
@@ -712,6 +807,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             color: '#A259FF',
             label: 'Varun Sehgal',
             action: 'System Ready 🚀',
+            toolKey: 'V Move',
+            cursorMode: 'arrow',
             chatText: '✨ Built live, by a crowd of cursors!'
           },
           user: {
@@ -720,7 +817,9 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             color: '#1ABCFE',
             label: userName || 'You',
             action: 'VarunOS Ready',
-            chatText: 'Ready to explore!'
+            toolKey: 'V Move',
+            cursorMode: 'arrow',
+            chatText: 'Ready to explore! 🚀'
           },
           sarah: { hidden: true, x: centerX - 120, y: centerY },
           alex: { hidden: true, x: centerX + 120, y: centerY },
@@ -735,9 +834,9 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         return;
       }
 
-      // Silky-smooth organic physics dampening with fluid particle trails
+      // Smooth dampening physics with fluid particle trails
       const updatedCursors = {};
-      const smoothRate = 18.0; // natural fluid inertia
+      const smoothRate = 18.0;
       const smoothingFactor = 1 - Math.exp(-smoothRate * dt);
 
       Object.entries(agentTargets).forEach(([key, target]) => {
@@ -757,11 +856,9 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           return;
         }
 
-        // Fluid spring interpolation ensures zero jump or stutter
         p.x += (target.x - p.x) * smoothingFactor;
         p.y += (target.y - p.y) * smoothingFactor;
 
-        // Update fluid motion trail with distance check to avoid clustered dots
         if (!p.trail) p.trail = [];
         const lastPt = p.trail[0];
         const distSq = lastPt ? (p.x - lastPt.x) ** 2 + (p.y - lastPt.y) ** 2 : 999;
@@ -778,7 +875,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         };
       });
 
-      // Compute dynamic SVG network paths between the active collaborative agents (1-2 at a time)
+      // Compute dynamic SVG connector lines between active collaborative agents
       const leadList = Object.values(updatedCursors).filter((c) => !c.hidden);
       const netPaths = [];
       for (let i = 0; i < leadList.length; i++) {
@@ -810,10 +907,52 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
 
   return (
     <div className={`swarm-overlay-container ${completeBanner ? 'fade-out-overlay' : ''}`}>
+      {/* Top Floating Rebuild HUD Controls */}
+      <div className="swarm-hud-bar">
+        <div className="swarm-hud-status">
+          <span className="swarm-hud-pulse-dot" />
+          <span className="swarm-hud-phase">{statusMessage}</span>
+        </div>
+        <div className="swarm-hud-controls">
+          <button
+            type="button"
+            className="swarm-hud-btn"
+            onClick={handleTogglePause}
+            title="Pause / Resume (Space)"
+          >
+            {isPaused ? '▶ Resume' : '⏸ Pause'}
+          </button>
+          <button
+            type="button"
+            className="swarm-hud-btn"
+            onClick={handleToggleSpeed}
+            title="Toggle playback speed (1x / 2x)"
+          >
+            {speedMultiplier === 1 ? '1x Speed' : '2x Fast'}
+          </button>
+          <button
+            type="button"
+            className="swarm-hud-btn"
+            onClick={handleToggleSound}
+            title="Mute / Unmute sound effects (M)"
+          >
+            {isMuted ? '🔇 Muted' : '🔊 Sound'}
+          </button>
+          <button
+            type="button"
+            className="swarm-hud-skip-btn"
+            onClick={finishSwarm}
+            title="Skip rebuild and open VarunOS immediately (Esc)"
+          >
+            Skip Rebuild ⏭
+          </button>
+        </div>
+      </div>
+
       {/* Blueprint Coordinates Indicator (Bottom-Left) */}
       <div className="swarm-blueprint-indicator">
         <div className="blueprint-header-row">
-          <span className="blueprint-tag">⚡ SWARM REBUILD ENGINE v3.5</span>
+          <span className="blueprint-tag">⚡ SWARM REBUILD ENGINE v4.0</span>
           <button 
             type="button" 
             className="swarm-blueprint-skip-btn" 
@@ -823,7 +962,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             Skip Rebuild (Esc) ⏭
           </button>
         </div>
-        <span className="blueprint-coords">{statusMessage} • 5 COLLABORATIVE ARCHITECTS (Active)</span>
+        <span className="blueprint-coords">{statusMessage} • FIGMA MULTIPLAYER CANVAS</span>
       </div>
 
       {/* Viewport Info Readout (Bottom-Right) */}
@@ -833,7 +972,6 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
 
       {/* SVG Canvas for smart guide lines, measurements & dynamic swarm network paths */}
       <svg className="swarm-vector-canvas" width={dims.w} height={dims.h}>
-        {/* Dynamic network connector lines between nearby swarm agents (califa swarm site style) */}
         {networkPaths.map((np, idx) => (
           <path
             key={`np-${idx}`}
@@ -1021,8 +1159,10 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             color={cursor.color}
             label={cursor.label}
             action={cursor.action}
+            toolKey={cursor.toolKey}
+            cursorMode={cursor.cursorMode}
+            isClicking={cursor.isClicking}
             isDrawing={cursor.isDrawing}
-            isCrosshair={cursor.isCrosshair}
             caretText={cursor.caretText}
             dupBadge={cursor.dupBadge}
             chatText={cursor.chatText}
