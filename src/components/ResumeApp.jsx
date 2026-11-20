@@ -30,8 +30,9 @@ const ResumeApp = () => {
         <div className="resume-top-left">
           <div className="preview-doc-badge">
             <FileText size={14} className="doc-icon" />
-            <span className="doc-name">Varun_Sehgal_Resume.pdf</span>
+            <span className="doc-name">Varun_Sehgal_Resume_Kittu.pdf</span>
           </div>
+          <span className="page-pill">kittu.pro</span>
         </div>
 
         <div className="resume-top-center">

@@ -1,104 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './KittuResume.css';
 
-// Sound synthesizer for tactile typing clicks, drop thumps, and completion chime
-class ResumeSoundSynth {
-  constructor() {
-    this.ctx = null;
-  }
-
-  init() {
-    if (!this.ctx && typeof window !== 'undefined') {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (AudioCtx) this.ctx = new AudioCtx();
-    }
-    if (this.ctx && this.ctx.state === 'suspended') {
-      this.ctx.resume().catch(() => {});
-    }
-  }
-
-  playType(freq = 360) {
-    try {
-      this.init();
-      if (!this.ctx) return;
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(freq + (Math.random() * 40 - 20), this.ctx.currentTime);
-      gain.gain.setValueAtTime(0.03, this.ctx.currentTime);
-      gain.gain.linearRampToValueAtTime(0.0001, this.ctx.currentTime + 0.025);
-      osc.connect(gain);
-      gain.connect(this.ctx.destination);
-      osc.start();
-      osc.stop(this.ctx.currentTime + 0.025);
-    } catch (e) {}
-  }
-
-  playThump(freq = 200) {
-    try {
-      this.init();
-      if (!this.ctx) return;
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(70, this.ctx.currentTime + 0.07);
-      gain.gain.setValueAtTime(0.06, this.ctx.currentTime);
-      gain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.07);
-      osc.connect(gain);
-      gain.connect(this.ctx.destination);
-      osc.start();
-      osc.stop(this.ctx.currentTime + 0.07);
-    } catch (e) {}
-  }
-
-  playSnap(freq = 680) {
-    try {
-      this.init();
-      if (!this.ctx) return;
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(200, this.ctx.currentTime + 0.04);
-      gain.gain.setValueAtTime(0.05, this.ctx.currentTime);
-      gain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.04);
-      osc.connect(gain);
-      gain.connect(this.ctx.destination);
-      osc.start();
-      osc.stop(this.ctx.currentTime + 0.04);
-    } catch (e) {}
-  }
-
-  playChime() {
-    try {
-      this.init();
-      if (!this.ctx) return;
-      [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(freq, this.ctx.currentTime + i * 0.08);
-        gain.gain.setValueAtTime(0.04, this.ctx.currentTime + i * 0.08);
-        gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + i * 0.08 + 0.45);
-        osc.connect(gain);
-        gain.connect(this.ctx.destination);
-        osc.start(this.ctx.currentTime + i * 0.08);
-        osc.stop(this.ctx.currentTime + i * 0.08 + 0.45);
-      });
-    } catch (e) {}
-  }
-}
-
-const resumeSound = new ResumeSoundSynth();
+/**
+ * KittuResumeApp
+ * Pixel-perfect recreation of https://www.kittu.pro/resume
+ * Includes notebook paper styling, hand-drawn wobbly cards, custom fonts,
+ * and the collaborative multiplayer cursor build animation ("one by one or 2 at a time").
+ */
 
 const KittuResumeApp = ({ onBack, onTriggerSwarm }) => {
   const [copied, setCopied] = useState(false);
-  const [isBuilding, setIsBuilding] = useState(true);
+  const [isBuilding, setIsBuilding] = useState(false);
   const [activeCursors, setActiveCursors] = useState([]);
   const [activeSelection, setActiveSelection] = useState(null);
   const [activeGuides, setActiveGuides] = useState([]);
-  const [buildStep, setBuildStep] = useState(0); // 0 = start, 1 = hero, 2 = photo, 3 = stats, 4 = experience, 5 = ready
   const containerRef = useRef(null);
   const buildTimeoutRef = useRef([]);
 
@@ -117,7 +32,6 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm }) => {
   const replayBuild = () => {
     clearTimeouts();
     setIsBuilding(true);
-    setBuildStep(0);
     setActiveCursors([]);
     setActiveSelection(null);
     setActiveGuides([]);
@@ -129,28 +43,24 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm }) => {
 
     // Step 1: Type cursor enters and types the title (0s - 1.8s)
     schedule(() => {
-      setBuildStep(1);
-      resumeSound.playType(380);
       setActiveCursors([
         {
           id: 'type',
           name: 'Type',
           color: '#1ABCFE',
-          x: 240,
-          y: 110,
-          tool: 'T Text',
-          chat: 'morning! drafting Varun\'s resume',
+          x: 220,
+          y: 130,
+          tool: 'T',
+          chat: 'morning! let\'s draft this',
           isTyping: true,
           action: 'Typing Headline'
         }
       ]);
-      setActiveSelection({ x: 30, y: 50, w: 560, h: 90, label: 'Hero Name • [clamp(3.8rem, 8vw)]' });
-    }, 150);
+      setActiveSelection({ x: 40, y: 70, w: 520, h: 90, label: 'Hero Name • [clamp(3.8rem, 8vw)]' });
+    }, 100);
 
-    // Step 2: Layout joins in, framing Polaroid photo & sticky note (1.8s - 3.8s)
+    // Step 2: Cursor 2 (Layout) joins in, working 2 at a time (1.8s - 3.4s)
     schedule(() => {
-      setBuildStep(2);
-      resumeSound.playSnap(680);
       setActiveCursors([
         {
           id: 'type',
@@ -158,7 +68,7 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm }) => {
           color: '#1ABCFE',
           x: 480,
           y: 200,
-          tool: 'T Text',
+          tool: 'T',
           chat: 'headline looking clean',
           isTyping: true,
           action: 'Writing Lede'
@@ -169,22 +79,20 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm }) => {
           color: '#FF7262',
           x: 780,
           y: 240,
-          tool: 'R Rectangle',
-          chat: 'on it! framing sticky note & photo',
+          tool: 'R',
+          chat: 'on it! framing sticky note',
           action: 'Aligning Polaroid'
         }
       ]);
-      setActiveSelection({ x: 730, y: 130, w: 270, h: 320, label: 'Polaroid & Sticky Note' });
+      setActiveSelection({ x: 740, y: 140, w: 260, h: 320, label: 'Polaroid & Sticky Note' });
       setActiveGuides([
-        { type: 'v', x: 730, y1: 70, y2: 480, label: 'X: Right Column (730px)' },
-        { type: 'h', x1: 30, x2: 1010, y: 240, label: 'Center Alignment' }
+        { type: 'v', x: 740, y1: 80, y2: 480, label: 'X: Right Column (740px)' },
+        { type: 'h', x1: 40, x2: 1000, y: 240, label: 'Center Alignment' }
       ]);
-    }, 1800);
+    }, 1900);
 
-    // Step 3: Reviewer 2 stamps 4 stats via ⌥ Option Duplicate (3.8s - 6.0s)
+    // Step 3: Layout hands off to Reviewer 2, stamping stats (3.5s - 5.2s)
     schedule(() => {
-      setBuildStep(3);
-      resumeSound.playThump(220);
       setActiveCursors([
         {
           id: 'reviewer',
@@ -192,31 +100,29 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm }) => {
           color: '#0ACF83',
           x: 280,
           y: 430,
-          tool: '⌥ Duplicate',
-          chat: 'stamping 4 wob-pills (⌥ dup)',
+          tool: '⌥',
+          chat: 'stamping 4 wob-pills',
           action: 'Duplicating Stats'
         },
         {
-          id: 'spacing',
-          name: 'Spacing',
-          color: '#5F9E1A',
-          x: 640,
+          id: 'layout',
+          name: 'Layout',
+          color: '#FF7262',
+          x: 620,
           y: 430,
-          tool: 'V Move',
-          chat: 'equal 16px gaps verified',
+          tool: 'V',
+          chat: 'equal 16px gaps',
           action: 'Smart Guides'
         }
       ]);
-      setActiveSelection({ x: 30, y: 390, w: 970, h: 80, label: 'Stats Row • [4 × 1fr]' });
+      setActiveSelection({ x: 40, y: 390, w: 960, h: 80, label: 'Stats Row • [4 × 1fr]' });
       setActiveGuides([
-        { type: 'h', x1: 30, x2: 1010, y: 390, label: 'Stats Baseline' }
+        { type: 'h', x1: 40, x2: 1000, y: 390, label: 'Stats Baseline' }
       ]);
-    }, 3800);
+    }, 3600);
 
-    // Step 4: Type cursor moves to Experience Timeline, QA verifies LinkedIn dates (6.0s - 8.2s)
+    // Step 4: Type cursor moves to Experience Timeline, QA checks bounds (5.3s - 7.0s)
     schedule(() => {
-      setBuildStep(4);
-      resumeSound.playThump(250);
       setActiveCursors([
         {
           id: 'type',
@@ -224,8 +130,8 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm }) => {
           color: '#1ABCFE',
           x: 320,
           y: 720,
-          tool: 'T Text',
-          chat: 'UniEvent & Assemble synced with LinkedIn',
+          tool: 'T',
+          chat: 'UniEvent & Assemble synced',
           action: 'Timeline Roles'
         },
         {
@@ -234,36 +140,34 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm }) => {
           color: '#EC4899',
           x: 740,
           y: 740,
-          tool: 'V Move',
+          tool: 'V',
           chat: 'dates match LinkedIn 100%',
           action: 'Verification'
         }
       ]);
-      setActiveSelection({ x: 30, y: 640, w: 740, h: 320, label: 'Experience Timeline' });
+      setActiveSelection({ x: 40, y: 640, w: 720, h: 320, label: 'Experience Timeline' });
       setActiveGuides([
         { type: 'v', x: 62, y1: 640, y2: 960, label: 'Timeline Vertical Line' }
       ]);
-    }, 6000);
+    }, 5300);
 
-    // Step 5: Final celebration & handover (8.2s - 9.8s)
+    // Step 5: Final touch & celebration (7.1s - 8.2s)
     schedule(() => {
-      setBuildStep(5);
-      resumeSound.playChime();
       setActiveCursors([
         {
           id: 'varun',
           name: 'Varun Sehgal',
           color: '#A259FF',
           x: 520,
-          y: 480,
-          tool: '✓ Complete',
+          y: 500,
+          tool: '✓',
           chat: '✨ Built live, by a crowd of cursors!',
           action: 'Ready!'
         }
       ]);
       setActiveSelection(null);
       setActiveGuides([]);
-    }, 8200);
+    }, 7100);
 
     // End build animation
     schedule(() => {
@@ -271,18 +175,50 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm }) => {
       setActiveCursors([]);
       setActiveSelection(null);
       setActiveGuides([]);
-    }, 9800);
+    }, 8400);
   };
 
-  // Automatically start build animation on mount (just like kittu.pro/resume)
   useEffect(() => {
-    replayBuild();
     return () => clearTimeouts();
   }, []);
 
   return (
     <div className="kittu-resume-artboard-box" ref={containerRef}>
-      {/* Main Container with progressive reveal */}
+      {/* Top Header / Nav */}
+      <div className="cv-top-bar">
+        {onBack ? (
+          <button type="button" onClick={onBack} className="cv-back-link" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+            <span>←</span> Back to Workspace
+          </button>
+        ) : (
+          <span className="cv-back-link">
+            <span>←</span> VarunOS Desktop
+          </span>
+        )}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <button
+            type="button"
+            className="cv-replay-btn"
+            onClick={replayBuild}
+            title="Replay the collaborative crowd-of-cursors build animation"
+          >
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 12a8 8 0 1 0 2.6-5.9M4 4v4.5h4.5" />
+            </svg>
+            Replay the build
+          </button>
+          <a
+            href="/Varun_Sehgal_Resume_Updated.pdf"
+            download="Varun_Sehgal_Resume.pdf"
+            className="cv-copy-btn"
+            style={{ textDecoration: 'none' }}
+          >
+            Download PDF
+          </a>
+        </div>
+      </div>
+
+      {/* Main Container */}
       <div className={`cv-container ${isBuilding ? 'is-building' : ''}`}>
         {/* Collaborative Cursors Overlay when build is running */}
         {isBuilding && (
@@ -402,7 +338,7 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm }) => {
                   }}
                 >
                   <span>{c.name}</span>
-                  {c.tool && <span style={{ opacity: 0.9, fontSize: '10.5px', background: 'rgba(0,0,0,0.25)', padding: '1px 5px', borderRadius: '3px' }}>{c.tool}</span>}
+                  {c.tool && <span style={{ opacity: 0.85, fontSize: '11px', background: 'rgba(0,0,0,0.2)', padding: '1px 4px', borderRadius: '2px' }}>{c.tool}</span>}
                 </span>
 
                 {/* Chat Bubble */}
@@ -412,16 +348,16 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm }) => {
                       position: 'absolute',
                       top: '-36px',
                       left: '14px',
-                      background: c.color,
-                      color: '#ffffff',
-                      fontFamily: 'var(--nf-sketch), cursive',
+                      background: '#ffffff',
+                      color: '#1c1917',
+                      border: `1.5px solid ${c.color}`,
+                      borderRadius: '6px',
+                      padding: '4px 10px',
                       fontSize: '12px',
                       fontWeight: '600',
-                      padding: '4px 10px',
-                      borderRadius: '2px 12px 12px 12px',
-                      whiteSpace: 'nowrap',
-                      boxShadow: '0 4px 12px rgba(0,0,0,0.25)',
-                      pointerEvents: 'none'
+                      fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.12)',
+                      whiteSpace: 'nowrap'
                     }}
                   >
                     💬 {c.chat}
@@ -433,52 +369,33 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm }) => {
         )}
 
         <main className="cv-main-content">
-          {/* SECTION 1: HERO HEADER */}
-          <section className="cv-hero" aria-labelledby="cv-name">
-            <div>
-              <p className="cv-lede">Hello, I'm</p>
-              <h1 id="cv-name" className="cv-name">
-                Varun Sehgal
-              </h1>
-
+          {/* SECTION 1: HERO */}
+          <section className="cv-section cv-hero" aria-label="Varun Sehgal">
+            <div className="cv-hero-text">
+              <h1 className="cv-name">Varun Sehgal</h1>
               <p className="cv-lede">
-                <strong>Product designer</strong>, systems thinker &amp; builder. UI/UX Designer Intern at <strong>UniEvent (EventFlow)</strong> &amp; Assistant Head of Operations at <strong>Assemble</strong>.
+                I study and craft <span className="cv-hi">friction-free product experiences</span>: 
+                how interaction models shape user psychology, and whether enterprise systems can be made fluid, beautiful, and tactile without losing execution speed.
               </p>
-
-              <div className="cv-links-row">
-                <a href="mailto:varun.sehgal02@gmail.com" className="cv-link-pill">
-                  <span>varun.sehgal02@gmail.com</span>
-                </a>
-                <button type="button" onClick={copyEmail} className="cv-copy-btn">
-                  {copied ? '✓ Copied' : 'Copy'}
-                </button>
-                <a href="https://www.linkedin.com/in/varunsehgal02" target="_blank" rel="noopener noreferrer" className="cv-link-pill">
-                  LinkedIn ↗
-                </a>
-                <a href="https://github.com/varunsehgal05" target="_blank" rel="noopener noreferrer" className="cv-link-pill">
-                  GitHub ↗
-                </a>
-                <button
-                  type="button"
-                  onClick={replayBuild}
-                  className="cv-copy-btn"
-                  style={{ background: 'rgba(162, 89, 255, 0.15)', color: '#7c3aed', border: '1px solid rgba(162, 89, 255, 0.3)' }}
-                  title="Replay crowd of cursors build"
-                >
-                  ↺ Replay Build
-                </button>
-              </div>
+              <p className="cv-now-line">
+                UI/UX Designer Intern at <strong>UniEvent (EventFlow)</strong> &amp; Assistant Head of Operations at <strong>Assemble</strong>.
+              </p>
+              <p className="cv-links">
+                <a href="mailto:varun.sehgal02@gmail.com">Email</a>
+                <a href="https://github.com/varunsehgal05" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a href="https://linkedin.com/in/varunsehgal02" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                <a href="https://varunsehgal.runs-on.dev" target="_blank" rel="noopener noreferrer">Portfolio</a>
+              </p>
             </div>
 
-            {/* Hero Right Column: Polaroid & Sticky Note */}
-            <div className="cv-hero-aside">
-              <div className="cv-note">
+            {/* Right side: Sticky note + Polaroid photo */}
+            <div className="cv-side">
+              <aside className="cv-note" aria-label="What I'm working on now">
+                <p className="cv-note-head">Now: AI Interview &amp; EventFlow</p>
                 <p>
-                  <strong>Hey, I'm Varun!</strong>
-                  <br />
-                  I bridge the gap between high-fidelity Figma components and clean, production-ready code.
+                  Architecting multi-token design systems in Figma and translating them with sub-millisecond fidelity into Next.js &amp; Tailwind components.
                 </p>
-              </div>
+              </aside>
 
               <div className="cv-polaroid">
                 <img
@@ -493,8 +410,8 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm }) => {
             {/* In Numbers Stats Row (4 Wob-Pills) */}
             <ul className="cv-stats" aria-label="In numbers">
               <li className="cv-stat">
-                <strong>3+</strong>
-                <span>Years Product Design Experience</span>
+                <strong>6+</strong>
+                <span>industry &amp; SaaS projects shipped</span>
               </li>
               <li className="cv-stat">
                 <strong>200+</strong>
@@ -505,8 +422,8 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm }) => {
                 <span>Place Winner at HACKeThor (Unstop)</span>
               </li>
               <li className="cv-stat">
-                <strong>2</strong>
-                <span>National Hackathons (Winner &amp; Organizer)</span>
+                <strong>8.5</strong>
+                <span>CGPA in B.Tech CSE at JUET</span>
               </li>
             </ul>
           </section>
@@ -528,7 +445,7 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm }) => {
                 </p>
               </article>
               <article className="cv-thread cv-thread-2">
-                <h3>Design Engineering &amp; Vibecoding</h3>
+                <h3>Design Engineering</h3>
                 <p>
                   Zero-friction handoff: transforming Figma variables and layouts into executable React, Next.js, and Tailwind CSS components with 60fps animations.
                 </p>
@@ -544,7 +461,7 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm }) => {
                 <p className="cv-job-head">
                   <strong>UI/UX Designer Intern</strong>, UniEvent (EventFlow)
                 </p>
-                <p className="cv-job-meta">Jun 2024 — Nov 2024 • 6 Mos, Bengaluru, Karnataka, India (Remote - Ended early Nov)</p>
+                <p className="cv-job-meta">Sep 2024 — Nov 2024 • 6 Mos, Bengaluru, Karnataka, India (Remote)</p>
                 <ul>
                   <li>Designed campus event ticketing platform (EventFlow) from initial wireframes to high-fidelity clickable prototype.</li>
                   <li>Slashed transaction drop-off by 30% across a 4-step booking workflow across 50+ reusable component variants.</li>
@@ -582,7 +499,7 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm }) => {
                 <li className="cv-entry">
                   <strong>B.Tech in Computer Science &amp; Engineering</strong>
                   <span>Jaypee University of Engineering &amp; Technology (JUET), Guna</span>
-                  <span className="cv-soft">2023 — 2027</span>
+                  <span className="cv-soft">2023 — 2027 • CGPA 8.5</span>
                 </li>
                 <li className="cv-entry">
                   <strong>Senior Secondary (Class XII)</strong>
@@ -597,7 +514,7 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm }) => {
                   <span>1st Place in National Level Hackathon organized by Unstop out of 500+ participants.</span>
                 </li>
                 <li className="cv-entry">
-                  <strong>🚀 CodeSrijan Organizer</strong>
+                  <strong>CodeSrijan Organizer</strong>
                   <span>Lead UI/UX Designer and Frontend architect for 200+ hackathon participants across 50+ universities.</span>
                 </li>
                 <li className="cv-entry">
@@ -612,76 +529,123 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm }) => {
           <section className="cv-section" aria-labelledby="cv-made">
             <h2 id="cv-made" className="cv-section-title">Things I've made</h2>
             <ul className="cv-made">
-              {/* Big Featured Card: CodeSrijan (Vibecoded Site) */}
+              {/* Big Featured Card */}
               <li className="cv-made-big">
-                <a href="http://codesrijan-nine.vercel.app/" target="_blank" rel="noopener noreferrer" className="cv-made-card">
+                <a href="https://codesrijan-nine.vercel.app/" target="_blank" rel="noopener noreferrer" className="cv-made-card">
                   <div className="cv-cover-box" style={{ background: '#090d16', border: '2px solid #2b2b2b' }}>
                     <div style={{ textAlign: 'center', padding: '24px' }}>
-                      <span style={{ fontSize: '32px' }}>⚡</span>
-                      <div style={{ color: '#67e8f9', fontWeight: '800', marginTop: '6px' }}>CodeSrijan Hackathon Portal</div>
-                      <div style={{ color: '#a7f3d0', fontSize: '11px', marginTop: '4px', fontWeight: '700' }}>⚡ Vibecoded Live Site • 200+ Hackers</div>
+                      <span style={{ fontSize: '32px' }}>🚀</span>
+                      <div style={{ color: '#67e8f9', fontWeight: '800', marginTop: '6px' }}>CodeSrijan Ecosystem</div>
+                      <div style={{ color: '#94a3b8', fontSize: '11px', marginTop: '4px' }}>200+ Hackers • 72h Sprint • Live Evaluation</div>
                     </div>
                   </div>
                   <div>
-                    <strong>CodeSrijan Hackathon Portal (Vibecoded Live Site)</strong>
-                    <span>Full-stack live hackathon platform vibecoded &amp; engineered by Varun Sehgal for Jaypee University. Features team matchmaking, rubric evaluation, and real-time announcements.</span>
+                    <strong>CodeSrijan Hackathon Portal</strong>
+                    <span>Full-stack live hackathon platform designed for Jaypee University. Features team matchmaking, rubric evaluation, and real-time announcements.</span>
                   </div>
                 </a>
               </li>
 
               {/* Card 2: EventFlow */}
               <li>
-                <a href="https://www.figma.com/design/29nTBBWxZfoOKdFnOaQWbq/EventFlow?node-id=2-2&p=f&t=ucsh4jF84sBl50UA-0" target="_blank" rel="noopener noreferrer" className="cv-made-card">
-                  <div className="cv-cover-box" style={{ background: '#1c1917', border: '2px solid #2b2b2b' }}>
-                    <div style={{ textAlign: 'center', padding: '20px' }}>
-                      <span style={{ fontSize: '28px' }}>🎟️</span>
-                      <div style={{ color: '#fdba74', fontWeight: '800', marginTop: '4px' }}>EventFlow</div>
-                      <div style={{ color: '#a8a29e', fontSize: '10.5px' }}>❖ Figma Design System</div>
+                <div className="cv-made-card">
+                  <div className="cv-cover-box" style={{ background: '#1c1917' }}>
+                    <div style={{ textAlign: 'center' }}>
+                      <span style={{ fontSize: '24px' }}>🎟️</span>
+                      <div style={{ color: '#f59e0b', fontSize: '11px', fontWeight: '800', marginTop: '4px' }}>EventFlow</div>
                     </div>
                   </div>
-                  <div>
-                    <strong>EventFlow Experience Platform</strong>
-                    <span>Campus ticketing flow with a 50+ token design system reducing checkout abandonment by 30%.</span>
-                  </div>
-                </a>
+                  <strong>EventFlow Ticketing</strong>
+                  <span>Campus event discovery &amp; instant booking platform with 30% reduced drop-off.</span>
+                </div>
               </li>
 
-              {/* Card 3: AI Interview Prep */}
+              {/* Card 3: AI Interview */}
               <li>
-                <a href="https://www.figma.com/design/ezDh2NmBto6iv7xaQNs3Ha/AI-Interview?node-id=11-1842&t=siyh0b32g2XWrRNe-1" target="_blank" rel="noopener noreferrer" className="cv-made-card">
-                  <div className="cv-cover-box" style={{ background: '#0f172a', border: '2px solid #2b2b2b' }}>
-                    <div style={{ textAlign: 'center', padding: '20px' }}>
-                      <span style={{ fontSize: '28px' }}>🤖</span>
-                      <div style={{ color: '#38bdf8', fontWeight: '800', marginTop: '4px' }}>AI Interview</div>
-                      <div style={{ color: '#94a3b8', fontSize: '10.5px' }}>❖ Figma AI SaaS</div>
+                <div className="cv-made-card">
+                  <div className="cv-cover-box" style={{ background: '#0b1329' }}>
+                    <div style={{ textAlign: 'center' }}>
+                      <span style={{ fontSize: '24px' }}>🤖</span>
+                      <div style={{ color: '#38bdf8', fontSize: '11px', fontWeight: '800', marginTop: '4px' }}>AI Interview</div>
                     </div>
                   </div>
-                  <div>
-                    <strong>AI Interview Prep System</strong>
-                    <span>Technical mock interview evaluation platform with real-time AI scoring and grading matrix.</span>
-                  </div>
-                </a>
+                  <strong>AI Interview Studio</strong>
+                  <span>Interactive question generator and audio mock-interview coach UI in Figma.</span>
+                </div>
               </li>
 
               {/* Card 4: Expensify */}
               <li>
-                <a href="https://www.figma.com/design/3mw8XBHEZ3b8HKNNqcs6U2/Expensify---Budget-Tracker-App?node-id=135-318&t=gUJEMUlyDc8ERNeR-1" target="_blank" rel="noopener noreferrer" className="cv-made-card">
-                  <div className="cv-cover-box" style={{ background: '#022c22', border: '2px solid #2b2b2b' }}>
-                    <div style={{ textAlign: 'center', padding: '20px' }}>
-                      <span style={{ fontSize: '28px' }}>💳</span>
-                      <div style={{ color: '#34d399', fontWeight: '800', marginTop: '4px' }}>Expensify</div>
-                      <div style={{ color: '#6ee7b7', fontSize: '10.5px' }}>❖ Figma Mobile FinTech</div>
+                <div className="cv-made-card">
+                  <div className="cv-cover-box" style={{ background: '#18181b' }}>
+                    <div style={{ textAlign: 'center' }}>
+                      <span style={{ fontSize: '24px' }}>💳</span>
+                      <div style={{ color: '#10b981', fontSize: '11px', fontWeight: '800', marginTop: '4px' }}>Expensify</div>
                     </div>
                   </div>
-                  <div>
-                    <strong>Expensify Budget Tracker</strong>
-                    <span>17+ mobile screens refined for rapid expense logging under 5 seconds with micro-interactions.</span>
+                  <strong>Expensify Budget</strong>
+                  <span>Mobile personal finance app prototype with gesture-driven expense tagging.</span>
+                </div>
+              </li>
+
+              {/* Card 5: Movie Tickets */}
+              <li>
+                <div className="cv-made-card">
+                  <div className="cv-cover-box" style={{ background: '#26122c' }}>
+                    <div style={{ textAlign: 'center' }}>
+                      <span style={{ fontSize: '24px' }}>🎬</span>
+                      <div style={{ color: '#f43f5e', fontSize: '11px', fontWeight: '800', marginTop: '4px' }}>Movie Booking</div>
+                    </div>
                   </div>
-                </a>
+                  <strong>Movie Tickets App</strong>
+                  <span>Dynamic seat-selection matrix and trailer preview interaction flow.</span>
+                </div>
+              </li>
+
+              {/* Card 6: SaaS Landing */}
+              <li>
+                <div className="cv-made-card">
+                  <div className="cv-cover-box" style={{ background: '#111827' }}>
+                    <div style={{ textAlign: 'center' }}>
+                      <span style={{ fontSize: '24px' }}>⚡</span>
+                      <div style={{ color: '#a855f7', fontSize: '11px', fontWeight: '800', marginTop: '4px' }}>SaaS Conversion</div>
+                    </div>
+                  </div>
+                  <strong>SaaS Landing Pages</strong>
+                  <span>High-converting responsive landing pages built for 10+ international tech startups.</span>
+                </div>
               </li>
             </ul>
           </section>
+
+          {/* SECTION 6: SAY HELLO */}
+          <section className="cv-section cv-contact" aria-labelledby="cv-contact">
+            <h2 id="cv-contact" className="cv-section-title">Say hello</h2>
+            <p>For product design roles, design systems, or collaboration, write to me:</p>
+            <p className="cv-email-line">
+              <a className="cv-email" href="mailto:varun.sehgal02@gmail.com">varun.sehgal02@gmail.com</a>
+              <button type="button" className="cv-copy-btn" onClick={copyEmail}>
+                {copied ? '✓ Copied!' : 'Copy'}
+              </button>
+            </p>
+            <p className="cv-links">
+              <a href="https://github.com/varunsehgal05" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a href="https://linkedin.com/in/varunsehgal02" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+              <a href="https://varunsehgal.runs-on.dev" target="_blank" rel="noopener noreferrer">Portfolio Web</a>
+            </p>
+          </section>
         </main>
+
+        {/* FOOTER */}
+        <footer className="cv-footer">
+          <p>© 2026 Varun Sehgal. Built live, by a crowd of cursors.</p>
+          <button type="button" className="cv-replay-btn" onClick={replayBuild}>
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 12a8 8 0 1 0 2.6-5.9M4 4v4.5h4.5" />
+            </svg>
+            Replay the build
+          </button>
+        </footer>
       </div>
     </div>
   );
