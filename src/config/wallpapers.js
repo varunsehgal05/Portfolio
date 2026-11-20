@@ -1,33 +1,5 @@
 export const desktopWallpapers = [
   {
-    id: 'roxy-calendar',
-    name: 'Roxy Ifrita (Teal Calendar)',
-    tag: 'Zenless Anime Calendar',
-    thumbnail: '/wallpapers/roxy-calendar.jpg',
-    style: {
-      backgroundColor: '#0a1413',
-      backgroundImage: 'url(/wallpapers/roxy-calendar.jpg)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      imageRendering: 'auto'
-    }
-  },
-  {
-    id: 'neon-crimson-cyber',
-    name: 'Neon Crimson Cyberpunk',
-    tag: 'Cyberpunk Neon',
-    thumbnail: '/wallpapers/neon-crimson-cyber.jpg',
-    style: {
-      backgroundColor: '#160408',
-      backgroundImage: 'url(/wallpapers/neon-crimson-cyber.jpg)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      imageRendering: 'auto'
-    }
-  },
-  {
     id: 'default',
     name: 'Sequoia Midnight',
     tag: 'Dark Grid',
@@ -105,34 +77,6 @@ export const terminalWallpapers = [
     }
   },
   {
-    id: 'roxy-calendar',
-    name: 'Roxy Ifrita (Teal Calendar)',
-    tag: 'Anime Calendar',
-    image: '/wallpapers/roxy-calendar.jpg',
-    overlayColor: 'rgba(0, 0, 0, 0.22)',
-    bgStyle: {
-      backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.22), rgba(0, 0, 0, 0.32)), url(/wallpapers/roxy-calendar.jpg)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      imageRendering: 'auto'
-    }
-  },
-  {
-    id: 'neon-crimson-cyber',
-    name: 'Neon Crimson Cyberpunk',
-    tag: 'Cyberpunk Neon',
-    image: '/wallpapers/neon-crimson-cyber.jpg',
-    overlayColor: 'rgba(16, 6, 10, 0.40)',
-    bgStyle: {
-      backgroundImage: 'linear-gradient(rgba(16, 6, 10, 0.40), rgba(16, 6, 10, 0.50)), url(/wallpapers/neon-crimson-cyber.jpg)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      imageRendering: 'auto'
-    }
-  },
-  {
     id: 'monterey',
     name: 'Monterey (inspired by macOS)',
     tag: 'macOS-inspired',
@@ -144,6 +88,28 @@ export const terminalWallpapers = [
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
       imageRendering: 'auto'
+    }
+  },
+  {
+    id: 'cosmic',
+    name: 'Deep Cosmic Purple',
+    tag: 'Nebula Glow',
+    image: null,
+    bgStyle: {
+      backgroundColor: '#0a0614',
+      backgroundImage: 'radial-gradient(circle at 60% 40%, #1c0b38 0%, #0f051e 60%, #080312 100%)',
+      backgroundSize: '100% 100%'
+    }
+  },
+  {
+    id: 'aurora',
+    name: 'Cyan Aurora Glow',
+    tag: 'Borealis',
+    image: null,
+    bgStyle: {
+      backgroundColor: '#03131e',
+      backgroundImage: 'radial-gradient(circle at 40% 60%, #083344 0%, #05202e 60%, #02111c 100%)',
+      backgroundSize: '100% 100%'
     }
   }
 ];

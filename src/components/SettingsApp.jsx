@@ -38,17 +38,25 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
 
   const [activeWallpaper, setActiveWallpaper] = useState(() => {
     try {
-      return localStorage.getItem('varunos_desktop_wallpaper') || 'roxy-calendar';
+      const saved = localStorage.getItem('varunos_desktop_wallpaper');
+      if (saved && saved !== 'roxy-calendar' && saved !== 'neon-crimson-cyber') {
+        return saved;
+      }
+      return 'default';
     } catch {
-      return 'roxy-calendar';
+      return 'default';
     }
   });
 
   const [activeTerminalWallpaper, setActiveTerminalWallpaper] = useState(() => {
     try {
-      return localStorage.getItem('varunos_terminal_wallpaper') || 'roxy-calendar';
+      const saved = localStorage.getItem('varunos_terminal_wallpaper');
+      if (saved && saved !== 'roxy-calendar' && saved !== 'neon-crimson-cyber') {
+        return saved;
+      }
+      return 'default';
     } catch {
-      return 'roxy-calendar';
+      return 'default';
     }
   });
 

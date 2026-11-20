@@ -43,12 +43,16 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
   const FULLSCREEN_APPS = ['figma', 'vscode', 'safari'];
   const [bouncingApp, setBouncingApp] = useState(null);
 
-  // Active desktop wallpaper state (persisted in localStorage, defaults to user selected Roxy Calendar)
+  // Active desktop wallpaper state (persisted in localStorage, defaults to Sequoia Midnight)
   const [activeWallpaperId, setActiveWallpaperId] = useState(() => {
     try {
-      return localStorage.getItem('varunos_desktop_wallpaper') || 'roxy-calendar';
+      const saved = localStorage.getItem('varunos_desktop_wallpaper');
+      if (saved && saved !== 'roxy-calendar' && saved !== 'neon-crimson-cyber') {
+        return saved;
+      }
+      return 'default';
     } catch {
-      return 'roxy-calendar';
+      return 'default';
     }
   });
   const [prevWallpaper, setPrevWallpaper] = useState(null);

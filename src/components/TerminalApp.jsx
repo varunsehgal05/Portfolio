@@ -79,9 +79,13 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
   // Active terminal wallpaper state (persists in localStorage)
   const [activeWallpaperId, setActiveWallpaperId] = useState(() => {
     try {
-      return localStorage.getItem('varunos_terminal_wallpaper') || 'roxy-calendar';
+      const saved = localStorage.getItem('varunos_terminal_wallpaper');
+      if (saved && saved !== 'roxy-calendar' && saved !== 'neon-crimson-cyber') {
+        return saved;
+      }
+      return 'default';
     } catch {
-      return 'roxy-calendar';
+      return 'default';
     }
   });
 
@@ -199,21 +203,21 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
           setHistory([
             ...newHistory,
             '🖼️ VARUNOS TERMINAL WALLPAPERS:',
-            '  • roxy      - Roxy Ifrita (Teal & Monochrome Anime Calendar)',
-            '  • cyber     - Neon Crimson Cyberpunk',
-            '  • monterey  - Monterey (inspired by macOS)',
             '  • dark      - Solid Dark (Clean Minimal)',
+            '  • monterey  - Monterey (inspired by macOS)',
+            '  • cosmic    - Deep Cosmic Purple',
+            '  • aurora    - Cyan Aurora Glow',
             '',
             `Current active backdrop: ${currentWp.name}`,
-            'Usage: wallpaper <name> (e.g. "wallpaper roxy", "wallpaper cyber", "wallpaper dark")',
+            'Usage: wallpaper <name> (e.g. "wallpaper dark", "wallpaper monterey", "wallpaper cosmic")',
             ''
           ]);
         } else {
           const key = arg.toLowerCase().trim();
           let matched = null;
-          if (key.includes('roxy') || key.includes('teal') || key.includes('anime')) matched = 'roxy-calendar';
-          else if (key.includes('cyber') || key.includes('neon') || key.includes('red')) matched = 'neon-crimson-cyber';
-          else if (key.includes('monterey') || key.includes('mac')) matched = 'monterey';
+          if (key.includes('monterey') || key.includes('mac')) matched = 'monterey';
+          else if (key.includes('cosmic') || key.includes('purple')) matched = 'cosmic';
+          else if (key.includes('aurora') || key.includes('cyan')) matched = 'aurora';
           else if (key.includes('dark') || key.includes('default') || key.includes('solid')) matched = 'default';
 
           if (matched) {
@@ -227,7 +231,7 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
           } else {
             setHistory([
               ...newHistory,
-              `wallpaper: unknown theme "${arg}". Available: roxy, cyber, monterey, dark`,
+              `wallpaper: unknown theme "${arg}". Available: dark, monterey, cosmic, aurora`,
               ''
             ]);
           }
@@ -387,7 +391,7 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
     } else if (e.key === 'Tab') {
       e.preventDefault();
       // Auto-completion
-      const available = ['help', 'neofetch', 'wallpaper', 'wallpaper roxy', 'wallpaper cyber', 'wallpaper dark', 'skills', 'projects', 'vibecoding', 'experience', 'contact', 'clear', 'cat resume', 'open figma', 'open vscode', 'open safari', 'open contact'];
+      const available = ['help', 'neofetch', 'wallpaper', 'wallpaper dark', 'wallpaper monterey', 'wallpaper cosmic', 'wallpaper aurora', 'skills', 'projects', 'vibecoding', 'experience', 'contact', 'clear', 'cat resume', 'open figma', 'open vscode', 'open safari', 'open contact'];
       const match = available.find(c => c.startsWith(inputVal.toLowerCase().trim()));
       if (match) {
         setInputVal(match);
@@ -462,25 +466,14 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
             <span className="quick-bar-label">🖼️ Wallpaper:</span>
             <button
               type="button"
-              className={`terminal-pill-btn terminal-wp-pill ${activeWallpaperId === 'roxy-calendar' ? 'active' : ''}`}
+              className={`terminal-pill-btn terminal-wp-pill ${activeWallpaperId === 'default' ? 'active' : ''}`}
               onClick={(e) => {
                 e.stopPropagation();
-                setTerminalWallpaper('roxy-calendar');
+                setTerminalWallpaper('default');
               }}
-              title="Roxy Ifrita (Teal Calendar)"
+              title="Solid Dark"
             >
-              Roxy
-            </button>
-            <button
-              type="button"
-              className={`terminal-pill-btn terminal-wp-pill ${activeWallpaperId === 'neon-crimson-cyber' ? 'active' : ''}`}
-              onClick={(e) => {
-                e.stopPropagation();
-                setTerminalWallpaper('neon-crimson-cyber');
-              }}
-              title="Neon Crimson Cyberpunk"
-            >
-              Cyber
+              Dark
             </button>
             <button
               type="button"
@@ -495,14 +488,25 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
             </button>
             <button
               type="button"
-              className={`terminal-pill-btn terminal-wp-pill ${activeWallpaperId === 'default' ? 'active' : ''}`}
+              className={`terminal-pill-btn terminal-wp-pill ${activeWallpaperId === 'cosmic' ? 'active' : ''}`}
               onClick={(e) => {
                 e.stopPropagation();
-                setTerminalWallpaper('default');
+                setTerminalWallpaper('cosmic');
               }}
-              title="Solid Dark"
+              title="Deep Cosmic Purple"
             >
-              Dark
+              Cosmic
+            </button>
+            <button
+              type="button"
+              className={`terminal-pill-btn terminal-wp-pill ${activeWallpaperId === 'aurora' ? 'active' : ''}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                setTerminalWallpaper('aurora');
+              }}
+              title="Cyan Aurora Glow"
+            >
+              Aurora
             </button>
           </div>
 
