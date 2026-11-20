@@ -2225,7 +2225,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                           </div>
                           <div className="bento-body">
                             <span className="bento-cat">{proj.category}</span>
-                            <h3 
+                            <h3
                               className="bento-title"
                               contentEditable="true"
                               suppressContentEditableWarning={true}
@@ -2234,7 +2234,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                             >
                               {props.customText || proj.name}
                             </h3>
-                            <p 
+                            <p
                               className="bento-desc"
                               contentEditable="true"
                               suppressContentEditableWarning={true}
@@ -2400,234 +2400,234 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                                 <span className="material-symbols-outlined text-[17px]">{item.icon}</span>
                               </div>
 
-                            {/* Alternating Card */}
-                            <div
-                              className={`zigzag-card figma-selectable-node ${isSelected ? 'is-selected' : ''}`}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleSelectNode(expNodeId, props.customText || item.highlight, 'Frame');
-                              }}
-                              style={{
-                                width: props.w ? `${props.w}px` : undefined,
-                                minHeight: props.h ? `${props.h}px` : undefined,
-                                borderRadius: props.radius !== undefined ? `${props.radius}px` : undefined,
-                                backgroundColor: props.fill || undefined,
-                                borderColor: props.stroke || undefined,
-                                borderWidth: props.strokeWidth ? `${props.strokeWidth}px` : undefined,
-                                borderStyle: props.stroke ? 'solid' : undefined,
-                                opacity: props.opacity !== undefined ? props.opacity / 100 : undefined,
-                                transform: (props.x || props.y) ? `translate(${props.x || 0}px, ${props.y || 0}px)` : undefined,
-                                transition: 'all 0.15s ease'
-                              }}
-                            >
-                              {isSelected && (
-                                <div className="figma-selection-overlay">
-                                  <div className="selection-tag">❖ {props.customText || item.highlight} [{props.w || 420}×{props.h || 220}]</div>
-                                  <div className="selection-handle tl" />
-                                  <div className="selection-handle tr" />
-                                  <div className="selection-handle bl" />
-                                  <div className="selection-handle br" />
-                                </div>
-                              )}
-                              <div className="zigzag-card-header">
-                                <span className="zigzag-card-date">{item.date}</span>
-                                <span className="zigzag-card-badge">{item.category}</span>
-                              </div>
-
-                              <div className="zigzag-card-title-row">
-                                <h3 
-                                  className="zigzag-card-title"
-                                  contentEditable="true"
-                                  suppressContentEditableWarning={true}
-                                  onBlur={(e) => updateSelectedProp('customText', e.currentTarget.innerText)}
-                                  title="Click to edit title"
-                                >
-                                  <span className="zigzag-highlight-name">{props.customText || item.highlight}</span> {item.titleRest}
-                                </h3>
-                              </div>
-
-                              {item.quote && (
-                                <blockquote className="zigzag-card-quote">
-                                  "{item.quote}"
-                                </blockquote>
-                              )}
-
-                              {item.desc && (
-                                <p className="zigzag-card-desc">{item.desc}</p>
-                              )}
-
-                              <div className="zigzag-card-footer">
-                                <div className="zigzag-badges-row">
-                                  {item.award && (
-                                    <span className="hackathon-award-badge">{item.award}</span>
-                                  )}
-                                  {item.credentialId && (
-                                    <span className="cert-id-badge">ID: {item.credentialId}</span>
-                                  )}
-                                  {item.location && (
-                                    <span className="timeline-location-pill">{item.location}</span>
-                                  )}
-                                </div>
-
-                                {item.link && (
-                                  <div className="zigzag-actions-row">
-                                    <a
-                                      href={item.link}
-                                      target="_blank"
-                                      rel="noreferrer"
-                                      className="cert-action-btn primary"
-                                      title="Open link in browser"
-                                    >
-                                      <span>{item.actionLabel || 'Verify'}</span>
-                                      <span className="material-symbols-outlined text-[13px]">open_in_new</span>
-                                    </a>
-                                    <button
-                                      type="button"
-                                      className="cert-action-btn secondary"
-                                      onClick={() => handleCopyLink(item.link, `${item.highlight} link`)}
-                                      title="Copy link to clipboard"
-                                    >
-                                      <span className="material-symbols-outlined text-[13px]">content_copy</span>
-                                      <span>Copy</span>
-                                    </button>
+                              {/* Alternating Card */}
+                              <div
+                                className={`zigzag-card figma-selectable-node ${isSelected ? 'is-selected' : ''}`}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleSelectNode(expNodeId, props.customText || item.highlight, 'Frame');
+                                }}
+                                style={{
+                                  width: props.w ? `${props.w}px` : undefined,
+                                  minHeight: props.h ? `${props.h}px` : undefined,
+                                  borderRadius: props.radius !== undefined ? `${props.radius}px` : undefined,
+                                  backgroundColor: props.fill || undefined,
+                                  borderColor: props.stroke || undefined,
+                                  borderWidth: props.strokeWidth ? `${props.strokeWidth}px` : undefined,
+                                  borderStyle: props.stroke ? 'solid' : undefined,
+                                  opacity: props.opacity !== undefined ? props.opacity / 100 : undefined,
+                                  transform: (props.x || props.y) ? `translate(${props.x || 0}px, ${props.y || 0}px)` : undefined,
+                                  transition: 'all 0.15s ease'
+                                }}
+                              >
+                                {isSelected && (
+                                  <div className="figma-selection-overlay">
+                                    <div className="selection-tag">❖ {props.customText || item.highlight} [{props.w || 420}×{props.h || 220}]</div>
+                                    <div className="selection-handle tl" />
+                                    <div className="selection-handle tr" />
+                                    <div className="selection-handle bl" />
+                                    <div className="selection-handle br" />
                                   </div>
                                 )}
+                                <div className="zigzag-card-header">
+                                  <span className="zigzag-card-date">{item.date}</span>
+                                  <span className="zigzag-card-badge">{item.category}</span>
+                                </div>
+
+                                <div className="zigzag-card-title-row">
+                                  <h3
+                                    className="zigzag-card-title"
+                                    contentEditable="true"
+                                    suppressContentEditableWarning={true}
+                                    onBlur={(e) => updateSelectedProp('customText', e.currentTarget.innerText)}
+                                    title="Click to edit title"
+                                  >
+                                    <span className="zigzag-highlight-name">{props.customText || item.highlight}</span> {item.titleRest}
+                                  </h3>
+                                </div>
+
+                                {item.quote && (
+                                  <blockquote className="zigzag-card-quote">
+                                    "{item.quote}"
+                                  </blockquote>
+                                )}
+
+                                {item.desc && (
+                                  <p className="zigzag-card-desc">{item.desc}</p>
+                                )}
+
+                                <div className="zigzag-card-footer">
+                                  <div className="zigzag-badges-row">
+                                    {item.award && (
+                                      <span className="hackathon-award-badge">{item.award}</span>
+                                    )}
+                                    {item.credentialId && (
+                                      <span className="cert-id-badge">ID: {item.credentialId}</span>
+                                    )}
+                                    {item.location && (
+                                      <span className="timeline-location-pill">{item.location}</span>
+                                    )}
+                                  </div>
+
+                                  {item.link && (
+                                    <div className="zigzag-actions-row">
+                                      <a
+                                        href={item.link}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="cert-action-btn primary"
+                                        title="Open link in browser"
+                                      >
+                                        <span>{item.actionLabel || 'Verify'}</span>
+                                        <span className="material-symbols-outlined text-[13px]">open_in_new</span>
+                                      </a>
+                                      <button
+                                        type="button"
+                                        className="cert-action-btn secondary"
+                                        onClick={() => handleCopyLink(item.link, `${item.highlight} link`)}
+                                        title="Copy link to clipboard"
+                                      >
+                                        <span className="material-symbols-outlined text-[13px]">content_copy</span>
+                                        <span>Copy</span>
+                                      </button>
+                                    </div>
+                                  )}
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                    {/* Footer matching user screenshot */}
-                    <div className="activity-timeline-footer">
-                      <span className="footer-brand">Spectral Chroma</span>
-                      <div className="activity-footer-links">
-                        <span onClick={() => onOpenApp ? onOpenApp('contact') : null}>Feedback</span>
-                        <span>Shortcuts</span>
-                        <span>System Status</span>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  /* Alternate Split Columns View */
-                  <div className="experience-columns-grid">
-                    {/* Timeline Column */}
-                    <div className="timeline-section">
-                      <h2 className="sub-section-title">Career Timeline & Internships</h2>
-                      <div className="timeline-flow">
-                        {TIMELINE.map((item, index) => (
-                          <div key={index} className="timeline-flow-node">
-                            <div className="flow-dot-col">
-                              <span className="flow-dot"></span>
-                              {index < TIMELINE.length - 1 && <span className="flow-stem"></span>}
-                            </div>
-                            <div className="flow-content-card">
-                              <span className="flow-period">{item.period}</span>
-                              <h3 className="flow-role">{item.role}</h3>
-                              <div className="timeline-meta-row">
-                                <a
-                                  href={item.link}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  className="timeline-company-link"
-                                >
-                                  {item.company}
-                                  <span className="material-symbols-outlined text-[13px]">open_in_new</span>
-                                </a>
-                                {item.location && <span className="timeline-location-pill">{item.location}</span>}
-                              </div>
-                              <p className="flow-desc">{item.desc}</p>
-                            </div>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
 
-                      {/* Hackathons Section */}
-                      <div className="hackathons-section">
-                        <h2 className="sub-section-title">Hackathon Wins & Leadership</h2>
+                      {/* Footer matching user screenshot */}
+                      <div className="activity-timeline-footer">
+                        <span className="footer-brand">Spectral Chroma</span>
+                        <div className="activity-footer-links">
+                          <span onClick={() => onOpenApp ? onOpenApp('contact') : null}>Feedback</span>
+                          <span>Shortcuts</span>
+                          <span>System Status</span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    /* Alternate Split Columns View */
+                    <div className="experience-columns-grid">
+                      {/* Timeline Column */}
+                      <div className="timeline-section">
+                        <h2 className="sub-section-title">Career Timeline & Internships</h2>
                         <div className="timeline-flow">
-                          {HACKATHONS.map((hack, index) => (
-                            <div key={hack.id} className="timeline-flow-node">
+                          {TIMELINE.map((item, index) => (
+                            <div key={index} className="timeline-flow-node">
                               <div className="flow-dot-col">
-                                <span className="flow-dot" style={{ background: '#f59e0b' }}></span>
-                                {index < HACKATHONS.length - 1 && <span className="flow-stem"></span>}
+                                <span className="flow-dot"></span>
+                                {index < TIMELINE.length - 1 && <span className="flow-stem"></span>}
                               </div>
                               <div className="flow-content-card">
-                                <span className="flow-period">{hack.date}</span>
-                                <div className="hackathon-award-badge">
-                                  <span>{hack.award}</span>
-                                </div>
-                                <h3 className="flow-role">{hack.title}</h3>
+                                <span className="flow-period">{item.period}</span>
+                                <h3 className="flow-role">{item.role}</h3>
                                 <div className="timeline-meta-row">
                                   <a
-                                    href={hack.link}
+                                    href={item.link}
                                     target="_blank"
                                     rel="noreferrer"
                                     className="timeline-company-link"
                                   >
-                                    {hack.issuer}
+                                    {item.company}
                                     <span className="material-symbols-outlined text-[13px]">open_in_new</span>
                                   </a>
+                                  {item.location && <span className="timeline-location-pill">{item.location}</span>}
                                 </div>
-                                <p className="flow-desc">{hack.desc}</p>
+                                <p className="flow-desc">{item.desc}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Hackathons Section */}
+                        <div className="hackathons-section">
+                          <h2 className="sub-section-title">Hackathon Wins & Leadership</h2>
+                          <div className="timeline-flow">
+                            {HACKATHONS.map((hack, index) => (
+                              <div key={hack.id} className="timeline-flow-node">
+                                <div className="flow-dot-col">
+                                  <span className="flow-dot" style={{ background: '#f59e0b' }}></span>
+                                  {index < HACKATHONS.length - 1 && <span className="flow-stem"></span>}
+                                </div>
+                                <div className="flow-content-card">
+                                  <span className="flow-period">{hack.date}</span>
+                                  <div className="hackathon-award-badge">
+                                    <span>{hack.award}</span>
+                                  </div>
+                                  <h3 className="flow-role">{hack.title}</h3>
+                                  <div className="timeline-meta-row">
+                                    <a
+                                      href={hack.link}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="timeline-company-link"
+                                    >
+                                      {hack.issuer}
+                                      <span className="material-symbols-outlined text-[13px]">open_in_new</span>
+                                    </a>
+                                  </div>
+                                  <p className="flow-desc">{hack.desc}</p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Certifications Column */}
+                      <div className="certs-section">
+                        <h2 className="sub-section-title">Verified Certifications</h2>
+                        <div className="certs-flow-grid">
+                          {CERTIFICATIONS.map(cert => (
+                            <div key={cert.id} className="cert-flow-card">
+                              <div className="cert-card-top">
+                                <span className="material-symbols-outlined text-[#0d99ff] text-[20px]">verified</span>
+                                <span className="cert-date">{cert.date}</span>
+                              </div>
+                              <h3 className="cert-title">{cert.title}</h3>
+                              <span className="cert-issuer">Issued by {cert.issuer}</span>
+                              {cert.credentialId && (
+                                <span className="cert-id-badge">ID: {cert.credentialId}</span>
+                              )}
+                              <p className="cert-desc">{cert.desc}</p>
+
+                              <div className="cert-actions-row">
+                                <a
+                                  href={cert.link}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="cert-action-btn primary"
+                                  title="Open verified credential in browser"
+                                >
+                                  <span>Verify Credential</span>
+                                  <span className="material-symbols-outlined text-[13px]">open_in_new</span>
+                                </a>
+                                <button
+                                  type="button"
+                                  className="cert-action-btn secondary"
+                                  onClick={() => handleCopyLink(cert.link, `${cert.title} link`)}
+                                  title="Copy certificate verification link"
+                                >
+                                  <span className="material-symbols-outlined text-[13px]">content_copy</span>
+                                  <span>Copy Link</span>
+                                </button>
                               </div>
                             </div>
                           ))}
                         </div>
                       </div>
                     </div>
-
-                    {/* Certifications Column */}
-                    <div className="certs-section">
-                      <h2 className="sub-section-title">Verified Certifications</h2>
-                      <div className="certs-flow-grid">
-                        {CERTIFICATIONS.map(cert => (
-                          <div key={cert.id} className="cert-flow-card">
-                            <div className="cert-card-top">
-                              <span className="material-symbols-outlined text-[#0d99ff] text-[20px]">verified</span>
-                              <span className="cert-date">{cert.date}</span>
-                            </div>
-                            <h3 className="cert-title">{cert.title}</h3>
-                            <span className="cert-issuer">Issued by {cert.issuer}</span>
-                            {cert.credentialId && (
-                              <span className="cert-id-badge">ID: {cert.credentialId}</span>
-                            )}
-                            <p className="cert-desc">{cert.desc}</p>
-
-                            <div className="cert-actions-row">
-                              <a
-                                href={cert.link}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="cert-action-btn primary"
-                                title="Open verified credential in browser"
-                              >
-                                <span>Verify Credential</span>
-                                <span className="material-symbols-outlined text-[13px]">open_in_new</span>
-                              </a>
-                              <button
-                                type="button"
-                                className="cert-action-btn secondary"
-                                onClick={() => handleCopyLink(cert.link, `${cert.title} link`)}
-                                title="Copy certificate verification link"
-                              >
-                                <span className="material-symbols-outlined text-[13px]">content_copy</span>
-                                <span>Copy Link</span>
-                              </button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                )}
+                  )}
                 </div>
               </div>
             </div>
           )}
 
-                    {/* =========================================================================
+          {/* =========================================================================
               VIEW 4: ABOUT (Design Engineering Vision & Identity Blueprint - Image 2)
               ========================================================================= */}
           {activeTab === 'about' && (
@@ -3216,7 +3216,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                         <span className="sticky-emoji-badge">💀</span>
                       </div>
 
-                      <p 
+                      <p
                         className="sticky-body-text"
                         contentEditable="true"
                         suppressContentEditableWarning={true}
@@ -3246,7 +3246,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                         <span className="sticky-label">CUSTOMER QUOTE</span>
                         <span className="sticky-emoji-badge">🗣️</span>
                       </div>
-                      <p 
+                      <p
                         className="sticky-body-text"
                         contentEditable="true"
                         suppressContentEditableWarning={true}
@@ -3279,7 +3279,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                         <span className="sticky-label">OPPORTUNITY</span>
                         <span className="sticky-emoji-badge">💡</span>
                       </div>
-                      <p 
+                      <p
                         className="sticky-body-text"
                         contentEditable="true"
                         suppressContentEditableWarning={true}
@@ -3299,7 +3299,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                         <span className="sticky-label">BEHAVIORAL NUDGE</span>
                         <span className="sticky-emoji-badge">⚡</span>
                       </div>
-                      <p 
+                      <p
                         className="sticky-body-text"
                         contentEditable="true"
                         suppressContentEditableWarning={true}
@@ -3388,7 +3388,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
             </div>
           )}
 
-                    {/* =========================================================================
+          {/* =========================================================================
               VIEW 7: PLUGINS (Creative Figma Community Ecosystem & Dev Console - Image 3)
               ========================================================================= */}
           {activeTab === 'plugins' && (
@@ -3587,7 +3587,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                             <div className="sandbox-code-preview-col">
                               <div className="code-header-pill">Generated AST Output</div>
                               <pre className="token-code-block font-mono text-[11px] leading-tight">
-{`export const tokens = {
+                                {`export const tokens = {
   chroma: ${tokenChroma},
   radius: "${tokenRadius}rem",
   spectralGlow: "rgba(255, 87, 51, ${(tokenChroma * 0.35).toFixed(2)})",
@@ -3731,7 +3731,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                         <div className="manifest-json-viewport">
                           <div className="json-filename-tag">manifest.json (read-only)</div>
                           <pre className="manifest-code-content font-mono text-[10.5px]">
-{`{
+                            {`{
   "name": "Spectral Token Bridge",
   "id": "1403010530",
   "api": "1.0.0",

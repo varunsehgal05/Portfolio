@@ -54,7 +54,7 @@ const Window = ({
     const availableHeight = Math.max(300, window.innerHeight - MENUBAR_HEIGHT - DOCK_CLEARANCE);
     const availableWidth = Math.max(400, window.innerWidth);
 
-    if (app.id === 'trash') return { width: Math.min(availableWidth - 80, 780), height: Math.min(availableHeight - 40, 500) };
+    if (app.id === 'trash') return { width: Math.min(availableWidth - 80, 800), height: Math.min(availableHeight - 20, 560) };
     if (app.id === 'terminal') return { width: Math.min(availableWidth - 80, 720), height: Math.min(availableHeight - 40, 460) };
     if (app.id === 'settings') return { width: Math.min(availableWidth - 80, 680), height: Math.min(availableHeight - 30, 500) };
     if (app.id === 'safari') return { width: Math.min(availableWidth - 80, 960), height: Math.min(availableHeight - 20, 580) };
