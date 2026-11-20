@@ -47,7 +47,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
   const [activeWallpaperId, setActiveWallpaperId] = useState(() => {
     try {
       const saved = localStorage.getItem('varunos_desktop_wallpaper');
-      if (saved && saved !== 'roxy-calendar' && saved !== 'neon-crimson-cyber') {
+      if (saved && desktopWallpapers.some(w => w.id === saved)) {
         return saved;
       }
       return 'default';

@@ -39,7 +39,7 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
   const [activeWallpaper, setActiveWallpaper] = useState(() => {
     try {
       const saved = localStorage.getItem('varunos_desktop_wallpaper');
-      if (saved && saved !== 'roxy-calendar' && saved !== 'neon-crimson-cyber') {
+      if (saved && desktopWallpapers.some(w => w.id === saved)) {
         return saved;
       }
       return 'default';
@@ -51,7 +51,7 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
   const [activeTerminalWallpaper, setActiveTerminalWallpaper] = useState(() => {
     try {
       const saved = localStorage.getItem('varunos_terminal_wallpaper');
-      if (saved && saved !== 'roxy-calendar' && saved !== 'neon-crimson-cyber') {
+      if (saved && terminalWallpapers.some(w => w.id === saved)) {
         return saved;
       }
       return 'default';
@@ -495,7 +495,7 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
             {wallpaperSection === 'desktop' && (
               <>
                 <div className="wallpaper-shortcut-banner">
-                  <span>⚡ <strong>Quick Shortcut:</strong> Press <code>Alt + 1</code> through <code>Alt + 5</code> anytime to switch desktop wallpapers instantly!</span>
+                  <span>⚡ <strong>Quick Shortcut:</strong> Press <code>Alt + 1</code> through <code>Alt + {desktopWallpapers.length}</code> anytime to switch desktop wallpapers instantly!</span>
                 </div>
 
                 <div className="wallpaper-grid">
