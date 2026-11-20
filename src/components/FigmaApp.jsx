@@ -621,20 +621,88 @@ const FigmaApp = ({ isInteracting, userName, onOpenApp }) => {
   const [isAppLoading, setIsAppLoading] = useState(true);
   const startPanRef = useRef({ x: 0, y: 0 });
 
-  // FigJam Process Board state (Image 1)
-  const [isPlayingTape, setIsPlayingTape] = useState(false);
-  const [painPointReactions, setPainPointReactions] = useState(6);
-  const [processToolbarTool, setProcessToolbarTool] = useState('select');
+  // FigJam Process Board state (Creative Whiteboard)
+  const [sprintTime, setSprintTime] = useState(8 * 60 + 45);
+  const [isSprintTimerRunning, setIsSprintTimerRunning] = useState(true);
+  const [isLofiPlaying, setIsLofiPlaying] = useState(true);
+  const [processAudioPlaying, setProcessAudioPlaying] = useState(false);
+  const [floatingEmojis, setFloatingEmojis] = useState([]);
+  const [figjamTool, setFigjamTool] = useState('select');
+  const [painPointReactions, setPainPointReactions] = useState(12);
 
-  // About Blueprint state (Image 2)
-  const [isPlayingAudioNote, setIsPlayingAudioNote] = useState(false);
+  // About Constellation state (Creative Constellation)
+  const [kineticTension, setKineticTension] = useState(94);
+  const [isAudioDispatchPlaying, setIsAudioDispatchPlaying] = useState(false);
+  const [audioDispatchSec, setAudioDispatchSec] = useState(14);
 
-  // Plugin Ecosystem state (Image 3)
-  const [pluginFilter, setPluginFilter] = useState('all');
-  const [tokenChroma, setTokenChroma] = useState(0.82);
-  const [tokenRadius, setTokenRadius] = useState(0.78);
-  const [isHotReloading, setIsHotReloading] = useState(false);
-  const [isShaderProceduralOpen, setIsShaderProceduralOpen] = useState(false);
+  // Plugin Studio state (Creative Studio Lab)
+  const [pluginHue, setPluginHue] = useState(28);
+  const [pluginLuma, setPluginLuma] = useState(78);
+  const [pluginRadiusVal, setPluginRadiusVal] = useState(16);
+  const [pluginFilterTab, setPluginFilterTab] = useState('all');
+  const [isSyncingCanvas, setIsSyncingCanvas] = useState(false);
+  const [latencyStat, setLatencyStat] = useState('0.38 ms');
+  const [consoleCmdInput, setConsoleCmdInput] = useState('');
+  const [copyAstFeedback, setCopyAstFeedback] = useState('Copy JSON');
+  const [consoleLogs, setConsoleLogs] = useState([
+    { id: 1, text: '[16:42:01.002] <ws::client> Handshake verified: wss://figma-ipc.local:8080/session-vs', type: 'text-outline' },
+    { id: 2, text: '[16:42:01.018] <wasm> Initialized spectral-ast-engine v2.5.0 (SIMD enabled)', type: 'text-tertiary' },
+    { id: 3, text: '[16:42:01.240] [bridge] Document loaded: "Varun_Sehgal_Portfolio.fig" (4,119 nodes)', type: 'text-on-surface-variant' },
+    { id: 4, text: '[16:42:02.890] [token-sync] OKLCH color matrix dynamically compiled: 14 variable sets', type: 'text-secondary' },
+    { id: 5, text: '[16:42:03.110] [rpc] Heartbeat acknowledgement received (RTT: 0.42ms)', type: 'text-outline' }
+  ]);
+
+  // Sprint countdown timer
+  useEffect(() => {
+    if (!isSprintTimerRunning) return;
+    const interval = setInterval(() => {
+      setSprintTime(prev => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [isSprintTimerRunning]);
+
+  // About audio waveform player timer
+  useEffect(() => {
+    if (!isAudioDispatchPlaying) return;
+    const interval = setInterval(() => {
+      setAudioDispatchSec(prev => (prev < 42 ? prev + 1 : 14));
+    }, 250);
+    return () => clearInterval(interval);
+  }, [isAudioDispatchPlaying]);
+
+  const handleTriggerStamp = (emoji, e) => {
+    const id = Date.now() + Math.random();
+    const x = e?.clientX || (typeof window !== 'undefined' ? window.innerWidth / 2 : 600);
+    const y = e?.clientY || (typeof window !== 'undefined' ? window.innerHeight / 2 : 400);
+    setFloatingEmojis(prev => [...prev, { id, emoji, x, y }]);
+    setTimeout(() => {
+      setFloatingEmojis(prev => prev.filter(item => item.id !== id));
+    }, 700);
+  };
+
+  const handleExecuteConsoleCmd = (e) => {
+    e?.preventDefault?.();
+    const cmd = consoleCmdInput.trim();
+    if (!cmd) return;
+    const now = new Date();
+    const timeStr = `[${now.toTimeString().split(' ')[0]}.${String(now.getMilliseconds()).padStart(3, '0')}]`;
+    const userLog = { id: Date.now(), text: `${timeStr} > ${cmd}`, type: 'text-on-surface' };
+    setConsoleLogs(prev => [...prev, userLog]);
+    setConsoleCmdInput('');
+
+    setTimeout(() => {
+      let resp = '<eval> Command executed successfully. Return: OK';
+      let rType = 'text-secondary';
+      if (cmd.includes('selection')) {
+        resp = '<eval> [FrameNode "AppContainer", VectorNode "TokenSwatchPreview"]';
+        rType = 'text-tertiary';
+      } else if (cmd.includes('root') || cmd.includes('version')) {
+        resp = '<eval> Figma API Version: 1.0.0 (API v24)';
+        rType = 'text-tertiary';
+      }
+      setConsoleLogs(prev => [...prev, { id: Date.now() + 1, text: `${timeStr} ${resp}`, type: rType }]);
+    }, 200);
+  };
 
   const handleZoomIn = () => {
     setZoom(z => {
@@ -2819,12 +2887,12 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
 
                           {/* 3x2 Grid Meta Table */}
                           <div className="id-card-meta-table">
-                            <div className="meta-cell"><span className="meta-k">DOB:</span> <span className="meta-v">02.10.2003</span></div>
-                            <div className="meta-cell"><span className="meta-k">LOC:</span> <span className="meta-v">Bengaluru</span></div>
-                            <div className="meta-cell"><span className="meta-k">📞</span> <span className="meta-v">+91 939936</span></div>
-                            <div className="meta-cell"><span className="meta-k">✉️</span> <a href="mailto:varun.sehgal02@gmail.com" className="meta-v">varun.sehg</a></div>
-                            <div className="meta-cell"><span className="meta-k">Portfolio:</span> <a href="https://varunsehgal.runs-on.dev" target="_blank" rel="noreferrer" className="meta-v">varunsehg</a></div>
-                            <div className="meta-cell"><span className="meta-k">Lang:</span> <span className="meta-v">English</span></div>
+                            <div className="meta-cell"><span className="meta-k">DOB:</span> <span className="meta-v">02.01.2005</span></div>
+                            <div className="meta-cell"><span className="meta-k">LOC:</span> <span className="meta-v">Gwalior, MP</span></div>
+                            <div className="meta-cell"><span className="meta-k">📞</span> <a href="tel:+919399361193" className="meta-v">+91 9399361193</a></div>
+                            <div className="meta-cell"><span className="meta-k">✉️</span> <a href="mailto:varun.sehgal02@gmail.com" className="meta-v">varun.sehgal02@gmail.com</a></div>
+                            <div className="meta-cell"><span className="meta-k">Portfolio:</span> <a href="https://varunsehgal.runs-on.dev" target="_blank" rel="noreferrer" className="meta-v">varunsehgal.runs-on.dev</a></div>
+                            <div className="meta-cell"><span className="meta-k">Lang:</span> <span className="meta-v">English, Hindi</span></div>
                           </div>
                         </div>
 
@@ -2889,6 +2957,12 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     <div className="tactile-resume-grid">
                       {/* LEFT COLUMN: Experience & Education Timeline */}
                       <div className="tactile-column-left">
+                        {/* Section Header: WORK EXPERIENCE */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
+                          <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: '11px', fontWeight: '800', color: '#e11d48', background: '#ffe4e6', padding: '2px 8px', borderRadius: '4px', border: '1px solid #fecdd3' }}># WORK EXPERIENCE</span>
+                          <span style={{ fontSize: '11px', color: '#71717a', fontWeight: '600' }}>[Industry Roles &amp; Internships]</span>
+                        </div>
+
                         <div className="tactile-timeline">
                           {/* Item 1 */}
                           <div className="tactile-timeline-item">
@@ -2945,8 +3019,6 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                             <h4 className="timeline-job-role">Jaypee University of Engineering &amp; Technology</h4>
                             <div className="timeline-company-row">
                               <span className="company-name">B.Tech in Computer Science &amp; Engineering</span>
-                              <span className="company-dot">•</span>
-                              <span className="badge-green-pill">CGPA 8.5</span>
                             </div>
                             <div className="timeline-loc-text">Guna, Madhya Pradesh, India</div>
                           </div>
@@ -2965,9 +3037,9 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                         </div>
                       </div>
 
-                      {/* RIGHT COLUMN: Stickers Cluster + 4x2 Software Tiles */}
+                      {/* RIGHT COLUMN: Stickers Cluster + 4x2 Software Tiles (UI/UX ONLY) */}
                       <div className="tactile-column-right">
-                        {/* Tactile Stickers Cluster */}
+                        {/* Tactile Stickers Cluster (NO motion graphics) */}
                         <div className="stickers-cluster-box">
                           {/* 1. Kraft Tape Banner */}
                           <div className="sticker-tape-kraft">
@@ -2987,52 +3059,15 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                             </div>
                           </div>
 
-                          {/* 4. Cyan Circle */}
-                          <div className="sticker-circle-cyan">
-                            <span>MOTION<br/>GRAPHICS</span>
-                          </div>
-
-                          {/* 5. Soft Periwinkle Capsule */}
+                          {/* 4. Soft Periwinkle Capsule */}
                           <div className="sticker-pill-indigo">
                             <span>✦ AI UX &amp; PROTOTYPING</span>
                           </div>
                         </div>
 
-                        {/* 4x2 Software & Skills App Tiles (Matching Image) */}
+                        {/* 4x2 Software & Skills App Tiles (UI/UX ONLY - NO GFX) */}
                         <div className="tactile-software-grid">
-                          {/* 1. After Effects */}
-                          <div className="software-app-tile">
-                            <div className="software-tile-icon adobe-ae">
-                              <span>Ae</span>
-                            </div>
-                            <span className="software-tile-name">After Effects</span>
-                          </div>
-
-                          {/* 2. Premiere Pro */}
-                          <div className="software-app-tile">
-                            <div className="software-tile-icon adobe-pr">
-                              <span>Pr</span>
-                            </div>
-                            <span className="software-tile-name">Premiere Pro</span>
-                          </div>
-
-                          {/* 3. Photoshop */}
-                          <div className="software-app-tile">
-                            <div className="software-tile-icon adobe-ps">
-                              <span>Ps</span>
-                            </div>
-                            <span className="software-tile-name">Photoshop</span>
-                          </div>
-
-                          {/* 4. Illustrator */}
-                          <div className="software-app-tile">
-                            <div className="software-tile-icon adobe-ai">
-                              <span>Ai</span>
-                            </div>
-                            <span className="software-tile-name">Illustrator</span>
-                          </div>
-
-                          {/* 5. Figma */}
+                          {/* 1. Figma */}
                           <div className="software-app-tile">
                             <div className="software-tile-icon figma-icon">
                               <svg width="18" height="26" viewBox="0 0 38 57" fill="none">
@@ -3044,6 +3079,40 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                               </svg>
                             </div>
                             <span className="software-tile-name">Figma</span>
+                          </div>
+
+                          {/* 2. Framer */}
+                          <div className="software-app-tile">
+                            <div className="software-tile-icon" style={{ background: '#0055ff' }}>
+                              <svg width="18" height="18" viewBox="0 0 24 24" fill="#ffffff">
+                                <path d="M4 0h16v8h-8zM4 8h8l8 8H4zM4 16h8v8z"/>
+                              </svg>
+                            </div>
+                            <span className="software-tile-name">Framer</span>
+                          </div>
+
+                          {/* 3. FigJam */}
+                          <div className="software-app-tile">
+                            <div className="software-tile-icon" style={{ background: '#9747ff' }}>
+                              <span style={{ color: '#ffffff', fontWeight: '800', fontSize: '13px' }}>FJ</span>
+                            </div>
+                            <span className="software-tile-name">FigJam</span>
+                          </div>
+
+                          {/* 4. ProtoPie */}
+                          <div className="software-app-tile">
+                            <div className="software-tile-icon" style={{ background: '#ff3d67' }}>
+                              <span style={{ color: '#ffffff', fontWeight: '900', fontSize: '13px' }}>Pπ</span>
+                            </div>
+                            <span className="software-tile-name">ProtoPie</span>
+                          </div>
+
+                          {/* 5. Webflow */}
+                          <div className="software-app-tile">
+                            <div className="software-tile-icon" style={{ background: '#146ef5' }}>
+                              <span style={{ color: '#ffffff', fontWeight: '900', fontSize: '12px' }}>Wf</span>
+                            </div>
+                            <span className="software-tile-name">Webflow</span>
                           </div>
 
                           {/* 6. React / Next */}
@@ -3083,7 +3152,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     {/* Bottom Accent: Yellow Highlighter Band with Software Skills Text */}
                     <div className="tactile-bottom-accent-band">
                       <div className="bottom-yellow-highlighter-stripe" />
-                      <div className="bottom-script-headline">Software Skills</div>
+                      <div className="bottom-script-headline">Software &amp; Design Skills</div>
                     </div>
                   </div>
                 </div>
@@ -3091,11 +3160,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
             </div>
           )}
 
-          {/* iv>
-            </div>
-          )}
-
-                    {/* =========================================================================
+          {/* =========================================================================
               VIEW 6: PROCESS (FigJam Interactive Sprint Process Board - Image 1)
               ========================================================================= */}
           {activeTab === 'process' && (
