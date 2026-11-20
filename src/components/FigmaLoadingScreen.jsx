@@ -87,7 +87,7 @@ const FigmaLoadingScreen = ({
   if (isUnmounted) return null;
 
   return (
-    <div 
+    <div
       className={`figma-loading-overlay ${isFadingOut ? 'fade-out' : ''}`}
       onClick={completeLoading}
       title="Click anywhere to skip loading"

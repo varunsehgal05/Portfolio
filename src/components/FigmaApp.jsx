@@ -755,27 +755,32 @@ const FigmaApp = ({ isInteracting, userName, onOpenApp }) => {
   const [selectedNodeType, setSelectedNodeType] = useState('Frame');
   const [nodeProps, setNodeProps] = useState({
     'root-canvas': { x: 0, y: 0, w: 1200, h: 850, radius: 16, fill: '#1e1e1e', fillOpacity: 100, stroke: '#383838', strokeWidth: 1, opacity: 100 },
-    'work-codesrijan': { x: 40, y: 80, w: 360, h: 440, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
-    'work-eventflow': { x: 430, y: 80, w: 360, h: 440, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
-    'work-landing': { x: 820, y: 80, w: 360, h: 440, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
-    'work-saas': { x: 40, y: 550, w: 360, h: 440, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
-    'exp-imagine': { x: 60, y: 80, w: 420, h: 220, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
-    'exp-knaptix': { x: 540, y: 30, w: 420, h: 220, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
-    'exp-udemy': { x: 540, y: 280, w: 420, h: 220, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
-    'exp-infosys': { x: 60, y: 330, w: 420, h: 220, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
-    'about-avatar': { x: 510, y: 310, w: 220, h: 220, radius: 110, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 2, opacity: 100 },
-    'about-strengths': { x: 40, y: 40, w: 360, h: 260, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
-    'about-weaknesses': { x: 840, y: 40, w: 360, h: 260, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
-    'about-philosophy': { x: 40, y: 440, w: 360, h: 260, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
-    'about-toolkit': { x: 840, y: 440, w: 360, h: 260, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
-    'about-education': { x: 440, y: 600, w: 360, h: 240, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
-    'process-p1': { x: 40, y: 80, w: 380, h: 560, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
-    'process-p2': { x: 480, y: 80, w: 380, h: 560, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
-    'process-p3': { x: 920, y: 80, w: 380, h: 560, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
-    'process-p4': { x: 1360, y: 80, w: 380, h: 560, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
-    'process-p5': { x: 1800, y: 80, w: 380, h: 560, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
-    'process-p6': { x: 2240, y: 80, w: 380, h: 560, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
-    'resume-artboard': { x: 40, y: 40, w: 920, h: 1180, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 }
+    'work-artboard': { x: 0, y: 0, w: 1340, h: 960, radius: 16, fill: '#1e1e1e', stroke: '#383838', strokeWidth: 1, opacity: 100 },
+    'exp-artboard': { x: 0, y: 0, w: 1200, h: 800, radius: 16, fill: '#1e1e1e', stroke: '#383838', strokeWidth: 1, opacity: 100 },
+    'about-artboard': { x: 0, y: 0, w: 1280, h: 920, radius: 16, fill: '#1e1e1e', stroke: '#383838', strokeWidth: 1, opacity: 100 },
+    'resume-artboard': { x: 0, y: 0, w: 920, h: 1180, radius: 16, fill: '#1e1e1e', stroke: '#383838', strokeWidth: 1, opacity: 100 },
+    'process-artboard': { x: 0, y: 0, w: 2600, h: 900, radius: 16, fill: '#1e1e1e', stroke: '#383838', strokeWidth: 1, opacity: 100 },
+    'plugins-artboard': { x: 0, y: 0, w: 1280, h: 900, radius: 16, fill: '#1e1e1e', stroke: '#383838', strokeWidth: 1, opacity: 100 },
+    'work-codesrijan': { x: 0, y: 0, w: 360, h: 440, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
+    'work-eventflow': { x: 0, y: 0, w: 360, h: 440, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
+    'work-landing': { x: 0, y: 0, w: 360, h: 440, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
+    'work-saas': { x: 0, y: 0, w: 360, h: 440, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
+    'exp-imagine': { x: 0, y: 0, w: 420, h: 220, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
+    'exp-knaptix': { x: 0, y: 0, w: 420, h: 220, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
+    'exp-udemy': { x: 0, y: 0, w: 420, h: 220, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
+    'exp-infosys': { x: 0, y: 0, w: 420, h: 220, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
+    'about-avatar': { x: 0, y: 0, w: 220, h: 220, radius: 110, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 2, opacity: 100 },
+    'about-strengths': { x: 0, y: 0, w: 360, h: 260, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
+    'about-weaknesses': { x: 0, y: 0, w: 360, h: 260, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
+    'about-philosophy': { x: 0, y: 0, w: 360, h: 260, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
+    'about-toolkit': { x: 0, y: 0, w: 360, h: 260, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
+    'about-education': { x: 0, y: 0, w: 360, h: 240, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
+    'process-p1': { x: 0, y: 0, w: 380, h: 560, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
+    'process-p2': { x: 0, y: 0, w: 380, h: 560, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
+    'process-p3': { x: 0, y: 0, w: 380, h: 560, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
+    'process-p4': { x: 0, y: 0, w: 380, h: 560, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
+    'process-p5': { x: 0, y: 0, w: 380, h: 560, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
+    'process-p6': { x: 0, y: 0, w: 380, h: 560, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 }
   });
 
   // Floating sticky notes
@@ -873,11 +878,47 @@ const FigmaApp = ({ isInteracting, userName, onOpenApp }) => {
     showToast(`${label} copied to clipboard!`);
   };
 
+  // Automatically select the active artboard when switching tabs so inspector always targets current view
+  useEffect(() => {
+    const tabArtboardMap = {
+      home: { id: 'root-canvas', name: 'Varun_Sehgal_Portfolio (Home)', type: 'Frame' },
+      projects: { id: 'work-artboard', name: 'Work & Case Studies Artboard', type: 'Frame' },
+      experience: { id: 'exp-artboard', name: 'Experience & Timeline Artboard', type: 'Frame' },
+      about: { id: 'about-artboard', name: 'Bio & Blueprint Artboard', type: 'Frame' },
+      resume: { id: 'resume-artboard', name: 'Creative Tactile Resume Artboard', type: 'Frame' },
+      process: { id: 'process-artboard', name: 'FigJam Process Artboard', type: 'Frame' },
+      plugins: { id: 'plugins-artboard', name: 'Plugins & Labs Artboard', type: 'Frame' }
+    };
+    const target = tabArtboardMap[activeTab];
+    if (target) {
+      setSelectedNodeId(target.id);
+      setSelectedLayerId(target.id);
+      setSelectedNodeLabel(target.name);
+      setSelectedNodeType(target.type);
+    }
+  }, [activeTab]);
+
   const handleSelectNode = (id, label, type) => {
     setSelectedNodeId(id);
     setSelectedLayerId(id);
     setSelectedNodeLabel(label);
     setSelectedNodeType(type);
+    setNodeProps(prev => {
+      if (prev[id]) return prev;
+      return {
+        ...prev,
+        [id]: {
+          x: 0, y: 0,
+          w: id.includes('artboard') ? 1340 : 360,
+          h: id.includes('artboard') ? 960 : 440,
+          radius: 16,
+          fill: '#2c2c2c',
+          stroke: '#0d99ff',
+          strokeWidth: 1,
+          opacity: 100
+        }
+      };
+    });
     showToast(`Selected: ${label}`);
   };
 
@@ -893,15 +934,34 @@ const FigmaApp = ({ isInteracting, userName, onOpenApp }) => {
         [key]: val
       }
     }));
-    if (key === 'x') setFrameX(val);
-    if (key === 'y') setFrameY(val);
-    if (key === 'w') setFrameW(val);
-    if (key === 'h') setFrameH(val);
-    if (key === 'radius') setFrameRadius(val);
-    if (key === 'fill') setFillColor(val);
-    if (key === 'stroke') setStrokeColor(val);
-    if (key === 'strokeWidth') setStrokeWidth(val);
-    if (key === 'opacity') setLayerOpacity(val);
+    if (selectedNodeId === 'root-canvas') {
+      if (key === 'x') setFrameX(val);
+      if (key === 'y') setFrameY(val);
+      if (key === 'w') setFrameW(val);
+      if (key === 'h') setFrameH(val);
+      if (key === 'radius') setFrameRadius(val);
+      if (key === 'fill') setFillColor(val);
+      if (key === 'stroke') setStrokeColor(val);
+      if (key === 'strokeWidth') setStrokeWidth(val);
+      if (key === 'opacity') setLayerOpacity(val);
+    }
+  };
+
+  const getNodeStyle = (id, fallbackW = 1200, fallbackH = 850) => {
+    const p = nodeProps[id] || {};
+    return {
+      width: `${p.w || fallbackW}px`,
+      maxWidth: `${p.w || fallbackW}px`,
+      minHeight: `${p.h || fallbackH}px`,
+      borderRadius: `${p.radius !== undefined ? p.radius : 16}px`,
+      backgroundColor: p.fill || undefined,
+      borderColor: p.stroke || undefined,
+      borderWidth: p.strokeWidth !== undefined ? `${p.strokeWidth}px` : undefined,
+      borderStyle: p.stroke ? 'solid' : undefined,
+      opacity: p.opacity !== undefined ? p.opacity / 100 : undefined,
+      transform: (p.x || p.y) ? `translate(${p.x || 0}px, ${p.y || 0}px)` : undefined,
+      transition: 'width 0.15s ease, min-height 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, border-radius 0.15s ease'
+    };
   };
 
   const handleExportFrame = () => {
@@ -1870,23 +1930,27 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   className={`artboard-container figma-selectable-node ${selectedNodeId === 'root-canvas' ? 'is-selected' : ''}`}
                   data-node-id="root-canvas"
                   data-node-name="Varun_Sehgal_Portfolio"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSelectNode('root-canvas', 'Varun_Sehgal_Portfolio (Home)', 'Frame');
+                  }}
                   style={{
-                    width: `${frameW}px`,
-                    maxWidth: `${frameW}px`,
-                    minHeight: `${frameH}px`,
-                    borderRadius: `${frameRadius}px`,
+                    width: `${nodeProps['root-canvas']?.w || frameW}px`,
+                    maxWidth: `${nodeProps['root-canvas']?.w || frameW}px`,
+                    minHeight: `${nodeProps['root-canvas']?.h || frameH}px`,
+                    borderRadius: `${nodeProps['root-canvas']?.radius !== undefined ? nodeProps['root-canvas'].radius : frameRadius}px`,
                     padding: `${padY}px ${padX}px`,
                     gap: `${autoLayoutGap}px`,
                     flexDirection: autoLayoutDir === 'vertical' ? 'column' : 'row',
-                    backgroundColor: fillVisible ? fillColor : 'transparent',
-                    opacity: isFrameVisible ? (Number(layerOpacity) / 100) : 0.08,
-                    border: strokeVisible ? `${strokeWidth}px solid ${strokeColor}` : 'none',
+                    backgroundColor: fillVisible ? (nodeProps['root-canvas']?.fill || fillColor) : 'transparent',
+                    opacity: isFrameVisible ? (Number(nodeProps['root-canvas']?.opacity ?? layerOpacity) / 100) : 0.08,
+                    border: strokeVisible ? `${nodeProps['root-canvas']?.strokeWidth ?? strokeWidth}px solid ${nodeProps['root-canvas']?.stroke || strokeColor}` : 'none',
                     backdropFilter: blurVisible ? `blur(${blurAmount}px)` : 'none',
                     WebkitBackdropFilter: blurVisible ? `blur(${blurAmount}px)` : 'none',
                     boxShadow: shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none',
                     overflow: clipContent ? 'hidden' : 'visible',
-                    transform: `rotate(${frameAngle}deg)`,
-                    transition: 'all 0.2s ease'
+                    transform: (nodeProps['root-canvas']?.x || nodeProps['root-canvas']?.y) ? `translate(${nodeProps['root-canvas'].x || 0}px, ${nodeProps['root-canvas'].y || 0}px) rotate(${frameAngle}deg)` : `rotate(${frameAngle}deg)`,
+                    transition: 'all 0.15s ease'
                   }}
                 >
                   {/* Artboard Frame Header */}
@@ -2046,6 +2110,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 {/* Framed Artboard Box (Pixel-perfect match to user reference Image 1) */}
                 <div
                   className={`figma-artboard-box work-artboard-box figma-selectable-node ${selectedNodeId === 'work-artboard' ? 'is-selected' : ''}`}
+                  style={getNodeStyle('work-artboard', 1340, 960)}
                   onClick={(e) => {
                     e.stopPropagation();
                     handleSelectNode('work-artboard', 'Work & Case Studies Artboard', 'Frame');
@@ -2054,7 +2119,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   <div className="figma-artboard-header-tag">
                     <span className="artboard-hash">#</span>
                     <span className="artboard-name">Work & Case Studies</span>
-                    <span className="artboard-dims">[1340 × 960]</span>
+                    <span className="artboard-dims">[{nodeProps['work-artboard']?.w || 1340} × {nodeProps['work-artboard']?.h || 960}]</span>
                   </div>
 
                   {selectedNodeId === 'work-artboard' && (
@@ -2111,16 +2176,21 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                             handleSelectNode(nodeId, proj.name, 'Component');
                           }}
                           style={{
-                            borderRadius: props.radius ? `${props.radius}px` : undefined,
+                            width: props.w ? `${props.w}px` : undefined,
+                            minHeight: props.h ? `${props.h}px` : undefined,
+                            borderRadius: props.radius !== undefined ? `${props.radius}px` : undefined,
                             backgroundColor: props.fill || undefined,
                             borderColor: props.stroke || undefined,
                             borderWidth: props.strokeWidth ? `${props.strokeWidth}px` : undefined,
-                            opacity: props.opacity !== undefined ? props.opacity / 100 : undefined
+                            borderStyle: props.stroke ? 'solid' : undefined,
+                            opacity: props.opacity !== undefined ? props.opacity / 100 : undefined,
+                            transform: (props.x || props.y) ? `translate(${props.x || 0}px, ${props.y || 0}px)` : undefined,
+                            transition: 'all 0.15s ease'
                           }}
                         >
                           {isSelected && (
                             <div className="figma-selection-overlay">
-                              <div className="selection-tag">❖ {proj.name} [{props.w || 360}×{props.h || 440}]</div>
+                              <div className="selection-tag">❖ {props.customText || proj.name} [{props.w || 360}×{props.h || 440}]</div>
                               <div className="selection-handle tl" />
                               <div className="selection-handle tr" />
                               <div className="selection-handle bl" />
@@ -2140,8 +2210,23 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                           </div>
                           <div className="bento-body">
                             <span className="bento-cat">{proj.category}</span>
-                            <h3 className="bento-title">{proj.name}</h3>
-                            <p className="bento-desc">{proj.desc}</p>
+                            <h3 
+                              className="bento-title"
+                              contentEditable="true"
+                              suppressContentEditableWarning={true}
+                              onBlur={(e) => updateSelectedProp('customText', e.currentTarget.innerText)}
+                              title="Click or double click to edit title"
+                            >
+                              {props.customText || proj.name}
+                            </h3>
+                            <p 
+                              className="bento-desc"
+                              contentEditable="true"
+                              suppressContentEditableWarning={true}
+                              title="Click to edit description"
+                            >
+                              {proj.desc}
+                            </p>
                             <div className="bento-tags-list">
                               {proj.tags.map((t, idx) => (
                                 <span key={idx} className="bento-tag">{t}</span>
@@ -2175,6 +2260,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 {/* Framed Artboard Box for Experience */}
                 <div
                   className={`figma-artboard-box experience-artboard-box figma-selectable-node ${selectedNodeId === 'exp-artboard' ? 'is-selected' : ''}`}
+                  style={getNodeStyle('exp-artboard', 1240, 1360)}
                   onClick={(e) => {
                     e.stopPropagation();
                     handleSelectNode('exp-artboard', 'Recent Activity & Timeline Frame', 'Frame');
@@ -2183,7 +2269,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   <div className="figma-artboard-header-tag">
                     <span className="artboard-hash">#</span>
                     <span className="artboard-name">Recent Activity &amp; Career Timeline</span>
-                    <span className="artboard-dims">[1240 × 1360]</span>
+                    <span className="artboard-dims">[{nodeProps['exp-artboard']?.w || 1240} × {nodeProps['exp-artboard']?.h || 1360}]</span>
                   </div>
 
                   {selectedNodeId === 'exp-artboard' && (
@@ -2279,19 +2365,24 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                               className={`zigzag-card figma-selectable-node ${isSelected ? 'is-selected' : ''}`}
                               onClick={(e) => {
                                 e.stopPropagation();
-                                handleSelectNode(expNodeId, item.highlight, 'Frame');
+                                handleSelectNode(expNodeId, props.customText || item.highlight, 'Frame');
                               }}
                               style={{
-                                borderRadius: props.radius ? `${props.radius}px` : undefined,
+                                width: props.w ? `${props.w}px` : undefined,
+                                minHeight: props.h ? `${props.h}px` : undefined,
+                                borderRadius: props.radius !== undefined ? `${props.radius}px` : undefined,
                                 backgroundColor: props.fill || undefined,
                                 borderColor: props.stroke || undefined,
                                 borderWidth: props.strokeWidth ? `${props.strokeWidth}px` : undefined,
-                                opacity: props.opacity !== undefined ? props.opacity / 100 : undefined
+                                borderStyle: props.stroke ? 'solid' : undefined,
+                                opacity: props.opacity !== undefined ? props.opacity / 100 : undefined,
+                                transform: (props.x || props.y) ? `translate(${props.x || 0}px, ${props.y || 0}px)` : undefined,
+                                transition: 'all 0.15s ease'
                               }}
                             >
                               {isSelected && (
                                 <div className="figma-selection-overlay">
-                                  <div className="selection-tag">❖ {item.highlight} [{props.w || 420}×{props.h || 220}]</div>
+                                  <div className="selection-tag">❖ {props.customText || item.highlight} [{props.w || 420}×{props.h || 220}]</div>
                                   <div className="selection-handle tl" />
                                   <div className="selection-handle tr" />
                                   <div className="selection-handle bl" />
@@ -2304,8 +2395,14 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                               </div>
 
                               <div className="zigzag-card-title-row">
-                                <h3 className="zigzag-card-title">
-                                  <span className="zigzag-highlight-name">{item.highlight}</span> {item.titleRest}
+                                <h3 
+                                  className="zigzag-card-title"
+                                  contentEditable="true"
+                                  suppressContentEditableWarning={true}
+                                  onBlur={(e) => updateSelectedProp('customText', e.currentTarget.innerText)}
+                                  title="Click to edit title"
+                                >
+                                  <span className="zigzag-highlight-name">{props.customText || item.highlight}</span> {item.titleRest}
                                 </h3>
                               </div>
 
@@ -2505,6 +2602,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 {/* About Blueprint Canvas matching Image 2 */}
                 <div
                   className={`figma-artboard-box about-blueprint-artboard figma-selectable-node ${selectedNodeId === 'about-artboard' ? 'is-selected' : ''}`}
+                  style={getNodeStyle('about-artboard', 1380, 1220)}
                   onClick={(e) => {
                     e.stopPropagation();
                     handleSelectNode('about-artboard', 'Varun_Sehgal_Identity Frame', 'Frame');
@@ -2513,7 +2611,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   <div className="figma-artboard-header-tag">
                     <span className="artboard-hash">#</span>
                     <span className="artboard-name">Varun_Sehgal_Identity.fig — Lead Product Designer &amp; Design Technologist</span>
-                    <span className="artboard-dims">[1380 × 1220]</span>
+                    <span className="artboard-dims">[{nodeProps['about-artboard']?.w || 1380} × {nodeProps['about-artboard']?.h || 1220}]</span>
                   </div>
 
                   {selectedNodeId === 'about-artboard' && (
@@ -2832,6 +2930,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 {/* Framed Artboard Box for Resume */}
                 <div
                   className={`figma-artboard-box resume-artboard-box figma-selectable-node ${selectedNodeId === 'resume-artboard' ? 'is-selected' : ''}`}
+                  style={getNodeStyle('resume-artboard', 1100, 1420)}
                   onClick={(e) => {
                     e.stopPropagation();
                     handleSelectNode('resume-artboard', 'Tactile_Creative_Resume', 'Frame');
@@ -2840,7 +2939,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   <div className="figma-artboard-header-tag">
                     <span className="artboard-hash">#</span>
                     <span className="artboard-name">Creative Tactile Resume — Varun Sehgal</span>
-                    <span className="artboard-dims">[1100 × 1420]</span>
+                    <span className="artboard-dims">[{nodeProps['resume-artboard']?.w || 1100} × {nodeProps['resume-artboard']?.h || 1420}]</span>
                   </div>
 
                   {selectedNodeId === 'resume-artboard' && (
@@ -3183,6 +3282,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 {/* FigJam Process Board Canvas matching Image 1 */}
                 <div
                   className={`figma-artboard-box figjam-process-artboard figma-selectable-node ${selectedNodeId === 'process-artboard' ? 'is-selected' : ''}`}
+                  style={getNodeStyle('process-artboard', 1400, 960)}
                   onClick={(e) => {
                     e.stopPropagation();
                     handleSelectNode('process-artboard', 'FigJam Process Board', 'Frame');
@@ -3191,7 +3291,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   <div className="figma-artboard-header-tag">
                     <span className="artboard-hash">#</span>
                     <span className="artboard-name">Varun_Sehgal_Portfolio.fig — FigJam Process Board (Interactive Sprint)</span>
-                    <span className="artboard-dims">[1400 × 960]</span>
+                    <span className="artboard-dims">[{nodeProps['process-artboard']?.w || 1400} × {nodeProps['process-artboard']?.h || 960}]</span>
                   </div>
 
                   {selectedNodeId === 'process-artboard' && (
@@ -3386,7 +3486,12 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                         <span className="sticky-emoji-badge">💀</span>
                       </div>
 
-                      <p className="sticky-body-text">
+                      <p 
+                        className="sticky-body-text"
+                        contentEditable="true"
+                        suppressContentEditableWarning={true}
+                        title="Click to edit text"
+                      >
                         Procurement leads get locked out if tax exemption require manual approval queue.
                       </p>
 
@@ -3411,7 +3516,12 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                         <span className="sticky-label">CUSTOMER QUOTE</span>
                         <span className="sticky-emoji-badge">🗣️</span>
                       </div>
-                      <p className="sticky-body-text">
+                      <p 
+                        className="sticky-body-text"
+                        contentEditable="true"
+                        suppressContentEditableWarning={true}
+                        title="Click to edit customer quote"
+                      >
                         "Why can't I invite our legal counsel before typing my corporate credit card numbers?"
                       </p>
                       <div className="sticky-footer">
@@ -3439,7 +3549,12 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                         <span className="sticky-label">OPPORTUNITY</span>
                         <span className="sticky-emoji-badge">💡</span>
                       </div>
-                      <p className="sticky-body-text">
+                      <p 
+                        className="sticky-body-text"
+                        contentEditable="true"
+                        suppressContentEditableWarning={true}
+                        title="Click to edit opportunity text"
+                      >
                         "Shadow Approval System: Allow instant trial provisioning with 14-day async invoice generation."
                       </p>
                       <div className="sticky-footer">
@@ -3454,7 +3569,12 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                         <span className="sticky-label">BEHAVIORAL NUDGE</span>
                         <span className="sticky-emoji-badge">⚡</span>
                       </div>
-                      <p className="sticky-body-text">
+                      <p 
+                        className="sticky-body-text"
+                        contentEditable="true"
+                        suppressContentEditableWarning={true}
+                        title="Click to edit nudge text"
+                      >
                         One-click PO generation dispatch directly paired with DocuSign.
                       </p>
                       <div className="sticky-footer">
@@ -3553,6 +3673,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 {/* Plugins Ecosystem Canvas matching Image 3 */}
                 <div
                   className={`figma-artboard-box plugins-ecosystem-artboard figma-selectable-node ${selectedNodeId === 'plugins-artboard' ? 'is-selected' : ''}`}
+                  style={getNodeStyle('plugins-artboard', 1440, 1100)}
                   onClick={(e) => {
                     e.stopPropagation();
                     handleSelectNode('plugins-artboard', 'Varuns_Plugin_Lab_Ecosystem', 'Frame');
@@ -3561,7 +3682,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   <div className="figma-artboard-header-tag">
                     <span className="artboard-hash">#</span>
                     <span className="artboard-name">COMMUNITY + EXTENSIONS / Varun's Plugin Lab &amp; Ecosystem [Verified Creator]</span>
-                    <span className="artboard-dims">[1440 × 1100]</span>
+                    <span className="artboard-dims">[{nodeProps['plugins-artboard']?.w || 1440} × {nodeProps['plugins-artboard']?.h || 1100}]</span>
                   </div>
 
                   {selectedNodeId === 'plugins-artboard' && (
@@ -4018,12 +4139,6 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   Design
                 </button>
                 <button
-                  className={`prop-tab-btn ${propertiesTab === 'prototype' ? 'active' : ''}`}
-                  onClick={() => setPropertiesTab('prototype')}
-                >
-                  Prototype
-                </button>
-                <button
                   className={`prop-tab-btn ${propertiesTab === 'inspect' ? 'active' : ''}`}
                   onClick={() => setPropertiesTab('inspect')}
                 >
@@ -4050,7 +4165,17 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                       </span>
                     </div>
                     <div className="prop-target-name">
-                      <span className="target-label">{selectedNodeLabel}</span>
+                      <input
+                        type="text"
+                        className="target-label-input"
+                        value={selectedNodeLabel}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setSelectedNodeLabel(val);
+                          updateSelectedProp('customText', val);
+                        }}
+                        title="Click to rename layer / component"
+                      />
                       <span className="target-type">
                         {selectedNodeType} · {selectedNode.w || frameW} × {selectedNode.h || frameH}
                       </span>
@@ -4079,6 +4204,27 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                           {isFrameVisible ? 'visibility' : 'visibility_off'}
                         </span>
                       </button>
+                    </div>
+                  </div>
+
+                  {/* Text & Content Live Editor */}
+                  <div className="prop-section">
+                    <div className="prop-section-header">
+                      <span className="prop-section-title">Text & Content (Live Edit)</span>
+                      <span className="material-symbols-outlined text-[14px] text-zinc-400">title</span>
+                    </div>
+                    <div className="prop-content-edit-wrap">
+                      <textarea
+                        className="prop-content-textarea"
+                        placeholder="Edit selected element headline or content..."
+                        value={selectedNode.customText !== undefined ? selectedNode.customText : (selectedNodeLabel || '')}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setSelectedNodeLabel(val);
+                          updateSelectedProp('customText', val);
+                        }}
+                        rows={2}
+                      />
                     </div>
                   </div>
 
@@ -4544,101 +4690,6 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                       <span className="material-symbols-outlined text-[16px]">file_download</span>
                       <span>Export Varun_Sehgal_Portfolio ({exportFormat})</span>
                     </button>
-                  </div>
-                </>
-              )}
-
-              {propertiesTab === 'prototype' && (
-                <>
-                  <div className="prop-section">
-                    <div className="prop-section-title">Prototype Flow</div>
-                    <div className="prop-prototype-card">
-                      <div className="flow-badge-row">
-                        <span className="material-symbols-outlined text-[15px] text-[#0d99ff]">play_circle</span>
-                        <span className="font-semibold text-white text-[12px]">{activeFlow}</span>
-                      </div>
-                      <p className="text-[11px] text-zinc-400 mt-1">
-                        Starting point: Varun Sehgal Portfolio ({activeTab.toUpperCase()})
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="prop-section">
-                    <div className="prop-section-title">Device</div>
-                    <div className="prop-device-box">
-                      <span className="material-symbols-outlined text-[18px] text-zinc-400">laptop_mac</span>
-                      <div className="flex-1">
-                        <select
-                          value={selectedDevice}
-                          onChange={(e) => {
-                            setSelectedDevice(e.target.value);
-                            showToast(`Device switched to ${e.target.value}`);
-                          }}
-                          className="prop-device-select"
-                        >
-                          <option>MacBook Pro 16"</option>
-                          <option>iPhone 15 Pro</option>
-                          <option>iPad Pro 12.9"</option>
-                          <option>Desktop 1440px</option>
-                        </select>
-                        <div className="text-[10px] text-zinc-500 mt-0.5">Scaled to fit viewport</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="prop-section">
-                    <div className="prop-section-title">Interactive Triggers</div>
-                    <div
-                      className="prop-interaction-item clickable"
-                      onClick={() => {
-                        setActiveTab('projects');
-                        showToast('Navigated to Work');
-                      }}
-                      title="Click to trigger flow"
-                    >
-                      <span className="interaction-trigger">On Click</span>
-                      <span className="interaction-arrow">→</span>
-                      <span className="interaction-target">Navigate to Work</span>
-                    </div>
-                    <div
-                      className="prop-interaction-item clickable"
-                      onClick={() => {
-                        setActiveTab('experience');
-                        showToast('Navigated to Experience');
-                      }}
-                      title="Click to trigger flow"
-                    >
-                      <span className="interaction-trigger">On Click</span>
-                      <span className="interaction-arrow">→</span>
-                      <span className="interaction-target">Navigate to Experience</span>
-                    </div>
-                    <div
-                      className="prop-interaction-item clickable"
-                      onClick={() => {
-                        setActiveTab('about');
-                        showToast('Navigated to About');
-                      }}
-                      title="Click to trigger flow"
-                    >
-                      <span className="interaction-trigger">On Click</span>
-                      <span className="interaction-arrow">→</span>
-                      <span className="interaction-target">Navigate to About</span>
-                    </div>
-                    <div
-                      className="prop-interaction-item clickable"
-                      onClick={() => {
-                        setPreviewAnimation(true);
-                        setTimeout(() => setPreviewAnimation(false), 600);
-                        showToast('Smart Animate triggered (300ms)');
-                      }}
-                      title="Test animation"
-                    >
-                      <span className="interaction-trigger">On Hover</span>
-                      <span className="interaction-arrow">→</span>
-                      <span className="interaction-target">
-                        Smart Animate {previewAnimation ? '⚡ Playing...' : '(300ms)'}
-                      </span>
-                    </div>
                   </div>
                 </>
               )}

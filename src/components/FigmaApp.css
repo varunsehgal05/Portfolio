@@ -2155,6 +2155,54 @@
   text-overflow: ellipsis;
 }
 
+.target-label-input {
+  background: transparent;
+  border: 1px solid transparent;
+  color: #f3f4f6;
+  font-size: 11.5px;
+  font-weight: 600;
+  width: 100%;
+  padding: 1px 4px;
+  border-radius: 3px;
+  outline: none;
+  transition: all 0.15s ease;
+}
+
+.target-label-input:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.target-label-input:focus {
+  background: #1e1e1e;
+  border-color: #0d99ff;
+  box-shadow: 0 0 0 1px #0d99ff;
+}
+
+.prop-content-edit-wrap {
+  width: 100%;
+}
+
+.prop-content-textarea {
+  width: 100%;
+  background: #1e1e1e;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #e5e7eb;
+  font-family: inherit;
+  font-size: 11.5px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.15s ease;
+  box-sizing: border-box;
+}
+
+.prop-content-textarea:focus {
+  border-color: #0d99ff;
+  box-shadow: 0 0 0 1px #0d99ff;
+}
+
 .target-type {
   font-size: 9.5px;
   color: #9ca3af;
