@@ -99,27 +99,27 @@ const ALL_PROJECTS = [
 const TIMELINE = [
   {
     role: 'UI/UX Designer Intern',
-    company: 'UniEvent',
-    period: 'Jun 2024 — Nov 2024',
-    location: 'Remote',
+    company: 'UniEvent (EventFlow)',
+    period: 'Sep 2024 — Nov 2024 • 6 Mos',
+    location: 'Bengaluru, Karnataka, India (Remote)',
     link: 'https://www.linkedin.com/in/varunsehgal02',
-    desc: 'Designed user-focused digital experiences and translated complex business requirements into clear, consistent interfaces for campus event ticketing platform (EventFlow). Architected 4-step booking flow optimization, slashing transaction drop-off by 30% across 50+ modular components. Completed in early November 2024.'
+    desc: 'Designed campus event ticketing platform (EventFlow). Slashed transaction drop-off by 30% across 4-step booking workflow across 50+ components.'
   },
   {
     role: 'Assistant Head of Operations / UI/UX Intern',
     company: 'Assemble',
-    period: 'Aug 2024 — Jan 2025',
+    period: 'Aug 2024 — Jan 2025 • 6 Mos',
     location: 'Remote',
     link: 'https://www.linkedin.com/in/varunsehgal02',
-    desc: 'Designed collaborative creator workspace tools and interaction prototypes in Figma. Coordinated platform operations for multi-team esports competitions.'
+    desc: 'Designed collaborative creator workspace tools and interaction prototypes in Figma. Coordinated operations for multi-team competitions.'
   },
   {
     role: 'UI/UX Designer Intern',
     company: 'Knaptix Ventures',
-    period: 'Jun 2024 — Aug 2024',
+    period: 'Jun 2024 — Aug 2024 • 3 Mos',
     location: 'Remote',
     link: 'https://www.linkedin.com/in/varunsehgal02',
-    desc: 'Engineered high-fidelity wireframes and design system components for 5+ B2B client applications and web dashboards, boosting customer satisfaction scores by 40%.'
+    desc: 'Delivered brand identities and conversion-focused SaaS landing pages for 10+ tech startups with a 95% client retention rate.'
   },
   {
     role: 'Freelance UI/UX Designer',
@@ -250,13 +250,13 @@ const TIMELINE_ACTIVITY = [
     id: 'act-unievent',
     type: 'experience',
     category: 'Product Design',
-    date: 'Jun 2024 — Nov 2024',
+    date: 'Sep 2024 — Nov 2024 • 6 Mos',
     icon: 'edit',
-    highlight: 'UniEvent',
+    highlight: 'UniEvent (EventFlow)',
     titleRest: 'completed UI/UX Design Internship (EventFlow)',
-    desc: 'Designed user-focused digital experiences and translated complex business requirements into clear, consistent interfaces for campus event ticketing platform (EventFlow). Completed internship in early November 2024.',
+    desc: 'Designed campus event ticketing platform (EventFlow). Slashed transaction drop-off by 30% across 4-step booking workflow across 50+ components.',
     quote: 'Spearheaded end-to-end design system with 50+ tokens, responsive checkout patterns, and real-time seat reservation micro-interactions.',
-    location: 'Remote',
+    location: 'Bengaluru, Karnataka, India (Remote)',
     link: 'https://www.linkedin.com/in/varunsehgal02',
     actionLabel: 'View on LinkedIn'
   },
@@ -278,11 +278,11 @@ const TIMELINE_ACTIVITY = [
     id: 'act-assemble',
     type: 'experience',
     category: 'Operations & UX',
-    date: 'Aug 2024 — Jan 2025',
+    date: 'Aug 2024 — Jan 2025 • 6 Mos',
     icon: 'terminal',
     highlight: 'Assemble',
     titleRest: 'appointed Assistant Head of Operations / UI/UX Intern',
-    desc: 'Designed collaborative creator workspace tools and interaction prototypes in Figma. Coordinated platform operations and stream workflows for multi-team esports competitions.',
+    desc: 'Designed collaborative creator workspace tools and interaction prototypes in Figma. Coordinated operations for multi-team competitions.',
     location: 'Remote',
     link: 'https://www.linkedin.com/in/varunsehgal02',
     actionLabel: 'View on LinkedIn'
@@ -332,11 +332,11 @@ const TIMELINE_ACTIVITY = [
     id: 'act-knaptix',
     type: 'experience',
     category: 'Internship',
-    date: 'Jan 2024 — Jun 2024',
+    date: 'Jun 2024 — Aug 2024 • 3 Mos',
     icon: 'layers',
     highlight: 'Knaptix Ventures',
     titleRest: 'engaged Varun as UI/UX Designer Intern',
-    desc: 'Engineered high-fidelity wireframes and design system components for 5+ B2B client applications and web dashboards, boosting customer satisfaction scores by 40%.',
+    desc: 'Delivered brand identities and conversion-focused SaaS landing pages for 10+ tech startups with a 95% client retention rate.',
     location: 'Remote',
     link: 'https://www.linkedin.com/in/varunsehgal02',
     actionLabel: 'View on LinkedIn'
@@ -637,6 +637,13 @@ const FigmaApp = ({ isInteracting, userName, onOpenApp }) => {
   const [floatingEmojis, setFloatingEmojis] = useState([]);
   const [figjamTool, setFigjamTool] = useState('select');
   const [painPointReactions, setPainPointReactions] = useState(12);
+  const [isPlayingTape, setIsPlayingTape] = useState(false);
+  const [processToolbarTool, setProcessToolbarTool] = useState('select');
+  const [pluginFilter, setPluginFilter] = useState('all');
+  const [tokenChroma, setTokenChroma] = useState(0.85);
+  const [tokenRadius, setTokenRadius] = useState(0.75);
+  const [isShaderProceduralOpen, setIsShaderProceduralOpen] = useState(false);
+  const [isHotReloading, setIsHotReloading] = useState(false);
 
   // About Constellation state (Creative Constellation)
   const [kineticTension, setKineticTension] = useState(94);
@@ -758,9 +765,9 @@ const FigmaApp = ({ isInteracting, userName, onOpenApp }) => {
     'work-artboard': { x: 0, y: 0, w: 1340, h: 960, radius: 16, fill: '#1e1e1e', stroke: '#383838', strokeWidth: 1, opacity: 100 },
     'exp-artboard': { x: 0, y: 0, w: 1200, h: 800, radius: 16, fill: '#1e1e1e', stroke: '#383838', strokeWidth: 1, opacity: 100 },
     'about-artboard': { x: 0, y: 0, w: 1280, h: 920, radius: 16, fill: '#1e1e1e', stroke: '#383838', strokeWidth: 1, opacity: 100 },
-    'resume-artboard': { x: 0, y: 0, w: 920, h: 1180, radius: 16, fill: '#1e1e1e', stroke: '#383838', strokeWidth: 1, opacity: 100 },
-    'process-artboard': { x: 0, y: 0, w: 2600, h: 900, radius: 16, fill: '#1e1e1e', stroke: '#383838', strokeWidth: 1, opacity: 100 },
-    'plugins-artboard': { x: 0, y: 0, w: 1280, h: 900, radius: 16, fill: '#1e1e1e', stroke: '#383838', strokeWidth: 1, opacity: 100 },
+    'resume-artboard': { x: 0, y: 0, w: 1000, h: 1060, radius: 16, fill: '#1e1e1e', stroke: '#383838', strokeWidth: 1, opacity: 100 },
+    'process-artboard': { x: 0, y: 0, w: 1400, h: 960, radius: 16, fill: '#141416', stroke: 'rgba(255, 255, 255, 0.12)', strokeWidth: 1, opacity: 100 },
+    'plugins-artboard': { x: 0, y: 0, w: 1440, h: 1100, radius: 16, fill: '#141416', stroke: 'rgba(255, 255, 255, 0.12)', strokeWidth: 1, opacity: 100 },
     'work-codesrijan': { x: 0, y: 0, w: 360, h: 440, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
     'work-eventflow': { x: 0, y: 0, w: 360, h: 440, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
     'work-landing': { x: 0, y: 0, w: 360, h: 440, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
@@ -1107,7 +1114,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
       case 'projects': return { width: 1340, height: 960 };
       case 'experience': return { width: 1240, height: 1360 };
       case 'about': return { width: 1380, height: 1220 };
-      case 'resume': return { width: 1100, height: 1420 };
+      case 'resume': return { width: 1000, height: 1060 };
       case 'process': return { width: 1400, height: 960 };
       case 'plugins': return { width: 1440, height: 1100 };
       default: return { width: 1240, height: 880 };
@@ -2930,7 +2937,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 {/* Framed Artboard Box for Resume */}
                 <div
                   className={`figma-artboard-box resume-artboard-box figma-selectable-node ${selectedNodeId === 'resume-artboard' ? 'is-selected' : ''}`}
-                  style={getNodeStyle('resume-artboard', 1100, 1420)}
+                  style={getNodeStyle('resume-artboard', 1000, 1060)}
                   onClick={(e) => {
                     e.stopPropagation();
                     handleSelectNode('resume-artboard', 'Tactile_Creative_Resume', 'Frame');
@@ -2939,12 +2946,12 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   <div className="figma-artboard-header-tag">
                     <span className="artboard-hash">#</span>
                     <span className="artboard-name">Creative Tactile Resume — Varun Sehgal</span>
-                    <span className="artboard-dims">[{nodeProps['resume-artboard']?.w || 1100} × {nodeProps['resume-artboard']?.h || 1420}]</span>
+                    <span className="artboard-dims">[{nodeProps['resume-artboard']?.w || 1000} × {nodeProps['resume-artboard']?.h || 1060}]</span>
                   </div>
 
                   {selectedNodeId === 'resume-artboard' && (
                     <div className="figma-selection-overlay">
-                      <div className="selection-tag">❖ Creative_Tactile_Resume [1100×1420]</div>
+                      <div className="selection-tag">❖ Creative_Tactile_Resume [1000×1060]</div>
                       <div className="selection-handle tl" /><div className="selection-handle tr" />
                       <div className="selection-handle bl" /><div className="selection-handle br" />
                     </div>
@@ -3144,7 +3151,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                         </div>
                       </div>
 
-                      {/* RIGHT COLUMN: Stickers Cluster + 4x2 Software Tiles (UI/UX ONLY) */}
+                      {/* RIGHT COLUMN: Stickers Cluster & Tactical Highlights */}
                       <div className="tactile-column-right">
                         {/* Tactile Stickers Cluster (NO motion graphics) */}
                         <div className="stickers-cluster-box">
@@ -3172,94 +3179,114 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                           </div>
                         </div>
 
-                        {/* 4x2 Software & Skills App Tiles (UI/UX ONLY - NO GFX) */}
-                        <div className="tactile-software-grid">
-                          {/* 1. Figma */}
-                          <div className="software-app-tile">
-                            <div className="software-tile-icon figma-icon">
-                              <svg width="18" height="26" viewBox="0 0 38 57" fill="none">
-                                <path d="M19 28.5C19 23.2533 23.2533 19 28.5 19C33.7467 19 38 23.2533 38 28.5C38 33.7467 33.7467 38 28.5 38C23.2533 38 19 33.7467 19 28.5Z" fill="#1ABCFE"/>
-                                <path d="M0 47.5C0 42.2533 4.25329 38 9.5 38H19V47.5C19 52.7467 14.7467 57 9.5 57C4.25329 57 0 52.7467 0 47.5Z" fill="#0ACF83"/>
-                                <path d="M19 0V19H28.5C33.7467 19 38 14.7467 38 9.5C38 4.25329 33.7467 0 28.5 0H19Z" fill="#FF7262"/>
-                                <path d="M0 9.5C0 14.7467 4.25329 19 9.5 19H19V0H9.5C4.25329 0 0 4.25329 0 9.5Z" fill="#F24E1E"/>
-                                <path d="M0 28.5C0 33.7467 4.25329 38 9.5 38H19V19H9.5C4.25329 19 0 23.2533 0 28.5Z" fill="#A259FF"/>
-                              </svg>
-                            </div>
-                            <span className="software-tile-name">Figma</span>
+                        {/* Sticky Callout Note for right column balance */}
+                        <div style={{
+                          background: '#fef08a',
+                          border: '1.5px solid #ca8a04',
+                          borderRadius: '6px',
+                          padding: '12px 14px',
+                          color: '#713f12',
+                          fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif',
+                          fontSize: '11px',
+                          lineHeight: '1.45',
+                          boxShadow: '2px 4px 10px rgba(0,0,0,0.06)',
+                          transform: 'rotate(1deg)',
+                          marginTop: '8px'
+                        }}>
+                          <div style={{ fontWeight: '800', display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '4px', color: '#854d0e' }}>
+                            <span>📌</span> DESIGN PRINCIPLE
                           </div>
-
-                          {/* 2. Framer */}
-                          <div className="software-app-tile">
-                            <div className="software-tile-icon" style={{ background: '#0055ff' }}>
-                              <svg width="18" height="18" viewBox="0 0 24 24" fill="#ffffff">
-                                <path d="M4 0h16v8h-8zM4 8h8l8 8H4zM4 16h8v8z"/>
-                              </svg>
-                            </div>
-                            <span className="software-tile-name">Framer</span>
-                          </div>
-
-                          {/* 3. FigJam */}
-                          <div className="software-app-tile">
-                            <div className="software-tile-icon" style={{ background: '#9747ff' }}>
-                              <span style={{ color: '#ffffff', fontWeight: '800', fontSize: '13px' }}>FJ</span>
-                            </div>
-                            <span className="software-tile-name">FigJam</span>
-                          </div>
-
-                          {/* 4. ProtoPie */}
-                          <div className="software-app-tile">
-                            <div className="software-tile-icon" style={{ background: '#ff3d67' }}>
-                              <span style={{ color: '#ffffff', fontWeight: '900', fontSize: '13px' }}>Pπ</span>
-                            </div>
-                            <span className="software-tile-name">ProtoPie</span>
-                          </div>
-
-                          {/* 5. Webflow */}
-                          <div className="software-app-tile">
-                            <div className="software-tile-icon" style={{ background: '#146ef5' }}>
-                              <span style={{ color: '#ffffff', fontWeight: '900', fontSize: '12px' }}>Wf</span>
-                            </div>
-                            <span className="software-tile-name">Webflow</span>
-                          </div>
-
-                          {/* 6. React / Next */}
-                          <div className="software-app-tile">
-                            <div className="software-tile-icon react-icon">
-                              <svg width="22" height="20" viewBox="0 0 115.3 100" fill="#00d8ff">
-                                <ellipse cx="57.6" cy="50" rx="15" ry="46" transform="rotate(-60 57.6 50)"/>
-                                <ellipse cx="57.6" cy="50" rx="15" ry="46"/>
-                                <ellipse cx="57.6" cy="50" rx="15" ry="46" transform="rotate(60 57.6 50)"/>
-                                <circle cx="57.6" cy="50" r="10" fill="#00d8ff"/>
-                              </svg>
-                            </div>
-                            <span className="software-tile-name">React / Next</span>
-                          </div>
-
-                          {/* 7. Tailwind CSS */}
-                          <div className="software-app-tile">
-                            <div className="software-tile-icon tailwind-icon">
-                              <svg width="24" height="16" viewBox="0 0 54 33" fill="#38bdf8">
-                                <path d="M27 0c-7.2 0-11.7 3.6-13.5 10.8 2.7-3.6 5.85-4.95 9.45-4.05 2.054.513 3.522 2.004 5.147 3.653C30.744 13.09 33.808 16.2 40.5 16.2c7.2 0 11.7-3.6 13.5-10.8-2.7 3.6-5.85 4.95-9.45 4.05-2.054-.513-3.522-2.004-5.147-3.653C36.756 3.11 33.692 0 27 0zM13.5 16.2C6.3 16.2 1.8 19.8 0 27c2.7-3.6 5.85-4.95 9.45-4.05 2.054.514 3.522 2.004 5.147 3.653C17.244 29.29 20.308 32.4 27 32.4c7.2 0 11.7-3.6 13.5-10.8-2.7 3.6-5.85 4.95-9.45 4.05-2.054-.513-3.522-2.004-5.147-3.653C23.256 19.31 20.192 16.2 13.5 16.2z"/>
-                              </svg>
-                            </div>
-                            <span className="software-tile-name">Tailwind CSS</span>
-                          </div>
-
-                          {/* 8. TypeScript */}
-                          <div className="software-app-tile">
-                            <div className="software-tile-icon ts-icon">
-                              <span>TS</span>
-                            </div>
-                            <span className="software-tile-name">TypeScript</span>
-                          </div>
+                          Zero friction handoff from Figma tokens directly to executable Tailwind &amp; Next.js components.
                         </div>
                       </div>
                     </div>
 
-                    {/* Bottom Accent: Yellow Highlighter Band with Software Skills Text */}
+                    {/* Bottom Accent: Yellow Highlighter Band directly below Timeline (NO extra gap) */}
                     <div className="tactile-bottom-accent-band">
                       <div className="bottom-yellow-highlighter-stripe" />
                       <div className="bottom-script-headline">Software &amp; Design Skills</div>
+                    </div>
+
+                    {/* 8 Software & Skills App Tiles in clean responsive row right below headline */}
+                    <div className="tactile-software-grid">
+                      {/* 1. Figma */}
+                      <div className="software-app-tile">
+                        <div className="software-tile-icon figma-icon">
+                          <svg width="18" height="26" viewBox="0 0 38 57" fill="none">
+                            <path d="M19 28.5C19 23.2533 23.2533 19 28.5 19C33.7467 19 38 23.2533 38 28.5C38 33.7467 33.7467 38 28.5 38C23.2533 38 19 33.7467 19 28.5Z" fill="#1ABCFE"/>
+                            <path d="M0 47.5C0 42.2533 4.25329 38 9.5 38H19V47.5C19 52.7467 14.7467 57 9.5 57C4.25329 57 0 52.7467 0 47.5Z" fill="#0ACF83"/>
+                            <path d="M19 0V19H28.5C33.7467 19 38 14.7467 38 9.5C38 4.25329 33.7467 0 28.5 0H19Z" fill="#FF7262"/>
+                            <path d="M0 9.5C0 14.7467 4.25329 19 9.5 19H19V0H9.5C4.25329 0 0 4.25329 0 9.5Z" fill="#F24E1E"/>
+                            <path d="M0 28.5C0 33.7467 4.25329 38 9.5 38H19V19H9.5C4.25329 19 0 23.2533 0 28.5Z" fill="#A259FF"/>
+                          </svg>
+                        </div>
+                        <span className="software-tile-name">Figma</span>
+                      </div>
+
+                      {/* 2. Framer */}
+                      <div className="software-app-tile">
+                        <div className="software-tile-icon" style={{ background: '#0055ff' }}>
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="#ffffff">
+                            <path d="M4 0h16v8h-8zM4 8h8l8 8H4zM4 16h8v8z"/>
+                          </svg>
+                        </div>
+                        <span className="software-tile-name">Framer</span>
+                      </div>
+
+                      {/* 3. FigJam */}
+                      <div className="software-app-tile">
+                        <div className="software-tile-icon" style={{ background: '#9747ff' }}>
+                          <span style={{ color: '#ffffff', fontWeight: '800', fontSize: '13px' }}>FJ</span>
+                        </div>
+                        <span className="software-tile-name">FigJam</span>
+                      </div>
+
+                      {/* 4. ProtoPie */}
+                      <div className="software-app-tile">
+                        <div className="software-tile-icon" style={{ background: '#ff3d67' }}>
+                          <span style={{ color: '#ffffff', fontWeight: '900', fontSize: '13px' }}>Pπ</span>
+                        </div>
+                        <span className="software-tile-name">ProtoPie</span>
+                      </div>
+
+                      {/* 5. Webflow */}
+                      <div className="software-app-tile">
+                        <div className="software-tile-icon" style={{ background: '#146ef5' }}>
+                          <span style={{ color: '#ffffff', fontWeight: '900', fontSize: '12px' }}>Wf</span>
+                        </div>
+                        <span className="software-tile-name">Webflow</span>
+                      </div>
+
+                      {/* 6. React / Next */}
+                      <div className="software-app-tile">
+                        <div className="software-tile-icon react-icon">
+                          <svg width="22" height="20" viewBox="0 0 115.3 100" fill="#00d8ff">
+                            <ellipse cx="57.6" cy="50" rx="15" ry="46" transform="rotate(-60 57.6 50)"/>
+                            <ellipse cx="57.6" cy="50" rx="15" ry="46"/>
+                            <ellipse cx="57.6" cy="50" rx="15" ry="46" transform="rotate(60 57.6 50)"/>
+                            <circle cx="57.6" cy="50" r="10" fill="#00d8ff"/>
+                          </svg>
+                        </div>
+                        <span className="software-tile-name">React / Next</span>
+                      </div>
+
+                      {/* 7. Tailwind CSS */}
+                      <div className="software-app-tile">
+                        <div className="software-tile-icon tailwind-icon">
+                          <svg width="24" height="16" viewBox="0 0 54 33" fill="#38bdf8">
+                            <path d="M27 0c-7.2 0-11.7 3.6-13.5 10.8 2.7-3.6 5.85-4.95 9.45-4.05 2.054.513 3.522 2.004 5.147 3.653C30.744 13.09 33.808 16.2 40.5 16.2c7.2 0 11.7-3.6 13.5-10.8-2.7 3.6-5.85 4.95-9.45 4.05-2.054-.513-3.522-2.004-5.147-3.653C36.756 3.11 33.692 0 27 0zM13.5 16.2C6.3 16.2 1.8 19.8 0 27c2.7-3.6 5.85-4.95 9.45-4.05 2.054.514 3.522 2.004 5.147 3.653C17.244 29.29 20.308 32.4 27 32.4c7.2 0 11.7-3.6 13.5-10.8-2.7 3.6-5.85 4.95-9.45 4.05-2.054-.513-3.522-2.004-5.147-3.653C23.256 19.31 20.192 16.2 13.5 16.2z"/>
+                          </svg>
+                        </div>
+                        <span className="software-tile-name">Tailwind CSS</span>
+                      </div>
+
+                      {/* 8. TypeScript */}
+                      <div className="software-app-tile">
+                        <div className="software-tile-icon ts-icon">
+                          <span>TS</span>
+                        </div>
+                        <span className="software-tile-name">TypeScript</span>
+                      </div>
                     </div>
                   </div>
                 </div>
