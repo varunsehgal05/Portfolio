@@ -58,13 +58,13 @@ const FEATURED_PROJECTS = [
   },
   {
     id: 'codesrijan',
-    title: 'CodeSrijan Hackathon Ecosystem',
-    category: 'Digital Platform • Branding',
-    desc: 'Complete branding, participant portals, and 72-hour evaluation platform for 200+ hackathon participants.',
+    title: 'CodeSrijan Hackathon Platform',
+    category: 'Vibecoded • Vercel Live',
+    desc: 'National hackathon ecosystem vibecoded & engineered by Varun Sehgal for 200+ hackathon participants.',
     date: 'Aug 2026',
     size: '12.1 MB',
-    tags: ['Event Branding', 'UI Design', 'Design Tokens'],
-    link: 'https://lnkd.in/p/dUXQYx92',
+    tags: ['Vibecoded', 'Next.js', 'Vercel Live', 'Hackathon'],
+    link: 'http://codesrijan-nine.vercel.app/',
     appId: 'vscode'
   }
 ];

@@ -21,24 +21,28 @@ const ALL_PROJECTS = [
   {
     id: 'codesrijan',
     name: 'CodeSrijan Hackathon Portal',
-    category: 'SaaS / Web',
-    badge: '800+ Attendees',
-    metric: '800+ Attendees • 50+ Teams',
+    category: 'Vibecoded Site',
+    badge: '⚡ Vibecoded Live Site',
+    metric: '⚡ Vibecoded Live Site • 800+ Attendees',
     image: '/figma_CodeSrijan.png',
-    desc: 'National hackathon portal facilitating registration, project submissions, live evaluation matrices, and announcements.',
-    tags: ['React', 'Event Platform', 'Design System'],
-    link: 'https://www.figma.com/design/hCaNWKm2qTY2kQ0KOZRywa/M-1?node-id=40-2&t=vfPIBYY278lzphVq-1'
+    desc: 'National hackathon portal vibecoded & engineered by Varun Sehgal for Jaypee University. Features registration, team matching, and live rubrics.',
+    tags: ['Vibecoded', 'Next.js', 'Vercel Live', 'Hackathon'],
+    link: 'http://codesrijan-nine.vercel.app/',
+    liveUrl: 'http://codesrijan-nine.vercel.app/',
+    figmaLink: 'https://www.figma.com/design/hCaNWKm2qTY2kQ0KOZRywa/M-1?node-id=40-2&t=vfPIBYY278lzphVq-1',
+    isVibecoded: true
   },
   {
     id: 'eventflow',
     name: 'EventFlow Experience Platform',
-    category: 'SaaS / Web',
-    badge: '30% Less Dropoff',
+    category: 'Figma Design',
+    badge: '❖ Figma Design System',
     metric: '4-Step Checkout • 30% Less Dropoff',
     image: '/figma_EventFlow.png',
     desc: 'Campus event ticketing & management platform streamlining booking workflows with 30% reduced drop-off.',
     tags: ['SaaS', 'Figma', 'Event Platform'],
-    link: 'https://www.figma.com/design/29nTBBWxZfoOKdFnOaQWbq/EventFlow?node-id=2-2&p=f&t=ucsh4jF84sBl50UA-0'
+    link: 'https://www.figma.com/design/29nTBBWxZfoOKdFnOaQWbq/EventFlow?node-id=2-2&p=f&t=ucsh4jF84sBl50UA-0',
+    isFigmaLink: true
   },
   {
     id: 'landing-page',
@@ -101,7 +105,7 @@ const TIMELINE = [
   {
     role: 'UI/UX Designer Intern',
     company: 'UniEvent (EventFlow)',
-    period: 'Sep 2024 — Nov 2024 • 6 Mos',
+    period: 'Jun 2024 — Nov 2024 • 6 Mos (Ended early Nov)',
     location: 'Bengaluru, Karnataka, India (Remote)',
     link: 'https://www.linkedin.com/in/varunsehgal02',
     desc: 'Designed campus event ticketing platform (EventFlow). Slashed transaction drop-off by 30% across 4-step booking workflow across 50+ components.'
@@ -251,7 +255,7 @@ const TIMELINE_ACTIVITY = [
     id: 'act-unievent',
     type: 'experience',
     category: 'Product Design',
-    date: 'Sep 2024 — Nov 2024 • 6 Mos',
+    date: 'Jun 2024 — Nov 2024 • 6 Mos (Ended early Nov)',
     icon: 'edit',
     highlight: 'UniEvent (EventFlow)',
     titleRest: 'completed UI/UX Design Internship (EventFlow)',
@@ -639,6 +643,7 @@ const FigmaApp = ({ isInteracting, userName, onOpenApp }) => {
   const [figjamTool, setFigjamTool] = useState('select');
   const [painPointReactions, setPainPointReactions] = useState(12);
   const [isPlayingTape, setIsPlayingTape] = useState(false);
+  const [isPlayingAudioNote, setIsPlayingAudioNote] = useState(false);
   const [processToolbarTool, setProcessToolbarTool] = useState('select');
   const [pluginFilter, setPluginFilter] = useState('all');
   const [tokenChroma, setTokenChroma] = useState(0.85);
@@ -1142,6 +1147,8 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
   useEffect(() => {
     if (activeTab === 'projects') {
       setZoom(0.9);
+    } else if (activeTab === 'about') {
+      setZoom(0.85);
     }
     const timer = setTimeout(() => {
       centerCanvasView(activeTab);
@@ -2240,9 +2247,34 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                                 <span key={idx} className="bento-tag">{t}</span>
                               ))}
                             </div>
-                            <a href={proj.link} target="_blank" rel="noreferrer" className="bento-action-btn">
-                              Open in Figma <span className="material-symbols-outlined text-[16px]">open_in_new</span>
-                            </a>
+                            {proj.isVibecoded ? (
+                              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '12px' }}>
+                                <a
+                                  href={proj.link}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="bento-action-btn"
+                                  style={{ background: 'linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%)', color: '#ffffff', fontWeight: 700 }}
+                                >
+                                  🚀 Open Live Site (Vercel) <span className="material-symbols-outlined text-[16px]">open_in_new</span>
+                                </a>
+                                {proj.figmaLink && (
+                                  <a
+                                    href={proj.figmaLink}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="bento-action-btn"
+                                    style={{ background: 'rgba(255, 255, 255, 0.08)' }}
+                                  >
+                                    ❖ Figma File
+                                  </a>
+                                )}
+                              </div>
+                            ) : (
+                              <a href={proj.link} target="_blank" rel="noreferrer" className="bento-action-btn">
+                                Open in Figma <span className="material-symbols-outlined text-[16px]">open_in_new</span>
+                              </a>
+                            )}
                           </div>
                         </div>
                       );
@@ -2941,18 +2973,18 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   style={getNodeStyle('resume-artboard', 1080, 2600)}
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleSelectNode('resume-artboard', 'Notebook_Resume_Kittu', 'Frame');
+                    handleSelectNode('resume-artboard', 'Notebook_Resume', 'Frame');
                   }}
                 >
                   <div className="figma-artboard-header-tag">
                     <span className="artboard-hash">#</span>
-                    <span className="artboard-name">Notebook Resume — Varun Sehgal (kittu.pro)</span>
+                    <span className="artboard-name">Notebook Resume — Varun Sehgal</span>
                     <span className="artboard-dims">[{nodeProps['resume-artboard']?.w || 1080} × {nodeProps['resume-artboard']?.h || 2600}]</span>
                   </div>
 
                   {selectedNodeId === 'resume-artboard' && (
                     <div className="figma-selection-overlay">
-                      <div className="selection-tag">❖ Notebook_Resume_Kittu [1080×2600]</div>
+                      <div className="selection-tag">❖ Notebook_Resume [1080×2600]</div>
                       <div className="selection-handle tl" /><div className="selection-handle tr" />
                       <div className="selection-handle bl" /><div className="selection-handle br" />
                     </div>
