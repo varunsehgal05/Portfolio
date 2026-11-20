@@ -24,7 +24,8 @@ import {
   FileCheck,
   Send,
   ShieldAlert,
-  ArrowRight
+  ArrowRight,
+  Paperclip
 } from 'lucide-react';
 import './TrashApp.css';
 
@@ -183,28 +184,6 @@ const INITIAL_TRASH_ITEMS = [
   }
 ];
 
-// Helper: Speech synthesis
-const speakAIMessage = (text) => {
-  try {
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 1.05;
-      utterance.pitch = 1.1;
-      utterance.volume = 0.95;
-      const voices = window.speechSynthesis.getVoices();
-      const preferred = voices.find(v => v.lang.startsWith('en') && (
-        v.name.includes('Samantha') || 
-        v.name.includes('Google') || 
-        v.name.includes('Natural') || 
-        v.name.includes('Victoria')
-      ));
-      if (preferred) utterance.voice = preferred;
-      window.speechSynthesis.speak(utterance);
-    }
-  } catch {}
-};
-
 // Helper: Procedural mechanical mouse click sound
 const playMechanicalClick = () => {
   try {
@@ -241,7 +220,7 @@ const playMechanicalClick = () => {
   } catch {}
 };
 
-// Helper: AI sci-fi chime
+// Helper: Clippy retro chime
 const playAIChime = () => {
   try {
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -272,17 +251,16 @@ const TrashApp = ({ onClose, onOpenApp }) => {
   const [isShredding, setIsShredding] = useState(false);
   const [bannerNotice, setBannerNotice] = useState(null);
 
-  // AI Sentinel & Auto-Close States
-  const [showAIGreetBubble, setShowAIGreetBubble] = useState(true);
+  // Clippy Assistant & Auto-Close States
   const [aiCountdown, setAiCountdown] = useState(null);
   const [isAICountdownCancelled, setIsAICountdownCancelled] = useState(false);
 
-  // Virtual AI Mouse Controller state
+  // Virtual Clippy Mouse Controller state
   const [aiMouse, setAiMouse] = useState({
     active: false,
     x: 0,
     y: 0,
-    label: 'VarunOS AI',
+    label: '📎 Clippy',
     isClicking: false,
     ripple: null
   });
@@ -290,17 +268,21 @@ const TrashApp = ({ onClose, onOpenApp }) => {
   const countdownTimerRef = useRef(null);
   const isClosingProcessRef = useRef(false);
 
-  // 1. Initial Mount AI Speech & Greeting
+  // 1. Initial Mount: Clippy on desktop welcomes user & offers portfolio
   useEffect(() => {
     playAIChime();
-    const msg = "Hey! You are not here to see my trash! You're here to check out my portfolio and hire me!";
-    speakAIMessage(msg);
-    // Clippy says the words and highlights at that time
+    const msg = "It looks like you opened the Trash! 📎 You are not here to see my trash! 👀 You're here to explore my portfolio and hire me!";
+    // Clippy says the words in his classic balloon and highlights
     window.dispatchEvent(new CustomEvent('varunos-clippy-speak', {
       detail: {
         text: msg,
         animation: "GetAttention",
-        highlightDuration: 5500
+        highlightDuration: 7000,
+        hold: true,
+        actions: [
+          { label: "View Portfolio", primary: true, appId: "figma" },
+          { label: "View Resume", appId: "resume" }
+        ]
       }
     }));
     return () => {
@@ -375,21 +357,21 @@ const TrashApp = ({ onClose, onOpenApp }) => {
     setSelectedItemId(item.id);
   };
 
-  // Opening File: Triggers AI Interception & Voice
+  // Opening File: Triggers Clippy Guidance
   const handleItemDoubleClick = (item) => {
     setActivePreviewItem(item);
     setIsAICountdownCancelled(false);
-    setAiCountdown(4); // 4-second countdown before AI closes with mouse
+    setAiCountdown(4); // 4-second countdown before Clippy guides back
 
     playAIChime();
-    const msg = "Hold on! You are here to see my portfolio and hire me, not to see my trash! I'm closing this for you now.";
-    speakAIMessage(msg);
-    // Clippy says the words and highlights at that time
+    const msg = "Hey! You're inspecting discarded files! 📎 Let's look at Varun's real work instead!";
+    // Clippy says the words and highlights on desktop
     window.dispatchEvent(new CustomEvent('varunos-clippy-speak', {
       detail: {
         text: msg,
         animation: "Explain",
-        highlightDuration: 6000
+        highlightDuration: 6000,
+        hold: true
       }
     }));
 
@@ -399,7 +381,7 @@ const TrashApp = ({ onClose, onOpenApp }) => {
       setAiCountdown(prev => {
         if (prev <= 1) {
           clearInterval(countdownTimerRef.current);
-          startAIMouseCloseSequence();
+          startClippyCloseSequence();
           return 0;
         }
         return prev - 1;
@@ -407,11 +389,20 @@ const TrashApp = ({ onClose, onOpenApp }) => {
     }, 1000);
   };
 
-  // EXECUTE AI VIRTUAL MOUSE CLOSE SEQUENCE
-  const startAIMouseCloseSequence = () => {
+  // EXECUTE CLIPPY VIRTUAL MOUSE CLOSE SEQUENCE
+  const startClippyCloseSequence = () => {
     if (isClosingProcessRef.current) return;
     isClosingProcessRef.current = true;
     if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
+
+    window.dispatchEvent(new CustomEvent('varunos-clippy-speak', {
+      detail: {
+        text: "On it! Closing trash so you can explore Varun's real work! 📎",
+        animation: "Explain",
+        highlightDuration: 4000,
+        hold: false
+      }
+    }));
 
     // Initial mouse spawn point (middle of viewport)
     const startX = window.innerWidth / 2;
@@ -421,7 +412,7 @@ const TrashApp = ({ onClose, onOpenApp }) => {
       active: true,
       x: startX,
       y: startY,
-      label: '🤖 VarunOS AI: "Closing file preview..."',
+      label: '📎 Clippy: "Closing file preview..."',
       isClicking: false,
       ripple: null
     });
@@ -442,7 +433,7 @@ const TrashApp = ({ onClose, onOpenApp }) => {
         ...prev,
         x: targetX,
         y: targetY,
-        label: '🤖 VarunOS AI: "Closing preview..."'
+        label: '📎 Clippy: "Closing preview..."'
       }));
 
       // After gliding to modal close button (650ms) -> Click!
@@ -463,7 +454,7 @@ const TrashApp = ({ onClose, onOpenApp }) => {
             ...prev,
             isClicking: false,
             ripple: null,
-            label: '🤖 VarunOS AI: "Now closing Trash window! 👋"'
+            label: '📎 Clippy: "Now closing Trash window! 👋"'
           }));
 
           // Find Red close button on active window
@@ -481,7 +472,7 @@ const TrashApp = ({ onClose, onOpenApp }) => {
             ...prev,
             x: winCloseX,
             y: winCloseY,
-            label: '🤖 VarunOS AI: "Closing Trash! Let\'s see the real portfolio!"'
+            label: '📎 Clippy: "Closing Trash! Let\'s see the real portfolio!"'
           }));
 
           // After gliding to Red Close Button (700ms) -> Click and Close Window!
@@ -619,12 +610,12 @@ const TrashApp = ({ onClose, onOpenApp }) => {
         <div className="trash-toolbar-right">
           <button
             type="button"
-            className="trash-action-btn ai-close-btn"
-            onClick={startAIMouseCloseSequence}
-            title="Let AI close Trash with its virtual mouse"
+            className="trash-action-btn clippy-close-btn"
+            onClick={startClippyCloseSequence}
+            title="Ask Clippy to close Trash"
           >
-            <Bot size={13} className="text-cyan-400" />
-            <span>AI Close Trash</span>
+            <Paperclip size={13} className="text-amber-400" />
+            <span>Ask Clippy to Close</span>
           </button>
 
           <button
@@ -659,53 +650,6 @@ const TrashApp = ({ onClose, onOpenApp }) => {
           )}
         </div>
       </header>
-
-      {/* AI SENTINEL GREETING BANNER ON TRASH OPEN */}
-      {showAIGreetBubble && (
-        <div className="trash-ai-sentinel-banner">
-          <div className="ai-sentinel-left">
-            <div className="ai-sentinel-avatar-wrap">
-              <Bot size={18} className="ai-bot-icon" />
-              <span className="ai-avatar-beacon-pulse"></span>
-            </div>
-            <div className="ai-sentinel-text-wrap">
-              <div className="ai-sentinel-title-row">
-                <span className="ai-sentinel-badge">VARUNOS AI SENTINEL</span>
-                <span className="ai-sentinel-status">● Active Guard</span>
-              </div>
-              <p className="ai-sentinel-msg">
-                "You are <strong>not here to see my trash!</strong> 👀 You're here to explore my <strong>portfolio</strong> and <strong>hire me!</strong>"
-              </p>
-            </div>
-          </div>
-          <div className="ai-sentinel-actions">
-            <button 
-              type="button" 
-              className="ai-sentinel-btn primary"
-              onClick={() => onOpenApp?.('figma')}
-            >
-              <Briefcase size={12} />
-              <span>View Portfolio</span>
-            </button>
-            <button 
-              type="button" 
-              className="ai-sentinel-btn secondary"
-              onClick={() => onOpenApp?.('resume')}
-            >
-              <FileCheck size={12} />
-              <span>View Resume</span>
-            </button>
-            <button 
-              type="button" 
-              className="ai-sentinel-btn dismiss"
-              onClick={() => setShowAIGreetBubble(false)}
-              title="Dismiss warning"
-            >
-              <X size={12} />
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* Temporary Notice Banner */}
       {bannerNotice && (
@@ -821,7 +765,7 @@ const TrashApp = ({ onClose, onOpenApp }) => {
 
       {/* Bottom Statusbar */}
       <footer className="trash-statusbar">
-        <span className="status-hint">💡 Double-click any file to open preview (AI will intercept!)</span>
+        <span className="status-hint">💡 Double-click any file to inspect details (Clippy will guide you!)</span>
         {selectedItem && (
           <span className="status-selected">
             Selected: <strong>{selectedItem.name}</strong> ({selectedItem.size})
@@ -829,32 +773,32 @@ const TrashApp = ({ onClose, onOpenApp }) => {
         )}
       </footer>
 
-      {/* QUICK LOOK MODAL WITH AI INTERCEPTION & REDIRECT */}
+      {/* QUICK LOOK MODAL WITH CLIPPY GUIDANCE & REDIRECT */}
       {activePreviewItem && (
         <div className="trash-modal-backdrop" onClick={() => setActivePreviewItem(null)}>
           <div className="trash-modal-card" onClick={(e) => e.stopPropagation()}>
             
-            {/* AI INTERCEPTION HERO HEADER */}
-            <div className="trash-ai-interception-card">
-              <div className="ai-interception-badge-bar">
-                <span className="ai-interception-pill">
-                  <ShieldAlert size={12} className="text-amber-400" />
-                  AI SECURITY INTERCEPTION
+            {/* Clippy Office Recommendation Banner */}
+            <div className="trash-clippy-tip-card">
+              <div className="clippy-tip-header-row">
+                <span className="clippy-tip-badge">
+                  <Paperclip size={12} className="text-amber-400" />
+                  Clippy Office Assistant
                 </span>
-                <span className="ai-interception-tag">Wrong Directory!</span>
+                <span className="clippy-tip-tag">Recommendation</span>
               </div>
-              <h3 className="ai-interception-headline">
-                "You are here to see my portfolio & hire me, NOT to see my trash! 💼✨"
+              <h3 className="clippy-tip-headline">
+                "It looks like you're inspecting discarded drafts! 📎 You're here to explore my portfolio and hire me!"
               </h3>
-              <p className="ai-interception-sub">
-                Why dig into discarded drafts like <code>{activePreviewItem.name}</code>? Varun's production SaaS apps, Figma design systems, and frontend code are waiting for you!
+              <p className="clippy-tip-sub">
+                Why dig into old drafts like <code>{activePreviewItem.name}</code>? Varun's production SaaS apps, Figma design systems, and frontend code are waiting for you!
               </p>
 
               {/* Action Buttons: Redirect to Portfolio / Hire */}
-              <div className="ai-interception-actions-row">
+              <div className="clippy-tip-actions-row">
                 <button
                   type="button"
-                  className="ai-interception-action-btn figma-action"
+                  className="clippy-tip-btn figma-action"
                   onClick={() => {
                     setActivePreviewItem(null);
                     onOpenApp?.('figma');
@@ -866,7 +810,7 @@ const TrashApp = ({ onClose, onOpenApp }) => {
                 </button>
                 <button
                   type="button"
-                  className="ai-interception-action-btn resume-action"
+                  className="clippy-tip-btn resume-action"
                   onClick={() => {
                     setActivePreviewItem(null);
                     onOpenApp?.('resume');
@@ -877,7 +821,7 @@ const TrashApp = ({ onClose, onOpenApp }) => {
                 </button>
                 <button
                   type="button"
-                  className="ai-interception-action-btn hire-action"
+                  className="clippy-tip-btn hire-action"
                   onClick={() => {
                     setActivePreviewItem(null);
                     onOpenApp?.('contact');
@@ -888,33 +832,33 @@ const TrashApp = ({ onClose, onOpenApp }) => {
                 </button>
               </div>
 
-              {/* AI Auto-Close Countdown & Takeover Bar */}
-              <div className="ai-takeover-countdown-bar">
-                <div className="ai-takeover-info">
-                  <MousePointer2 size={13} className="text-cyan-400 animate-bounce" />
+              {/* Countdown Bar */}
+              <div className="clippy-takeover-bar">
+                <div className="clippy-takeover-info">
+                  <Paperclip size={13} className="text-amber-400 animate-bounce" />
                   {!isAICountdownCancelled ? (
                     <span>
-                      AI taking over mouse to close this trash in <strong>{aiCountdown ?? 3}s</strong>...
+                      Clippy closing this trash window in <strong>{aiCountdown ?? 3}s</strong>...
                     </span>
                   ) : (
-                    <span className="text-zinc-400">AI auto-close paused. Take your time!</span>
+                    <span className="text-zinc-400">Auto-close paused. Take your time!</span>
                   )}
                 </div>
-                <div className="ai-takeover-ctrl-btns">
+                <div className="clippy-takeover-btns">
                   <button
                     type="button"
-                    className="ai-close-now-pill"
-                    onClick={startAIMouseCloseSequence}
+                    className="clippy-close-now-btn"
+                    onClick={startClippyCloseSequence}
                   >
-                    ⚡ Close Now with AI Mouse
+                    📎 Close Now with Clippy
                   </button>
                   {!isAICountdownCancelled && (
                     <button
                       type="button"
-                      className="ai-pause-pill"
+                      className="clippy-pause-btn"
                       onClick={cancelAICountdown}
                     >
-                      Cancel
+                      Keep Browsing
                     </button>
                   )}
                 </div>
@@ -1013,9 +957,9 @@ const TrashApp = ({ onClose, onOpenApp }) => {
               />
             </svg>
 
-            {/* AI Speech & Label Tag */}
+            {/* Clippy Speech & Label Tag */}
             <div className="virtual-ai-mouse-badge">
-              <Bot size={11} className="text-cyan-300" />
+              <Paperclip size={11} className="text-amber-300" />
               <span>{aiMouse.label}</span>
             </div>
           </div>

@@ -335,12 +335,13 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
   const [messages, setMessages] = useState([]);
   const [isThinking, setIsThinking] = useState(false);
   const [isHighlighted, setIsHighlighted] = useState(false);
+  const [clippyActions, setClippyActions] = useState(null);
   const highlightTimerRef = useRef(null);
 
   // Listen for speech requests from TrashApp or other system events
   useEffect(() => {
     const handleClippySpeak = (e) => {
-      const { text, animation = "GetAttention", highlightDuration = 5500 } = e.detail || {};
+      const { text, animation = "GetAttention", highlightDuration = 7000, hold = true, actions = null } = e.detail || {};
       if (!text) return;
 
       setIsHighlighted(true);
@@ -348,6 +349,12 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
       highlightTimerRef.current = setTimeout(() => {
         setIsHighlighted(false);
       }, highlightDuration);
+
+      if (actions && actions.length > 0) {
+        setClippyActions(actions);
+      } else {
+        setClippyActions(null);
+      }
 
       const agent = agentRef.current;
       if (agent) {
@@ -360,8 +367,9 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
           }, highlightDuration);
         }
         try {
+          agent.stop();
           agent.play(animation);
-          agent.speak(text);
+          agent.speak(text, hold);
           if (agent._balloon) agent._balloon.reposition();
         } catch {}
       }
@@ -615,6 +623,45 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
     <>
       {/* Clippy Spotlight Pulse Ring when Speaking */}
       {isHighlighted && <div className="clippy-highlight-ring" aria-hidden="true" />}
+
+      {/* Floating Action Buttons from Clippy's Speech */}
+      {clippyActions && !isChatOpen && (
+        <div className="clippy-floating-actions-bar">
+          <div className="clippy-actions-bar-header">
+            <span className="clippy-bar-title">📎 Clippy's Recommendation</span>
+            <button
+              type="button"
+              className="clippy-bar-close"
+              onClick={() => setClippyActions(null)}
+              title="Dismiss"
+            >
+              <X size={12} />
+            </button>
+          </div>
+          <div className="clippy-actions-pills">
+            {clippyActions.map((act, i) => (
+              <button
+                key={i}
+                type="button"
+                className={`clippy-pill-btn ${act.primary ? 'primary' : ''}`}
+                onClick={() => {
+                  if (act.appId && onOpenApp) {
+                    onOpenApp(act.appId);
+                  } else if (act.onClick) {
+                    act.onClick();
+                  }
+                  setClippyActions(null);
+                  if (agentRef.current?._balloon) {
+                    agentRef.current._balloon.hide(true);
+                  }
+                }}
+              >
+                <span>{act.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Interactive Clippy Ask Dialog */}
       {isChatOpen && (
