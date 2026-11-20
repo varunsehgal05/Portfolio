@@ -293,7 +293,16 @@ const TrashApp = ({ onClose, onOpenApp }) => {
   // 1. Initial Mount AI Speech & Greeting
   useEffect(() => {
     playAIChime();
-    speakAIMessage("Hey! You are not here to see my trash! You're here to check out my portfolio and hire me!");
+    const msg = "Hey! You are not here to see my trash! You're here to check out my portfolio and hire me!";
+    speakAIMessage(msg);
+    // Clippy says the words and highlights at that time
+    window.dispatchEvent(new CustomEvent('varunos-clippy-speak', {
+      detail: {
+        text: msg,
+        animation: "GetAttention",
+        highlightDuration: 5500
+      }
+    }));
     return () => {
       if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
     };
@@ -373,7 +382,16 @@ const TrashApp = ({ onClose, onOpenApp }) => {
     setAiCountdown(4); // 4-second countdown before AI closes with mouse
 
     playAIChime();
-    speakAIMessage("Hold on! You are here to see my portfolio and hire me, not to see my trash! I'm closing this for you now.");
+    const msg = "Hold on! You are here to see my portfolio and hire me, not to see my trash! I'm closing this for you now.";
+    speakAIMessage(msg);
+    // Clippy says the words and highlights at that time
+    window.dispatchEvent(new CustomEvent('varunos-clippy-speak', {
+      detail: {
+        text: msg,
+        animation: "Explain",
+        highlightDuration: 6000
+      }
+    }));
 
     // Start 4s countdown
     if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);

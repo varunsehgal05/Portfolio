@@ -49,11 +49,39 @@
   left: 20px;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
   font-family: 'SF Mono', Consolas, Monaco, monospace;
   pointer-events: none;
   z-index: 1000000;
-  opacity: 0.8;
+  opacity: 0.9;
+}
+
+.blueprint-header-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.swarm-blueprint-skip-btn {
+  pointer-events: auto;
+  cursor: pointer;
+  background: rgba(162, 89, 255, 0.2);
+  border: 1px solid rgba(162, 89, 255, 0.5);
+  color: #e0d4fc;
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.swarm-blueprint-skip-btn:hover {
+  background: rgba(162, 89, 255, 0.4);
+  border-color: #a259ff;
+  color: #ffffff;
+  transform: translateY(-1px);
 }
 
 .blueprint-tag {

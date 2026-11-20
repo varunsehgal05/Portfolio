@@ -334,6 +334,45 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
   const [inputText, setInputText] = useState("");
   const [messages, setMessages] = useState([]);
   const [isThinking, setIsThinking] = useState(false);
+  const [isHighlighted, setIsHighlighted] = useState(false);
+  const highlightTimerRef = useRef(null);
+
+  // Listen for speech requests from TrashApp or other system events
+  useEffect(() => {
+    const handleClippySpeak = (e) => {
+      const { text, animation = "GetAttention", highlightDuration = 5500 } = e.detail || {};
+      if (!text) return;
+
+      setIsHighlighted(true);
+      if (highlightTimerRef.current) clearTimeout(highlightTimerRef.current);
+      highlightTimerRef.current = setTimeout(() => {
+        setIsHighlighted(false);
+      }, highlightDuration);
+
+      const agent = agentRef.current;
+      if (agent) {
+        if (agent._el) {
+          agent._el.classList.add('clippy-highlighted');
+          setTimeout(() => {
+            if (agentRef.current?._el) {
+              agentRef.current._el.classList.remove('clippy-highlighted');
+            }
+          }, highlightDuration);
+        }
+        try {
+          agent.play(animation);
+          agent.speak(text);
+          if (agent._balloon) agent._balloon.reposition();
+        } catch {}
+      }
+    };
+
+    window.addEventListener('varunos-clippy-speak', handleClippySpeak);
+    return () => {
+      window.removeEventListener('varunos-clippy-speak', handleClippySpeak);
+      if (highlightTimerRef.current) clearTimeout(highlightTimerRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     isChatOpenRef.current = isChatOpen;
@@ -574,6 +613,9 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
 
   return (
     <>
+      {/* Clippy Spotlight Pulse Ring when Speaking */}
+      {isHighlighted && <div className="clippy-highlight-ring" aria-hidden="true" />}
+
       {/* Interactive Clippy Ask Dialog */}
       {isChatOpen && (
         <div className="clippy-dialog-container" ref={dialogRef}>

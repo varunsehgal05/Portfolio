@@ -33,6 +33,52 @@ body.has-fullscreen-window .clippy-quick-sound-pill {
   transform: scale(0.96);
 }
 
+/* Clippy Highlight / Spotlight effect when speaking */
+.pixel-clippy.clippy-highlighted {
+  filter: drop-shadow(0 0 18px rgba(250, 204, 21, 0.95)) drop-shadow(0 0 40px rgba(245, 158, 11, 0.85)) brightness(1.25) !important;
+  transform: scale(1.12) !important;
+  z-index: 100001 !important;
+  animation: clippySpotlightPulse 0.75s ease-in-out infinite alternate !important;
+}
+
+@keyframes clippySpotlightPulse {
+  0% {
+    filter: drop-shadow(0 0 14px rgba(250, 204, 21, 0.85)) drop-shadow(0 0 28px rgba(245, 158, 11, 0.65)) brightness(1.18);
+    transform: scale(1.08) translateY(-4px);
+  }
+  100% {
+    filter: drop-shadow(0 0 26px rgba(250, 204, 21, 1)) drop-shadow(0 0 48px rgba(245, 158, 11, 0.95)) brightness(1.35);
+    transform: scale(1.16) translateY(-8px);
+  }
+}
+
+/* Glowing ring under Clippy when highlighted */
+.clippy-highlight-ring {
+  position: fixed;
+  right: 18px;
+  bottom: 14px;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(250, 204, 21, 0.4) 0%, rgba(245, 158, 11, 0.18) 55%, transparent 75%);
+  border: 2px solid rgba(250, 204, 21, 0.75);
+  box-shadow: 0 0 35px rgba(250, 204, 21, 0.55), inset 0 0 20px rgba(250, 204, 21, 0.35);
+  z-index: 99999;
+  animation: clippyRingWave 1.3s ease-out infinite;
+}
+
+@keyframes clippyRingWave {
+  0% {
+    transform: scale(0.75);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.45);
+    opacity: 0;
+  }
+}
+
 .clippy-balloon {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
   border-radius: 8px !important;

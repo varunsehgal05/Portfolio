@@ -884,12 +884,13 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
       });
 
       // Update 43 replica workers around active stage centroid
-      const centroidX = Object.values(agentTargets).reduce((acc, c) => acc + c.x, 0) / 5;
-      const centroidY = Object.values(agentTargets).reduce((acc, c) => acc + c.y, 0) / 5;
+      const agentValues = Object.values(agentTargets);
+      const centroidX = agentValues.length > 0 ? agentValues.reduce((acc, c) => acc + (c.x || 0), 0) / agentValues.length : w / 2;
+      const centroidY = agentValues.length > 0 ? agentValues.reduce((acc, c) => acc + (c.y || 0), 0) / agentValues.length : h / 2;
 
       const currentReps = replicasStateRef.current;
       const updatedReps = currentReps.map((rep, idx) => {
-        const orbitAngle = (t * 2.2 + (idx * Math.PI * 2) / currentReps.length);
+        const orbitAngle = (elapsed * 2.2 + (idx * Math.PI * 2) / currentReps.length);
         const orbitRadius = 110 + ((idx * 21) % 220);
         const targetX = centroidX + Math.cos(orbitAngle) * orbitRadius;
         const targetY = centroidY + Math.sin(orbitAngle) * (orbitRadius * 0.65);
@@ -933,44 +934,20 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
 
   return (
     <div className={`swarm-overlay-container ${completeBanner ? 'fade-out-overlay' : ''}`}>
-      {/* Top Floating Rebuild HUD Controls (Option 2) */}
-      <div className="swarm-hud-bar">
-        <div className="swarm-hud-status">
-          <span className="swarm-hud-pulse-dot" />
-          <span className="swarm-hud-phase">{statusMessage}</span>
-        </div>
-        <div className="swarm-hud-controls">
-          <button 
-            type="button"
-            className="swarm-hud-btn" 
-            onClick={handleToggleSpeed} 
-            title="Toggle playback speed"
-          >
-            {speedMultiplier}× Speed
-          </button>
-          <button 
-            type="button"
-            className="swarm-hud-btn" 
-            onClick={handleToggleSound} 
-            title="Toggle audio cues (M)"
-          >
-            {isMuted ? '🔇 Muted' : '🔊 Audio'}
-          </button>
-          <button 
-            type="button"
-            className="swarm-hud-skip-btn" 
-            onClick={finishSwarm} 
-            title="Skip reconstruction and open VarunOS immediately (Esc)"
-          >
-            ⏭ Skip Rebuild / Finish Now
-          </button>
-        </div>
-      </div>
-
       {/* Blueprint Coordinates Indicator (Bottom-Left) */}
       <div className="swarm-blueprint-indicator">
-        <span className="blueprint-tag">⚡ SWARM REBUILD ENGINE v3.5</span>
-        <span className="blueprint-coords">AUTONOMOUS MULTIPLAYER RECONSTRUCTION • 48 AGENTS (18 tasks queued)</span>
+        <div className="blueprint-header-row">
+          <span className="blueprint-tag">⚡ SWARM REBUILD ENGINE v3.5</span>
+          <button 
+            type="button" 
+            className="swarm-blueprint-skip-btn" 
+            onClick={finishSwarm}
+            title="Skip rebuild and open VarunOS immediately (Esc)"
+          >
+            Skip Rebuild (Esc) ⏭
+          </button>
+        </div>
+        <span className="blueprint-coords">{statusMessage} • 48 AGENTS (18 tasks queued)</span>
       </div>
 
       {/* Viewport Info Readout (Bottom-Right) */}

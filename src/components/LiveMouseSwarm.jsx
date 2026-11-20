@@ -23,11 +23,46 @@ const ELITE_AGENTS = [
   { id: 'agent-marcus', name: 'Marcus Vance', role: 'Motion & QA', color: '#F59E0B', defaultAction: 'Reviewing' }
 ];
 
+const createInitialAgents = (count) => {
+  const initialAgents = [];
+  const actualCount = Math.max(1, Math.min(count || 5, 12));
+  const w = typeof window !== 'undefined' ? window.innerWidth : 1200;
+  const h = typeof window !== 'undefined' ? window.innerHeight : 800;
+
+  for (let i = 0; i < actualCount; i++) {
+    const spec = ELITE_AGENTS[i % ELITE_AGENTS.length];
+    const angle = (i / actualCount) * Math.PI * 2;
+    const radius = 60 + (i % 3) * 35;
+
+    initialAgents.push({
+      id: `${spec.id}-${i}`,
+      name: spec.name,
+      role: spec.role,
+      color: spec.color,
+      action: spec.defaultAction,
+      x: w / 2 + Math.cos(angle) * radius,
+      y: h / 2 + Math.sin(angle) * radius,
+      vx: (Math.random() - 0.5) * 1.5,
+      vy: (Math.random() - 0.5) * 1.5,
+      offsetX: Math.cos(angle) * radius,
+      offsetY: Math.sin(angle) * radius,
+      damping: 0.88,
+      spring: 0.045,
+      separationDist: 50,
+      wobblePhase: i * 1.25
+    });
+  }
+  return initialAgents;
+};
+
 const LiveMouseSwarm = ({ isEnabled = true, agentCount = 5 }) => {
   const containerRef = useRef(null);
   const svgLinesRef = useRef(null);
   const animFrameRef = useRef(null);
   const [assemblyUI, setAssemblyUI] = useState(null);
+
+  const [agentList] = useState(() => createInitialAgents(agentCount));
+  const agentsRef = useRef(agentList);
 
   const mouseRef = useRef({
     x: typeof window !== 'undefined' ? window.innerWidth / 2 : 600,
@@ -36,7 +71,6 @@ const LiveMouseSwarm = ({ isEnabled = true, agentCount = 5 }) => {
     clickPulse: 0
   });
 
-  const agentsRef = useRef([]);
   const domNodesRef = useRef([]);
   const actionTextNodesRef = useRef([]);
   const linesDomRef = useRef([]);
@@ -45,43 +79,12 @@ const LiveMouseSwarm = ({ isEnabled = true, agentCount = 5 }) => {
     active: false,
     appName: '',
     startTime: 0,
-    duration: 850,
+    duration: 950,
     box: { x: 0, y: 0, w: 0, h: 0 }
   });
 
   useEffect(() => {
     if (!isEnabled) return;
-
-    // Initialize 5 Elite collaborative agents
-    const initialAgents = [];
-    const count = Math.max(1, Math.min(agentCount, 12));
-    const w = typeof window !== 'undefined' ? window.innerWidth : 1200;
-    const h = typeof window !== 'undefined' ? window.innerHeight : 800;
-
-    for (let i = 0; i < count; i++) {
-      const spec = ELITE_AGENTS[i % ELITE_AGENTS.length];
-      const angle = (i / count) * Math.PI * 2;
-      const radius = 60 + (i % 3) * 35;
-
-      initialAgents.push({
-        id: `${spec.id}-${i}`,
-        name: spec.name,
-        role: spec.role,
-        color: spec.color,
-        action: spec.defaultAction,
-        x: w / 2 + Math.cos(angle) * radius,
-        y: h / 2 + Math.sin(angle) * radius,
-        vx: (Math.random() - 0.5) * 1.5,
-        vy: (Math.random() - 0.5) * 1.5,
-        offsetX: Math.cos(angle) * radius,
-        offsetY: Math.sin(angle) * radius,
-        damping: 0.88,
-        spring: 0.045,
-        separationDist: 50,
-        wobblePhase: i * 1.25
-      });
-    }
-    agentsRef.current = initialAgents;
 
     // Global listener: Mouse movement
     const handleMouseMove = (e) => {
@@ -113,18 +116,28 @@ const LiveMouseSwarm = ({ isEnabled = true, agentCount = 5 }) => {
 
     // Global listener: Collaborative App Assembly Trigger
     const handleAppAssembly = (e) => {
-      const { appName } = e.detail || {};
-      const winW = Math.min(window.innerWidth - 80, 920);
-      const winH = Math.min(window.innerHeight - 100, 560);
-      const winX = Math.max(20, (window.innerWidth - winW) / 2);
-      const winY = Math.max(36, (window.innerHeight - winH) / 2 - 15);
+      const { appId, appName } = e.detail || {};
+      const w = typeof window !== 'undefined' ? window.innerWidth : 1200;
+      const h = typeof window !== 'undefined' ? window.innerHeight : 800;
+
+      let winW = Math.min(w - 80, 920);
+      let winH = Math.min(h - 100, 560);
+      if (appId === 'trash') { winW = Math.min(w - 80, 780); winH = Math.min(h - 100, 500); }
+      else if (appId === 'terminal') { winW = Math.min(w - 80, 720); winH = Math.min(h - 100, 460); }
+      else if (appId === 'settings') { winW = Math.min(w - 80, 680); winH = Math.min(h - 100, 500); }
+      else if (appId === 'coffee') { winW = Math.min(w - 80, 460); winH = Math.min(h - 100, 520); }
+      else if (appId === 'resume') { winW = Math.min(w - 80, 880); winH = Math.min(h - 100, 620); }
+      else if (appId === 'figma' || appId === 'vscode') { winW = Math.min(w - 40, 1140); winH = Math.min(h - 80, 720); }
+
+      const winX = Math.max(20, (w - winW) / 2);
+      const winY = Math.max(36, (h - winH) / 2 - 15);
 
       const box = { x: winX, y: winY, w: winW, h: winH };
       assemblyStateRef.current = {
         active: true,
         appName: appName || 'App Window',
         startTime: performance.now(),
-        duration: 900,
+        duration: 1000,
         box
       };
 
@@ -137,7 +150,7 @@ const LiveMouseSwarm = ({ isEnabled = true, agentCount = 5 }) => {
       // Clear assembly UI once completed
       setTimeout(() => {
         setAssemblyUI(null);
-      }, 920);
+      }, 1050);
     };
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
@@ -319,8 +332,6 @@ const LiveMouseSwarm = ({ isEnabled = true, agentCount = 5 }) => {
 
   if (!isEnabled) return null;
 
-  const agents = agentsRef.current.length > 0 ? agentsRef.current : [];
-
   return (
     <div ref={containerRef} className="live-mouse-swarm-overlay" aria-hidden="true">
       {/* Dynamic SVG Dashed Network Layer */}
@@ -359,7 +370,7 @@ const LiveMouseSwarm = ({ isEnabled = true, agentCount = 5 }) => {
       )}
 
       {/* Agents Layer (5 Elite Collaborative Agents) */}
-      {agents.map((agent, idx) => (
+      {agentList.map((agent, idx) => (
         <div
           key={agent.id}
           ref={(el) => (domNodesRef.current[idx] = el)}
