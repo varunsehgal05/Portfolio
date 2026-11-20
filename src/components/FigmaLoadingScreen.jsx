@@ -1,19 +1,27 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import './FigmaLoadingScreen.css';
 
 /**
  * Authentic Figma App Loading Screen
  * Displays the official 5-piece Figma vector logo, gradient progress bar,
  * and realistic file & token loading stages before fading into the workspace.
+ * Guaranteed never to hang or get trapped in re-render loops.
  */
 const FigmaLoadingScreen = ({
   fileName = 'Varun_Sehgal_Portfolio.fig',
-  duration = 1400,
+  duration = 1200,
   onLoaded
 }) => {
   const [phase, setPhase] = useState(0);
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [isUnmounted, setIsUnmounted] = useState(false);
+
+  const onLoadedRef = useRef(onLoaded);
+  useEffect(() => {
+    onLoadedRef.current = onLoaded;
+  });
+
+  const hasEndedRef = useRef(false);
 
   const STATUS_STEPS = [
     'Opening file ' + fileName + '...',
@@ -22,36 +30,68 @@ const FigmaLoadingScreen = ({
     'Ready'
   ];
 
-  useEffect(() => {
-    // Step transitions
-    const step1 = setTimeout(() => setPhase(1), duration * 0.32);
-    const step2 = setTimeout(() => setPhase(2), duration * 0.68);
-    const step3 = setTimeout(() => setPhase(3), duration * 0.95);
+  const completeLoading = useCallback(() => {
+    if (hasEndedRef.current) return;
+    hasEndedRef.current = true;
+    setPhase(3);
+    setIsFadingOut(true);
 
-    // Fade out
-    const fadeTimer = setTimeout(() => {
-      setIsFadingOut(true);
-      if (onLoaded) onLoaded();
-    }, duration);
+    if (typeof onLoadedRef.current === 'function') {
+      try {
+        onLoadedRef.current();
+      } catch (err) {
+        console.error('Error in FigmaLoadingScreen onLoaded callback:', err);
+      }
+    }
 
-    // Unmount from DOM after transition
     const unmountTimer = setTimeout(() => {
       setIsUnmounted(true);
-    }, duration + 420);
+    }, 380);
+
+    return () => clearTimeout(unmountTimer);
+  }, []);
+
+  useEffect(() => {
+    // Step transitions
+    const step1 = setTimeout(() => setPhase(1), Math.min(360, duration * 0.3));
+    const step2 = setTimeout(() => setPhase(2), Math.min(720, duration * 0.65));
+    const step3 = setTimeout(() => setPhase(3), Math.min(1000, duration * 0.9));
+
+    // Finish fade out
+    const fadeTimer = setTimeout(() => {
+      completeLoading();
+    }, duration);
+
+    // Hard fallback safety timer (unconditional reveal)
+    const fallbackTimer = setTimeout(() => {
+      completeLoading();
+    }, duration + 600);
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' || e.key === ' ' || e.key === 'Enter') {
+        completeLoading();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
 
     return () => {
       clearTimeout(step1);
       clearTimeout(step2);
       clearTimeout(step3);
       clearTimeout(fadeTimer);
-      clearTimeout(unmountTimer);
+      clearTimeout(fallbackTimer);
+      window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [duration, onLoaded]);
+  }, [duration, completeLoading]);
 
   if (isUnmounted) return null;
 
   return (
-    <div className={`figma-loading-overlay ${isFadingOut ? 'fade-out' : ''}`}>
+    <div 
+      className={`figma-loading-overlay ${isFadingOut ? 'fade-out' : ''}`}
+      onClick={completeLoading}
+      title="Click anywhere to skip loading"
+    >
       {/* Background Dot Matrix */}
       <div className="figma-loading-bg-dots" />
 
@@ -110,6 +150,7 @@ const FigmaLoadingScreen = ({
 
       <div className="figma-loading-meta">
         <span>Figma Desktop · Multi-Agent Canvas Engine</span>
+        <span className="figma-skip-hint">(click to skip)</span>
       </div>
     </div>
   );

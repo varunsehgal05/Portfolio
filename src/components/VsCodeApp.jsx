@@ -39,6 +39,7 @@ import {
   Layers
 } from 'lucide-react';
 import './VsCodeApp.css';
+import VsCodeLoadingScreen from './VsCodeLoadingScreen';
 
 // Runnable starter script for instant execution
 const DEFAULT_APP_JS = `// VarunOS Antigravity IDE — Live JavaScript Execution Engine
@@ -275,6 +276,17 @@ const INITIAL_EXTENSIONS = [
 ];
 
 export const VsCodeApp = () => {
+  // App Startup Loading Screen State
+  const [isAppLoading, setIsAppLoading] = useState(true);
+
+  // Safety watchdog: ensure VS Code loading screen NEVER hangs under any circumstance
+  useEffect(() => {
+    const safetyTimer = setTimeout(() => {
+      setIsAppLoading(false);
+    }, 1600);
+    return () => clearTimeout(safetyTimer);
+  }, []);
+
   // File System State
   const [projectFiles, setProjectFiles] = useState(INITIAL_PROJECT_FILES);
   const [activeFile, setActiveFile] = useState('FinderApp.css');
@@ -647,6 +659,15 @@ export const VsCodeApp = () => {
 
   return (
     <div className="vscode-window-shell">
+      {/* Authentic VS Code Startup Loading Screen */}
+      {isAppLoading && (
+        <VsCodeLoadingScreen
+          workspaceName="destop-portfolio"
+          duration={1100}
+          onLoaded={() => setIsAppLoading(false)}
+        />
+      )}
+
       {/* 1. Top Menu Titlebar (Antigravity IDE - Reference Match) */}
       <header className="vscode-titlebar">
         <div className="titlebar-left">

@@ -11,6 +11,7 @@
   transition: opacity 0.42s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.42s ease;
   user-select: none;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .figma-loading-overlay.fade-out {
@@ -164,4 +165,21 @@
 
 .figma-loading-meta span {
   opacity: 0.75;
+}
+
+.figma-skip-hint {
+  color: #a1a1aa;
+  font-size: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 1px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-left: 6px;
+  transition: all 0.2s ease;
+}
+
+.figma-loading-overlay:hover .figma-skip-hint {
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.4);
+  background: rgba(56, 189, 248, 0.12);
 }

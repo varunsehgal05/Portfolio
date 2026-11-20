@@ -621,6 +621,14 @@ const FigmaApp = ({ isInteracting, userName, onOpenApp }) => {
   const [isAppLoading, setIsAppLoading] = useState(true);
   const startPanRef = useRef({ x: 0, y: 0 });
 
+  // Safety watchdog: ensure Figma loading screen NEVER hangs under any circumstance
+  useEffect(() => {
+    const safetyTimer = setTimeout(() => {
+      setIsAppLoading(false);
+    }, 1600);
+    return () => clearTimeout(safetyTimer);
+  }, []);
+
   // FigJam Process Board state (Creative Whiteboard)
   const [sprintTime, setSprintTime] = useState(8 * 60 + 45);
   const [isSprintTimerRunning, setIsSprintTimerRunning] = useState(true);
