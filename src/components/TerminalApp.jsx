@@ -93,13 +93,14 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
     const wp = terminalWallpapers.find(w => w.id === wpId) || terminalWallpapers[0];
     if (!wp.image) return wp.bgStyle || { backgroundColor: '#0d1117' };
     
-    // Tint opacities: vivid (0.18 / 0.28) - crystal clear artwork without blue hue!
-    // balanced (0.36 / 0.46), norm (0.58 / 0.68)
+    // Calibrated tint opacities:
+    // vivid (0.42 / 0.54) - crystal clear artwork with dark contrast scrim so text is sharp & readable!
+    // balanced (0.62 / 0.74) - deep contrast for intense coding
     const [topAlpha, bottomAlpha] = tint === 'vivid' 
-      ? ['0.18', '0.28'] 
+      ? ['0.42', '0.54'] 
       : tint === 'balanced' 
-      ? ['0.36', '0.46'] 
-      : ['0.58', '0.68'];
+      ? ['0.62', '0.74'] 
+      : ['0.80', '0.88'];
       
     return {
       backgroundImage: `linear-gradient(rgba(0, 0, 0, ${topAlpha}), rgba(0, 0, 0, ${bottomAlpha})), url(${wp.image})`,
@@ -108,6 +109,13 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
       backgroundRepeat: 'no-repeat',
       imageRendering: 'auto'
     };
+  };
+
+  const cycleWallpaper = (direction) => {
+    const currentIdx = terminalWallpapers.findIndex(w => w.id === activeWallpaperId);
+    let nextIdx = (currentIdx + direction) % terminalWallpapers.length;
+    if (nextIdx < 0) nextIdx = terminalWallpapers.length - 1;
+    setTerminalWallpaper(terminalWallpapers[nextIdx].id);
   };
 
   const [prevWpStyle, setPrevWpStyle] = useState(null);
@@ -455,7 +463,7 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
         <div className="terminal-quick-bar">
           <div className="quick-bar-cmds">
             <span className="quick-bar-label">⚡ Cmds:</span>
-            {['neofetch', 'skills', 'projects', 'vibecoding', 'experience', 'contact', 'clear'].map((cmd) => (
+            {['neofetch', 'skills', 'projects', 'vibecoding', 'clear'].map((cmd) => (
               <button
                 key={cmd}
                 type="button"
@@ -474,44 +482,57 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
 
           <div className="quick-bar-wallpapers">
             <span className="quick-bar-label">🖼️ Wallpaper:</span>
-            {terminalWallpapers.map((wp) => {
-              const label =
-                wp.id === 'default' ? 'Dark' :
-                wp.id === 'roxy-calendar' ? 'Roxy' :
-                wp.id === 'cyberpunk-girl' ? 'Cyber' :
-                wp.id === 'batman-red' ? 'Batman' :
-                wp.id === 'anime-room' ? 'Anime' :
-                wp.id === 'minecraft-cat' ? 'Cat' :
-                wp.id === 'monterey' ? 'Monterey' :
-                wp.id === 'cosmic' ? 'Cosmic' :
-                wp.id === 'aurora' ? 'Aurora' : wp.name;
-              return (
-                <button
-                  key={wp.id}
-                  type="button"
-                  className={`terminal-pill-btn terminal-wp-pill ${activeWallpaperId === wp.id ? 'active' : ''}`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setTerminalWallpaper(wp.id);
-                  }}
-                  title={wp.name}
-                >
-                  {label}
-                </button>
-              );
-            })}
+            <button
+              type="button"
+              className="terminal-cycle-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                cycleWallpaper(-1);
+              }}
+              title="Previous Wallpaper (Cycle Left)"
+            >
+              ‹
+            </button>
+            <div className="terminal-wp-select-wrap">
+              <select
+                className="terminal-wp-select"
+                value={activeWallpaperId}
+                onChange={(e) => {
+                  e.stopPropagation();
+                  setTerminalWallpaper(e.target.value);
+                }}
+                title="Select Terminal Wallpaper"
+              >
+                {terminalWallpapers.map((wp) => (
+                  <option key={wp.id} value={wp.id}>
+                    {wp.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <button
+              type="button"
+              className="terminal-cycle-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                cycleWallpaper(1);
+              }}
+              title="Next Wallpaper (Cycle Right)"
+            >
+              ›
+            </button>
           </div>
 
           <div className="terminal-quick-divider" />
 
           {/* Wallpaper Tint Controller */}
           <div className="quick-bar-tint">
-            <span className="quick-bar-label">Vivid:</span>
+            <span className="quick-bar-label">Tint:</span>
             <button
               type="button"
               className={`terminal-tint-btn ${tintLevel === 'vivid' ? 'active' : ''}`}
               onClick={(e) => { e.stopPropagation(); handleSelectTint('vivid'); }}
-              title="Maximum Wallpaper Visibility (Clear Art)"
+              title="Vivid Artwork with Enhanced Text Contrast"
             >
               Vivid
             </button>
@@ -519,7 +540,7 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
               type="button"
               className={`terminal-tint-btn ${tintLevel === 'balanced' ? 'active' : ''}`}
               onClick={(e) => { e.stopPropagation(); handleSelectTint('balanced'); }}
-              title="Balanced Contrast"
+              title="Balanced High-Contrast Scrim"
             >
               Norm
             </button>
