@@ -337,11 +337,12 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
   const [isHighlighted, setIsHighlighted] = useState(false);
   const [clippyActions, setClippyActions] = useState(null);
   const highlightTimerRef = useRef(null);
+  const actionsTimerRef = useRef(null);
 
   // Listen for speech requests from TrashApp or other system events
   useEffect(() => {
     const handleClippySpeak = (e) => {
-      const { text, animation = "GetAttention", highlightDuration = 7000, hold = true, actions = null } = e.detail || {};
+      const { text, animation = "GetAttention", highlightDuration = 3000, hold = false, actions = null } = e.detail || {};
       if (!text) return;
 
       setIsHighlighted(true);
@@ -350,8 +351,21 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
         setIsHighlighted(false);
       }, highlightDuration);
 
+      if (actionsTimerRef.current) clearTimeout(actionsTimerRef.current);
+
       if (actions && actions.length > 0) {
         setClippyActions(actions);
+        // Clippy's recommendation is shown for 2-3 seconds only, then automatically dismissed
+        actionsTimerRef.current = setTimeout(() => {
+          setClippyActions(null);
+          if (agentRef.current?._balloon) {
+            agentRef.current._balloon.hide(true);
+          }
+          if (agentRef.current?._el) {
+            agentRef.current._el.classList.remove('clippy-highlighted');
+          }
+          setIsHighlighted(false);
+        }, 3000);
       } else {
         setClippyActions(null);
       }
@@ -379,6 +393,7 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
     return () => {
       window.removeEventListener('varunos-clippy-speak', handleClippySpeak);
       if (highlightTimerRef.current) clearTimeout(highlightTimerRef.current);
+      if (actionsTimerRef.current) clearTimeout(actionsTimerRef.current);
     };
   }, []);
 
@@ -632,7 +647,10 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
             <button
               type="button"
               className="clippy-bar-close"
-              onClick={() => setClippyActions(null)}
+              onClick={() => {
+                if (actionsTimerRef.current) clearTimeout(actionsTimerRef.current);
+                setClippyActions(null);
+              }}
               title="Dismiss"
             >
               <X size={12} />
@@ -645,6 +663,7 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
                 type="button"
                 className={`clippy-pill-btn ${act.primary ? 'primary' : ''}`}
                 onClick={() => {
+                  if (actionsTimerRef.current) clearTimeout(actionsTimerRef.current);
                   if (act.appId && onOpenApp) {
                     onOpenApp(act.appId);
                   } else if (act.onClick) {

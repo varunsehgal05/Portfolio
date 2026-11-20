@@ -17,6 +17,7 @@ import CoffeeApp from './CoffeeApp';
 const Window = ({
   app,
   userName,
+  zIndex,
   isActive,
   isMinimized,
   isMaximized: controlledMaximized,
@@ -418,6 +419,7 @@ const Window = ({
           }
         }}
         onMouseDown={onFocus}
+        onTouchStart={onFocus}
         dragHandleClassName="window-titlebar"
         cancel=".mac-traffic-lights, .mac-btn, button, a, input, [data-no-drag]"
         disableDragging={isMaximized || animState !== 'visible'}
@@ -425,7 +427,7 @@ const Window = ({
         minWidth={320}
         minHeight={220}
         bounds="parent"
-        style={{ zIndex: isMaximized ? (isActive ? 300 : 150) : (isActive ? 100 : 10) }}
+        style={{ zIndex: zIndex !== undefined ? zIndex : (isActive ? 300 : (isMaximized ? 40 : 20)) }}
       >
         <div ref={windowInnerRef} className={`window-inner ${getAnimClass()}`}>
           {/* macOS Style Titlebar - double-click to toggle fullscreen, drag down to restore */}

@@ -14,6 +14,17 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
   const [minimizedWindows, setMinimizedWindows] = useState([]);
   const [activeWindow, setActiveWindow] = useState('finder');
   const [maximizedWindows, setMaximizedWindows] = useState([]);
+  // Window Stacking Order: most recently focused window is always at the end
+  const [windowOrder, setWindowOrder] = useState(['finder']);
+
+  const bringToFront = (appId) => {
+    setWindowOrder(prev => {
+      const next = prev.filter(id => id !== appId);
+      next.push(appId);
+      return next;
+    });
+    setActiveWindow(appId);
+  };
 
   const toggleMaximizeWindow = (appId) => {
     setMaximizedWindows(prev =>
@@ -183,7 +194,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
     }
     // Unminimize if it was minimized
     setMinimizedWindows(prev => prev.filter(id => id !== appId));
-    setActiveWindow(appId);
+    bringToFront(appId);
 
     // Notify Swarm Agents to assemble this app window collaboratively
     const appInfo = portfolioApps[appId];
@@ -199,29 +210,36 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
     setOpenWindows(prev => prev.filter(id => id !== appId));
     setMinimizedWindows(prev => prev.filter(id => id !== appId));
     setMaximizedWindows(prev => prev.filter(id => id !== appId));
-    if (activeWindow === appId) {
-      const remaining = openWindows.filter(id => id !== appId && !minimizedWindows.includes(id));
-      setActiveWindow(remaining.length > 0 ? remaining[remaining.length - 1] : null);
-    }
+    setWindowOrder(prev => {
+      const next = prev.filter(id => id !== appId);
+      if (activeWindow === appId) {
+        const remaining = next.filter(id => !minimizedWindows.includes(id));
+        setActiveWindow(remaining.length > 0 ? remaining[remaining.length - 1] : null);
+      }
+      return next;
+    });
   };
 
   const toggleMinimize = (appId) => {
     if (minimizedWindows.includes(appId)) {
       // Restore window
       setMinimizedWindows(prev => prev.filter(id => id !== appId));
-      setActiveWindow(appId);
+      bringToFront(appId);
     } else {
       // Minimize window
       setMinimizedWindows(prev => [...prev, appId]);
       if (activeWindow === appId) {
-        const remaining = openWindows.filter(id => id !== appId && !minimizedWindows.includes(id));
-        setActiveWindow(remaining.length > 0 ? remaining[remaining.length - 1] : null);
+        setWindowOrder(prev => {
+          const remaining = prev.filter(id => id !== appId && !minimizedWindows.includes(id) && openWindows.includes(id));
+          setActiveWindow(remaining.length > 0 ? remaining[remaining.length - 1] : null);
+          return prev;
+        });
       }
     }
   };
 
   const focusApp = (appId) => {
-    setActiveWindow(appId);
+    bringToFront(appId);
   };
 
   const handleDockClick = (appId) => {
@@ -229,13 +247,13 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
       if (minimizedWindows.includes(appId)) {
         // Restore window
         setMinimizedWindows(prev => prev.filter(id => id !== appId));
-        setActiveWindow(appId);
+        bringToFront(appId);
       } else if (activeWindow === appId) {
         // Active window clicked in dock -> minimize it (macOS Dock toggle behavior)
         toggleMinimize(appId);
       } else {
         // App is open in background -> bring to front
-        setActiveWindow(appId);
+        bringToFront(appId);
       }
     } else {
       openApp(appId);
@@ -248,6 +266,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
     setMinimizedWindows([]);
     setMaximizedWindows([]);
     setActiveWindow('finder');
+    setWindowOrder(['finder']);
     if (onReplaySwarm) onReplaySwarm();
   };
 
@@ -258,6 +277,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
       setMinimizedWindows([]);
       setMaximizedWindows([]);
       setActiveWindow('finder');
+      setWindowOrder(['finder']);
     }
   }, [swarmStage]);
 
@@ -325,11 +345,17 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
         <div className={`desktop-windows-layer ${swarmStage < 5 ? (swarmStage >= 3 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
           {openWindows.map((appId) => {
             const app = portfolioApps[appId] || { id: appId, name: appId };
+            const stackRank = windowOrder.indexOf(appId);
+            const zIndex = activeWindow === appId 
+              ? 300 + (stackRank >= 0 ? stackRank : 0)
+              : 20 + Math.max(0, stackRank) * 10;
+
             return (
               <Window
                 key={appId}
                 app={app}
                 userName={userName}
+                zIndex={zIndex}
                 isActive={activeWindow === appId}
                 isMinimized={minimizedWindows.includes(appId)}
                 isMaximized={maximizedWindows.includes(appId)}

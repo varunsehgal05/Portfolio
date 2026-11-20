@@ -277,8 +277,8 @@ const TrashApp = ({ onClose, onOpenApp }) => {
       detail: {
         text: msg,
         animation: "GetAttention",
-        highlightDuration: 7000,
-        hold: true,
+        highlightDuration: 3000,
+        hold: false,
         actions: [
           { label: "View Portfolio", primary: true, appId: "figma" },
           { label: "View Resume", appId: "resume" }
