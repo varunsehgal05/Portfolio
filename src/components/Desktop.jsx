@@ -294,8 +294,8 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
         </div>
       )}
 
-      {/* Collaborative Swarm Live Mouse Flocking & App Assembly Engine (5 Elite Agents) */}
-      <LiveMouseSwarm isEnabled={isSwarmFollowEnabled && swarmStage >= 5} agentCount={5} />
+      {/* Collaborative Swarm Live Mouse Flocking & App Assembly Engine (Kittu style: 2 agents for silky 60fps & zero clutter) */}
+      <LiveMouseSwarm isEnabled={isSwarmFollowEnabled && swarmStage >= 5} agentCount={2} />
 
       {/* Top MenuBar wrapper */}
       <div className={`desktop-menubar-wrap ${swarmStage < 5 ? (swarmStage >= 1 ? 'stage-revealed' : 'stage-hidden') : ''}`}>

@@ -55,7 +55,7 @@ const createInitialAgents = (count) => {
   return initialAgents;
 };
 
-const LiveMouseSwarm = ({ isEnabled = true, agentCount = 5 }) => {
+const LiveMouseSwarm = ({ isEnabled = true, agentCount = 2 }) => {
   const containerRef = useRef(null);
   const svgLinesRef = useRef(null);
   const animFrameRef = useRef(null);

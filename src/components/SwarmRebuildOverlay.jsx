@@ -12,6 +12,7 @@ const SwarmCursor = React.memo(({
   isCrosshair,
   caretText,
   dupBadge,
+  chatText,
   trail = []
 }) => {
   return (
@@ -76,6 +77,13 @@ const SwarmCursor = React.memo(({
           <div className="swarm-typing-bubble" style={{ borderColor: color }}>
             <span className="typing-text">{caretText}</span>
             <span className="typing-caret" />
+          </div>
+        )}
+
+        {/* Collaborative Chat Bubble (Kittu.pro Style) */}
+        {chatText && (
+          <div className="swarm-chat-bubble" style={{ borderColor: color }}>
+            <span>💬 {chatText}</span>
           </div>
         )}
       </div>
@@ -375,11 +383,11 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
       let agentTargets = {};
 
       // =====================================================================
-      // Phase 1: Top MenuBar Drafting & Alignment (0.0s - 0.8s)
+      // Phase 1: Top MenuBar Drafting & Alignment (0.0s - 1.2s) — 2 Cursors
       // =====================================================================
-      if (elapsed < 0.8) {
+      if (elapsed < 1.2) {
         setStatusMessage('[1/5] Drafting macOS MenuBar wireframe...');
-        const t = Math.min(1, Math.max(0, elapsed / 0.8));
+        const t = Math.min(1, Math.max(0, elapsed / 1.2));
         const eased = smootherstep(t);
 
         const menuX = lerp(20, w - 20, eased);
@@ -398,6 +406,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             action: 'Drafting MenuBar',
             isDrawing: true,
             isCrosshair: true,
+            chatText: 'morning! drafting top bar',
             boxBounds: { x: 0, y: 0, w: menuX, h: 28, label: 'MenuBar 100vw × 28px • Blur(24px)' }
           },
           user: {
@@ -406,29 +415,12 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             color: '#1ABCFE',
             label: userName || 'You',
             action: 'Aligning Status Tray',
+            chatText: 'on it, aligning tray',
             isDrawing: false
           },
-          sarah: {
-            x: lerp(40, 56, eased),
-            y: lerp(200, 48, eased),
-            color: '#FF7262',
-            label: 'Sarah Lin',
-            action: 'Grid Setup: 20px Margin'
-          },
-          alex: {
-            x: lerp(w - 120, winTargetX, eased),
-            y: lerp(h - 140, winTargetY, eased),
-            color: '#0ACF83',
-            label: 'Alex Chen',
-            action: 'Snapping Window Origin'
-          },
-          elena: {
-            x: lerp(w / 2 - 80, w / 2, eased),
-            y: lerp(80, 28, eased),
-            color: '#F59E0B',
-            label: 'Elena Rostova',
-            action: 'Smart Guide: Y: 28px'
-          }
+          sarah: { hidden: true, x: 56, y: 48 },
+          alex: { hidden: true, x: winTargetX, y: winTargetY },
+          elena: { hidden: true, x: w / 2, y: 28 }
         };
 
         setWireframeData({
@@ -455,13 +447,12 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         ]);
       }
       // =====================================================================
-      // Phase 2: Desktop App Icons Continuous Stamping (0.8s - 1.6s)
+      // Phase 2: Desktop App Icons Continuous Stamping (1.2s - 2.5s) — 2 Cursors
       // =====================================================================
-      else if (elapsed < 1.6) {
+      else if (elapsed < 2.5) {
         setStatusMessage('[2/5] Stamping & Duplicating Desktop Apps...');
-        const t = Math.min(1, Math.max(0, (elapsed - 0.8) / 0.8));
+        const t = Math.min(1, Math.max(0, (elapsed - 1.2) / 1.3));
         const eased = smootherstep(t);
-        const arcOffset = Math.sin(t * Math.PI) * 45;
 
         if (t > 0.65) {
           updateStage(2, 740); // Reveal Desktop Icons
@@ -471,10 +462,9 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         const iconYPositions = [48, 126, 204, 282, 360];
         const iconIndex = Math.min(4, Math.floor(t * 5));
 
-        // Sarah glides down smoothly starting from exact Phase 1 position (56, 48) to (56, 360)
         const sarahY = lerp(48, 360, eased);
-        const elenaX = lerp(w / 2, 92, eased);
-        const elenaY = lerp(28, 360, eased);
+        const elenaX = 92;
+        const elenaY = sarahY;
 
         // Stamp audio & ripple trigger when reaching each icon
         if (lastStampedIndexRef.current !== iconIndex) {
@@ -492,6 +482,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             action: `Stamping: ${iconNames[iconIndex]}`,
             isDrawing: true,
             isCrosshair: true,
+            chatText: 'stamping desktop apps (⌥ dup)',
             dupBadge: `⌥ Duplicate +${iconIndex + 1}`,
             boxBounds: {
               x: 20,
@@ -507,29 +498,12 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             color: '#F59E0B',
             label: 'Elena Rostova',
             action: 'Smart Guides: 78px Gap',
+            chatText: 'checking 78px spacing',
             isDrawing: false
           },
-          varun: {
-            x: lerp(w - 20, winTargetX + 220, eased),
-            y: lerp(14, winTargetY + 98, eased) + arcOffset,
-            color: '#A259FF',
-            label: 'Varun Sehgal',
-            action: 'Preparing Headline'
-          },
-          user: {
-            x: lerp(w - 220, winTargetX + 80, eased),
-            y: lerp(14, winTargetY + 60, eased) + arcOffset * 1.2,
-            color: '#1ABCFE',
-            label: userName || 'You',
-            action: 'Extrude Handle Ready'
-          },
-          alex: {
-            x: winTargetX,
-            y: winTargetY,
-            color: '#0ACF83',
-            label: 'Alex Chen',
-            action: 'Holding Top-Left Pivot'
-          }
+          varun: { hidden: true, x: winTargetX + 220, y: winTargetY + 98 },
+          user: { hidden: true, x: winTargetX + 80, y: winTargetY + 60 },
+          alex: { hidden: true, x: winTargetX, y: winTargetY }
         };
 
         setWireframeData(null);
@@ -552,11 +526,11 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         ]);
       }
       // =====================================================================
-      // Phase 3: Center Finder Window & Live Headline Typing (1.6s - 2.6s)
+      // Phase 3: Center Finder Window & Live Headline Typing (2.5s - 4.0s) — 2 Cursors
       // =====================================================================
-      else if (elapsed < 2.6) {
+      else if (elapsed < 4.0) {
         setStatusMessage('[3/5] Constructing Finder Window & Typing Content...');
-        const t = Math.min(1, Math.max(0, (elapsed - 1.6) / 1.0));
+        const t = Math.min(1, Math.max(0, (elapsed - 2.5) / 1.5));
         const eased = smootherstep(t);
 
         const curW = lerp(80, winTargetW, eased);
@@ -592,6 +566,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             action: 'Extruding Window Frame',
             isDrawing: true,
             isCrosshair: true,
+            chatText: 'scaling frame to 920×560',
             boxBounds: {
               x: curX,
               y: curY,
@@ -606,30 +581,12 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             color: '#A259FF',
             label: 'Varun Sehgal',
             action: 'Typing Headline...',
-            caretText: currentTyped
+            caretText: currentTyped,
+            chatText: 'typing headlines & auto-layout'
           },
-          sarah: {
-            x: lerp(56, curX + curW - 80, eased),
-            y: lerp(360, curY + 50, eased) - Math.sin(t * Math.PI) * 40,
-            color: '#FF7262',
-            label: 'Sarah Lin',
-            action: t > 0.5 ? '4 Projects Grid Auto-Layout' : 'Arranging Layout Grid',
-            dupBadge: t > 0.5 ? 'Auto-Layout 2×2' : null
-          },
-          alex: {
-            x: curX,
-            y: curY,
-            color: '#0ACF83',
-            label: 'Alex Chen',
-            action: 'Top-Left Pivot (0, 0)'
-          },
-          elena: {
-            x: lerp(92, curX + curW / 2, eased),
-            y: lerp(360, curY + curH + 24, eased),
-            color: '#F59E0B',
-            label: 'Elena Rostova',
-            action: 'Smart Guide: Centered Alignment'
-          }
+          sarah: { hidden: true, x: curX + curW - 80, y: curY + 50 },
+          alex: { hidden: true, x: curX, y: curY },
+          elena: { hidden: true, x: curX + curW / 2, y: curY + curH + 24 }
         };
 
         const wireframeOpacity = t < 0.82 ? 1 : Math.max(0, 1 - (t - 0.82) / 0.18);
@@ -672,11 +629,11 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         ]);
       }
       // =====================================================================
-      // Phase 4: Bottom macOS Dock Capsule (2.6s - 3.2s)
+      // Phase 4: Bottom macOS Dock Capsule (4.0s - 5.2s) — 2 Cursors
       // =====================================================================
-      else if (elapsed < 3.2) {
+      else if (elapsed < 5.2) {
         setStatusMessage('[4/5] Extruding Glass Dock Capsule...');
-        const t = Math.min(1, Math.max(0, (elapsed - 2.6) / 0.6));
+        const t = Math.min(1, Math.max(0, (elapsed - 4.0) / 1.2));
         const easedMove = smootherstep(t);
 
         const dockSpan = lerp(60, dockTargetW, easedMove);
@@ -690,11 +647,12 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
 
         agentTargets = {
           alex: {
-            x: lerp(winTargetX, curRight, easedMove),
-            y: lerp(winTargetY, curDockY + 28, easedMove),
+            x: curRight,
+            y: curDockY + 28,
             color: '#0ACF83',
             label: 'Alex Chen',
             action: 'Extruding Glass Capsule',
+            chatText: 'extruding glass dock capsule',
             isDrawing: true,
             isCrosshair: true,
             boxBounds: {
@@ -705,34 +663,17 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
               label: `macOS Glass Dock • ${Math.round(dockSpan)} × 56px`
             }
           },
-          sarah: {
-            x: lerp(winTargetX + winTargetW - 80, curLeft, easedMove),
-            y: lerp(winTargetY + 50, curDockY + 28, easedMove),
-            color: '#FF7262',
-            label: 'Sarah Lin',
-            action: 'Left Capsule Edge (r: 18px)'
-          },
           user: {
-            x: lerp(winTargetX + winTargetW, w / 2, easedMove),
-            y: lerp(winTargetY + winTargetH, curDockY - 16, easedMove),
+            x: curLeft + dockSpan * 0.5,
+            y: curDockY + 12,
             color: '#1ABCFE',
             label: userName || 'You',
-            action: 'Deploying Dock Apps'
+            action: 'Deploying Dock Apps',
+            chatText: 'snapping dock apps'
           },
-          varun: {
-            x: lerp(winTargetX + 510, w - 75, easedMove),
-            y: lerp(winTargetY + 98, h - 85, easedMove),
-            color: '#A259FF',
-            label: 'Varun Sehgal',
-            action: 'Assistant Bot Setup'
-          },
-          elena: {
-            x: lerp(winTargetX + winTargetW / 2, w / 2, easedMove),
-            y: lerp(winTargetY + winTargetH + 24, curDockY, easedMove),
-            color: '#F59E0B',
-            label: 'Elena Rostova',
-            action: 'Smart Guide: Dock Baseline'
-          }
+          sarah: { hidden: true, x: curLeft, y: curDockY + 28 },
+          varun: { hidden: true, x: w - 75, y: h - 85 },
+          elena: { hidden: true, x: w / 2, y: curDockY }
         };
 
         setWireframeData(null);
@@ -754,73 +695,36 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         ]);
       }
       // =====================================================================
-      // Phase 5: Assistant Bot & Grand Harmonic Convergence (3.2s - 3.8s)
+      // Phase 5: Built live, by a crowd of cursors! (5.2s - 6.2s) — 2 Cursors
       // =====================================================================
-      else if (elapsed < 3.8) {
-        setStatusMessage('[5/5] Deploying Assistant Bot & Convergence...');
-        const t = Math.min(1, Math.max(0, (elapsed - 3.2) / 0.6));
-        const eased = smootherstep(t);
+      else if (elapsed < 6.2) {
+        setStatusMessage('[5/5] Built live, by a crowd of cursors!');
+        const t = Math.min(1, Math.max(0, (elapsed - 5.2) / 1.0));
         const centerX = w / 2;
         const centerY = h / 2;
 
         updateStage(5, 960); // Everything unlocked!
 
-        const r = lerp(230, 115, eased);
-        const angleBase = t * Math.PI * 0.9;
-        const blend = smootherstep(Math.min(1, t * 1.6));
-
-        // 5 agents smoothly spiral into a golden orbit with celebratory actions
-        const getAgentSpiral = (angleOffset, startX, startY) => {
-          const orbitX = centerX + Math.cos(angleBase + angleOffset) * r;
-          const orbitY = centerY + Math.sin(angleBase + angleOffset) * r * 0.65;
-          return {
-            x: lerp(startX, orbitX, blend),
-            y: lerp(startY, orbitY, blend)
-          };
-        };
-
-        const varunPos = getAgentSpiral(0, w - 75, h - 85);
-        const userPos = getAgentSpiral(1.256, w / 2, dockTargetY - 16);
-        const sarahPos = getAgentSpiral(2.513, (w - dockTargetW) / 2, dockTargetY + 28);
-        const alexPos = getAgentSpiral(3.769, (w + dockTargetW) / 2, dockTargetY + 28);
-        const elenaPos = getAgentSpiral(5.026, w / 2, dockTargetY);
-
         agentTargets = {
           varun: {
-            x: varunPos.x,
-            y: varunPos.y,
+            x: centerX - 90 + Math.sin(t * Math.PI * 2) * 20,
+            y: centerY - 40,
             color: '#A259FF',
             label: 'Varun Sehgal',
-            action: 'System Ready 🚀'
+            action: 'System Ready 🚀',
+            chatText: '✨ Built live, by a crowd of cursors!'
           },
           user: {
-            x: userPos.x,
-            y: userPos.y,
+            x: centerX + 90 - Math.sin(t * Math.PI * 2) * 20,
+            y: centerY - 40,
             color: '#1ABCFE',
             label: userName || 'You',
-            action: 'Approved ✓'
+            action: 'VarunOS Ready',
+            chatText: 'Ready to explore!'
           },
-          sarah: {
-            x: sarahPos.x,
-            y: sarahPos.y,
-            color: '#FF7262',
-            label: 'Sarah Lin',
-            action: 'UI Verified ✨'
-          },
-          alex: {
-            x: alexPos.x,
-            y: alexPos.y,
-            color: '#0ACF83',
-            label: 'Alex Chen',
-            action: '100% Operational ⚡'
-          },
-          elena: {
-            x: elenaPos.x,
-            y: elenaPos.y,
-            color: '#F59E0B',
-            label: 'Elena Rostova',
-            action: 'Pixel Perfect 💎'
-          }
+          sarah: { hidden: true, x: centerX - 120, y: centerY },
+          alex: { hidden: true, x: centerX + 120, y: centerY },
+          elena: { hidden: true, x: centerX, y: centerY + 60 }
         };
 
         setActiveGuides([]);
@@ -839,8 +743,18 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
       Object.entries(agentTargets).forEach(([key, target]) => {
         let p = physicsRef.current[key];
         if (!p) {
-          p = { x: target.x, y: target.y, trail: [] };
+          p = { x: target.x || 0, y: target.y || 0, trail: [] };
           physicsRef.current[key] = p;
+        }
+
+        if (target.hidden) {
+          updatedCursors[key] = {
+            ...target,
+            x: target.x || p.x,
+            y: target.y || p.y,
+            trail: []
+          };
+          return;
         }
 
         // Fluid spring interpolation ensures zero jump or stutter
@@ -864,8 +778,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         };
       });
 
-      // Compute dynamic SVG network paths between the 5 lead collaborative agents
-      const leadList = Object.values(updatedCursors);
+      // Compute dynamic SVG network paths between the active collaborative agents (1-2 at a time)
+      const leadList = Object.values(updatedCursors).filter((c) => !c.hidden);
       const netPaths = [];
       for (let i = 0; i < leadList.length; i++) {
         for (let j = i + 1; j < leadList.length; j++) {
@@ -1070,7 +984,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
 
       {/* Active Selection Bounding Boxes Layer */}
       {Object.entries(cursors).map(([key, cursor]) => {
-        if (!cursor.isDrawing || !cursor.boxBounds) return null;
+        if (cursor.hidden || !cursor.isDrawing || !cursor.boxBounds) return null;
         const b = cursor.boxBounds;
         return (
           <div
@@ -1096,22 +1010,26 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         );
       })}
 
-      {/* Active Multiplayer Cursors (5 Lead Agents) */}
-      {Object.entries(cursors).map(([key, cursor]) => (
-        <SwarmCursor
-          key={key}
-          x={cursor.x}
-          y={cursor.y}
-          color={cursor.color}
-          label={cursor.label}
-          action={cursor.action}
-          isDrawing={cursor.isDrawing}
-          isCrosshair={cursor.isCrosshair}
-          caretText={cursor.caretText}
-          dupBadge={cursor.dupBadge}
-          trail={cursor.trail}
-        />
-      ))}
+      {/* Active Multiplayer Cursors (1-2 Active at a time like kittu.pro) */}
+      {Object.entries(cursors).map(([key, cursor]) => {
+        if (cursor.hidden) return null;
+        return (
+          <SwarmCursor
+            key={key}
+            x={cursor.x}
+            y={cursor.y}
+            color={cursor.color}
+            label={cursor.label}
+            action={cursor.action}
+            isDrawing={cursor.isDrawing}
+            isCrosshair={cursor.isCrosshair}
+            caretText={cursor.caretText}
+            dupBadge={cursor.dupBadge}
+            chatText={cursor.chatText}
+            trail={cursor.trail}
+          />
+        );
+      })}
     </div>
   );
 };
