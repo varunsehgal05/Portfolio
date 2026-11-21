@@ -4888,12 +4888,12 @@
   width: 1080px;
   max-width: 1080px;
   margin: 0 auto;
-  padding: 16px 20px 32px 20px;
+  padding: 0;
   min-height: auto;
-  background: #18181b;
+  background: transparent;
   border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+  border: none;
+  box-shadow: none;
 }
 
 .process-artboard-box {

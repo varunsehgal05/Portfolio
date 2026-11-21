@@ -100,7 +100,8 @@ const Dock = ({
   activeWindow, 
   bouncingAppProp = null, 
   isFullScreenActive = false,
-  onAppClick 
+  onAppClick,
+  stampedDockCount = 10
 }) => {
   const [mouseX, setMouseX] = useState(null);
   const [bouncingApp, setBouncingApp] = useState(null);
@@ -240,9 +241,20 @@ const Dock = ({
         >
         {DOCK_ITEMS.map((item, idx) => {
           if (item.isSeparator) {
-            return <div key={`sep-${idx}`} className="dock-separator" />;
+            const isSepRevealed = stampedDockCount >= 7;
+            return (
+              <div 
+                key={`sep-${idx}`} 
+                className="dock-separator"
+                style={{
+                  opacity: isSepRevealed ? 1 : 0,
+                  transition: 'opacity 0.28s ease'
+                }}
+              />
+            );
           }
 
+          const isRevealed = stampedDockCount >= 10 || idx < stampedDockCount;
           const IconComponent = item.icon;
           const isOpen = openWindows.includes(item.id);
           const isMin = minimizedWindows.includes(item.id);
@@ -288,9 +300,14 @@ const Dock = ({
               className={`dock-item ${isMin ? 'minimized-app' : ''} ${isBouncing ? 'dock-bouncing' : ''}`}
               onClick={() => handleClick(item.id)}
               style={{
-                transform: `translate3d(0, ${translateY}px, 0) scale(${scale})`,
+                transform: isRevealed 
+                  ? `translate3d(0, ${translateY}px, 0) scale(${scale})` 
+                  : 'scale(0.4) translateY(18px)',
+                opacity: isRevealed ? 1 : 0,
                 margin: `0 ${marginX.toFixed(1)}px`,
-                zIndex: Math.round(scale * 50)
+                zIndex: Math.round(scale * 50),
+                pointerEvents: isRevealed ? 'auto' : 'none',
+                transition: 'opacity 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)'
               }}
             >
               <div className="dock-tooltip">{item.name}</div>

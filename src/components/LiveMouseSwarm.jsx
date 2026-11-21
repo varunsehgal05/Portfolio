@@ -46,16 +46,16 @@ const createInitialAgents = (count) => {
       vy: (Math.random() - 0.5) * 1.5,
       offsetX: Math.cos(angle) * radius,
       offsetY: Math.sin(angle) * radius,
-      damping: 0.88,
-      spring: 0.045,
-      separationDist: 50,
+      damping: 0.95,
+      spring: 0.012,
+      separationDist: 60,
       wobblePhase: i * 1.25
     });
   }
   return initialAgents;
 };
 
-const LiveMouseSwarm = ({ isEnabled = true, agentCount = 2 }) => {
+const LiveMouseSwarm = ({ isEnabled = true, isRebuildActive = false, agentCount = 5 }) => {
   const containerRef = useRef(null);
   const svgLinesRef = useRef(null);
   const animFrameRef = useRef(null);
@@ -79,12 +79,12 @@ const LiveMouseSwarm = ({ isEnabled = true, agentCount = 2 }) => {
     active: false,
     appName: '',
     startTime: 0,
-    duration: 950,
+    duration: 2800,
     box: { x: 0, y: 0, w: 0, h: 0 }
   });
 
   useEffect(() => {
-    if (!isEnabled) return;
+    if (isRebuildActive) return;
 
     // Global listener: Mouse movement
     const handleMouseMove = (e) => {
@@ -137,7 +137,7 @@ const LiveMouseSwarm = ({ isEnabled = true, agentCount = 2 }) => {
         active: true,
         appName: appName || 'App Window',
         startTime: performance.now(),
-        duration: 1000,
+        duration: 2800,
         box
       };
 
@@ -150,7 +150,7 @@ const LiveMouseSwarm = ({ isEnabled = true, agentCount = 2 }) => {
       // Clear assembly UI once completed
       setTimeout(() => {
         setAssemblyUI(null);
-      }, 1050);
+      }, 2900);
     };
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
@@ -203,12 +203,12 @@ const LiveMouseSwarm = ({ isEnabled = true, agentCount = 2 }) => {
         for (let i = 0; i < agents.length; i++) {
           const a = agents[i];
           const target = targets[i] || { x: x + w / 2, y: y + h / 2, action: 'Assembling' };
-          const spring = 0.14; // snappy collaborative dash
+          const spring = 0.038; // Silky smooth collaborative dash
           const dx = target.x - a.x;
           const dy = target.y - a.y;
 
-          a.vx = (a.vx + dx * spring) * 0.76;
-          a.vy = (a.vy + dy * spring) * 0.76;
+          a.vx = (a.vx + dx * spring) * 0.85;
+          a.vy = (a.vy + dy * spring) * 0.85;
           a.x += a.vx;
           a.y += a.vy;
           a.action = target.action;
@@ -234,7 +234,7 @@ const LiveMouseSwarm = ({ isEnabled = true, agentCount = 2 }) => {
           );
         }
       } else {
-        // Normal Mode: Smooth Boids Mouse Flocking
+        // Normal Mode: Smooth Boids Mouse Flocking (Calm, graceful, not rushing)
         const targetX = mouse.x;
         const targetY = mouse.y;
 
@@ -242,8 +242,8 @@ const LiveMouseSwarm = ({ isEnabled = true, agentCount = 2 }) => {
           const agent = agents[i];
           agent.action = agent.role;
 
-          // 1. Goal Seeking: pull toward mouse with personal orbital offset
-          const orbitalTime = now * 0.0018;
+          // 1. Goal Seeking: pull toward mouse with personal orbital offset (calm, slow drift)
+          const orbitalTime = now * 0.0004;
           const currentTargetX = targetX + Math.cos(orbitalTime + agent.wobblePhase) * agent.offsetX;
           const currentTargetY = targetY + Math.sin(orbitalTime + agent.wobblePhase) * agent.offsetY;
 
@@ -262,8 +262,8 @@ const LiveMouseSwarm = ({ isEnabled = true, agentCount = 2 }) => {
 
             if (dist < agent.separationDist && dist > 0) {
               const force = (agent.separationDist - dist) / agent.separationDist;
-              const pushX = (dx / dist) * force * 1.8;
-              const pushY = (dy / dist) * force * 1.8;
+              const pushX = (dx / dist) * force * 1.5;
+              const pushY = (dy / dist) * force * 1.5;
 
               agent.vx -= pushX;
               agent.vy -= pushY;
@@ -272,7 +272,7 @@ const LiveMouseSwarm = ({ isEnabled = true, agentCount = 2 }) => {
             }
 
             // Connecting line between peers
-            if (dist < 130 && lineCoords.length < 10) {
+            if (dist < 130 && lineCoords.length < 10 && isEnabled) {
               lineCoords.push({
                 x1: agent.x,
                 y1: agent.y,
@@ -328,12 +328,23 @@ const LiveMouseSwarm = ({ isEnabled = true, agentCount = 2 }) => {
       window.removeEventListener('varunos-app-assembling', handleAppAssembly);
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
     };
-  }, [isEnabled, agentCount]);
+  }, [isEnabled, isRebuildActive, agentCount]);
 
-  if (!isEnabled) return null;
+  if (isRebuildActive) return null;
+
+  const isVisible = isEnabled || (assemblyStateRef.current && assemblyStateRef.current.active);
 
   return (
-    <div ref={containerRef} className="live-mouse-swarm-overlay" aria-hidden="true">
+    <div 
+      ref={containerRef} 
+      className={`live-mouse-swarm-overlay ${isVisible ? 'is-visible' : 'is-idle-hidden'}`} 
+      style={{
+        opacity: isVisible ? 1 : 0,
+        pointerEvents: 'none',
+        transition: 'opacity 0.35s ease'
+      }}
+      aria-hidden="true"
+    >
       {/* Dynamic SVG Dashed Network Layer */}
       <svg className="live-swarm-svg-canvas" ref={svgLinesRef}>
         {Array.from({ length: 12 }).map((_, idx) => (

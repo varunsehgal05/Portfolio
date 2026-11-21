@@ -420,7 +420,7 @@ const Window = ({
         cancel=".mac-traffic-lights, .mac-btn, button, a, input, [data-no-drag]"
         disableDragging={isMaximized || animState !== 'visible'}
         enableResizing={!isMaximized && animState === 'visible'}
-        minWidth={app.id === 'terminal' ? 460 : 320}
+        minWidth={app.id === 'terminal' ? 560 : 320}
         minHeight={220}
         bounds="parent"
         style={{ zIndex: zIndex !== undefined ? zIndex : (isActive ? 300 : (isMaximized ? 40 : 20)) }}

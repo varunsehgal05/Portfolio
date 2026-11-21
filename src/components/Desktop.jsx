@@ -100,8 +100,10 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
     return () => window.removeEventListener('varunos-toggle-swarm-follow', handleSwarmFollowToggle);
   }, []);
 
-  // Track sequential desktop icon stamping during Swarm Rebuild (reveal 1-by-1)
-  const [stampedIconCount, setStampedIconCount] = useState(() => (swarmStage >= 2 ? 6 : 0));
+  // Track sequential desktop icon stamping during Swarm Rebuild (reveal 1-by-1 in Stage 3)
+  const [stampedIconCount, setStampedIconCount] = useState(() => (swarmStage >= 3 ? 6 : 0));
+  // Track sequential dock icon stamping during Swarm Rebuild (reveal 1-by-1 in Stage 4)
+  const [stampedDockCount, setStampedDockCount] = useState(() => (swarmStage >= 5 ? 10 : 0));
 
   useEffect(() => {
     const handleIconStamped = (e) => {
@@ -109,15 +111,28 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
         setStampedIconCount(e.detail.count);
       }
     };
+    const handleDockStamped = (e) => {
+      if (typeof e.detail?.count === 'number') {
+        setStampedDockCount(e.detail.count);
+      }
+    };
     window.addEventListener('varunos-swarm-icon-stamped', handleIconStamped);
-    return () => window.removeEventListener('varunos-swarm-icon-stamped', handleIconStamped);
+    window.addEventListener('varunos-swarm-dock-stamped', handleDockStamped);
+    return () => {
+      window.removeEventListener('varunos-swarm-icon-stamped', handleIconStamped);
+      window.removeEventListener('varunos-swarm-dock-stamped', handleDockStamped);
+    };
   }, []);
 
   useEffect(() => {
-    if (swarmStage >= 2) {
+    if (swarmStage >= 3) {
       setStampedIconCount(6);
     } else if (swarmStage === 0) {
       setStampedIconCount(0);
+      setStampedDockCount(0);
+    }
+    if (swarmStage >= 5) {
+      setStampedDockCount(10);
     }
   }, [swarmStage]);
 
@@ -357,23 +372,21 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
     <div 
       className={`desktop ${swarmStage < 5 ? 'desktop-in-rebuild' : ''}`}
     >
-      {/* Smooth Wallpaper Switching Animated Backdrop (macOS Sequoia Crossfade) */}
-      {swarmStage >= 5 && (
-        <div className="desktop-wallpaper-viewport" aria-hidden="true">
-          {prevWallpaper && (
-            <div 
-              key={`prev-wp-${prevWallpaper.id}`}
-              className="desktop-wallpaper-layer outgoing"
-              style={prevWallpaper.style}
-            />
-          )}
+      {/* Smooth Wallpaper Switching Animated Backdrop (macOS Sequoia Crossfade, revealed in Stage 1) */}
+      <div className={`desktop-wallpaper-viewport ${swarmStage < 5 ? (swarmStage >= 1 ? 'stage-revealed' : 'stage-hidden') : ''}`} aria-hidden="true">
+        {prevWallpaper && (
           <div 
-            key={`curr-wp-${activeWallpaper.id}`}
-            className={`desktop-wallpaper-layer ${isWpTransitioning ? 'incoming' : 'active'}`}
-            style={activeWallpaper.style}
+            key={`prev-wp-${prevWallpaper.id}`}
+            className="desktop-wallpaper-layer outgoing"
+            style={prevWallpaper.style}
           />
-        </div>
-      )}
+        )}
+        <div 
+          key={`curr-wp-${activeWallpaper.id}`}
+          className={`desktop-wallpaper-layer ${isWpTransitioning ? 'incoming' : 'active'}`}
+          style={activeWallpaper.style}
+        />
+      </div>
 
       {/* Toast notification when switching wallpaper */}
       {wallpaperToast && (
@@ -383,11 +396,11 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
         </div>
       )}
 
-      {/* Collaborative Swarm Live Mouse Flocking & App Assembly Engine (Kittu style: 2 agents for silky 60fps & zero clutter) */}
-      <LiveMouseSwarm isEnabled={isSwarmFollowEnabled && swarmStage >= 5} agentCount={2} />
+      {/* Collaborative Swarm Live Mouse Flocking & App Assembly Engine (5 Elite Collaborative Agents) */}
+      <LiveMouseSwarm isEnabled={isSwarmFollowEnabled} isRebuildActive={swarmStage < 5} agentCount={5} />
 
-      {/* Top MenuBar wrapper */}
-      <div className={`desktop-menubar-wrap ${swarmStage < 5 ? (swarmStage >= 1 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
+      {/* Top MenuBar wrapper (revealed in Stage 2) */}
+      <div className={`desktop-menubar-wrap ${swarmStage < 5 ? (swarmStage >= 2 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
         <MenuBar 
           userName={userName} 
           onReplaySwarm={handleInternalReplaySwarm}
@@ -408,12 +421,12 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
       </div>
 
       <div className="desktop-content">
-        {/* Left Column Desktop Icons (Revealed 1-by-1 sequentially as Sarah stamps them) */}
-        <div className={`desktop-icons ${swarmStage < 5 ? (swarmStage >= 2 || stampedIconCount > 0 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
+        {/* Left Column Desktop Icons (Revealed 1-by-1 in Stage 3 as Sarah stamps them) */}
+        <div className={`desktop-icons ${swarmStage < 5 ? (swarmStage >= 3 || stampedIconCount > 0 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
           {displayedIcons.map((id, index) => {
             const app = portfolioApps[id];
             if (!app) return null;
-            const isRevealed = swarmStage >= 2 || index < stampedIconCount;
+            const isRevealed = swarmStage >= 3 || index < stampedIconCount;
             return (
               <DesktopIcon
                 key={app.id}
@@ -433,8 +446,8 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
           })}
         </div>
 
-        {/* Windows Layer */}
-        <div className={`desktop-windows-layer ${swarmStage < 5 ? (swarmStage >= 3 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
+        {/* Windows Layer (revealed in Stage 5 as real window is assembled & finalized) */}
+        <div className={`desktop-windows-layer ${swarmStage < 5 ? (swarmStage >= 5 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
           {openWindows.map((appId) => {
             const app = portfolioApps[appId] || { id: appId, name: appId };
             const stackRank = windowOrder.indexOf(appId);
@@ -467,7 +480,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
           <PixelAssistant isIdle={isIdle} onOpenApp={openApp} />
         </div>
 
-        {/* Bottom macOS Dock */}
+        {/* Bottom macOS Dock (revealed in Stage 4: capsule first, then apps) */}
         <div className={`desktop-dock-wrap ${swarmStage < 5 ? (swarmStage >= 4 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
           <Dock
             openWindows={openWindows}
@@ -476,6 +489,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
             bouncingAppProp={bouncingApp}
             isFullScreenActive={isFullScreenActive}
             onAppClick={handleDockClick}
+            stampedDockCount={swarmStage >= 5 ? 10 : (swarmStage >= 4 ? stampedDockCount : 0)}
           />
         </div>
       </div>

@@ -358,36 +358,12 @@ const TrashApp = ({ onClose, onOpenApp }) => {
     setSelectedItemId(item.id);
   };
 
-  // Opening File: Triggers Clippy Guidance
+  // Opening File: View Item Modal
   const handleItemDoubleClick = (item) => {
     setActivePreviewItem(item);
-    setIsAICountdownCancelled(false);
-    setAiCountdown(4); // 4-second countdown before Clippy guides back
-
+    setIsAICountdownCancelled(true);
+    setAiCountdown(null);
     playAIChime();
-    const msg = "Hey! You're inspecting discarded files! 📎 Let's look at Varun's real work instead!";
-    // Clippy says the words and highlights on desktop
-    window.dispatchEvent(new CustomEvent('varunos-clippy-speak', {
-      detail: {
-        text: msg,
-        animation: "Explain",
-        highlightDuration: 3500,
-        hold: false
-      }
-    }));
-
-    // Start 4s countdown
-    if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
-    countdownTimerRef.current = setInterval(() => {
-      setAiCountdown(prev => {
-        if (prev <= 1) {
-          clearInterval(countdownTimerRef.current);
-          startClippyCloseSequence();
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
   };
 
   // EXECUTE CLIPPY VIRTUAL MOUSE CLOSE SEQUENCE

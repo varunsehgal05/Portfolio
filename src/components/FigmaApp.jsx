@@ -785,7 +785,7 @@ const FigmaApp = ({ isInteracting, userName, onOpenApp }) => {
     'work-artboard': { x: 0, y: 0, w: 1340, h: 960, radius: 16, fill: '#1e1e1e', stroke: '#383838', strokeWidth: 1, opacity: 100 },
     'exp-artboard': { x: 0, y: 0, w: 1200, h: 800, radius: 16, fill: '#1e1e1e', stroke: '#383838', strokeWidth: 1, opacity: 100 },
     'about-artboard': { x: 0, y: 0, w: 1280, h: 920, radius: 16, fill: '#1e1e1e', stroke: '#383838', strokeWidth: 1, opacity: 100 },
-    'resume-artboard': { x: 0, y: 0, w: 1080, h: 2600, radius: 16, fill: '#1e1e1e', stroke: '#383838', strokeWidth: 1, opacity: 100 },
+    'resume-artboard': { x: 0, y: 0, w: 1080, h: 2600, radius: 16, fill: 'transparent', stroke: 'transparent', strokeWidth: 0, opacity: 100 },
     'process-artboard': { x: 0, y: 0, w: 1400, h: 960, radius: 16, fill: '#141416', stroke: 'rgba(255, 255, 255, 0.12)', strokeWidth: 1, opacity: 100 },
     'plugins-artboard': { x: 0, y: 0, w: 1440, h: 1100, radius: 16, fill: '#141416', stroke: 'rgba(255, 255, 255, 0.12)', strokeWidth: 1, opacity: 100 },
     'work-codesrijan': { x: 0, y: 0, w: 360, h: 440, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
