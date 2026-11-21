@@ -816,7 +816,7 @@ const TrashApp = ({ onClose, onOpenApp }) => {
                     onOpenApp?.('resume');
                   }}
                 >
-                  <FileCheck size={13} />
+                  <FileCheck size={13} className="text-purple-400" />
                   <span>Open Resume</span>
                 </button>
                 <button
@@ -827,7 +827,7 @@ const TrashApp = ({ onClose, onOpenApp }) => {
                     onOpenApp?.('contact');
                   }}
                 >
-                  <Send size={13} />
+                  <Send size={13} className="text-emerald-400" />
                   <span>Hire Varun</span>
                 </button>
               </div>
