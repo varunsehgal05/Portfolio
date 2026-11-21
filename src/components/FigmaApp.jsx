@@ -2991,7 +2991,25 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   )}
 
                   {/* Pixel-perfect recreation of https://www.kittu.pro/resume with crowd-of-cursors engine */}
-                  <KittuResumeApp onBack={() => setActiveTab('home')} />
+                  <KittuResumeApp
+                    onBack={() => setActiveTab('home')}
+                    onScrollToTop={() => {
+                      // Smoothly glide pan.y back to top (0) so user is dragged up to top of notebook
+                      const startY = pan.y;
+                      const startTime = performance.now();
+                      const duration = 650;
+                      const animateScroll = (now) => {
+                        const elapsed = now - startTime;
+                        const progress = Math.min(1, elapsed / duration);
+                        const eased = 1 - Math.pow(1 - progress, 3);
+                        setPan(p => ({ ...p, y: startY * (1 - eased) }));
+                        if (progress < 1) {
+                          requestAnimationFrame(animateScroll);
+                        }
+                      };
+                      requestAnimationFrame(animateScroll);
+                    }}
+                  />
                 </div>
               </div>
             </div>

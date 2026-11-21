@@ -575,6 +575,108 @@
   text-decoration: none;
 }
 
+/* Project Tags in Things I've Made (Image 1) */
+.cv-project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.cv-tag {
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 2.5px 8px;
+  border-radius: 4px;
+  border: 1.5px solid var(--rule);
+  background: #ffffff;
+  color: var(--ink);
+  letter-spacing: 0.2px;
+  box-shadow: 1.5px 1.5px 0px rgba(0, 0, 0, 0.15);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  line-height: 1.2;
+}
+
+.cv-tag.vibecoded {
+  background: #fdf4ff;
+  border-color: #a855f7;
+  color: #7e22ce;
+}
+
+.cv-tag.figma {
+  background: #f0fdf4;
+  border-color: #0acf83;
+  color: #15803d;
+}
+
+.cv-tag.ai {
+  background: #f0f9ff;
+  border-color: #0284c7;
+  color: #0369a1;
+}
+
+.cv-tag.fintech {
+  background: #ecfdf5;
+  border-color: #10b981;
+  color: #047857;
+}
+
+.cv-tag.saas {
+  background: #fffbeb;
+  border-color: #f59e0b;
+  color: #b45309;
+}
+
+.cv-tag.next {
+  background: #f8fafc;
+  border-color: #334155;
+  color: #0f172a;
+}
+
+.cv-tag.live {
+  background: #ecfeff;
+  border-color: #06b6d4;
+  color: #0e7490;
+}
+
+/* Progressive Rebuild Animation for KittuResume */
+.cv-hero-text,
+.cv-side,
+.cv-stats,
+.cv-section,
+.cv-footer {
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cv-item-hidden {
+  opacity: 0 !important;
+  transform: translateY(16px) !important;
+  pointer-events: none !important;
+}
+
+.cv-item-visible {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  pointer-events: auto !important;
+}
+
+/* Remake button bounce */
+.cv-remake-btn {
+  background: #fff3bf;
+  border-color: #d9480f;
+  color: #d9480f;
+  box-shadow: 0 4px 12px rgba(217, 72, 15, 0.2);
+}
+
+.cv-remake-btn:hover {
+  background: #ffe066;
+  color: #b4380b;
+  transform: translateY(-2px) rotate(-1.5deg);
+}
+
 /* CONTACT SECTION */
 .cv-contact > p {
   margin-bottom: 14px;
