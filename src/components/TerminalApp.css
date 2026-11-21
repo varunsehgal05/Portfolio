@@ -99,10 +99,10 @@
   display: flex;
   align-items: center;
   gap: 3px;
-  padding: 3px 10px 3px 6px;
+  padding: 3px 6px;
   min-height: 28px;
   max-height: 28px;
-  background: rgba(10, 14, 20, 0.72);
+  background: rgba(10, 14, 20, 0.78);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -123,14 +123,14 @@
 .quick-bar-cmds {
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 2px;
   flex-shrink: 0;
 }
 
 .quick-bar-wallpapers {
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 2px;
   flex-shrink: 0;
 }
 
@@ -138,18 +138,19 @@
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.16);
   color: #38bdf8;
-  width: 17px;
-  height: 18px;
+  width: 16px;
+  height: 17px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
+  border-radius: 3px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   line-height: 1;
   padding: 0;
   transition: all 0.15s ease;
+  flex-shrink: 0;
 }
 
 .terminal-cycle-btn:hover {
@@ -162,6 +163,7 @@
   position: relative;
   display: inline-flex;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .terminal-wp-select {
@@ -171,14 +173,14 @@
   border: 1px solid rgba(56, 189, 248, 0.35);
   color: #f1f5f9;
   font-family: inherit;
-  font-size: 9.5px;
+  font-size: 9px;
   font-weight: 600;
-  padding: 1.5px 14px 1.5px 5px;
-  border-radius: 4px;
+  padding: 1.5px 12px 1.5px 4px;
+  border-radius: 3px;
   cursor: pointer;
   outline: none;
   transition: all 0.15s ease;
-  max-width: 84px;
+  max-width: 74px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -193,10 +195,10 @@
 .terminal-wp-select-wrap::after {
   content: '▾';
   position: absolute;
-  right: 5px;
+  right: 4px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 9px;
+  font-size: 8px;
   color: #38bdf8;
   pointer-events: none;
 }
@@ -204,12 +206,12 @@
 .quick-bar-tint {
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 2px;
   flex-shrink: 0;
 }
 
 .quick-bar-label {
-  font-size: 9px;
+  font-size: 8.5px;
   color: #94a3b8;
   font-weight: 600;
   white-space: nowrap;
@@ -229,15 +231,16 @@
   background: rgba(255, 255, 255, 0.07);
   border: 1px solid rgba(255, 255, 255, 0.12);
   color: #38bdf8;
-  padding: 1px 5px;
+  padding: 1px 4px;
   border-radius: 3px;
   font-family: inherit;
-  font-size: 9.5px;
+  font-size: 9px;
   font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
   line-height: 1.25;
   transition: all 0.15s ease;
+  flex-shrink: 0;
 }
 
 .terminal-pill-btn:hover {
@@ -248,7 +251,7 @@
 
 .terminal-wp-pill {
   color: #cbd5e1;
-  font-size: 9.5px;
+  font-size: 9px;
 }
 
 .terminal-wp-pill.active {
@@ -264,15 +267,16 @@
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.12);
   color: #94a3b8;
-  padding: 1px 5px;
+  padding: 1px 4px;
   border-radius: 3px;
   font-family: inherit;
-  font-size: 9px;
+  font-size: 8.5px;
   font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
   line-height: 1.25;
   transition: all 0.15s ease;
+  flex-shrink: 0;
 }
 
 .terminal-tint-btn.active {
@@ -291,18 +295,18 @@
 .terminal-bar-toggle-btn {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
+  gap: 2px;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: #94a3b8;
-  padding: 1.5px 5px;
-  border-radius: 4px;
+  padding: 1px 4px;
+  border-radius: 3px;
   font-family: inherit;
-  font-size: 9px;
+  font-size: 8.5px;
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.15s ease;
-  margin-left: auto;
+  margin-left: 3px;
   flex-shrink: 0;
 }
 

@@ -55,7 +55,7 @@ const Window = ({
     const availableWidth = Math.max(400, window.innerWidth);
 
     if (app.id === 'trash') return { width: Math.min(availableWidth - 80, 800), height: Math.min(availableHeight - 20, 560) };
-    if (app.id === 'terminal') return { width: Math.min(availableWidth - 60, 800), height: Math.min(availableHeight - 30, 480) };
+    if (app.id === 'terminal') return { width: Math.min(availableWidth - 40, 820), height: Math.min(availableHeight - 30, 490) };
     if (app.id === 'settings') return { width: Math.min(availableWidth - 80, 680), height: Math.min(availableHeight - 30, 500) };
     if (app.id === 'finder') return { width: Math.min(availableWidth - 80, 920), height: Math.min(availableHeight - 20, 560) };
     if (app.id === 'figma') return { width: Math.min(availableWidth - 60, 1100), height: Math.min(availableHeight, 680) };
@@ -420,7 +420,7 @@ const Window = ({
         cancel=".mac-traffic-lights, .mac-btn, button, a, input, [data-no-drag]"
         disableDragging={isMaximized || animState !== 'visible'}
         enableResizing={!isMaximized && animState === 'visible'}
-        minWidth={320}
+        minWidth={app.id === 'terminal' ? 460 : 320}
         minHeight={220}
         bounds="parent"
         style={{ zIndex: zIndex !== undefined ? zIndex : (isActive ? 300 : (isMaximized ? 40 : 20)) }}
