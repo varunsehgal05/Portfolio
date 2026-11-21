@@ -2656,7 +2656,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 {/* About Blueprint Canvas matching Image 2 */}
                 <div
                   className={`figma-artboard-box about-blueprint-artboard figma-selectable-node ${selectedNodeId === 'about-artboard' ? 'is-selected' : ''}`}
-                  style={getNodeStyle('about-artboard', 1380, 1220)}
+                  style={getNodeStyle('about-artboard', 1380, 760)}
                   onClick={(e) => {
                     e.stopPropagation();
                     handleSelectNode('about-artboard', 'Varun_Sehgal_Identity Frame', 'Frame');
@@ -2665,12 +2665,12 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   <div className="figma-artboard-header-tag">
                     <span className="artboard-hash">#</span>
                     <span className="artboard-name">Varun_Sehgal_Identity.fig — Lead Product Designer &amp; Design Technologist</span>
-                    <span className="artboard-dims">[{nodeProps['about-artboard']?.w || 1380} × {nodeProps['about-artboard']?.h || 1220}]</span>
+                    <span className="artboard-dims">[{nodeProps['about-artboard']?.w || 1380} × {nodeProps['about-artboard']?.h || 760}]</span>
                   </div>
 
                   {selectedNodeId === 'about-artboard' && (
                     <div className="figma-selection-overlay">
-                      <div className="selection-tag">❖ Varun_Sehgal_Identity [1380×1220]</div>
+                      <div className="selection-tag">❖ Varun_Sehgal_Identity [1380×760]</div>
                       <div className="selection-handle tl" /><div className="selection-handle tr" />
                       <div className="selection-handle bl" /><div className="selection-handle br" />
                     </div>
@@ -2732,117 +2732,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     </div>
                   </div>
 
-                  {/* RE-ARCHITECTED CENTER: Varun Sehgal Identity & Design Technologist Nexus */}
-                  <div className="about-center-identity-nexus">
-                    {/* Flanking Card 1: Core Systems & Token Architecture */}
-                    <div className="about-nexus-card systems-card">
-                      <div className="card-top-tag tag-purple">
-                        <span className="tag-text">SYSTEMS &amp; TOKENS</span>
-                      </div>
-                      <h3 className="nexus-card-title">Multi-Token Hierarchy</h3>
-                      <p className="nexus-card-desc">
-                        Engineering 0-drift token pipelines with OKLCH palettes, fluid clamp() modular scales, and executable contracts mapped to React 19 &amp; Tailwind v4.
-                      </p>
-                      
-                      {/* Interactive Token Inspection Chips */}
-                      <div className="interactive-token-chips-grid">
-                        <div className="token-chip" onClick={() => showToast('Token Copied: --color-primary-500 (#38bdf8)')}>
-                          <span className="token-dot" style={{ backgroundColor: '#38bdf8' }} />
-                          <span className="token-label">primary-500</span>
-                          <span className="token-val">#38bdf8</span>
-                        </div>
-                        <div className="token-chip" onClick={() => showToast('Token Copied: --color-accent-purple (#a855f7)')}>
-                          <span className="token-dot" style={{ backgroundColor: '#a855f7' }} />
-                          <span className="token-label">accent-purple</span>
-                          <span className="token-val">#a855f7</span>
-                        </div>
-                        <div className="token-chip" onClick={() => showToast('Token Copied: --color-status-active (#10b981)')}>
-                          <span className="token-dot" style={{ backgroundColor: '#10b981' }} />
-                          <span className="token-label">status-active</span>
-                          <span className="token-val">#10b981</span>
-                        </div>
-                        <div className="token-chip" onClick={() => showToast('Token Copied: --radius-token-md (12px)')}>
-                          <span className="token-dot" style={{ backgroundColor: '#f59e0b' }} />
-                          <span className="token-label">radius-md</span>
-                          <span className="token-val">12px</span>
-                        </div>
-                      </div>
-
-                      <div className="nexus-tools-row">
-                        <span className="nexus-tool-badge">Figma Auto-Layout v5</span>
-                        <span className="nexus-tool-badge">Design Tokens Studio</span>
-                        <span className="nexus-tool-badge">Tailwind v4</span>
-                      </div>
-                    </div>
-
-                    {/* Center Focal: Interactive Portrait Frame with Auto-Layout Bounds */}
-                    <div className="about-nexus-card portrait-nexus-card">
-                      <div className="portrait-figma-badge">
-                        <span className="material-symbols-outlined text-[13px] text-purple-400">frame_person</span>
-                        <span>❖ Varun_Sehgal_Identity · Frame [Auto Layout: Hug]</span>
-                      </div>
-                      <div className="portrait-img-container">
-                        <img
-                          src="/varun.jpg"
-                          alt="Varun Sehgal"
-                          className="portrait-avatar-img"
-                          onError={(e) => { e.currentTarget.src = '/hero.png'; }}
-                        />
-                        <div className="portrait-live-status-pill">
-                          <span className="live-pulse-dot" />
-                          <span>Seeking Seed / Series-A Roles</span>
-                        </div>
-                      </div>
-                      <div className="portrait-info-block">
-                        <div className="portrait-name-row">
-                          <h2 className="portrait-full-name">Varun Sehgal</h2>
-                          <span className="portrait-pro-badge">PRO VERIFIED</span>
-                        </div>
-                        <p className="portrait-lead-title">Lead Product Designer &amp; Design Technologist</p>
-                        <p className="portrait-meta-sub">Jaypee Univ. B.Tech CSE · Global Remote / SF</p>
-                      </div>
-                    </div>
-
-                    {/* Flanking Card 2: Impact & Shipped Velocity */}
-                    <div className="about-nexus-card impact-card">
-                      <div className="card-top-tag tag-cyan">
-                        <span className="tag-text">IMPACT &amp; VELOCITY</span>
-                      </div>
-                      <h3 className="nexus-card-title">Engineering Velocity</h3>
-
-                      <div className="metrics-2x2-nexus-grid">
-                        <div className="nexus-metric-box">
-                          <div className="nexus-metric-val text-sky-400">4+</div>
-                          <div className="nexus-metric-lbl">Years SaaS Design</div>
-                        </div>
-                        <div className="nexus-metric-box">
-                          <div className="nexus-metric-val text-purple-400">12+</div>
-                          <div className="nexus-metric-lbl">Shipped Products</div>
-                        </div>
-                        <div className="nexus-metric-box">
-                          <div className="nexus-metric-val text-emerald-400">99.4%</div>
-                          <div className="nexus-metric-lbl">Token Parity (Figma/Code)</div>
-                        </div>
-                        <div className="nexus-metric-box">
-                          <div className="nexus-metric-val text-amber-400">25k+</div>
-                          <div className="nexus-metric-lbl">Community Installs</div>
-                        </div>
-                      </div>
-
-                      <div className="creator-verified-row">
-                        <div className="figma-color-icon">
-                          <span className="figma-dot d1" />
-                          <span className="figma-dot d2" />
-                          <span className="figma-dot d3" />
-                          <span className="figma-dot d4" />
-                          <span className="figma-dot d5" />
-                        </div>
-                        <span className="creator-text">Official Figma Community Creator</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* 3. BOTTOM ROW: Audio Note & Connect Dossier */}
+                  {/* 2. BOTTOM ROW: Audio Note & Connect Dossier */}
                   <div className="about-bottom-cards-row">
                     {/* Left Bottom Card: AUDIO NOTE */}
                     <div className="about-bottom-card audio-note-card">
@@ -3034,7 +2924,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 {/* FigJam Process Board Canvas matching Image 1 */}
                 <div
                   className={`figma-artboard-box figjam-process-artboard figma-selectable-node ${selectedNodeId === 'process-artboard' ? 'is-selected' : ''}`}
-                  style={getNodeStyle('process-artboard', 1400, 960)}
+                  style={getNodeStyle('process-artboard', 1400, 600)}
                   onClick={(e) => {
                     e.stopPropagation();
                     handleSelectNode('process-artboard', 'FigJam Process Board', 'Frame');
@@ -3043,12 +2933,12 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   <div className="figma-artboard-header-tag">
                     <span className="artboard-hash">#</span>
                     <span className="artboard-name">Varun_Sehgal_Portfolio.fig — FigJam Process Board (Interactive Sprint)</span>
-                    <span className="artboard-dims">[{nodeProps['process-artboard']?.w || 1400} × {nodeProps['process-artboard']?.h || 960}]</span>
+                    <span className="artboard-dims">[{nodeProps['process-artboard']?.w || 1400} × {nodeProps['process-artboard']?.h || 600}]</span>
                   </div>
 
                   {selectedNodeId === 'process-artboard' && (
                     <div className="figma-selection-overlay">
-                      <div className="selection-tag">❖ FigJam_Process_Sprint_04 [1400×960]</div>
+                      <div className="selection-tag">❖ FigJam_Process_Sprint_04 [1400×600]</div>
                       <div className="selection-handle tl" /><div className="selection-handle tr" />
                       <div className="selection-handle bl" /><div className="selection-handle br" />
                     </div>
@@ -3112,196 +3002,8 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     </p>
                   </div>
 
-                  {/* FigJam Interactive Whiteboard Canvas with SVG Connectors & Sticky Nodes */}
+                  {/* FigJam Interactive Whiteboard Canvas Stage (Center part removed) */}
                   <div className="figjam-canvas-stage">
-                    {/* Continuous Sinusoidal Left-to-Right Wavy Flow (Matching Reference Image) */}
-                    <svg className="figjam-connectors-svg" viewBox="0 0 1340 620" fill="none">
-                      <defs>
-                        <linearGradient id="figjamWaveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                          <stop offset="0%" stopColor="#f97316" />
-                          <stop offset="20%" stopColor="#eab308" />
-                          <stop offset="42%" stopColor="#38bdf8" />
-                          <stop offset="65%" stopColor="#facc15" />
-                          <stop offset="82%" stopColor="#4ade80" />
-                          <stop offset="100%" stopColor="#f472b6" />
-                        </linearGradient>
-                        <filter id="waveGlow" x="-20%" y="-20%" width="140%" height="140%">
-                          <feDropShadow dx="0" dy="0" stdDeviation="3.5" floodColor="rgba(56, 189, 248, 0.45)" />
-                        </filter>
-                      </defs>
-
-                      {/* Continuous Wavy Sinusoidal Path threading left-to-right through all 5 reference nodes */}
-                      <path
-                        d="M 160,210 C 230,220 280,380 370,380 C 460,380 500,190 590,190 C 680,190 730,380 820,380 C 910,380 970,170 1060,170"
-                        stroke="url(#figjamWaveGrad)"
-                        strokeWidth="3.2"
-                        strokeDasharray="8 6"
-                        strokeLinecap="round"
-                        filter="url(#waveGlow)"
-                      />
-
-                      {/* Wave Crest & Valley Alignment Connection Dots */}
-                      <circle cx="370" cy="380" r="5" fill="#eab308" />
-                      <circle cx="590" cy="190" r="5" fill="#38bdf8" />
-                      <circle cx="820" cy="380" r="5" fill="#facc15" />
-                      <circle cx="1060" cy="170" r="5" fill="#4ade80" />
-                    </svg>
-
-                    {/* 1. User Field Tape Card */}
-                    <div className="figjam-node field-tape-card">
-                      <div className="figjam-step-badge step-1">01</div>
-                      <div className="tape-card-header">
-                        <div className="tape-header-left">
-                          <span className="material-symbols-outlined text-[16px] text-amber-400">mic</span>
-                          <span className="tape-tag-title">USER FIELD TAPE</span>
-                        </div>
-                        <div className="tape-rec-badge">
-                          <span className="rec-red-dot" />
-                          <span>REC - 04:22</span>
-                        </div>
-                      </div>
-
-                      <div className="tape-quote-bold">
-                        "Session 14 - Checkout friction discovery with Global FinTech CISO"
-                      </div>
-                      <div className="tape-timestamp-note">
-                        Timestamp 02:44: "I cannot submit PO approval without seat-level audit permissions in step 3."
-                      </div>
-
-                      {/* Waveform Visualizer */}
-                      <div className={`tape-waveform-row ${isPlayingTape ? 'playing' : ''}`}>
-                        {[35, 60, 85, 45, 95, 70, 40, 65, 90, 100, 50, 75, 40, 80, 95, 60, 45, 70, 85, 30].map((h, i) => (
-                          <div
-                            key={i}
-                            className="wave-bar"
-                            style={{
-                              height: `${h}%`,
-                              animationDelay: `${i * 0.06}s`
-                            }}
-                          />
-                        ))}
-                      </div>
-
-                      <div className="tape-footer-row">
-                        <button
-                          className="tape-play-btn"
-                          onClick={() => {
-                            setIsPlayingTape(!isPlayingTape);
-                            showToast(isPlayingTape ? 'Audio Paused' : 'Playing Field Tape (David M.)');
-                          }}
-                        >
-                          <span className="material-symbols-outlined text-[16px]">
-                            {isPlayingTape ? 'pause' : 'play_arrow'}
-                          </span>
-                          <span>{isPlayingTape ? 'Pause (2m clip)' : 'Listen (2m clip)'}</span>
-                        </button>
-                        <span className="tape-speaker-tag">Speaker: David M.</span>
-                      </div>
-                    </div>
-
-                    {/* 2. Pain Point 01 Sticky Note */}
-                    <div className="figjam-node sticky-note yellow-sticky pain-point-sticky">
-                      <div className="figjam-step-badge step-2">02</div>
-                      <div className="figjam-scotch-tape" />
-
-                      {/* Floating Multiplayer Cursor */}
-                      <div className="figjam-cursor-tag cursor-elena">
-                        <svg className="cursor-arrow-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                          <path d="M0 0L6 14L8.5 8.5L14 6L0 0Z" fill="#a855f7" />
-                        </svg>
-                        <span className="cursor-author-name">Elena (PM)</span>
-                      </div>
-
-                      <div className="sticky-header">
-                        <span className="sticky-label">PAIN POINT 01</span>
-                        <span className="sticky-emoji-badge">💀</span>
-                      </div>
-
-                      <p
-                        className="sticky-body-text"
-                        contentEditable="true"
-                        suppressContentEditableWarning={true}
-                        title="Click to edit text"
-                      >
-                        Procurement leads get locked out if tax exemption require manual approval queue.
-                      </p>
-
-                      <div className="sticky-footer">
-                        <span className="sticky-mention">@varun</span>
-                        <button
-                          className="sticky-reaction-pill"
-                          onClick={() => {
-                            setPainPointReactions(prev => prev + 1);
-                            showToast(`Reaction added: 🔥 ${painPointReactions + 1}`);
-                          }}
-                        >
-                          <span>🔥</span>
-                          <span>{painPointReactions}</span>
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* 3. Seat Audit Decision Node */}
-                    <div className="figjam-node decision-diamond-node">
-                      <div className="figjam-step-badge step-3">03</div>
-                      <div className="diamond-inner-content">
-                        <div className="diamond-icon-wrap">
-                          <span className="material-symbols-outlined text-[20px] text-sky-400">balance</span>
-                        </div>
-                        <h4 className="diamond-title">SEAT AUDIT</h4>
-                        <span className="diamond-sub">Gatekeeper?</span>
-                        <div className="diamond-telemetry-badge">
-                          <span>Drop-off: <strong>34.2%</strong></span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* 4. Customer Quote Sticky Note */}
-                    <div className="figjam-node sticky-note cream-sticky quote-sticky">
-                      <div className="figjam-step-badge step-4">04</div>
-                      <div className="figjam-scotch-tape" />
-
-                      <div className="sticky-header">
-                        <span className="sticky-label">CUSTOMER QUOTE</span>
-                        <span className="sticky-emoji-badge">🗣️</span>
-                      </div>
-                      <p
-                        className="sticky-body-text"
-                        contentEditable="true"
-                        suppressContentEditableWarning={true}
-                        title="Click to edit customer quote"
-                      >
-                        "Why can't I invite our legal counsel before typing my corporate credit card numbers?"
-                      </p>
-                      <div className="sticky-footer">
-                        <span className="sticky-mention">#soc2-blocker</span>
-                        <span className="sticky-reaction-pill">👍 6</span>
-                      </div>
-                    </div>
-
-                    {/* 5. Opportunity Sticky Note */}
-                    <div className="figjam-node sticky-note mint-sticky opportunity-sticky">
-                      <div className="figjam-step-badge step-5">05</div>
-                      <div className="figjam-scotch-tape" />
-
-                      <div className="sticky-header">
-                        <span className="sticky-label">OPPORTUNITY</span>
-                        <span className="sticky-emoji-badge">💡</span>
-                      </div>
-                      <p
-                        className="sticky-body-text"
-                        contentEditable="true"
-                        suppressContentEditableWarning={true}
-                        title="Click to edit opportunity text"
-                      >
-                        "Shadow Approval System: Allow instant trial provisioning with 14-day async invoice generation."
-                      </p>
-                      <div className="sticky-footer">
-                        <span className="sticky-mention">@varun</span>
-                        <span className="sticky-tag-sm">High Impact</span>
-                      </div>
-                    </div>
-
                     {/* Bottom Floating FigJam Toolbar matching Image 1 */}
                     <div className="figjam-floating-toolbar">
                       <div className="toolbar-tools-group">
@@ -3392,7 +3094,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 {/* Plugins Ecosystem Canvas matching Image 3 */}
                 <div
                   className={`figma-artboard-box plugins-ecosystem-artboard figma-selectable-node ${selectedNodeId === 'plugins-artboard' ? 'is-selected' : ''}`}
-                  style={getNodeStyle('plugins-artboard', 1440, 1100)}
+                  style={getNodeStyle('plugins-artboard', 1440, 480)}
                   onClick={(e) => {
                     e.stopPropagation();
                     handleSelectNode('plugins-artboard', 'Varuns_Plugin_Lab_Ecosystem', 'Frame');
@@ -3401,12 +3103,12 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   <div className="figma-artboard-header-tag">
                     <span className="artboard-hash">#</span>
                     <span className="artboard-name">COMMUNITY + EXTENSIONS / Varun's Plugin Lab &amp; Ecosystem [Verified Creator]</span>
-                    <span className="artboard-dims">[{nodeProps['plugins-artboard']?.w || 1440} × {nodeProps['plugins-artboard']?.h || 1100}]</span>
+                    <span className="artboard-dims">[{nodeProps['plugins-artboard']?.w || 1440} × {nodeProps['plugins-artboard']?.h || 480}]</span>
                   </div>
 
                   {selectedNodeId === 'plugins-artboard' && (
                     <div className="figma-selection-overlay">
-                      <div className="selection-tag">❖ Varuns_Plugin_Lab_Ecosystem [1440×1100]</div>
+                      <div className="selection-tag">❖ Varuns_Plugin_Lab_Ecosystem [1440×480]</div>
                       <div className="selection-handle tl" /><div className="selection-handle tr" />
                       <div className="selection-handle bl" /><div className="selection-handle br" />
                     </div>
@@ -3476,256 +3178,6 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                       <div className="view-mode-icons">
                         <span className="material-symbols-outlined text-[16px] text-sky-400">grid_view</span>
                         <span className="material-symbols-outlined text-[16px] text-zinc-500">view_list</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* RE-ARCHITECTED CENTER: Figma Community Verified Creator Hub & Interactive Plugin Studio */}
-                  <div className="plugins-center-studio">
-                    {/* 1. TOP SHELF: 3 Flagship Community Plugins */}
-                    <div className="plugins-flagship-shelf">
-                      {/* Card 1: Spectral Token Bridge */}
-                      <div className="plugin-flagship-card">
-                        <div className="flagship-card-header">
-                          <div className="flagship-icon-box bg-gradient-to-br from-orange-500/20 to-red-500/20 text-orange-400">
-                            <span className="material-symbols-outlined text-[20px]">layers</span>
-                          </div>
-                          <div className="flagship-meta-group">
-                            <div className="flagship-title-row">
-                              <h3 className="flagship-title">Spectral Token Bridge</h3>
-                              <span className="flagship-ver">v2.4</span>
-                            </div>
-                            <span className="flagship-category">Design Tokens · Production Sync</span>
-                          </div>
-                        </div>
-
-                        <p className="flagship-desc">
-                          Bi-directional synchronization between Figma design tokens, Tailwind v4, and React Native AST.
-                        </p>
-
-                        <div className="flagship-stats-row">
-                          <span className="stat-pill staff-pick">
-                            <span className="material-symbols-outlined text-[12px]">verified</span>
-                            <span>Staff Pick</span>
-                          </span>
-                          <span className="stat-pill runs">38.8k Runs</span>
-                          <span className="stat-pill rating">★ 4.95</span>
-                        </div>
-
-                        <div className="flagship-footer-action">
-                          <button
-                            className="flagship-action-btn primary"
-                            onClick={() => showToast('Launching Spectral Token Bridge...')}
-                          >
-                            <span>Launch Bridge ↗</span>
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Card 2: AutoGraph Flow */}
-                      <div className="plugin-flagship-card">
-                        <div className="flagship-card-header">
-                          <div className="flagship-icon-box bg-gradient-to-br from-sky-500/20 to-blue-500/20 text-sky-400">
-                            <span className="material-symbols-outlined text-[20px]">account_tree</span>
-                          </div>
-                          <div className="flagship-meta-group">
-                            <div className="flagship-title-row">
-                              <h3 className="flagship-title">AutoGraph Flow</h3>
-                              <span className="flagship-ver text-sky-400">v1.1</span>
-                            </div>
-                            <span className="flagship-category">State Machine · Connectors</span>
-                          </div>
-                        </div>
-
-                        <p className="flagship-desc">
-                          State machine graph and user flow connector generator with obstacle-avoidance routing and FigJam sticky sync.
-                        </p>
-
-                        <div className="flagship-stats-row">
-                          <span className="stat-pill community-choice">
-                            <span className="material-symbols-outlined text-[12px]">award_star</span>
-                            <span>Community Choice</span>
-                          </span>
-                          <span className="stat-pill runs">22.1k Runs</span>
-                          <span className="stat-pill rating">★ 4.92</span>
-                        </div>
-
-                        <div className="flagship-footer-action">
-                          <button
-                            className="flagship-action-btn"
-                            onClick={() => showToast('Flow Inspector Opened in FigJam')}
-                          >
-                            <span>Inspect Flow ↗</span>
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Card 3: ShaderLab Pro */}
-                      <div className="plugin-flagship-card">
-                        <div className="flagship-card-header">
-                          <div className="flagship-icon-box bg-gradient-to-br from-purple-500/20 to-pink-500/20 text-purple-400">
-                            <span className="material-symbols-outlined text-[20px]">water_drop</span>
-                          </div>
-                          <div className="flagship-meta-group">
-                            <div className="flagship-title-row">
-                              <h3 className="flagship-title">ShaderLab Pro</h3>
-                              <span className="flagship-ver text-purple-400">v2.0</span>
-                            </div>
-                            <span className="flagship-category">GLSL Shaders · Three.js</span>
-                          </div>
-                        </div>
-
-                        <p className="flagship-desc">
-                          In-canvas procedural GLSL noise, displacement mesh generator and real-time ray-marched canvas exporter.
-                        </p>
-
-                        <div className="flagship-stats-row">
-                          <span className="stat-pill gpu-acc">
-                            <span className="material-symbols-outlined text-[12px]">bolt</span>
-                            <span>GPU Powered</span>
-                          </span>
-                          <span className="stat-pill runs">18.5k Runs</span>
-                          <span className="stat-pill rating">★ 4.88</span>
-                        </div>
-
-                        <div className="flagship-footer-action">
-                          <button
-                            className="flagship-action-btn"
-                            onClick={() => {
-                              setIsShaderProceduralOpen(!isShaderProceduralOpen);
-                              showToast(isShaderProceduralOpen ? 'Closed ShaderLab' : 'ShaderLab Pro: Live Mesh Active');
-                            }}
-                          >
-                            <span>{isShaderProceduralOpen ? 'Close Mesh' : 'Open Shader ↗'}</span>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* 2. CENTERPIECE: Live Interactive Figma Plugin Sandbox */}
-                    <div className="plugin-interactive-sandbox-center">
-                      <div className="sandbox-top-titlebar">
-                        <div className="titlebar-left">
-                          <div className="traffic-lights-sm">
-                            <span className="light-dot red" />
-                            <span className="light-dot yellow" />
-                            <span className="light-dot green" />
-                          </div>
-                          <span className="sandbox-tab-title">Live Plugin Sandbox · Spectral Variable Sync Engine v2.4</span>
-                        </div>
-                        <div className="titlebar-right">
-                          <span className="sandbox-pill-tag">V8 Sandboxed Runtime</span>
-                          <span className="sandbox-status-live">
-                            <span className="pulse-dot-green" />
-                            <span>IPC Synced</span>
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="sandbox-body-grid">
-                        {/* Column 1: Tuning Sliders */}
-                        <div className="sandbox-column controls-column">
-                          <div className="column-section-title">Token Controls</div>
-
-                          <div className="sandbox-slider-item">
-                            <div className="slider-label-row">
-                              <span>Luminance Chroma</span>
-                              <strong className="text-orange-400">{tokenChroma}</strong>
-                            </div>
-                            <input
-                              type="range"
-                              min="0.1"
-                              max="1"
-                              step="0.02"
-                              value={tokenChroma}
-                              onChange={(e) => setTokenChroma(parseFloat(e.target.value))}
-                              className="token-range-slider"
-                            />
-                          </div>
-
-                          <div className="sandbox-slider-item">
-                            <div className="slider-label-row">
-                              <span>Border Radius</span>
-                              <strong className="text-sky-400">{tokenRadius}rem</strong>
-                            </div>
-                            <input
-                              type="range"
-                              min="0.2"
-                              max="2"
-                              step="0.04"
-                              value={tokenRadius}
-                              onChange={(e) => setTokenRadius(parseFloat(e.target.value))}
-                              className="token-range-slider"
-                            />
-                          </div>
-
-                          <div className="sandbox-sync-callout">
-                            <span className="material-symbols-outlined text-[15px] text-emerald-400">check_circle</span>
-                            <span>Synced to 120 Canvas Variables</span>
-                          </div>
-                        </div>
-
-                        {/* Column 2: Live Canvas Preview Element */}
-                        <div className="sandbox-column preview-column">
-                          <div className="column-section-title">Live Layer Preview</div>
-                          <div className="preview-canvas-card-wrap">
-                            <div
-                              className="preview-dynamic-box"
-                              style={{
-                                borderRadius: `${tokenRadius * 16}px`,
-                                borderColor: `rgba(255, 114, 98, ${Math.min(1, tokenChroma + 0.2)})`,
-                                boxShadow: `0 0 ${Math.round(tokenChroma * 36)}px rgba(255, 114, 98, ${tokenChroma * 0.45})`
-                              }}
-                            >
-                              <div className="preview-inner-content">
-                                <span className="preview-box-tag">❖ Component_Card</span>
-                                <h4 className="preview-box-title">Dynamic Token Surface</h4>
-                                <p className="preview-box-desc">
-                                  Radius: {Math.round(tokenRadius * 16)}px • Chroma: {tokenChroma}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Column 3: Code & Manifest Inspector */}
-                        <div className="sandbox-column code-column">
-                          <div className="column-section-title">Generated Token Contract</div>
-                          <pre className="token-code-block-new font-mono text-[11px]">
-                            {`export const tokens = {
-  chroma: ${tokenChroma},
-  radius: "${tokenRadius}rem",
-  spectralGlow: "rgba(255, 87, 51, ${(tokenChroma * 0.35).toFixed(2)})",
-  runtime: "Figma Plugin API v1"
-};`}
-                          </pre>
-                        </div>
-                      </div>
-
-                      {/* Footer Actions */}
-                      <div className="sandbox-footer-bar">
-                        <div className="footer-meta-text">
-                          <span>Compiler Status: <strong>0 Drifts Detected</strong></span>
-                        </div>
-                        <div className="footer-actions-group">
-                          <button
-                            className="sandbox-footer-btn"
-                            onClick={() => {
-                              navigator.clipboard?.writeText(JSON.stringify({ chroma: tokenChroma, radius: `${tokenRadius}rem` }, null, 2));
-                              showToast('Token Schema Copied to Clipboard!');
-                            }}
-                          >
-                            <span className="material-symbols-outlined text-[14px]">content_copy</span>
-                            <span>Copy Token Schema</span>
-                          </button>
-                          <button
-                            className="sandbox-footer-btn primary"
-                            onClick={() => showToast('Syncing 120 Figma Variables to Canvas...')}
-                          >
-                            <span className="material-symbols-outlined text-[14px]">play_arrow</span>
-                            <span>Run in Figma Canvas</span>
-                          </button>
-                        </div>
                       </div>
                     </div>
                   </div>

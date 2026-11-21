@@ -5948,7 +5948,7 @@
 /* Canvas Stage with Left-to-Right Wavy Flow */
 .figjam-canvas-stage {
   position: relative;
-  min-height: 600px;
+  min-height: 280px;
   border-radius: 12px;
   background: rgba(0, 0, 0, 0.28);
   border: 1px dashed rgba(255, 255, 255, 0.08);
@@ -6436,7 +6436,7 @@
    -------------------------------------------------------------------------- */
 .about-blueprint-artboard {
   width: 1380px;
-  min-height: 1220px;
+  min-height: 600px;
   background-color: #121318 !important;
   background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1.2px, transparent 1.2px) !important;
   background-size: 20px 20px !important;
@@ -6950,7 +6950,7 @@
    -------------------------------------------------------------------------- */
 .plugins-ecosystem-artboard {
   width: 1440px;
-  min-height: 1100px;
+  min-height: 380px;
   background-color: #111216 !important;
   background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1.2px, transparent 1.2px) !important;
   background-size: 20px 20px !important;
