@@ -179,31 +179,301 @@ const PORTFOLIO_CONFIG_CODE = `export const PORTFOLIO_METADATA = {
   name: "Varun Sehgal",
   role: "UI/UX & Product Designer | Frontend Engineer",
   location: "Gwalior, Madhya Pradesh, India",
+  education: {
+    institution: "Jaypee University of Engineering & Technology (JUET)",
+    degree: "B.Tech in Computer Science & Engineering (2023–2027)",
+    cgpa: "8.5 / 10.0"
+  },
   contact: {
     phone: "+91-9399361193",
     email: "varun.sehgal02@gmail.com",
     portfolioUrl: "https://varunsehgal.runs-on.dev",
-    github: "https://github.com/varunsehgal05"
+    github: "https://github.com/varunsehgal05",
+    linkedin: "https://linkedin.com/in/varunsehgal02"
   }
 };
 `;
 
+// AboutMe TSX code — Personal Developer & Product Designer Bio
+const ABOUT_ME_CODE = `// =========================================================================
+// AboutMe.tsx — Developer & Product Designer Profile
+// Varun Sehgal · UI/UX Designer & Design Engineer
+// =========================================================================
+
+export const VarunSehgal = {
+  name: "Varun Sehgal",
+  title: "UI/UX & Product Designer | Design Engineer",
+  location: "Gwalior, Madhya Pradesh, India",
+  education: {
+    degree: "B.Tech in Computer Science & Engineering",
+    institution: "Jaypee University of Engineering & Technology (JUET)",
+    timeline: "2023 — 2027",
+    cgpa: "8.5 / 10.0"
+  },
+  designPhilosophy: [
+    "I study and craft friction-free product experiences: how interaction models shape user psychology.",
+    "Bridging the chasm between static Figma design tokens and executable Next.js/Tailwind components.",
+    "Enterprise tools do not have to feel clunky — they can be fluid, tactile, and fast at 60fps."
+  ],
+  trackRecord: [
+    {
+      role: "Lead UI/UX Designer & Frontend Architect",
+      project: "CodeSrijan (National Hackathon Ecosystem)",
+      period: "2024 — Present",
+      metrics: "200+ hackers, 50+ universities, 72h sprint, live rubric scoring & matchmaking."
+    },
+    {
+      role: "UI/UX Designer Intern",
+      company: "UniEvent (EventFlow Ticketing)",
+      period: "Sep 2024 — Nov 2024 (Remote, Bengaluru)",
+      metrics: "Slashed transaction drop-off by 30% across a 4-step booking flow and 50+ component variants."
+    },
+    {
+      role: "Assistant Head of Operations / UI/UX Intern",
+      company: "Assemble",
+      period: "Aug 2024 — Jan 2025 (Remote)",
+      metrics: "Designed collaborative creator workspace tools and interaction prototypes in Figma."
+    },
+    {
+      role: "UI/UX Designer Intern",
+      company: "Knaptix Ventures",
+      period: "Jun 2024 — Aug 2024 (Remote)",
+      metrics: "Delivered conversion-focused SaaS landing pages for 10+ startups with 95% client retention."
+    }
+  ],
+  honors: [
+    "🏆 1st Place Winner at HACKeThor (National Level Hackathon, Unstop) out of 500+ participants.",
+    "⚡ Lead Organizer & Platform Architect at CodeSrijan Hackathon."
+  ],
+  contact: {
+    email: "varun.sehgal02@gmail.com",
+    portfolio: "https://varunsehgal.runs-on.dev",
+    linkedin: "https://linkedin.com/in/varunsehgal02",
+    github: "https://github.com/varunsehgal05"
+  }
+};
+
+export default function AboutMe() {
+  return (
+    <div className="developer-profile">
+      <h1>Varun Sehgal — Design Engineer & Product Designer</h1>
+      <p>Turning complex user friction into tactile, elegant digital products.</p>
+    </div>
+  );
+}
+`;
+
+// Tools & Tech Stack TS code
+const TOOLS_AND_STACK_CODE = `// =========================================================================
+// tools-and-stack.ts — Varun Sehgal's Tech Stack & Developer Toolkit
+// =========================================================================
+
+export const DEVELOPER_TOOLKIT = {
+  // 1. Design & Prototyping (Figma First)
+  design: {
+    coreTools: ["Figma", "Framer", "FigJam", "ProtoPie", "Webflow"],
+    capabilities: [
+      "Multi-token Design Systems (Spacing scales, Typography, OKLCH Color Space)",
+      "Auto Layout v5, Component Sets, Advanced Component Properties & Variables",
+      "Interactive State Machines & Physics-Based Motion Springs",
+      "Tactile Clickable Micro-interactions with Sub-millisecond Fidelity"
+    ]
+  },
+
+  // 2. Frontend Engineering (Pixel-Perfect Execution)
+  frontend: {
+    languages: ["TypeScript", "JavaScript (ES2024)", "HTML5", "CSS3 / Modern CSS"],
+    frameworks: ["React 18 / 19", "Next.js 14 / 15 (App Router, Server Components)", "Vite"],
+    styling: ["Tailwind CSS", "CSS Modules", "PostCSS", "Radix UI Primitives", "Lucide Icons"],
+    animation: ["Framer Motion", "GSAP", "CSS Springs", "Web Audio API (Haptic Feedback)"]
+  },
+
+  // 3. The Vibecoding Matrix (AI-Accelerated Velocity)
+  vibecoding: {
+    tools: ["Cursor IDE", "Antigravity 2.0 (Google DeepMind Agent)", "Claude Code", "GitHub Copilot", "v0.dev"],
+    methodology: [
+      "Design Intent First: Figma tokens and component variants authored by human judgment.",
+      "10x Scaffold Velocity: Leveraging agentic AI for boilerplate, state management, and type bindings.",
+      "Human-in-the-Loop Quality Gate: 100% type safety, responsive breakpoints, accessible DOM, and 60fps GPU performance."
+    ]
+  },
+
+  // 4. Backend, Cloud & DevOps
+  cloudAndData: {
+    databaseAndAuth: ["Supabase (PostgreSQL, Realtime WebSockets, Row Level Security)", "Firebase"],
+    hostingAndDeploy: ["Vercel (Edge Functions, Serverless, Analytics)", "Netlify", "GitHub Pages"],
+    versionControl: ["Git", "GitHub (Git Worktrees, Branch Protection, PR Reviews)"]
+  }
+};
+`;
+
+// Vibecoding Manifesto Markdown code
+const VIBECODING_MANIFESTO_CODE = `# ⚡ The Vibecoding Manifesto: Engineering at the Speed of Thought
+*By Varun Sehgal — UI/UX Designer & Design Engineer*
+
+## 1. What is "Vibecoding"?
+Vibecoding is not unguided copy-pasting or lazy prompt generation. 
+It represents a **fundamental paradigm shift** in how digital products are conceived, designed, and shipped.
+
+It is **Design-Led Velocity**:
+- **Designers who code:** We don't just hand off static PNGs or Figma inspect links; we build the actual production components.
+- **AI as the infinite-bandwidth assistant:** AI agents (Cursor, Antigravity, Claude) handle syntax boilerplate, repetitive layout grids, and mock data in milliseconds.
+- **Human as the Taste Arbiter:** The engineer provides product vision, spatial intuition, micro-interaction feel, and architectural discipline.
+
+---
+
+## 2. The CodeSrijan Case Study (Proof in Production)
+- **Deadline:** 72-hour live hackathon with 200+ participants from 50+ colleges.
+- **Traditional Timeline:** 8 weeks.
+- **Vibecoded Timeline:** 18 days from empty Figma canvas to live Vercel deployment.
+- **Key Wins:**
+  - Zero downtime on Vercel Edge.
+  - Sub-100ms real-time rubric calculation for 10+ concurrent judges.
+  - 45 squads assembled automatically through the dynamic matchmaking algorithm.
+
+---
+
+## 3. The Three Rules of Vibecoding
+1. **Never sacrifice type safety for speed.** (Strict TypeScript everywhere).
+2. **Design tokens are the single source of truth.** (Figma variables & Tailwind config stay in 1:1 sync).
+3. **If it doesn't feel fluid at 60fps, it isn't finished.** (Optimistic UI and hardware-accelerated transforms).
+`;
+
+// CodeSrijan Page TSX code
+const CODESRIJAN_PAGE_CODE = `// =========================================================================
+// CodeSrijan Hackathon Platform — Live Vercel Production Core (page.tsx)
+// Architected & Vibecoded by Varun Sehgal for Jaypee University (JUET)
+// 200+ Hackers | 50+ Universities | 72-Hour Live Sprint
+// =========================================================================
+
+import React, { useState } from 'react';
+
+interface Hacker {
+  id: string;
+  name: string;
+  role: 'Frontend' | 'Backend' | 'AI / ML' | 'UI/UX Design';
+  skills: string[];
+  teamId?: string;
+}
+
+interface RubricScore {
+  innovation: number;    // Weight: 30%
+  uxDesign: number;      // Weight: 25%
+  techComplexity: number;// Weight: 25%
+  feasibility: number;   // Weight: 20%
+}
+
+export default function CodeSrijanPortal() {
+  const [hackerCount, setHackerCount] = useState(200);
+  const [selectedTrack, setSelectedTrack] = useState<'AI' | 'Fintech' | 'Web3' | 'Open'>('AI');
+  
+  // Real-time optimistic Rubric Evaluation state (10+ Judges Sync)
+  const [rubric, setRubric] = useState<RubricScore>({
+    innovation: 9.5,
+    uxDesign: 9.8,
+    techComplexity: 9.2,
+    feasibility: 9.0
+  });
+
+  // Calculate weighted rubric score live
+  const calculateTotalScore = (r: RubricScore): number => {
+    return Number((r.innovation * 0.3 + r.uxDesign * 0.25 + r.techComplexity * 0.25 + r.feasibility * 0.2).toFixed(2));
+  };
+
+  return (
+    <div className="min-h-screen bg-[#07090e] text-white p-8 font-sans">
+      {/* Srijan Hero Bar */}
+      <header className="border-b border-cyan-500/20 pb-6 mb-8 flex justify-between items-center">
+        <div>
+          <span className="text-xs uppercase tracking-widest text-cyan-400 font-mono">
+            ⚡ National Level Hackathon Ecosystem
+          </span>
+          <h1 className="text-3xl font-extrabold bg-gradient-to-r from-white via-cyan-300 to-purple-400 bg-clip-text text-transparent mt-1">
+            Srijaning the Future: Code, Innovate, Conquer
+          </h1>
+          <p className="text-sm text-zinc-400 mt-2 max-w-xl">
+            Live evaluation, instant team matchmaking, and real-time announcements for 200+ hackers across 50+ universities.
+          </p>
+        </div>
+        <div className="flex gap-4">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2 text-center">
+            <span className="text-xs text-zinc-400 block font-mono">Live Hackers</span>
+            <span className="text-xl font-bold text-cyan-400">{hackerCount}+</span>
+          </div>
+          <div className="bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2 text-center">
+            <span className="text-xs text-zinc-400 block font-mono">Sprint Time</span>
+            <span className="text-xl font-bold text-purple-400">72h:00m</span>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Grid: Team Matcher & Rubric Evaluation */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Dynamic Team Matcher Card */}
+        <section className="bg-zinc-950/80 border border-zinc-800 rounded-2xl p-6">
+          <h2 className="text-lg font-bold text-cyan-400 flex items-center gap-2">
+            <span>🤝</span> Solo Hacker Matchmaking Engine
+          </h2>
+          <p className="text-xs text-zinc-400 mt-1 mb-4">
+            Problem solved: 40% of attendees arrived without squads. This algorithm pairs complementary roles.
+          </p>
+          <div className="space-y-3 font-mono text-xs">
+            <div className="p-3 bg-zinc-900/60 border border-zinc-800 rounded-lg flex justify-between">
+              <div>
+                <span className="text-white font-semibold">Team CyberSrijan</span>
+                <span className="text-zinc-500 block">Frontend + AI/ML + UI/UX</span>
+              </div>
+              <span className="text-emerald-400 self-center">✓ 4/4 Full</span>
+            </div>
+            <div className="p-3 bg-zinc-900/60 border border-zinc-800 rounded-lg flex justify-between">
+              <div>
+                <span className="text-white font-semibold">Team NeuralFlow</span>
+                <span className="text-zinc-500 block">Seeking: 1 UI/UX Designer</span>
+              </div>
+              <button className="px-2.5 py-1 bg-cyan-500/20 text-cyan-300 rounded hover:bg-cyan-500/30">Join Team</button>
+            </div>
+          </div>
+        </section>
+
+        {/* Live Multi-Judge Rubric Evaluator */}
+        <section className="bg-zinc-950/80 border border-zinc-800 rounded-2xl p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-bold text-purple-400 flex items-center gap-2">
+              <span>⚖️</span> Real-Time Rubric Scoring Matrix
+            </h2>
+            <span className="text-sm font-bold bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full">
+              Score: {calculateTotalScore(rubric)} / 10.0
+            </span>
+          </div>
+          <p className="text-xs text-zinc-400 mb-4">
+            Problem solved: Zero score conflict across 10 judges via optimistic WebSocket state sync.
+          </p>
+          <div className="space-y-2 text-xs">
+            <div className="flex justify-between text-zinc-300">
+              <span>Innovation (30%)</span>
+              <span className="text-cyan-400 font-bold">{rubric.innovation} / 10</span>
+            </div>
+            <div className="w-full bg-zinc-800 h-1.5 rounded-full overflow-hidden">
+              <div className="bg-cyan-400 h-full" style={{ width: \`\${rubric.innovation * 10}%\` }} />
+            </div>
+
+            <div className="flex justify-between text-zinc-300 pt-2">
+              <span>UI/UX & Tactile Fidelity (25%)</span>
+              <span className="text-purple-400 font-bold">{rubric.uxDesign} / 10</span>
+            </div>
+            <div className="w-full bg-zinc-800 h-1.5 rounded-full overflow-hidden">
+              <div className="bg-purple-400 h-full" style={{ width: \`\${rubric.uxDesign * 10}%\` }} />
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+}
+`;
+
 // Initial files dictionary
 const INITIAL_PROJECT_FILES = {
-  'app.js': {
-    name: 'app.js',
-    path: 'src > app.js',
-    icon: 'js',
-    lang: 'JavaScript',
-    code: DEFAULT_APP_JS
-  },
-  'TerminalApp.jsx': {
-    name: 'TerminalApp.jsx',
-    path: 'src > components > ⚛ TerminalApp.jsx',
-    icon: 'jsx',
-    lang: 'TypeScript React',
-    code: TERMINAL_APP_CODE
-  },
   'Live Preview: CodeSrijan': {
     name: 'Live Preview: CodeSrijan',
     path: 'codesrijan > 🌐 http://codesrijan-nine.vercel.app/',
@@ -212,12 +482,33 @@ const INITIAL_PROJECT_FILES = {
     isWebview: true,
     code: ''
   },
+  'AboutMe.tsx': {
+    name: 'AboutMe.tsx',
+    path: 'src > profile > ⚛ AboutMe.tsx',
+    icon: 'jsx',
+    lang: 'TypeScript React',
+    code: ABOUT_ME_CODE
+  },
+  'tools-and-stack.ts': {
+    name: 'tools-and-stack.ts',
+    path: 'src > config > 📄 tools-and-stack.ts',
+    icon: 'ts',
+    lang: 'TypeScript',
+    code: TOOLS_AND_STACK_CODE
+  },
+  'vibecoding-manifesto.md': {
+    name: 'vibecoding-manifesto.md',
+    path: 'docs > 📄 vibecoding-manifesto.md',
+    icon: 'md',
+    lang: 'Markdown',
+    code: VIBECODING_MANIFESTO_CODE
+  },
   'codesrijan/page.tsx': {
     name: 'codesrijan/page.tsx',
     path: 'codesrijan > app > ⚛ page.tsx',
     icon: 'jsx',
     lang: 'TypeScript React',
-    code: `// CodeSrijan Hackathon Portal\nexport default function Page() {\n  return <div>CodeSrijan Hackathon 72h Sprint</div>;\n}`
+    code: CODESRIJAN_PAGE_CODE
   },
   'portfolio.config.ts': {
     name: 'portfolio.config.ts',
@@ -225,6 +516,20 @@ const INITIAL_PROJECT_FILES = {
     icon: 'ts',
     lang: 'TypeScript',
     code: PORTFOLIO_CONFIG_CODE
+  },
+  'TerminalApp.jsx': {
+    name: 'TerminalApp.jsx',
+    path: 'src > components > ⚛ TerminalApp.jsx',
+    icon: 'jsx',
+    lang: 'TypeScript React',
+    code: TERMINAL_APP_CODE
+  },
+  'app.js': {
+    name: 'app.js',
+    path: 'src > app.js',
+    icon: 'js',
+    lang: 'JavaScript',
+    code: DEFAULT_APP_JS
   },
   'Varun_Sehgal_Resume_Updated.tex': {
     name: 'Varun_Sehgal_Resume_Updated.tex',
@@ -265,15 +570,24 @@ export const VsCodeApp = () => {
 
   // File System State
   const [projectFiles, setProjectFiles] = useState(INITIAL_PROJECT_FILES);
-  const [activeFile, setActiveFile] = useState('FinderApp.css');
+  const [activeFile, setActiveFile] = useState('Live Preview: CodeSrijan');
   const [openTabs, setOpenTabs] = useState([
-    'TerminalApp.jsx',
     'Live Preview: CodeSrijan',
+    'AboutMe.tsx',
+    'tools-and-stack.ts',
+    'vibecoding-manifesto.md',
     'codesrijan/page.tsx',
-    'portfolio.config.ts',
-    'Varun_Sehgal_Resume_Updated.tex',
-    'FinderApp.css'
+    'portfolio.config.ts'
   ]);
+
+  // CodeSrijan Interactive Simulator State
+  const [rubricSim, setRubricSim] = useState({
+    innovation: 9.5,
+    uxDesign: 9.8,
+    techComplexity: 9.2,
+    feasibility: 9.0
+  });
+  const [teamMatcherTested, setTeamMatcherTested] = useState(false);
 
   // Sidebar & Layout State
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -628,6 +942,7 @@ export const VsCodeApp = () => {
     if (iconType === 'js') return <span className="tab-file-icon icon-js text-[#facc15] font-bold text-[10.5px]">JS</span>;
     if (iconType === 'py') return <span className="tab-file-icon icon-py text-[#38bdf8] font-bold text-[10.5px]">PY</span>;
     if (iconType === 'tex') return <span className="tab-file-icon icon-tex">T</span>;
+    if (iconType === 'md') return <span className="tab-file-icon icon-md text-amber-400 font-bold text-[10.5px]">M↓</span>;
     if (iconType === 'globe') return <span className="tab-file-icon icon-globe text-emerald-400">🌐</span>;
     return <span className="tab-file-icon icon-default">📄</span>;
   };
@@ -1405,12 +1720,16 @@ export const VsCodeApp = () => {
                       </div>
                       <h2 className="interactive-title">Srijaning the Future: Code, Innovate, Conquer</h2>
                       <p className="interactive-desc">
-                        Live hackathon platform designed by <strong>Varun Sehgal</strong> for Jaypee University of Engineering & Technology. Powering registration, real-time rubric evaluation, and team matching for 200+ hackathon participants across 50+ universities.
+                        Live hackathon platform designed and architected by <strong>Varun Sehgal</strong> for Jaypee University of Engineering & Technology (JUET). Powering registration, real-time rubric evaluation, and team matching for 200+ hackathon participants across 50+ universities.
                       </p>
                       <div className="interactive-stats-row">
                         <div className="stat-box">
                           <div className="stat-val">200+</div>
                           <div className="stat-lbl">Hackers Registered</div>
+                        </div>
+                        <div className="stat-box">
+                          <div className="stat-val">50+</div>
+                          <div className="stat-lbl">Universities Across India</div>
                         </div>
                         <div className="stat-box">
                           <div className="stat-val">72h</div>
@@ -1421,6 +1740,220 @@ export const VsCodeApp = () => {
                           <div className="stat-lbl">Prize Matrix</div>
                         </div>
                       </div>
+                    </div>
+
+                    {/* Section 1: The Vibecoded Story — Problems Faced & Solutions */}
+                    <div className="webview-section-title">
+                      <span>⚡ The Vibecoded Case Study: Problems Faced &amp; How I Solved Them</span>
+                      <span className="section-badge">Case Study</span>
+                    </div>
+
+                    <div className="webview-challenges-grid">
+                      {/* Challenge 1 */}
+                      <div className="webview-challenge-card">
+                        <div className="challenge-card-header">
+                          <span className="challenge-icon">🤝</span>
+                          <span className="challenge-title">1. High-Concurrency Solo Matchmaking</span>
+                        </div>
+                        <div className="challenge-problem">
+                          <strong>Problem:</strong> Over 40% of the 200+ attendees registered without a squad. Traditional spreadsheets caused delays and unfair team skill distributions.
+                        </div>
+                        <div className="challenge-solution">
+                          <strong>Solution:</strong> Engineered an algorithmic matchmaking matrix pairing complementary skill tags (Frontend, Backend, AI/ML, UI/UX) with instant invite codes.
+                        </div>
+                        <div className="challenge-metric-pill">
+                          <span>✓ 45 balanced squads assembled in &lt; 2 hours</span>
+                        </div>
+                      </div>
+
+                      {/* Challenge 2 */}
+                      <div className="webview-challenge-card">
+                        <div className="challenge-card-header">
+                          <span className="challenge-icon">⚖️</span>
+                          <span className="challenge-title">2. Real-Time Multi-Judge Rubric Evaluation</span>
+                        </div>
+                        <div className="challenge-problem">
+                          <strong>Problem:</strong> 10+ industry judges evaluating live pitches simultaneously. Standard form submissions caused lockouts, race conditions, and scoring calculation latency.
+                        </div>
+                        <div className="challenge-solution">
+                          <strong>Solution:</strong> Implemented an optimistic UI state machine with multi-criteria rubric sliders (Innovation, UX, Feasibility, Tech Depth) updating leaderboards in sub-100ms.
+                        </div>
+                        <div className="challenge-metric-pill">
+                          <span>✓ Sub-100ms live scoring with 0 race conditions</span>
+                        </div>
+                      </div>
+
+                      {/* Challenge 3 */}
+                      <div className="webview-challenge-card">
+                        <div className="challenge-card-header">
+                          <span className="challenge-icon">⚡</span>
+                          <span className="challenge-title">3. Extreme 3-Week Hard Deadline (Vibecoding)</span>
+                        </div>
+                        <div className="challenge-problem">
+                          <strong>Problem:</strong> Traditional 8-week design-to-code cycles could not meet the firm university hackathon launch date.
+                        </div>
+                        <div className="challenge-solution">
+                          <strong>Solution:</strong> The Vibecoding Workflow: drafted atomic design tokens in Figma (OKLCH, auto-layout variants), then used agentic AI for rapid Next.js scaffolding while enforcing strict TypeScript safety.
+                        </div>
+                        <div className="challenge-metric-pill">
+                          <span>✓ Shipped 15+ views in 18 days with 99.9% uptime</span>
+                        </div>
+                      </div>
+
+                      {/* Challenge 4 */}
+                      <div className="webview-challenge-card">
+                        <div className="challenge-card-header">
+                          <span className="challenge-icon">🎯</span>
+                          <span className="challenge-title">4. Zero Drop-Off &amp; Hackathon Fatigue</span>
+                        </div>
+                        <div className="challenge-problem">
+                          <strong>Problem:</strong> Complex multi-step forms typically suffer 40%+ drop-off. Hackers get disoriented by buried announcement feeds during 72-hour coding sprints.
+                        </div>
+                        <div className="challenge-solution">
+                          <strong>Solution:</strong> Crafted a high-contrast dark theme with OKLCH cyan/purple accents, live milestone progress bars, and instant notifications.
+                        </div>
+                        <div className="challenge-metric-pill">
+                          <span>✓ 96% registration completion rate</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Section 2: Interactive Rubric Scoring Simulator */}
+                    <div className="webview-simulator-box">
+                      <div className="simulator-header">
+                        <div>
+                          <div className="simulator-title">⚖️ Interactive Live Rubric Scoring Matrix</div>
+                          <span className="text-xs text-zinc-400">
+                            Slide the criteria to test the real-time weighted composite score calculation used by judges
+                          </span>
+                        </div>
+                        <div className="simulator-score-badge">
+                          Composite: {(rubricSim.innovation * 0.3 + rubricSim.uxDesign * 0.25 + rubricSim.techComplexity * 0.25 + rubricSim.feasibility * 0.2).toFixed(2)} / 10.0
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="slider-group">
+                          <div className="slider-label-row">
+                            <span>Innovation &amp; Originality (30%)</span>
+                            <span className="text-cyan-400 font-bold">{rubricSim.innovation}</span>
+                          </div>
+                          <input
+                            type="range"
+                            min="1"
+                            max="10"
+                            step="0.1"
+                            value={rubricSim.innovation}
+                            onChange={(e) => setRubricSim({ ...rubricSim, innovation: parseFloat(e.target.value) })}
+                            className="simulator-slider"
+                          />
+                        </div>
+
+                        <div className="slider-group">
+                          <div className="slider-label-row">
+                            <span>UI/UX &amp; Tactile Design (25%)</span>
+                            <span className="text-purple-400 font-bold">{rubricSim.uxDesign}</span>
+                          </div>
+                          <input
+                            type="range"
+                            min="1"
+                            max="10"
+                            step="0.1"
+                            value={rubricSim.uxDesign}
+                            onChange={(e) => setRubricSim({ ...rubricSim, uxDesign: parseFloat(e.target.value) })}
+                            className="simulator-slider"
+                          />
+                        </div>
+
+                        <div className="slider-group">
+                          <div className="slider-label-row">
+                            <span>Technical Depth &amp; Complexity (25%)</span>
+                            <span className="text-emerald-400 font-bold">{rubricSim.techComplexity}</span>
+                          </div>
+                          <input
+                            type="range"
+                            min="1"
+                            max="10"
+                            step="0.1"
+                            value={rubricSim.techComplexity}
+                            onChange={(e) => setRubricSim({ ...rubricSim, techComplexity: parseFloat(e.target.value) })}
+                            className="simulator-slider"
+                          />
+                        </div>
+
+                        <div className="slider-group">
+                          <div className="slider-label-row">
+                            <span>Feasibility &amp; Market Readiness (20%)</span>
+                            <span className="text-amber-400 font-bold">{rubricSim.feasibility}</span>
+                          </div>
+                          <input
+                            type="range"
+                            min="1"
+                            max="10"
+                            step="0.1"
+                            value={rubricSim.feasibility}
+                            onChange={(e) => setRubricSim({ ...rubricSim, feasibility: parseFloat(e.target.value) })}
+                            className="simulator-slider"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Section 3: Interactive Team Matcher Demo */}
+                    <div className="webview-simulator-box" style={{ borderColor: 'rgba(56, 189, 248, 0.3)' }}>
+                      <div className="simulator-header">
+                        <div>
+                          <div className="simulator-title" style={{ color: '#38bdf8' }}>🤝 Solo Hacker Matchmaker Engine Demo</div>
+                          <span className="text-xs text-zinc-400">
+                            Automatic squad formation matching complementary skill sets for solo hackers
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          className="px-3 py-1.5 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 rounded-lg text-xs font-semibold transition"
+                          onClick={() => setTeamMatcherTested(!teamMatcherTested)}
+                        >
+                          {teamMatcherTested ? '↺ Reset Matcher' : '▶ Run Matchmaking Algorithm'}
+                        </button>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs font-mono">
+                        <div className="p-3 bg-zinc-900/70 border border-zinc-800 rounded-lg">
+                          <div className="flex justify-between items-center mb-1">
+                            <span className="text-white font-bold">Team 1: CyberSrijan</span>
+                            <span className="text-emerald-400 text-[10px]">● Formed</span>
+                          </div>
+                          <span className="text-zinc-400 text-[11px] block">Varun (UI/UX) • Rahul (Backend Go) • Priya (Next.js) • Ananya (AI/ML)</span>
+                        </div>
+                        <div className="p-3 bg-zinc-900/70 border border-zinc-800 rounded-lg">
+                          <div className="flex justify-between items-center mb-1">
+                            <span className="text-white font-bold">Team 2: QuantumFlow</span>
+                            <span className={teamMatcherTested ? "text-emerald-400 text-[10px]" : "text-amber-400 text-[10px]"}>
+                              {teamMatcherTested ? "● Matched Just Now!" : "○ Needs 1 UI/UX Designer"}
+                            </span>
+                          </div>
+                          <span className="text-zinc-400 text-[11px] block">
+                            {teamMatcherTested ? "Amit (Rust) • Sarah (React) • Varun (UI/UX) • David (Python)" : "Amit (Rust) • Sarah (React) • David (Python)"}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Section 4: Tech Stack & Architecture Pills */}
+                    <div className="webview-section-title">
+                      <span>🛠️ Production Architecture &amp; Tools Used</span>
+                      <span className="section-badge">Tech Stack</span>
+                    </div>
+
+                    <div className="webview-tech-tags">
+                      <span className="tech-tag-badge highlight">⚛ Next.js 14 (App Router)</span>
+                      <span className="tech-tag-badge highlight">TS TypeScript (Strict)</span>
+                      <span className="tech-tag-badge highlight">🎨 Tailwind CSS &amp; OKLCH</span>
+                      <span className="tech-tag-badge">❖ Figma Design Variables</span>
+                      <span className="tech-tag-badge">⚡ Vercel Edge Functions</span>
+                      <span className="tech-tag-badge">🗄 Supabase Realtime &amp; Auth</span>
+                      <span className="tech-tag-badge">🎬 Framer Motion 60fps</span>
+                      <span className="tech-tag-badge highlight">⚡ Vibecoding AI-Assisted Workflow</span>
                     </div>
                   </div>
                 </div>
