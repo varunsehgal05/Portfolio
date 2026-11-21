@@ -7,7 +7,6 @@ import ResumeApp from './ResumeApp';
 import ContactApp from './ContactApp';
 import FigmaApp from './FigmaApp';
 import FinderApp from './FinderApp';
-import SafariApp from './SafariApp';
 import TerminalApp from './TerminalApp';
 import SettingsApp from './SettingsApp';
 import VsCodeApp from './VsCodeApp';
@@ -58,7 +57,6 @@ const Window = ({
     if (app.id === 'trash') return { width: Math.min(availableWidth - 80, 800), height: Math.min(availableHeight - 20, 560) };
     if (app.id === 'terminal') return { width: Math.min(availableWidth - 60, 760), height: Math.min(availableHeight - 30, 480) };
     if (app.id === 'settings') return { width: Math.min(availableWidth - 80, 680), height: Math.min(availableHeight - 30, 500) };
-    if (app.id === 'safari') return { width: Math.min(availableWidth - 80, 960), height: Math.min(availableHeight - 20, 580) };
     if (app.id === 'finder') return { width: Math.min(availableWidth - 80, 920), height: Math.min(availableHeight - 20, 560) };
     if (app.id === 'figma') return { width: Math.min(availableWidth - 60, 1100), height: Math.min(availableHeight, 680) };
     if (app.id === 'vscode') return { width: Math.min(availableWidth - 80, 1000), height: Math.min(availableHeight, 620) };
@@ -344,8 +342,6 @@ const Window = ({
     switch (app.id) {
       case 'finder':
         return <FinderApp onOpenApp={onOpenApp} />;
-      case 'safari':
-        return <SafariApp />;
       case 'figma':
         return <FigmaApp isInteracting={isInteracting} userName={userName} onOpenApp={onOpenApp} />;
       case 'terminal':
@@ -482,7 +478,7 @@ const Window = ({
             <div className="titlebar-right-spacer" />
           </div>
 
-          <div className={`window-content ${app.id === 'resume' || app.id === 'contact' || app.id === 'figma' || app.id === 'finder' || app.id === 'safari' || app.id === 'settings' || app.id === 'vscode' || app.id === 'terminal' || app.id === 'trash' ? 'no-padding' : ''}`}>
+          <div className={`window-content ${app.id === 'resume' || app.id === 'contact' || app.id === 'figma' || app.id === 'finder' || app.id === 'settings' || app.id === 'vscode' || app.id === 'terminal' || app.id === 'trash' ? 'no-padding' : ''}`}>
             {renderContent()}
           </div>
         </div>

@@ -51,7 +51,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
   }, [isFullScreenActive]);
 
   // Apps that should open in full screen by default
-  const FULLSCREEN_APPS = ['figma', 'vscode', 'safari'];
+  const FULLSCREEN_APPS = ['figma', 'vscode'];
   const [bouncingApp, setBouncingApp] = useState(null);
 
   // Active desktop wallpaper state (persisted in localStorage, defaults to Sequoia Midnight)

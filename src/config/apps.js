@@ -5,12 +5,6 @@ export const portfolioApps = {
     title: 'VarunOS — Portfolio & Projects',
     icon: 'finder'
   },
-  safari: {
-    id: 'safari',
-    name: 'Safari',
-    title: 'Safari — Varun Sehgal GitHub',
-    icon: 'safari'
-  },
   vscode: {
     id: 'vscode',
     name: 'VS Code',

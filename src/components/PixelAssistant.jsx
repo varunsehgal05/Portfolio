@@ -155,15 +155,15 @@ const getAIResponse = (query) => {
   }
 
   // 10. Desktop Navigation & Shortcuts
-  if (/wallpaper|theme|shortcut|background|alt|how to use|desktop|safari|terminal|vscode|finder/.test(q)) {
+  if (/wallpaper|theme|shortcut|background|alt|how to use|desktop|terminal|vscode|finder/.test(q)) {
     return {
       topic: "VarunOS Desktop Navigation & Shortcuts",
-      answer: "Here are some awesome tips for navigating VarunOS:\n• **Alt + 1 / 2 / 3**: Switch between Sequoia Midnight, Monterey, and Deep Cosmic wallpapers.\n• **Double-Click Titlebars**: Toggle full screen with fluid zoom animations (inspired by macOS).\n• **Dock Click**: Bounces the app icon into view with smooth physics (inspired by macOS).\n• **Apps:** VS Code, Figma, Safari, Terminal, Resume, Contact, and Settings.",
+      answer: "Here are some awesome tips for navigating VarunOS:\n• **Alt + 1 / 2 / 3**: Switch between Sequoia Midnight, Monterey, and Deep Cosmic wallpapers.\n• **Double-Click Titlebars**: Toggle full screen with fluid zoom animations (inspired by macOS).\n• **Dock Click**: Bounces the app icon into view with smooth physics (inspired by macOS).\n• **Apps:** VS Code, Figma, Terminal, Resume, Contact, and Settings.",
       path: "VarunOS > System Settings",
       appId: "settings",
       appName: "Settings App",
       actionText: "Open Settings",
-      suggestions: ["Open Terminal", "Open Safari", "What are Varun's skills?"],
+      suggestions: ["Open Terminal", "Open Figma", "What are Varun's skills?"],
       animation: "GetWizardy"
     };
   }
@@ -233,7 +233,6 @@ You have complete knowledge of Varun:
    - figma: Figma design workspace with interactive artboards and design tokens.
    - resume: ATS Resume PDF Preview with zoom and PDF download.
    - contact: Mail & Contact App with live direct email dispatcher to varun.sehgal02@gmail.com.
-   - safari: Safari browser exploring live GitHub projects and portfolio.
    - terminal: Mac terminal with zsh, neofetch, and system specs.
    - finder: Portfolio and project file explorer.
    - settings: System settings for wallpapers, sound, and specs.
@@ -246,7 +245,7 @@ Instructions:
 {
   "topic": "Short title describing the topic",
   "answer": "Direct conversational answer using markdown formatting with bold (**text**), bullet points if helpful, and friendly personality.",
-  "appId": "optional app id: vscode, figma, resume, contact, safari, terminal, finder, or null",
+  "appId": "optional app id: vscode, figma, resume, contact, terminal, finder, or null",
   "appName": "optional human readable app name (e.g. 'VS Code Workspace', 'Figma Design', 'ATS Resume', 'Contact Varun') or null",
   "actionText": "optional button label like 'Open VS Code' or 'Contact Varun' or null",
   "path": "optional navigation breadcrumb like 'VS Code > vibecoded-projects' or 'Resume App > ATS Resume' or null",

@@ -156,23 +156,6 @@ const FINDER_CSS_CODE = `/* ====================================================
   flex-shrink: 0;
 }`;
 
-// SafariApp.jsx code
-const SAFARI_APP_CODE = `import React, { useState } from 'react';
-import { ArrowLeft, ArrowRight, RotateCw, Share2, Lock, ExternalLink, Globe } from 'lucide-react';
-import './SafariApp.css';
-
-export const SafariApp = () => {
-  const [url, setUrl] = useState('http://codesrijan-nine.vercel.app/');
-  return (
-    <div className="safari-root">
-      <header className="safari-toolbar">
-        <div className="nav-buttons"><ArrowLeft size={14} /></div>
-      </header>
-    </div>
-  );
-};
-export default SafariApp;`;
-
 // Resume TeX code
 const RESUME_TEX_CODE = `%-------------------------
 % ATS-Optimized Resume
@@ -256,13 +239,6 @@ const INITIAL_PROJECT_FILES = {
     icon: 'css',
     lang: 'CSS',
     code: FINDER_CSS_CODE
-  },
-  'SafariApp.jsx': {
-    name: 'SafariApp.jsx',
-    path: 'src > components > ⚛ SafariApp.jsx',
-    icon: 'jsx',
-    lang: 'TypeScript React',
-    code: SAFARI_APP_CODE
   }
 };
 
@@ -296,8 +272,7 @@ export const VsCodeApp = () => {
     'codesrijan/page.tsx',
     'portfolio.config.ts',
     'Varun_Sehgal_Resume_Updated.tex',
-    'FinderApp.css',
-    'SafariApp.jsx'
+    'FinderApp.css'
   ]);
 
   // Sidebar & Layout State

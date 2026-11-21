@@ -376,7 +376,7 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
       case 'open':
         if (onOpenApp && arg) {
           const target = arg.toLowerCase().replace('.app', '').replace('.pdf', '');
-          const validApps = ['finder', 'figma', 'vscode', 'resume', 'contact', 'safari', 'settings', 'trash'];
+          const validApps = ['finder', 'figma', 'vscode', 'resume', 'contact', 'settings', 'trash'];
           if (validApps.includes(target)) {
             onOpenApp(target);
             setHistory([...newHistory, `🚀 Launching ${target}.app...`, '']);
@@ -384,7 +384,7 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
             setHistory([...newHistory, `open: application not found: ${arg}`, `Available: ${validApps.join(', ')}`, '']);
           }
         } else {
-          setHistory([...newHistory, 'Usage: open <app_name> (e.g. open figma, open vscode, open safari)', '']);
+          setHistory([...newHistory, 'Usage: open <app_name> (e.g. open figma, open vscode, open contact)', '']);
         }
         break;
 
@@ -409,7 +409,7 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
     } else if (e.key === 'Tab') {
       e.preventDefault();
       // Auto-completion
-      const available = ['help', 'neofetch', 'wallpaper', 'wallpaper roxy', 'wallpaper cyber', 'wallpaper batman', 'wallpaper anime', 'wallpaper cat', 'wallpaper dark', 'wallpaper monterey', 'wallpaper cosmic', 'wallpaper aurora', 'skills', 'projects', 'vibecoding', 'experience', 'contact', 'clear', 'cat resume', 'open figma', 'open vscode', 'open safari', 'open contact'];
+      const available = ['help', 'neofetch', 'wallpaper', 'wallpaper roxy', 'wallpaper cyber', 'wallpaper batman', 'wallpaper anime', 'wallpaper cat', 'wallpaper dark', 'wallpaper monterey', 'wallpaper cosmic', 'wallpaper aurora', 'skills', 'projects', 'vibecoding', 'experience', 'contact', 'clear', 'cat resume', 'open figma', 'open vscode', 'open contact'];
       const match = available.find(c => c.startsWith(inputVal.toLowerCase().trim()));
       if (match) {
         setInputVal(match);

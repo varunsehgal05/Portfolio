@@ -114,11 +114,6 @@
   border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
-.dock-icon-inner.safari-bg {
-  background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-}
-
 .dock-icon-inner.vscode-bg {
   background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
   border: 1px solid rgba(56, 189, 248, 0.25);

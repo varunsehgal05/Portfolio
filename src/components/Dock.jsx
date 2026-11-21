@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
-  Compass, 
   Settings, 
   Trash2, 
   FileText,
@@ -27,12 +26,6 @@ const FinderIcon = () => (
       <circle cx="16" cy="9.5" r="1.5" fill="#ffffff" />
       <path d="M7 14.5C8.5 17 15.5 17 17 14.5" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" />
     </svg>
-  </div>
-);
-
-const SafariIcon = () => (
-  <div className="dock-icon-inner safari-bg">
-    <Compass size={24} color="#ffffff" />
   </div>
 );
 
@@ -90,7 +83,6 @@ const TrashDockIcon = () => (
 
 const DOCK_ITEMS = [
   { id: 'finder', name: 'Finder', icon: FinderIcon },
-  { id: 'safari', name: 'Safari', icon: SafariIcon },
   { id: 'vscode', name: 'VS Code', icon: VsCodeIcon },
   { id: 'figma', name: 'Figma', icon: FigmaDockIcon },
   { id: 'terminal', name: 'Terminal', icon: TerminalIcon },
