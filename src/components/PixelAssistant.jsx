@@ -388,9 +388,23 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
       }
     };
 
+    const handleClippyHide = () => {
+      try {
+        if (agentRef.current?._balloon) {
+          agentRef.current._balloon.hide(true);
+        }
+        if (agentRef.current?._el) {
+          agentRef.current._el.classList.remove('clippy-highlighted');
+        }
+        setIsHighlighted(false);
+      } catch {}
+    };
+
     window.addEventListener('varunos-clippy-speak', handleClippySpeak);
+    window.addEventListener('varunos-clippy-hide', handleClippyHide);
     return () => {
       window.removeEventListener('varunos-clippy-speak', handleClippySpeak);
+      window.removeEventListener('varunos-clippy-hide', handleClippyHide);
       if (highlightTimerRef.current) clearTimeout(highlightTimerRef.current);
       if (actionsTimerRef.current) clearTimeout(actionsTimerRef.current);
     };

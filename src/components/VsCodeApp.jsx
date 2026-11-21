@@ -217,6 +217,12 @@ export const VarunSehgal = {
   ],
   trackRecord: [
     {
+      role: "Lead Architect & Design Engineer",
+      project: "VarunOS (Living Desktop Web OS Portfolio)",
+      period: "2026",
+      metrics: "100% Vibecoded operating system in the browser. Interactive Figma workspace, live Antigravity IDE, 60fps window manager, and Web Audio haptics."
+    },
+    {
       role: "Lead UI/UX Designer & Frontend Architect",
       project: "CodeSrijan (National Hackathon Ecosystem)",
       period: "2024 — Present",
@@ -291,12 +297,18 @@ export const DEVELOPER_TOOLKIT = {
   // 3. The Vibecoding Matrix (AI-Accelerated Velocity)
   vibecoding: {
     tools: ["Cursor IDE", "Antigravity 2.0 (Google DeepMind Agent)", "Claude Code", "GitHub Copilot", "v0.dev"],
+    flagshipProjects: [
+      "VarunOS — 100% Vibecoded Living Desktop Operating System in the Browser",
+      "CodeSrijan — National Hackathon Platform with Live Rubrics (JUET)",
+      "EventFlow — Campus Ticketing System with 30% Reduced Drop-Off"
+    ],
     methodology: [
       "Design Intent First: Figma tokens and component variants authored by human judgment.",
       "10x Scaffold Velocity: Leveraging agentic AI for boilerplate, state management, and type bindings.",
       "Human-in-the-Loop Quality Gate: 100% type safety, responsive breakpoints, accessible DOM, and 60fps GPU performance."
     ]
   },
+
 
   // 4. Backend, Cloud & DevOps
   cloudAndData: {
@@ -333,7 +345,21 @@ It is **Design-Led Velocity**:
 
 ---
 
-## 3. The Three Rules of Vibecoding
+## 3. The Flagship Proof: VarunOS Desktop Web Portfolio (100% Vibecoded)
+*You are experiencing this right now inside your browser.*
+
+Rather than shipping a typical flat static portfolio, **VarunOS was conceived and 100% vibecoded** as a full interactive operating system:
+- 🖥️ **Full Window Management Engine:** Multi-window dragging, z-index focus layering, minimizing to Dock, maximizing, and edge snapping.
+- 🎨 **Figma Emulation Engine:** 60fps vector canvas, infinite zoom & pan physics, multiplayer collaborative cursor swarms, inspection panels, and interactive artboards.
+- 💻 **Antigravity IDE (VS Code Clone):** Sandboxed JS/TS/Python execution engine, real-time syntax highlighting, integrated terminal, file tree explorer with inline creation, and live web preview.
+- 🎵 **Web Audio Synthesizer:** Tactile haptic sound effects for clicks, window snaps, trash emptying, terminal execution, and theme transitions.
+- 📎 **Intelligent Clippy Assistant:** Context-aware office assistant that reacts to discarded drafts in Trash and guides recruiters to Varun's production work.
+
+**Velocity Metric:** Built in days through human design judgment paired with Antigravity 2.0 agentic AI.
+
+---
+
+## 4. The Three Rules of Vibecoding
 1. **Never sacrifice type safety for speed.** (Strict TypeScript everywhere).
 2. **Design tokens are the single source of truth.** (Figma variables & Tailwind config stay in 1:1 sync).
 3. **If it doesn't feel fluid at 60fps, it isn't finished.** (Optimistic UI and hardware-accelerated transforms).
@@ -472,6 +498,66 @@ export default function CodeSrijanPortal() {
 }
 `;
 
+// VarunOS Architecture and Vibecoding Showcase Component
+const VARUNOS_PORTFOLIO_CODE = `// =========================================================================
+// varunos-portfolio.tsx — The Architecture of VarunOS (100% Vibecoded Web OS)
+// Click "▶ Run Code" above (or press Ctrl+Enter) to execute live system telemetry!
+// =========================================================================
+
+export const VarunOS_System = {
+  name: "VarunOS Desktop Portfolio",
+  version: "2.4.0 (Sequoia Edition)",
+  type: "100% Vibecoded Living Web Desktop Operating System",
+  architect: "Varun Sehgal (UI/UX Designer & Design Engineer)",
+  location: "Gwalior, Madhya Pradesh, India",
+  techStack: ["React 19", "Vite", "Tailwind CSS", "Web Audio API", "Lucide Icons"],
+  aiPairing: "Antigravity 2.0 (Google DeepMind Agent) + Cursor IDE",
+
+  subsystems: [
+    { name: "Window Manager", fps: 60, features: ["Multi-window Dragging", "Z-Index Stacking", "Dock Minimizing", "Edge Snapping"] },
+    { name: "Figma Vector Engine", features: ["60fps Vector Canvas", "Collaborative Swarm Cursors", "Smart Guides", "Artboards"] },
+    { name: "Antigravity IDE (VS Code)", features: ["Sandboxed JS/Py Runner", "Interactive Explorer", "Integrated Terminal", "Live Webview"] },
+    { name: "Web Audio Synthesizer", features: ["Haptic Clicks", "Snap Chimes", "Empty Trash Crunch", "Terminal Beeps"] },
+    { name: "Clippy Office Assistant", features: ["Context-Aware Balloons", "Discarded File Redirection", "Guided Tours"] }
+  ],
+
+  runDiagnostics() {
+    console.log("🚀 [VarunOS] Initializing Web OS System Telemetry...");
+    console.log("OS: VarunOS Sequoia Web Architecture (arm64 Apple M3 Max emulation)");
+    console.log("Status: 100% Vibecoded with Agentic AI");
+    console.log("Execution Speed: 60 FPS GPU-Accelerated");
+    console.log("--------------------------------------------------");
+
+    let activeModules = 0;
+    this.subsystems.forEach((sub, idx) => {
+      activeModules++;
+      console.log(\`[\${idx + 1}] \${sub.name} -> ONLINE (\${sub.features.length} capabilities)\`);
+    });
+
+    console.log("--------------------------------------------------");
+    console.log("Total Active Subsystems:", activeModules);
+    console.log("Vibecoding Efficiency: 10x Standard Scaffold Velocity");
+    return { status: "OPTIMAL", activeModules, health: "100%" };
+  }
+};
+
+// Execute diagnostics
+VarunOS_System.runDiagnostics();
+`;
+
+// Runnable test.js script matching user's execution screen
+const TEST_JS_CODE = `// test.js — Quick Execution Sandbox in VarunOS
+// Click "▶ Run Code" above (or press Ctrl+Enter) to execute!
+
+console.log("Running test.js in VarunOS!");
+const sum = [10, 20, 30].reduce((a, b) => a + b, 0);
+console.log("Sum:", sum);
+
+// Vibecoding benchmark test
+const vibecodingSpeedup = 10; // 10x engineering velocity
+console.log(\`⚡ Vibecoding Factor: \${vibecodingSpeedup}x faster than traditional hand-coding!\`);
+`;
+
 // Initial files dictionary
 const INITIAL_PROJECT_FILES = {
   'Live Preview: CodeSrijan': {
@@ -481,6 +567,20 @@ const INITIAL_PROJECT_FILES = {
     lang: 'Live Webview',
     isWebview: true,
     code: ''
+  },
+  'varunos-portfolio.tsx': {
+    name: 'varunos-portfolio.tsx',
+    path: 'src > components > ⚛ varunos-portfolio.tsx',
+    icon: 'jsx',
+    lang: 'TypeScript React',
+    code: VARUNOS_PORTFOLIO_CODE
+  },
+  'test.js': {
+    name: 'test.js',
+    path: 'src > test.js',
+    icon: 'js',
+    lang: 'JavaScript',
+    code: TEST_JS_CODE
   },
   'AboutMe.tsx': {
     name: 'AboutMe.tsx',
@@ -570,15 +670,32 @@ export const VsCodeApp = () => {
 
   // File System State
   const [projectFiles, setProjectFiles] = useState(INITIAL_PROJECT_FILES);
-  const [activeFile, setActiveFile] = useState('Live Preview: CodeSrijan');
+  const [activeFile, setActiveFile] = useState('test.js');
   const [openTabs, setOpenTabs] = useState([
     'Live Preview: CodeSrijan',
+    'varunos-portfolio.tsx',
     'AboutMe.tsx',
     'tools-and-stack.ts',
     'vibecoding-manifesto.md',
+    'test.js',
     'codesrijan/page.tsx',
     'portfolio.config.ts'
   ]);
+
+  // Explorer Inline Creation & Refresh Actions (Image 2 actions)
+  const [isCreatingFile, setIsCreatingFile] = useState(false);
+  const [newFileName, setNewFileName] = useState('');
+  const newFileInputRef = useRef(null);
+
+  const [isCreatingFolder, setIsCreatingFolder] = useState(false);
+  const [newFolderName, setNewFolderName] = useState('');
+  const [customFolders, setCustomFolders] = useState(['utils', 'hooks']);
+  const newFolderInputRef = useRef(null);
+
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [refreshToast, setRefreshToast] = useState('');
+  const [isVercelCollapsed, setIsVercelCollapsed] = useState(false);
+  const [isDesktopCollapsed, setIsDesktopCollapsed] = useState(false);
 
   // CodeSrijan Interactive Simulator State
   const [rubricSim, setRubricSim] = useState({
@@ -675,39 +792,111 @@ export const VsCodeApp = () => {
     }
   };
 
-  // Create a New File
+  // Create a New File (Direct or Inline)
   const handleCreateNewFile = (customName) => {
-    const fileName = customName || prompt('Enter file name (e.g. script.js, main.py, styles.css):', 'test.js');
-    if (!fileName || !fileName.trim()) return;
+    if (customName) {
+      const trimmed = customName.trim();
+      const isJS = trimmed.endsWith('.js') || trimmed.endsWith('.ts');
+      const isPy = trimmed.endsWith('.py');
+      const defaultCode = isJS
+        ? `// ${trimmed}\nconsole.log("Running ${trimmed} in VarunOS!");\nconst sum = [10, 20, 30].reduce((a, b) => a + b, 0);\nconsole.log("Sum:", sum);\n`
+        : isPy
+        ? `# ${trimmed}\nprint("Hello from Python 3.12 in VarunOS!")\nprint(f"Calculation: 2 ** 8 = {2 ** 8}")\n`
+        : `/* ${trimmed} */\nbody {\n  margin: 0;\n}\n`;
 
-    const trimmed = fileName.trim();
-    const isJS = trimmed.endsWith('.js') || trimmed.endsWith('.ts');
-    const isPy = trimmed.endsWith('.py');
+      setProjectFiles(prev => ({
+        ...prev,
+        [trimmed]: {
+          name: trimmed,
+          path: `src > ${trimmed}`,
+          icon: isJS ? 'js' : isPy ? 'py' : 'default',
+          lang: isJS ? 'JavaScript' : isPy ? 'Python' : 'Plain Text',
+          code: defaultCode
+        }
+      }));
+
+      if (!openTabs.includes(trimmed)) {
+        setOpenTabs([...openTabs, trimmed]);
+      }
+      setActiveFile(trimmed);
+      return;
+    }
+
+    // Toggle inline file creation
+    setIsCreatingFile(true);
+    setIsCreatingFolder(false);
+    setSidebarOpen(true);
+    setActiveActivity('explorer');
+    setTimeout(() => newFileInputRef.current?.focus(), 60);
+  };
+
+  // Confirm Inline File Creation
+  const handleConfirmNewFile = () => {
+    let name = newFileName.trim();
+    if (!name) name = 'test.js';
+    if (!name.includes('.')) name += '.js';
+
+    const isJS = name.endsWith('.js') || name.endsWith('.jsx') || name.endsWith('.ts') || name.endsWith('.tsx');
+    const isPy = name.endsWith('.py');
+    const isCSS = name.endsWith('.css');
+    const isMD = name.endsWith('.md');
+    const isJSON = name.endsWith('.json');
+
     const defaultCode = isJS
-      ? `// ${trimmed}\nconsole.log("Running ${trimmed} in VarunOS!");\nconst sum = [10, 20, 30].reduce((a, b) => a + b, 0);\nconsole.log("Sum:", sum);\n`
+      ? `// ${name} — Vibecoded in Antigravity IDE\nconsole.log("Executing ${name} in VarunOS!");\nconst timestamp = new Date().toLocaleTimeString();\nconsole.log("Environment ready:", timestamp);\n`
       : isPy
-      ? `# ${trimmed}\nprint("Hello from Python 3.12 in VarunOS!")\nprint(f"Calculation: 2 ** 8 = {2 ** 8}")\n`
-      : `/* ${trimmed} */\nbody {\n  margin: 0;\n}\n`;
+      ? `# ${name}\nprint("Hello from Python in VarunOS!")\nprint("Calculation:", 42 * 2)\n`
+      : isCSS
+      ? `/* ${name} */\n.container {\n  display: flex;\n  gap: 16px;\n}\n`
+      : isMD
+      ? `# ${name}\nNotes authored in VarunOS Antigravity IDE.\n`
+      : isJSON
+      ? `{\n  "project": "${name}",\n  "status": "active"\n}\n`
+      : `// ${name}\n`;
 
     setProjectFiles(prev => ({
       ...prev,
-      [trimmed]: {
-        name: trimmed,
-        path: `src > ${trimmed}`,
-        icon: isJS ? 'js' : isPy ? 'py' : 'default',
-        lang: isJS ? 'JavaScript' : isPy ? 'Python' : 'Plain Text',
+      [name]: {
+        name: name,
+        path: `src > components > ${name}`,
+        icon: isJS ? (name.endsWith('.ts') || name.endsWith('.tsx') ? 'ts' : 'js') : isPy ? 'py' : isCSS ? 'css' : isMD ? 'md' : 'default',
+        lang: isJS ? (name.endsWith('.ts') || name.endsWith('.tsx') ? 'TypeScript' : 'JavaScript') : isPy ? 'Python' : isCSS ? 'CSS' : isMD ? 'Markdown' : 'Plain Text',
         code: defaultCode
       }
     }));
 
-    if (!openTabs.includes(trimmed)) {
-      setOpenTabs([...openTabs, trimmed]);
+    if (!openTabs.includes(name)) {
+      setOpenTabs(prev => [...prev, name]);
     }
-    setActiveFile(trimmed);
+    setActiveFile(name);
+    setIsCreatingFile(false);
+    setNewFileName('');
+  };
+
+  // Confirm Inline Folder Creation
+  const handleConfirmNewFolder = () => {
+    let name = newFolderName.trim();
+    if (!name) name = 'utils';
+    if (!customFolders.includes(name)) {
+      setCustomFolders(prev => [...prev, name]);
+    }
+    setIsCreatingFolder(false);
+    setNewFolderName('');
+  };
+
+  // Refresh Explorer Action (Image 2 - RotateCw button)
+  const handleRefreshExplorer = () => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      setIsRefreshing(false);
+      const totalCount = Object.keys(projectFiles).length;
+      setRefreshToast(`Explorer refreshed (${totalCount} files synchronized)`);
+      setTimeout(() => setRefreshToast(''), 2500);
+    }, 450);
   };
 
   // =========================================================================
-  // REAL CODE EXECUTION ENGINE
+  // REAL CODE EXECUTION ENGINE WITH PROGRESSIVE STREAMING ANIMATION
   // =========================================================================
   const executeCode = (codeToRun = currentCode, fileName = activeFile) => {
     if (!fileName || !codeToRun) {
@@ -724,9 +913,9 @@ export const VsCodeApp = () => {
     const isJS = fileName.endsWith('.js') || fileName.endsWith('.jsx') || fileName.endsWith('.ts') || fileName.endsWith('.tsx');
     const isPy = fileName.endsWith('.py');
 
-    const logs = [];
-    logs.push(`[Running] ${isPy ? 'python -u' : 'node'} "${fileName}"`);
-    logs.push('--------------------------------------------------');
+    const linesToEmit = [];
+    linesToEmit.push(`[Running] ${isPy ? 'python -u' : 'node'} "${fileName}"`);
+    linesToEmit.push('--------------------------------------------------');
 
     let hasError = false;
 
@@ -734,16 +923,16 @@ export const VsCodeApp = () => {
       // Sandboxed execution capturing console outputs
       const capturedConsole = {
         log: (...args) => {
-          logs.push(args.map(a => (typeof a === 'object' && a !== null ? JSON.stringify(a, null, 2) : String(a))).join(' '));
+          linesToEmit.push(args.map(a => (typeof a === 'object' && a !== null ? JSON.stringify(a, null, 2) : String(a))).join(' '));
         },
         info: (...args) => {
-          logs.push('[INFO] ' + args.map(a => (typeof a === 'object' ? JSON.stringify(a) : String(a))).join(' '));
+          linesToEmit.push('[INFO] ' + args.map(a => (typeof a === 'object' ? JSON.stringify(a) : String(a))).join(' '));
         },
         warn: (...args) => {
-          logs.push('[WARN] ' + args.map(a => (typeof a === 'object' ? JSON.stringify(a) : String(a))).join(' '));
+          linesToEmit.push('[WARN] ' + args.map(a => (typeof a === 'object' ? JSON.stringify(a) : String(a))).join(' '));
         },
         error: (...args) => {
-          logs.push('[ERROR] ' + args.map(a => (typeof a === 'object' ? JSON.stringify(a) : String(a))).join(' '));
+          linesToEmit.push('[ERROR] ' + args.map(a => (typeof a === 'object' ? JSON.stringify(a) : String(a))).join(' '));
         }
       };
 
@@ -759,12 +948,12 @@ export const VsCodeApp = () => {
         const retVal = runFn(capturedConsole);
 
         if (retVal !== undefined) {
-          logs.push(`➜ Returned: ${typeof retVal === 'object' && retVal !== null ? JSON.stringify(retVal, null, 2) : String(retVal)}`);
+          linesToEmit.push(`➜ Returned: ${typeof retVal === 'object' && retVal !== null ? JSON.stringify(retVal, null, 2) : String(retVal)}`);
         }
         setProblems([]);
       } catch (err) {
         hasError = true;
-        logs.push(`[Runtime Error] ${err.toString()}`);
+        linesToEmit.push(`[Runtime Error] ${err.toString()}`);
         setProblems([{
           file: fileName,
           message: err.toString(),
@@ -774,7 +963,7 @@ export const VsCodeApp = () => {
       }
     } else if (isPy) {
       // Python simulated runner parsing print statements & math
-      logs.push('Python 3.12.2 (main, VarunOS Virtual Env)');
+      linesToEmit.push('Python 3.12.2 (main, VarunOS Virtual Env)');
       const lines = codeToRun.split('\n');
       lines.forEach(line => {
         const trimmed = line.trim();
@@ -783,36 +972,43 @@ export const VsCodeApp = () => {
           try {
             // Strip quotes if simple string
             if ((inner.startsWith('"') && inner.endsWith('"')) || (inner.startsWith("'") && inner.endsWith("'"))) {
-              logs.push(inner.slice(1, -1));
+              linesToEmit.push(inner.slice(1, -1));
             } else {
-              logs.push(inner);
+              linesToEmit.push(inner);
             }
           } catch {
-            logs.push(inner);
+            linesToEmit.push(inner);
           }
         }
       });
       setProblems([]);
     } else {
-      logs.push(`Compiled & verified "${fileName}": Syntax valid (0 diagnostics).`);
+      linesToEmit.push(`Compiled & verified "${fileName}": Syntax valid (0 diagnostics).`);
       setProblems([]);
     }
 
     const elapsed = ((performance.now() - startTime) / 1000).toFixed(3);
-    logs.push('--------------------------------------------------');
-    logs.push(`[Done] exited with code=${hasError ? 1 : 0} in ${elapsed}s\n`);
+    linesToEmit.push('--------------------------------------------------');
+    linesToEmit.push(`[Done] exited with code=${hasError ? 1 : 0} in ${elapsed}s`);
 
-    const outputText = logs.join('\n');
-    setOutputLogs(prev => prev + '\n' + outputText);
+    // Stream lines into outputLogs with animated staggered delay for realistic running animation
+    setOutputLogs(prev => prev + (prev.endsWith('\n') ? '' : '\n'));
 
-    // Also mirror to terminal history
-    setTerminalHistory(prev => [
-      ...prev,
-      { type: 'command', text: `PS C:\\Users\\Varun\\Downloads\\destop-portflio> ${isPy ? 'python' : 'node'} ${fileName}` },
-      ...logs.map(l => ({ type: l.startsWith('[Runtime Error]') ? 'error' : 'output', text: l }))
-    ]);
+    linesToEmit.forEach((line, idx) => {
+      setTimeout(() => {
+        setOutputLogs(prev => (prev ? prev + '\n' : '') + line);
 
-    setTimeout(() => setIsRunning(false), 200);
+        if (idx === linesToEmit.length - 1) {
+          setIsRunning(false);
+          // Mirror to terminal history
+          setTerminalHistory(prev => [
+            ...prev,
+            { type: 'command', text: `PS C:\\Users\\Varun\\Downloads\\destop-portflio> ${isPy ? 'python' : 'node'} ${fileName}` },
+            ...linesToEmit.map(l => ({ type: l.startsWith('[Runtime Error]') ? 'error' : 'output', text: l }))
+          ]);
+        }
+      }, (idx + 1) * 90);
+    });
   };
 
   // Keyboard shortcut: Ctrl+Enter or F5 to Run Code
@@ -1277,81 +1473,173 @@ export const VsCodeApp = () => {
                 <div className="sidebar-header-row">
                   <span className="sidebar-title">EXPLORER</span>
                   <div className="sidebar-header-actions">
-                    <button className="sidebar-icon-btn" onClick={() => handleCreateNewFile()} title="New File">
+                    <button 
+                      className={`sidebar-icon-btn ${isCreatingFile ? 'active' : ''}`} 
+                      onClick={() => {
+                        setIsCreatingFile(prev => !prev);
+                        setIsCreatingFolder(false);
+                        setTimeout(() => newFileInputRef.current?.focus(), 60);
+                      }} 
+                      title="New File"
+                    >
                       <FilePlus size={13} />
                     </button>
-                    <button className="sidebar-icon-btn" onClick={() => handleCreateNewFile('app.js')} title="New Scratch Script (app.js)">
+                    <button 
+                      className={`sidebar-icon-btn ${isCreatingFolder ? 'active' : ''}`} 
+                      onClick={() => {
+                        setIsCreatingFolder(prev => !prev);
+                        setIsCreatingFile(false);
+                        setTimeout(() => newFolderInputRef.current?.focus(), 60);
+                      }} 
+                      title="New Folder / Scratch Script"
+                    >
                       <Plus size={13} />
                     </button>
-                    <button className="sidebar-icon-btn" title="Refresh Explorer">
-                      <RotateCw size={13} />
+                    <button 
+                      className={`sidebar-icon-btn ${isRefreshing ? 'is-spinning' : ''}`} 
+                      onClick={handleRefreshExplorer}
+                      title="Refresh Explorer"
+                    >
+                      <RotateCw size={13} className={isRefreshing ? 'animate-spin text-sky-400' : ''} />
                     </button>
                   </div>
                 </div>
 
+                {refreshToast && (
+                  <div className="explorer-refresh-toast">
+                    <Check size={12} className="text-emerald-400" />
+                    <span>{refreshToast}</span>
+                  </div>
+                )}
+
                 <div className="sidebar-tree-container">
                   {/* Project 1: CodeSrijan (Vercel Project) */}
-                  <div className="tree-project-root text-cyan-400">
-                    <ChevronDown size={14} />
+                  <div className="tree-project-root text-cyan-400" onClick={() => setIsVercelCollapsed(prev => !prev)} style={{ cursor: 'pointer' }}>
+                    {isVercelCollapsed ? <ChevronRight size={14} /> : <ChevronDown size={14} />}
                     <span>CODESRIJAN (VERCEL PROJECT)</span>
                   </div>
-                  <div className="tree-branch-group mb-2">
-                    <div 
-                      className={`tree-item-file ${activeFile === 'Live Preview: CodeSrijan' ? 'active' : ''}`}
-                      onClick={() => {
-                        if (!openTabs.includes('Live Preview: CodeSrijan')) setOpenTabs([...openTabs, 'Live Preview: CodeSrijan']);
-                        setActiveFile('Live Preview: CodeSrijan');
-                      }}
-                    >
-                      <span className="tab-file-icon text-emerald-400">🌐</span>
-                      <span className="tree-file-name text-emerald-400 font-semibold">Live Preview (Vercel)</span>
+                  {!isVercelCollapsed && (
+                    <div className="tree-branch-group mb-2">
+                      <div 
+                        className={`tree-item-file ${activeFile === 'Live Preview: CodeSrijan' ? 'active' : ''}`}
+                        onClick={() => {
+                          if (!openTabs.includes('Live Preview: CodeSrijan')) setOpenTabs([...openTabs, 'Live Preview: CodeSrijan']);
+                          setActiveFile('Live Preview: CodeSrijan');
+                        }}
+                      >
+                        <span className="tab-file-icon text-emerald-400">🌐</span>
+                        <span className="tree-file-name text-emerald-400 font-semibold">Live Preview (Vercel)</span>
+                      </div>
+                      <div 
+                        className={`tree-item-file ${activeFile === 'codesrijan/page.tsx' ? 'active' : ''}`}
+                        onClick={() => {
+                          if (!openTabs.includes('codesrijan/page.tsx')) setOpenTabs([...openTabs, 'codesrijan/page.tsx']);
+                          setActiveFile('codesrijan/page.tsx');
+                        }}
+                      >
+                        <span className="tab-file-icon icon-jsx">⚛</span>
+                        <span className="tree-file-name">page.tsx</span>
+                      </div>
                     </div>
-                    <div 
-                      className={`tree-item-file ${activeFile === 'codesrijan/page.tsx' ? 'active' : ''}`}
-                      onClick={() => {
-                        if (!openTabs.includes('codesrijan/page.tsx')) setOpenTabs([...openTabs, 'codesrijan/page.tsx']);
-                        setActiveFile('codesrijan/page.tsx');
-                      }}
-                    >
-                      <span className="tab-file-icon icon-jsx">⚛</span>
-                      <span className="tree-file-name">page.tsx</span>
-                    </div>
-                  </div>
+                  )}
 
                   {/* Project 2: Desktop Portfolio */}
-                  <div className="tree-project-root">
-                    <ChevronDown size={14} />
+                  <div className="tree-project-root" onClick={() => setIsDesktopCollapsed(prev => !prev)} style={{ cursor: 'pointer' }}>
+                    {isDesktopCollapsed ? <ChevronRight size={14} /> : <ChevronDown size={14} />}
                     <span>DESTOP-PORTFLIO</span>
                   </div>
-                  <div className="tree-branch-group">
-                    <div className="tree-item-folder open">
-                      <ChevronDown size={13} />
-                      <span>src</span>
-                    </div>
-                    <div className="tree-item-folder sub open">
-                      <ChevronDown size={13} />
-                      <span>components</span>
-                    </div>
+                  {!isDesktopCollapsed && (
+                    <div className="tree-branch-group">
+                      <div className="tree-item-folder open">
+                        <ChevronDown size={13} />
+                        <span>src</span>
+                      </div>
+                      <div className="tree-item-folder sub open">
+                        <ChevronDown size={13} />
+                        <span>components</span>
+                      </div>
 
-                    {/* Files List */}
-                    {Object.keys(projectFiles).filter(k => !k.includes('CodeSrijan') && !k.includes('codesrijan')).map((fileName) => {
-                      const f = projectFiles[fileName];
-                      const isActive = activeFile === fileName;
-                      return (
-                        <div
-                          key={fileName}
-                          className={`tree-item-file ${isActive ? 'active' : ''}`}
-                          onClick={() => {
-                            if (!openTabs.includes(fileName)) setOpenTabs([...openTabs, fileName]);
-                            setActiveFile(fileName);
-                          }}
-                        >
-                          {renderTabIcon(f.icon)}
-                          <span className="tree-file-name">{fileName}</span>
+                      {/* Inline New File Creator */}
+                      {isCreatingFile && (
+                        <div className="tree-item-file inline-new-file-box">
+                          <FilePlus size={13} className="text-sky-400" />
+                          <input
+                            ref={newFileInputRef}
+                            type="text"
+                            placeholder="filename.js, .ts, .py..."
+                            value={newFileName}
+                            onChange={(e) => setNewFileName(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') handleConfirmNewFile();
+                              if (e.key === 'Escape') setIsCreatingFile(false);
+                            }}
+                            className="inline-file-create-input"
+                            autoFocus
+                          />
+                          <button className="inline-confirm-btn" onClick={handleConfirmNewFile} title="Create File">
+                            <Check size={12} className="text-emerald-400" />
+                          </button>
+                          <button className="inline-cancel-btn" onClick={() => setIsCreatingFile(false)} title="Cancel">
+                            <X size={12} className="text-zinc-400" />
+                          </button>
                         </div>
-                      );
-                    })}
-                  </div>
+                      )}
+
+                      {/* Inline New Folder Creator */}
+                      {isCreatingFolder && (
+                        <div className="tree-item-folder inline-new-folder-box">
+                          <FolderPlus size={13} className="text-amber-400" />
+                          <input
+                            ref={newFolderInputRef}
+                            type="text"
+                            placeholder="folder name..."
+                            value={newFolderName}
+                            onChange={(e) => setNewFolderName(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') handleConfirmNewFolder();
+                              if (e.key === 'Escape') setIsCreatingFolder(false);
+                            }}
+                            className="inline-file-create-input"
+                            autoFocus
+                          />
+                          <button className="inline-confirm-btn" onClick={handleConfirmNewFolder} title="Create Folder">
+                            <Check size={12} className="text-emerald-400" />
+                          </button>
+                          <button className="inline-cancel-btn" onClick={() => setIsCreatingFolder(false)} title="Cancel">
+                            <X size={12} className="text-zinc-400" />
+                          </button>
+                        </div>
+                      )}
+
+                      {/* Custom User Folders */}
+                      {customFolders.map(folder => (
+                        <div key={folder} className="tree-item-folder sub open" style={{ paddingLeft: '32px' }}>
+                          <ChevronRight size={12} className="text-zinc-500" />
+                          <Folder size={13} className="text-amber-400/80" />
+                          <span className="text-zinc-300 text-[11px]">{folder}</span>
+                        </div>
+                      ))}
+
+                      {/* Files List */}
+                      {Object.keys(projectFiles).filter(k => !k.includes('CodeSrijan') && !k.includes('codesrijan')).map((fileName) => {
+                        const f = projectFiles[fileName];
+                        const isActive = activeFile === fileName;
+                        return (
+                          <div
+                            key={fileName}
+                            className={`tree-item-file ${isActive ? 'active' : ''}`}
+                            onClick={() => {
+                              if (!openTabs.includes(fileName)) setOpenTabs([...openTabs, fileName]);
+                              setActiveFile(fileName);
+                            }}
+                          >
+                            {renderTabIcon(f.icon)}
+                            <span className="tree-file-name">{fileName}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               </>
             )}
@@ -1657,13 +1945,22 @@ export const VsCodeApp = () => {
             {/* Top-Right Editor Tools featuring RUN CODE button */}
             <div className="tabs-right-tools">
               <button 
-                className={`editor-run-code-btn ${!hasActiveFile ? 'opacity-50 cursor-not-allowed' : ''}`}
-                onClick={() => hasActiveFile && executeCode()}
-                title={hasActiveFile ? "Run Active File (Ctrl+Enter)" : "Open a file to run code"}
-                disabled={!hasActiveFile}
+                className={`editor-run-code-btn ${isRunning ? 'is-running' : ''} ${!hasActiveFile ? 'opacity-50 cursor-not-allowed' : ''}`}
+                onClick={() => hasActiveFile && !isRunning && executeCode()}
+                title={hasActiveFile ? (isRunning ? "Executing code..." : "Run Active File (Ctrl+Enter)") : "Open a file to run code"}
+                disabled={!hasActiveFile || isRunning}
               >
-                <Play size={12} fill={hasActiveFile ? "#22c55e" : "#64748b"} color={hasActiveFile ? "#22c55e" : "#64748b"} />
-                <span>Run Code</span>
+                {isRunning ? (
+                  <>
+                    <RotateCw size={12} className="animate-spin text-emerald-400" />
+                    <span className="text-emerald-300 font-semibold">Running...</span>
+                  </>
+                ) : (
+                  <>
+                    <Play size={12} fill={hasActiveFile ? "#22c55e" : "#64748b"} color={hasActiveFile ? "#22c55e" : "#64748b"} />
+                    <span>Run Code</span>
+                  </>
+                )}
               </button>
 
               <button className="tab-tool-btn" onClick={() => handleCreateNewFile('app.js')} title="New Scratch Script">
@@ -1692,6 +1989,13 @@ export const VsCodeApp = () => {
               <span className="crumb-text active-crumb">{currentFile.name}</span>
               <span className="crumb-chevron">&gt;</span>
               <span className="crumb-text muted">editable</span>
+
+              {isRunning && (
+                <div className="editor-running-indicator">
+                  <span className="running-dot-ping" />
+                  <span>Executing {activeFile}...</span>
+                </div>
+              )}
             </div>
           )}
 
@@ -1959,7 +2263,15 @@ export const VsCodeApp = () => {
                 </div>
               </div>
             ) : (
-              <div className="vscode-code-viewport">
+              <div className="vscode-code-viewport" style={{ position: 'relative' }}>
+                {/* Real-time Code Running Laser Scanning Beam Animation */}
+                {isRunning && (
+                  <div className="vscode-run-laser-container">
+                    <div className="vscode-run-laser" />
+                    <div className="vscode-run-pulse-overlay" />
+                  </div>
+                )}
+
                 {/* Interactive Code Editor with synchronized Line Gutter */}
                 <div className="code-editor-scrollable">
                   <div className="code-editor-container">
@@ -2128,6 +2440,12 @@ export const VsCodeApp = () => {
                     onClick={() => setTerminalTab('output')}
                   >
                     Output
+                    {isRunning && (
+                      <span className="running-badge-pill">
+                        <span className="running-pulse-dot" />
+                        RUNNING
+                      </span>
+                    )}
                   </button>
                   <button 
                     className={`terminal-tab-item ${terminalTab === 'debug' ? 'active' : ''}`}
@@ -2223,7 +2541,10 @@ export const VsCodeApp = () => {
               {/* 2. Output Tab */}
               {terminalTab === 'output' && (
                 <div className="terminal-content-area output-area">
-                  <pre className="output-raw-pre">{outputLogs}</pre>
+                  <pre className="output-raw-pre">
+                    {outputLogs}
+                    {isRunning && <span className="term-blinking-cursor"> ▊</span>}
+                  </pre>
                 </div>
               )}
 

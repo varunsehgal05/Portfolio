@@ -287,6 +287,7 @@ const TrashApp = ({ onClose, onOpenApp }) => {
     }));
     return () => {
       if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
+      window.dispatchEvent(new CustomEvent('varunos-clippy-hide'));
     };
   }, []);
 
@@ -370,8 +371,8 @@ const TrashApp = ({ onClose, onOpenApp }) => {
       detail: {
         text: msg,
         animation: "Explain",
-        highlightDuration: 6000,
-        hold: true
+        highlightDuration: 3500,
+        hold: false
       }
     }));
 

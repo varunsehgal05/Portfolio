@@ -101,7 +101,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
   }, []);
 
   // Track sequential desktop icon stamping during Swarm Rebuild (reveal 1-by-1)
-  const [stampedIconCount, setStampedIconCount] = useState(() => (swarmStage >= 2 ? 5 : 0));
+  const [stampedIconCount, setStampedIconCount] = useState(() => (swarmStage >= 2 ? 6 : 0));
 
   useEffect(() => {
     const handleIconStamped = (e) => {
@@ -115,7 +115,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
 
   useEffect(() => {
     if (swarmStage >= 2) {
-      setStampedIconCount(5);
+      setStampedIconCount(6);
     } else if (swarmStage === 0) {
       setStampedIconCount(0);
     }

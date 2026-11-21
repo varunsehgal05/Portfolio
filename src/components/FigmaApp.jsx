@@ -19,6 +19,20 @@ const INITIAL_SHAPES = [];
 
 const ALL_PROJECTS = [
   {
+    id: 'varunos',
+    name: 'VarunOS — Web Desktop Operating System',
+    category: 'Vibecoded Site',
+    badge: '⚡ 100% Vibecoded Web OS',
+    metric: '⚡ Living Web OS • 60 FPS • Multi-App',
+    image: '/wallpaper-sequoia.jpg',
+    desc: 'Full macOS-inspired desktop operating system vibecoded from scratch with Antigravity AI. Features live VS Code runner, Figma vector workspace, Clippy assistant, and window manager.',
+    tags: ['Vibecoded', 'React 19', 'Tailwind', 'Antigravity IDE', 'Web OS'],
+    link: 'https://varunsehgal.runs-on.dev',
+    liveUrl: 'https://varunsehgal.runs-on.dev',
+    figmaLink: 'https://www.figma.com/design/hCaNWKm2qTY2kQ0KOZRywa/M-1?node-id=40-2',
+    isVibecoded: true
+  },
+  {
     id: 'codesrijan',
     name: 'CodeSrijan Hackathon Portal',
     category: 'Vibecoded Site',
@@ -2164,7 +2178,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     </div>
 
                     <div className="category-filter-pills">
-                      {['All', 'Mobile App', 'SaaS / Web'].map(cat => (
+                      {['All', 'Vibecoded Site', 'Mobile App', 'SaaS / Web'].map(cat => (
                         <button
                           key={cat}
                           className={`cat-filter-btn ${projectFilter === cat ? 'active' : ''}`}
