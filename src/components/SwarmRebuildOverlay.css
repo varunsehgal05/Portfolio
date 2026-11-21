@@ -270,48 +270,56 @@
 
 .swarm-cursor-tag {
   position: absolute;
-  top: 15px;
-  left: 12px;
-  padding: 2px 8px;
+  top: 13px;
+  left: 9px;
+  padding: 1.5px 6px;
   border-radius: 4px;
   color: #ffffff;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   white-space: nowrap;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
-  border: 0.5px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+  line-height: 1.2;
 }
 
 .swarm-cursor-name {
-  font-size: 11px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1px;
+}
+
+.swarm-cursor-tool-tag {
+  font-size: 8.5px;
   font-weight: 700;
-  letter-spacing: 0.2px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: rgba(0, 0, 0, 0.28);
+  padding: 0 3.5px;
+  border-radius: 2px;
 }
 
 .swarm-cursor-action {
-  font-size: 9.5px;
+  font-size: 9px;
   opacity: 0.9;
   font-weight: 500;
-  padding-left: 5px;
+  padding-left: 4px;
   border-left: 1px solid rgba(255, 255, 255, 0.35);
 }
 
 /* Option-Drag Duplicate Badge */
 .swarm-dup-badge {
   position: absolute;
-  top: 38px;
-  left: 12px;
-  padding: 1px 6px;
+  top: 32px;
+  left: 9px;
+  padding: 1px 5px;
   border-radius: 3px;
   background: #38bdf8;
   color: #000000;
-  font-size: 9.5px;
+  font-size: 9px;
   font-weight: 700;
   white-space: nowrap;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-  border: 0.5px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
   animation: badgePop 0.15s ease-out;
 }
 
@@ -320,58 +328,25 @@
   100% { transform: scale(1); opacity: 1; }
 }
 
-/* Simulated Typing Caret Bubble */
-.swarm-typing-bubble {
-  position: absolute;
-  top: -34px;
-  left: 14px;
-  background: rgba(15, 15, 18, 0.95);
-  backdrop-filter: blur(10px);
-  border: 1.5px solid;
-  border-radius: 8px;
-  padding: 4px 10px;
-  color: #ffffff;
-  font-size: 11.5px;
-  font-weight: 500;
-  white-space: nowrap;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.typing-caret {
-  display: inline-block;
-  width: 2px;
-  height: 12px;
-  background-color: #38bdf8;
-  animation: blinkCaret 0.8s infinite;
-}
-
-@keyframes blinkCaret {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
 /* Collaborative Chat Bubble (Kittu.pro Style cv-chat) */
 .swarm-chat-bubble {
   position: absolute;
-  top: -38px;
-  left: 18px;
+  top: -28px;
+  left: 12px;
   background: var(--cursor-color, #1e1b4b);
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 2px 12px 12px 12px;
-  padding: 4px 11px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  font-size: 11.5px;
-  font-weight: 600;
+  border-radius: 3px 8px 8px 8px;
+  padding: 2px 7px;
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+  font-size: 10px;
+  font-weight: 500;
   white-space: nowrap;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
   display: flex;
   align-items: center;
-  gap: 5px;
-  animation: chatBubblePop 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  gap: 4px;
+  animation: chatBubblePop 0.18s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
   z-index: 1000001;
 }
@@ -379,13 +354,13 @@
 .swarm-chat-bubble::after {
   content: '';
   position: absolute;
-  bottom: -6px;
-  left: 6px;
+  bottom: -5px;
+  left: 5px;
   width: 0;
   height: 0;
-  border-left: 6px solid var(--cursor-color, #1e1b4b);
-  border-bottom: 6px solid transparent;
-  border-right: 6px solid transparent;
+  border-left: 5px solid var(--cursor-color, #1e1b4b);
+  border-bottom: 5px solid transparent;
+  border-right: 5px solid transparent;
 }
 
 @keyframes chatBubblePop {
@@ -728,24 +703,7 @@
    TOP FLOATING REBUILD HUD CONTROLS (OPTION 2)
    ======================================================== */
 .swarm-hud-bar {
-  position: absolute;
-  top: 18px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 999999;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  background: rgba(18, 18, 24, 0.88);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(162, 89, 255, 0.25);
-  border-radius: 9999px;
-  padding: 6px 14px 6px 18px;
-  pointer-events: auto;
-  user-select: none;
-  animation: swarmHudSlideDown 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+  display: none !important;
 }
 
 @keyframes swarmHudSlideDown {
