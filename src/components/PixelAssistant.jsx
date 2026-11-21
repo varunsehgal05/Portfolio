@@ -384,7 +384,7 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
           agent.play(animation);
           agent.speak(text, hold);
           if (agent._balloon) agent._balloon.reposition();
-        } catch {}
+        } catch { }
       }
     };
 
@@ -397,7 +397,7 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
           agentRef.current._el.classList.remove('clippy-highlighted');
         }
         setIsHighlighted(false);
-      } catch {}
+      } catch { }
     };
 
     window.addEventListener('varunos-clippy-speak', handleClippySpeak);

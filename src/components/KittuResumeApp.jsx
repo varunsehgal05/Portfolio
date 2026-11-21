@@ -473,8 +473,8 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm, onScrollToTop }) => {
           x: 480,
           y: 1420,
           tool: '❖',
-          chat: 'tagging ⚡ Vibecoded + ❖ Figma...',
-          action: 'Dropping Tags'
+          chat: 'attaching Figma design link...',
+          action: 'Linking Figma'
         }
       ]);
       setActiveSelection({ x: 35, y: 1360, w: 960, h: 220, label: '❖ Project [1/6] • CodeSrijan Portal' });
@@ -1088,40 +1088,108 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm, onScrollToTop }) => {
             <ul className="cv-made">
               {/* Big Featured Card: CodeSrijan (Stage 13) */}
               <li className={`cv-made-big ${isBuilding && buildStage < 13 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-                <a href="https://codesrijan-nine.vercel.app/" target="_blank" rel="noopener noreferrer" className="cv-made-card">
-                  <div className="cv-cover-box" style={{ background: '#090d16', border: '2px solid #2b2b2b' }}>
+                <div className="cv-made-card">
+                  <a
+                    href="https://www.figma.com/design/hCaNWKm2qTY2kQ0KOZRywa/M-1?node-id=40-2&t=vfPIBYY278lzphVq-1"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="cv-cover-box cv-cover-link"
+                    style={{ background: '#090d16', border: '2px solid #2b2b2b' }}
+                    title="Open CodeSrijan in Figma"
+                  >
                     <div style={{ textAlign: 'center', padding: '24px' }}>
                       <span style={{ fontSize: '32px' }}>🚀</span>
                       <div style={{ color: '#67e8f9', fontWeight: '800', marginTop: '6px' }}>CodeSrijan Ecosystem</div>
                       <div style={{ color: '#94a3b8', fontSize: '11px', marginTop: '4px' }}>200+ Hackers • 72h Sprint • Live Evaluation</div>
                     </div>
-                  </div>
+                  </a>
                   <div>
-                    <strong>CodeSrijan Hackathon Portal</strong>
+                    <a
+                      href="https://www.figma.com/design/hCaNWKm2qTY2kQ0KOZRywa/M-1?node-id=40-2&t=vfPIBYY278lzphVq-1"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="cv-title-link"
+                    >
+                      <strong>CodeSrijan Hackathon Portal</strong>
+                    </a>
                     <span>Full-stack live hackathon platform designed for Jaypee University. Features team matchmaking, rubric evaluation, and real-time announcements.</span>
+                    <div className="cv-card-actions">
+                      <a
+                        href="https://www.figma.com/design/hCaNWKm2qTY2kQ0KOZRywa/M-1?node-id=40-2&t=vfPIBYY278lzphVq-1"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="cv-figma-link"
+                      >
+                        <svg width="11" height="16" viewBox="0 0 38 57" fill="none" aria-hidden="true">
+                          <path d="M19 28.5C19 23.2533 23.2533 19 28.5 19C33.7467 19 38 23.2533 38 28.5C38 33.7467 33.7467 38 28.5 38C23.2533 38 19 33.7467 19 28.5Z" fill="#1ABCFE"/>
+                          <path d="M0 47.5C0 42.2533 4.25329 38 9.5 38H19V47.5C19 52.7467 14.7467 57 9.5 57C4.25329 57 0 52.7467 0 47.5Z" fill="#0ACF83"/>
+                          <path d="M19 0V19H28.5C33.7467 19 38 14.7467 38 9.5C38 4.25329 33.7467 0 28.5 0H19Z" fill="#FF7262"/>
+                          <path d="M0 9.5C0 14.7467 4.25329 19 9.5 19H19V0H9.5C4.25329 0 0 4.25329 0 9.5Z" fill="#F24E1E"/>
+                          <path d="M0 28.5C0 33.7467 4.25329 38 9.5 38H19V19H9.5C4.25329 19 0 23.2533 0 28.5Z" fill="#A259FF"/>
+                        </svg>
+                        <span>Figma Design ↗</span>
+                      </a>
+                      <a
+                        href="https://codesrijan-nine.vercel.app/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="cv-live-link"
+                      >
+                        <span>🚀</span>
+                        <span>Live Site ↗</span>
+                      </a>
+                    </div>
                     <div className="cv-project-tags">
-                      <span className="cv-tag vibecoded">⚡ Vibecoded</span>
-                      <span className="cv-tag figma">❖ Figma</span>
                       <span className="cv-tag next">Next.js</span>
                       <span className="cv-tag live">Vercel Live</span>
                     </div>
                   </div>
-                </a>
+                </div>
               </li>
 
               {/* Card 2: EventFlow (Stage 14) */}
               <li className={`${isBuilding && buildStage < 14 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                 <div className="cv-made-card">
-                  <div className="cv-cover-box" style={{ background: '#1c1917' }}>
+                  <a
+                    href="https://www.figma.com/design/29nTBBWxZfoOKdFnOaQWbq/EventFlow?node-id=2-2&p=f&t=ucsh4jF84sBl50UA-0"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="cv-cover-box cv-cover-link"
+                    style={{ background: '#1c1917' }}
+                    title="Open EventFlow in Figma"
+                  >
                     <div style={{ textAlign: 'center' }}>
                       <span style={{ fontSize: '24px' }}>🎟️</span>
                       <div style={{ color: '#f59e0b', fontSize: '11px', fontWeight: '800', marginTop: '4px' }}>EventFlow</div>
                     </div>
-                  </div>
-                  <strong>EventFlow Ticketing</strong>
+                  </a>
+                  <a
+                    href="https://www.figma.com/design/29nTBBWxZfoOKdFnOaQWbq/EventFlow?node-id=2-2&p=f&t=ucsh4jF84sBl50UA-0"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="cv-title-link"
+                  >
+                    <strong>EventFlow Ticketing</strong>
+                  </a>
                   <span>Campus event discovery &amp; instant booking platform with 30% reduced drop-off.</span>
+                  <div className="cv-card-actions">
+                    <a
+                      href="https://www.figma.com/design/29nTBBWxZfoOKdFnOaQWbq/EventFlow?node-id=2-2&p=f&t=ucsh4jF84sBl50UA-0"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="cv-figma-link"
+                    >
+                      <svg width="11" height="16" viewBox="0 0 38 57" fill="none" aria-hidden="true">
+                        <path d="M19 28.5C19 23.2533 23.2533 19 28.5 19C33.7467 19 38 23.2533 38 28.5C38 33.7467 33.7467 38 28.5 38C23.2533 38 19 33.7467 19 28.5Z" fill="#1ABCFE"/>
+                        <path d="M0 47.5C0 42.2533 4.25329 38 9.5 38H19V47.5C19 52.7467 14.7467 57 9.5 57C4.25329 57 0 52.7467 0 47.5Z" fill="#0ACF83"/>
+                        <path d="M19 0V19H28.5C33.7467 19 38 14.7467 38 9.5C38 4.25329 33.7467 0 28.5 0H19Z" fill="#FF7262"/>
+                        <path d="M0 9.5C0 14.7467 4.25329 19 9.5 19H19V0H9.5C4.25329 0 0 4.25329 0 9.5Z" fill="#F24E1E"/>
+                        <path d="M0 28.5C0 33.7467 4.25329 38 9.5 38H19V19H9.5C4.25329 19 0 23.2533 0 28.5Z" fill="#A259FF"/>
+                      </svg>
+                      <span>Figma Design ↗</span>
+                    </a>
+                  </div>
                   <div className="cv-project-tags">
-                    <span className="cv-tag figma">❖ Figma</span>
                     <span className="cv-tag saas">Design System</span>
                     <span className="cv-tag">SaaS Checkout</span>
                   </div>
@@ -1131,17 +1199,46 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm, onScrollToTop }) => {
               {/* Card 3: AI Interview (Stage 15) */}
               <li className={`${isBuilding && buildStage < 15 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                 <div className="cv-made-card">
-                  <div className="cv-cover-box" style={{ background: '#0b1329' }}>
+                  <a
+                    href="https://www.figma.com/design/ezDh2NmBto6iv7xaQNs3Ha/AI-Interview?node-id=11-1842&t=siyh0b32g2XWrRNe-1"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="cv-cover-box cv-cover-link"
+                    style={{ background: '#0b1329' }}
+                    title="Open AI Interview in Figma"
+                  >
                     <div style={{ textAlign: 'center' }}>
                       <span style={{ fontSize: '24px' }}>🤖</span>
                       <div style={{ color: '#38bdf8', fontSize: '11px', fontWeight: '800', marginTop: '4px' }}>AI Interview</div>
                     </div>
-                  </div>
-                  <strong>AI Interview Studio</strong>
+                  </a>
+                  <a
+                    href="https://www.figma.com/design/ezDh2NmBto6iv7xaQNs3Ha/AI-Interview?node-id=11-1842&t=siyh0b32g2XWrRNe-1"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="cv-title-link"
+                  >
+                    <strong>AI Interview Studio</strong>
+                  </a>
                   <span>Interactive question generator and audio mock-interview coach UI in Figma.</span>
+                  <div className="cv-card-actions">
+                    <a
+                      href="https://www.figma.com/design/ezDh2NmBto6iv7xaQNs3Ha/AI-Interview?node-id=11-1842&t=siyh0b32g2XWrRNe-1"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="cv-figma-link"
+                    >
+                      <svg width="11" height="16" viewBox="0 0 38 57" fill="none" aria-hidden="true">
+                        <path d="M19 28.5C19 23.2533 23.2533 19 28.5 19C33.7467 19 38 23.2533 38 28.5C38 33.7467 33.7467 38 28.5 38C23.2533 38 19 33.7467 19 28.5Z" fill="#1ABCFE"/>
+                        <path d="M0 47.5C0 42.2533 4.25329 38 9.5 38H19V47.5C19 52.7467 14.7467 57 9.5 57C4.25329 57 0 52.7467 0 47.5Z" fill="#0ACF83"/>
+                        <path d="M19 0V19H28.5C33.7467 19 38 14.7467 38 9.5C38 4.25329 33.7467 0 28.5 0H19Z" fill="#FF7262"/>
+                        <path d="M0 9.5C0 14.7467 4.25329 19 9.5 19H19V0H9.5C4.25329 0 0 4.25329 0 9.5Z" fill="#F24E1E"/>
+                        <path d="M0 28.5C0 33.7467 4.25329 38 9.5 38H19V19H9.5C4.25329 19 0 23.2533 0 28.5Z" fill="#A259FF"/>
+                      </svg>
+                      <span>Figma Design ↗</span>
+                    </a>
+                  </div>
                   <div className="cv-project-tags">
-                    <span className="cv-tag vibecoded">⚡ Vibecoded</span>
-                    <span className="cv-tag figma">❖ Figma</span>
                     <span className="cv-tag ai">AI UX</span>
                   </div>
                 </div>
@@ -1150,16 +1247,46 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm, onScrollToTop }) => {
               {/* Card 4: Expensify (Stage 16) */}
               <li className={`${isBuilding && buildStage < 16 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                 <div className="cv-made-card">
-                  <div className="cv-cover-box" style={{ background: '#18181b' }}>
+                  <a
+                    href="https://www.figma.com/design/3mw8XBHEZ3b8HKNNqcs6U2/Expensify---Budget-Tracker-App?node-id=135-318&t=gUJEMUlyDc8ERNeR-1"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="cv-cover-box cv-cover-link"
+                    style={{ background: '#18181b' }}
+                    title="Open Expensify in Figma"
+                  >
                     <div style={{ textAlign: 'center' }}>
                       <span style={{ fontSize: '24px' }}>💳</span>
                       <div style={{ color: '#10b981', fontSize: '11px', fontWeight: '800', marginTop: '4px' }}>Expensify</div>
                     </div>
-                  </div>
-                  <strong>Expensify Budget</strong>
+                  </a>
+                  <a
+                    href="https://www.figma.com/design/3mw8XBHEZ3b8HKNNqcs6U2/Expensify---Budget-Tracker-App?node-id=135-318&t=gUJEMUlyDc8ERNeR-1"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="cv-title-link"
+                  >
+                    <strong>Expensify Budget</strong>
+                  </a>
                   <span>Mobile personal finance app prototype with gesture-driven expense tagging.</span>
+                  <div className="cv-card-actions">
+                    <a
+                      href="https://www.figma.com/design/3mw8XBHEZ3b8HKNNqcs6U2/Expensify---Budget-Tracker-App?node-id=135-318&t=gUJEMUlyDc8ERNeR-1"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="cv-figma-link"
+                    >
+                      <svg width="11" height="16" viewBox="0 0 38 57" fill="none" aria-hidden="true">
+                        <path d="M19 28.5C19 23.2533 23.2533 19 28.5 19C33.7467 19 38 23.2533 38 28.5C38 33.7467 33.7467 38 28.5 38C23.2533 38 19 33.7467 19 28.5Z" fill="#1ABCFE"/>
+                        <path d="M0 47.5C0 42.2533 4.25329 38 9.5 38H19V47.5C19 52.7467 14.7467 57 9.5 57C4.25329 57 0 52.7467 0 47.5Z" fill="#0ACF83"/>
+                        <path d="M19 0V19H28.5C33.7467 19 38 14.7467 38 9.5C38 4.25329 33.7467 0 28.5 0H19Z" fill="#FF7262"/>
+                        <path d="M0 9.5C0 14.7467 4.25329 19 9.5 19H19V0H9.5C4.25329 0 0 4.25329 0 9.5Z" fill="#F24E1E"/>
+                        <path d="M0 28.5C0 33.7467 4.25329 38 9.5 38H19V19H9.5C4.25329 19 0 23.2533 0 28.5Z" fill="#A259FF"/>
+                      </svg>
+                      <span>Figma Design ↗</span>
+                    </a>
+                  </div>
                   <div className="cv-project-tags">
-                    <span className="cv-tag figma">❖ Figma</span>
                     <span className="cv-tag fintech">Fintech</span>
                     <span className="cv-tag">Mobile UX</span>
                   </div>
@@ -1169,16 +1296,46 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm, onScrollToTop }) => {
               {/* Card 5: Movie Tickets (Stage 17) */}
               <li className={`${isBuilding && buildStage < 17 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                 <div className="cv-made-card">
-                  <div className="cv-cover-box" style={{ background: '#26122c' }}>
+                  <a
+                    href="https://www.figma.com/design/0cJQWX8qYssPfK4hmPtdVj/Movie-Ticket-Booking-App-Design?node-id=31-86&t=Jd933TVzkrlBb4MQ-1"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="cv-cover-box cv-cover-link"
+                    style={{ background: '#26122c' }}
+                    title="Open Movie Tickets in Figma"
+                  >
                     <div style={{ textAlign: 'center' }}>
                       <span style={{ fontSize: '24px' }}>🎬</span>
                       <div style={{ color: '#f43f5e', fontSize: '11px', fontWeight: '800', marginTop: '4px' }}>Movie Booking</div>
                     </div>
-                  </div>
-                  <strong>Movie Tickets App</strong>
+                  </a>
+                  <a
+                    href="https://www.figma.com/design/0cJQWX8qYssPfK4hmPtdVj/Movie-Ticket-Booking-App-Design?node-id=31-86&t=Jd933TVzkrlBb4MQ-1"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="cv-title-link"
+                  >
+                    <strong>Movie Tickets App</strong>
+                  </a>
                   <span>Dynamic seat-selection matrix and trailer preview interaction flow.</span>
+                  <div className="cv-card-actions">
+                    <a
+                      href="https://www.figma.com/design/0cJQWX8qYssPfK4hmPtdVj/Movie-Ticket-Booking-App-Design?node-id=31-86&t=Jd933TVzkrlBb4MQ-1"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="cv-figma-link"
+                    >
+                      <svg width="11" height="16" viewBox="0 0 38 57" fill="none" aria-hidden="true">
+                        <path d="M19 28.5C19 23.2533 23.2533 19 28.5 19C33.7467 19 38 23.2533 38 28.5C38 33.7467 33.7467 38 28.5 38C23.2533 38 19 33.7467 19 28.5Z" fill="#1ABCFE"/>
+                        <path d="M0 47.5C0 42.2533 4.25329 38 9.5 38H19V47.5C19 52.7467 14.7467 57 9.5 57C4.25329 57 0 52.7467 0 47.5Z" fill="#0ACF83"/>
+                        <path d="M19 0V19H28.5C33.7467 19 38 14.7467 38 9.5C38 4.25329 33.7467 0 28.5 0H19Z" fill="#FF7262"/>
+                        <path d="M0 9.5C0 14.7467 4.25329 19 9.5 19H19V0H9.5C4.25329 0 0 4.25329 0 9.5Z" fill="#F24E1E"/>
+                        <path d="M0 28.5C0 33.7467 4.25329 38 9.5 38H19V19H9.5C4.25329 19 0 23.2533 0 28.5Z" fill="#A259FF"/>
+                      </svg>
+                      <span>Figma Design ↗</span>
+                    </a>
+                  </div>
                   <div className="cv-project-tags">
-                    <span className="cv-tag figma">❖ Figma</span>
                     <span className="cv-tag">Interactive Proto</span>
                   </div>
                 </div>
@@ -1187,17 +1344,46 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm, onScrollToTop }) => {
               {/* Card 6: SaaS Landing (Stage 18) */}
               <li className={`${isBuilding && buildStage < 18 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                 <div className="cv-made-card">
-                  <div className="cv-cover-box" style={{ background: '#111827' }}>
+                  <a
+                    href="https://www.figma.com/design/WfUzGPYsE7UFYS9YaQp5v6/home-page?node-id=0-1&p=f&t=cA3tERTu8AuInovg-0"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="cv-cover-box cv-cover-link"
+                    style={{ background: '#111827' }}
+                    title="Open SaaS Landing Pages in Figma"
+                  >
                     <div style={{ textAlign: 'center' }}>
                       <span style={{ fontSize: '24px' }}>⚡</span>
                       <div style={{ color: '#a855f7', fontSize: '11px', fontWeight: '800', marginTop: '4px' }}>SaaS Conversion</div>
                     </div>
-                  </div>
-                  <strong>SaaS Landing Pages</strong>
+                  </a>
+                  <a
+                    href="https://www.figma.com/design/WfUzGPYsE7UFYS9YaQp5v6/home-page?node-id=0-1&p=f&t=cA3tERTu8AuInovg-0"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="cv-title-link"
+                  >
+                    <strong>SaaS Landing Pages</strong>
+                  </a>
                   <span>High-converting responsive landing pages built for 10+ international tech startups.</span>
+                  <div className="cv-card-actions">
+                    <a
+                      href="https://www.figma.com/design/WfUzGPYsE7UFYS9YaQp5v6/home-page?node-id=0-1&p=f&t=cA3tERTu8AuInovg-0"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="cv-figma-link"
+                    >
+                      <svg width="11" height="16" viewBox="0 0 38 57" fill="none" aria-hidden="true">
+                        <path d="M19 28.5C19 23.2533 23.2533 19 28.5 19C33.7467 19 38 23.2533 38 28.5C38 33.7467 33.7467 38 28.5 38C23.2533 38 19 33.7467 19 28.5Z" fill="#1ABCFE"/>
+                        <path d="M0 47.5C0 42.2533 4.25329 38 9.5 38H19V47.5C19 52.7467 14.7467 57 9.5 57C4.25329 57 0 52.7467 0 47.5Z" fill="#0ACF83"/>
+                        <path d="M19 0V19H28.5C33.7467 19 38 14.7467 38 9.5C38 4.25329 33.7467 0 28.5 0H19Z" fill="#FF7262"/>
+                        <path d="M0 9.5C0 14.7467 4.25329 19 9.5 19H19V0H9.5C4.25329 0 0 4.25329 0 9.5Z" fill="#F24E1E"/>
+                        <path d="M0 28.5C0 33.7467 4.25329 38 9.5 38H19V19H9.5C4.25329 19 0 23.2533 0 28.5Z" fill="#A259FF"/>
+                      </svg>
+                      <span>Figma Design ↗</span>
+                    </a>
+                  </div>
                   <div className="cv-project-tags">
-                    <span className="cv-tag vibecoded">⚡ Vibecoded</span>
-                    <span className="cv-tag figma">❖ Figma</span>
                     <span className="cv-tag saas">Conversion</span>
                   </div>
                 </div>

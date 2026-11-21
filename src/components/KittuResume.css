@@ -163,6 +163,7 @@
 .cv-note:after,
 .cv-polaroid:after,
 .cv-thread:after,
+.cv-made-big .cv-made-card:after,
 .cv-made-big a:after {
   content: "";
   background: var(--tape);
@@ -574,6 +575,95 @@
   font-size: 2.3rem;
   font-weight: 700;
   text-decoration: none;
+}
+
+/* Clickable Links & Figma Action Buttons in Things I've Made */
+.cv-title-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.cv-title-link:hover strong {
+  color: #0d99ff;
+}
+
+.cv-cover-link {
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cv-cover-link:hover {
+  filter: brightness(1.12);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+.cv-card-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+  margin-bottom: 2px;
+}
+
+.cv-figma-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #0f172a;
+  background: #f8fafc;
+  border: 1.5px solid #0acf83;
+  padding: 3.5px 10px;
+  border-radius: 5px;
+  text-decoration: none;
+  box-shadow: 1.5px 1.5px 0px rgba(10, 207, 131, 0.35);
+  transition: all 0.15s ease;
+}
+
+.cv-figma-link:hover {
+  background: #0acf83;
+  color: #ffffff;
+  border-color: #059669;
+  transform: translateY(-1.5px);
+  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.25);
+}
+
+.cv-figma-link svg {
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+}
+
+.cv-figma-link:hover svg {
+  transform: scale(1.12);
+}
+
+.cv-live-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #0369a1;
+  background: #f0f9ff;
+  border: 1.5px solid #0284c7;
+  padding: 3.5px 10px;
+  border-radius: 5px;
+  text-decoration: none;
+  box-shadow: 1.5px 1.5px 0px rgba(2, 132, 199, 0.3);
+  transition: all 0.15s ease;
+}
+
+.cv-live-link:hover {
+  background: #0284c7;
+  color: #ffffff;
+  transform: translateY(-1.5px);
+  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.25);
 }
 
 /* Project Tags in Things I've Made (Image 1) */
