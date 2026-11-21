@@ -233,16 +233,16 @@
 
 .desktop-dock-wrap.stage-hidden {
   opacity: 0;
-  transform: translateY(70px);
+  transform: translateY(36px);
   pointer-events: none;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
 }
 
 .desktop-dock-wrap.stage-revealed {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
-  transition: transform 0.48s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.48s ease;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.45s ease;
 }
 
 /* PixelAssistant wrap */

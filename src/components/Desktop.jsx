@@ -350,7 +350,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
     }
   }, [swarmStage]);
 
-  const displayedIcons = desktopIconIds || ['figma', 'vscode', 'resume', 'contact', 'trash'];
+  const displayedIcons = desktopIconIds || ['figma', 'vscode', 'resume', 'contact', 'coffee', 'trash'];
   const activeWallpaper = desktopWallpapers.find(w => w.id === activeWallpaperId) || desktopWallpapers[0];
 
   return (

@@ -268,6 +268,11 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
   const card1BadgeSnappedRef = useRef(false);
   const card2PlacedRef = useRef(false);
   const card2BadgeSnappedRef = useRef(false);
+  const card3PlacedRef = useRef(false);
+  const card3BadgeSnappedRef = useRef(false);
+  const card4PlacedRef = useRef(false);
+  const card4BadgeSnappedRef = useRef(false);
+  const dockSnappedRef = useRef(false);
   const lastTypedCharRef = useRef('');
   const physicsRef = useRef(null);
 
@@ -373,6 +378,11 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
     card1BadgeSnappedRef.current = false;
     card2PlacedRef.current = false;
     card2BadgeSnappedRef.current = false;
+    card3PlacedRef.current = false;
+    card3BadgeSnappedRef.current = false;
+    card4PlacedRef.current = false;
+    card4BadgeSnappedRef.current = false;
+    dockSnappedRef.current = false;
     lastTypedCharRef.current = '';
     lastStampedIndexRef.current = -1;
 
@@ -504,26 +514,26 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         ]);
       }
       // =====================================================================
-      // Phase 2: Desktop App Icons Stamping via ⌥ Duplicate (3.2s - 7.2s) — 2 Cursors
+      // Phase 2: Desktop App Icons Stamping via ⌥ Duplicate (3.2s - 7.6s) — 2 Cursors
       // =====================================================================
-      else if (elapsed < 7.2) {
+      else if (elapsed < 7.6) {
         setStatusMessage('[2/5] Stamping & Duplicating Desktop Apps...');
-        const t = Math.min(1, Math.max(0, (elapsed - 3.2) / 4.0));
+        const t = Math.min(1, Math.max(0, (elapsed - 3.2) / 4.4));
 
-        if (t > 0.85) {
+        if (t > 0.9) {
           updateStage(2, 740); // Reveal Desktop Icons
           if (typeof window !== 'undefined') {
-            window.dispatchEvent(new CustomEvent('varunos-swarm-icon-stamped', { detail: { count: 5 } }));
+            window.dispatchEvent(new CustomEvent('varunos-swarm-icon-stamped', { detail: { count: 6 } }));
           }
         }
 
-        const iconNames = ['Figma', 'VS Code', 'Resume.pdf', 'Contact', 'Trash'];
-        const iconYPositions = [48, 126, 204, 282, 360];
+        const iconNames = ['Figma', 'VS Code', 'Resume.pdf', 'Contact', 'Buy Me a Coffee', 'Trash'];
+        const iconYPositions = [48, 126, 204, 282, 360, 438];
         
-        // 5 icons stamped sequentially (~0.75s per icon)
-        const totalIcons = 5;
+        // 6 icons stamped sequentially (~0.73s per icon)
+        const totalIcons = 6;
         const iconFloat = t * totalIcons;
-        const iconIndex = Math.min(4, Math.floor(iconFloat));
+        const iconIndex = Math.min(5, Math.floor(iconFloat));
         const subProgress = iconFloat - iconIndex;
 
         // Curve movement between previous and next icon
@@ -531,15 +541,16 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         const nextY = iconYPositions[iconIndex];
         const sarahPos = interpolateArc(56, prevY, 56, nextY, subProgress, -16, 0.05);
 
-        const elenaX = 96;
-        const elenaY = sarahPos.y;
+        // Elena stays cleanly positioned to the right and slightly offset to prevent ANY cursor tag collision
+        const elenaX = 142;
+        const elenaY = sarahPos.y - 14;
 
         const isSarahClicking = subProgress > 0.72 && subProgress < 0.95;
 
         // Stamp audio & ripple trigger when landing on each icon + instant sequential 1-by-1 reveal
         if (lastStampedIndexRef.current !== iconIndex) {
           lastStampedIndexRef.current = iconIndex;
-          soundSynth.playDropThump(220 + iconIndex * 35);
+          soundSynth.playDropThump(220 + iconIndex * 28);
           triggerRipple(56, iconYPositions[iconIndex] + 20, '#FF7262');
           if (typeof window !== 'undefined') {
             window.dispatchEvent(new CustomEvent('varunos-swarm-icon-stamped', { detail: { count: iconIndex + 1 } }));
@@ -564,7 +575,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
               y: iconYPositions[iconIndex],
               w: 72,
               h: 70,
-              label: `${iconNames[iconIndex]} (72 × 70px)`
+              label: iconNames[iconIndex]
             }
           },
           elena: {
@@ -584,37 +595,41 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
 
         setWireframeData(null);
 
+        const prevIconY = iconIndex > 0 ? iconYPositions[iconIndex - 1] : 48;
+        const currentIconY = iconYPositions[iconIndex];
+        const gapMidY = (prevIconY + currentIconY) / 2 + 35;
+
         setActiveGuides([
-          { type: 'v', x1: 20, y1: 40, x2: 20, y2: 440, color: '#ec4899', dashed: true, label: 'X: 20px (Margin)' },
+          { type: 'v', x1: 20, y1: 40, x2: 20, y2: 510, color: '#ec4899', dashed: true, label: 'X: 20px (Margin)' },
           {
             type: 'v',
             x1: 92,
             y1: 40,
             x2: 92,
-            y2: 440,
+            y2: 510,
             color: '#ec4899',
             dashed: true,
             label: 'X: 92px (Column)',
-            pillText: 'ΔY: 78px Equal Spacing',
-            pillX: 132,
-            pillY: sarahPos.y + 35
+            pillText: iconIndex > 0 ? 'ΔY: 78px Equal Spacing' : null,
+            pillX: 148,
+            pillY: gapMidY
           }
         ]);
       }
       // =====================================================================
-      // Phase 3: Box-by-Box Window Construction & Live Content Typing (7.2s - 21.8s)
-      // Sequential, deliberate choreography ("box, then another mouse typing text"):
-      // 3.1 (7.2s - 9.6s): Alex Chen extrudes outer Window Frame Box [F] smoothly (2.4s)
-      // 3.2 (9.6s - 11.4s): Alex Chen draws Hero Bento Box [R] -> snap thump (1.8s)
-      // 3.3 (11.4s - 14.4s): Varun Sehgal glides in & types headline & sub copy [T] -> snaps status badge (3.0s)
-      // 3.4 (14.4s - 16.0s): Elena Rostova draws Card 01 Box [R] -> snap thump (1.6s)
-      // 3.5 (16.0s - 17.8s): Sarah Lin glides in & types Card 01 copy [T] (1.8s)
-      // 3.6 (17.8s - 19.4s): Alex Chen draws Card 02 Box [R] (with 12px gap guide) -> snap thump (1.6s)
-      // 3.7 (19.4s - 21.2s): Varun Sehgal glides in & types Card 02 copy [T] (1.8s)
-      // 3.8 (21.2s - 21.8s): Elena Rostova checks Auto-Layout & smoothly unveils real workspace (0.6s)
+      // Phase 3: Box-by-Box Window Construction & Content Typing (7.6s - 22.0s)
+      // Sequential, deliberate 2x2 grid choreography:
+      // 3.1 (7.6s - 9.6s): Alex Chen extrudes outer Window Frame Box [F] smoothly (2.0s)
+      // 3.2 (9.6s - 11.0s): Alex Chen draws Hero Bento Box [R] -> snap thump (1.4s)
+      // 3.3 (11.0s - 12.8s): Varun Sehgal types headline & sub copy [T] -> snaps status badge (1.8s)
+      // 3.4 (12.8s - 14.6s): Elena puts Card 01 Box [R] + Sarah types AI Interview content [T] (1.8s)
+      // 3.5 (14.6s - 16.4s): Alex puts Card 02 Box [R] + Varun types EventFlow content [T] (1.8s)
+      // 3.6 (16.4s - 18.2s): Elena puts Card 03 Box [R] + Sarah types Expensify content [T] (1.8s)
+      // 3.7 (18.2s - 20.0s): Alex puts Card 04 Box [R] + Varun types CodeSrijan content [T] (1.8s)
+      // 3.8 (20.0s - 22.0s): Elena & Alex check 2x2 Auto-Layout & reveal VarunOS workspace (2.0s)
       // =====================================================================
-      else if (elapsed < 21.8) {
-        const pElapsed = elapsed - 7.2;
+      else if (elapsed < 22.0) {
+        const pElapsed = elapsed - 7.6;
 
         const curW = winTargetW;
         const curH = winTargetH;
@@ -625,20 +640,20 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         const sidebarW = 175;
         const headerH = 38;
         const contentX = curX + sidebarW + 16;
-        const contentY = curY + headerH + 14;
+        const contentY = curY + headerH + 12;
         const contentW = curW - sidebarW - 32;
 
         // 1. Hero Box Bounds
         const heroX = contentX;
         const heroY = contentY;
         const heroW = contentW;
-        const heroH = 104;
+        const heroH = 96;
 
-        // 2. Cards Grid Bounds
-        const cardsGap = 12;
-        const cardsY = heroY + heroH + 14;
+        // 2. Cards 2x2 Grid Bounds (Compact, matching real Finder window)
+        const cardsGap = 10;
+        const cardsY = heroY + heroH + 10;
         const cardW = Math.floor((contentW - cardsGap) / 2);
-        const cardH = Math.min(150, curH - headerH - 14 - heroH - 14 - 18);
+        const cardH = 102;
 
         const card1X = contentX;
         const card1Y = cardsY;
@@ -646,10 +661,16 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         const card2X = contentX + cardW + cardsGap;
         const card2Y = cardsY;
 
-        // Sub-phase 3.1: Alex Chen Extrudes Outer Window Frame Box (0.0s - 2.4s)
-        if (pElapsed < 2.4) {
+        const card3X = contentX;
+        const card3Y = cardsY + cardH + cardsGap;
+
+        const card4X = contentX + cardW + cardsGap;
+        const card4Y = cardsY + cardH + cardsGap;
+
+        // Sub-phase 3.1: Alex Chen Extrudes Outer Window Frame Box (0.0s - 2.0s)
+        if (pElapsed < 2.0) {
           setStatusMessage('[3/5] Alex Chen: [F] Extruding Window Frame Box...');
-          const t1 = Math.min(1, pElapsed / 2.4);
+          const t1 = Math.min(1, pElapsed / 2.0);
           const drawnW = lerp(120, winTargetW, easeInOutCubic(t1));
           const drawnH = lerp(80, winTargetH, easeInOutCubic(t1));
 
@@ -687,6 +708,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             heroBoxVisible: false,
             card1BoxVisible: false,
             card2BoxVisible: false,
+            card3BoxVisible: false,
+            card4BoxVisible: false,
             opacity: 1
           });
 
@@ -707,16 +730,16 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           ]);
         }
 
-        // Sub-phase 3.2: Alex Chen Puts Hero Bento Box (2.4s - 4.2s)
-        else if (pElapsed < 4.2) {
+        // Sub-phase 3.2: Alex Chen Puts Hero Bento Box (2.0s - 3.4s)
+        else if (pElapsed < 3.4) {
           setStatusMessage('[3/5] Alex Chen: [R] Putting Hero Bento Box...');
-          const t2 = Math.min(1, (pElapsed - 2.4) / 1.8);
+          const t2 = Math.min(1, (pElapsed - 2.0) / 1.4);
           const drawnHeroW = lerp(40, heroW, easeInOutCubic(t2));
           const drawnHeroH = lerp(20, heroH, easeInOutCubic(t2));
 
           const alexArc = interpolateArc(heroX + 40, heroY + 20, heroX + drawnHeroW, heroY + drawnHeroH, t2, 14, 0.04);
 
-          if (t2 > 0.88 && !heroBoxPlacedRef.current) {
+          if (t2 > 0.85 && !heroBoxPlacedRef.current) {
             heroBoxPlacedRef.current = true;
             soundSynth.playDropThump(220);
             triggerRipple(heroX + heroW / 2, heroY + heroH / 2, '#0ACF83');
@@ -753,11 +776,13 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             h: curH,
             heroBoxVisible: true,
             heroBoxActive: true,
-            heroBoxPlaced: t2 > 0.88,
+            heroBoxPlaced: t2 > 0.85,
             heroTypedText: '',
             heroCaretVisible: false,
             card1BoxVisible: false,
             card2BoxVisible: false,
+            card3BoxVisible: false,
+            card4BoxVisible: false,
             opacity: 1
           });
 
@@ -778,10 +803,10 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           ]);
         }
 
-        // Sub-phase 3.3: Varun Sehgal Types Headline Copy into Hero Box (4.2s - 7.2s)
-        else if (pElapsed < 7.2) {
+        // Sub-phase 3.3: Varun Sehgal Types Headline Copy into Hero Box (3.4s - 5.2s)
+        else if (pElapsed < 5.2) {
           setStatusMessage('[3/5] Varun Sehgal: [T] Typing headline copy into box...');
-          const t3 = Math.min(1, (pElapsed - 4.2) / 3.0);
+          const t3 = Math.min(1, (pElapsed - 3.4) / 1.8);
           const headline = 'Designing intuitive web apps & modern interfaces';
           const charCount = Math.floor(t3 * headline.length);
           const currentTyped = headline.substring(0, charCount);
@@ -793,7 +818,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           }
 
           const varunTypingX = heroX + 18 + Math.min(contentW - 140, charCount * 8.2);
-          const varunTypingY = heroY + 44;
+          const varunTypingY = heroY + 40;
 
           const isCtaPlaced = t3 > 0.78;
           if (isCtaPlaced && !heroCtaSnappedRef.current) {
@@ -833,45 +858,77 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             ctaVisible: isCtaPlaced,
             card1BoxVisible: false,
             card2BoxVisible: false,
+            card3BoxVisible: false,
+            card4BoxVisible: false,
             opacity: 1
           });
 
           setActiveGuides([]);
         }
 
-        // Sub-phase 3.4: Elena Rostova Puts Card 01 Box (7.2s - 8.8s)
-        else if (pElapsed < 8.8) {
-          setStatusMessage('[3/5] Elena Rostova: [R] Putting Project Card 01 Box...');
-          const t4 = Math.min(1, (pElapsed - 7.2) / 1.6);
-          const drawnCard1W = lerp(30, cardW, easeInOutCubic(t4));
-          const drawnCard1H = lerp(20, cardH, easeInOutCubic(t4));
+        // Sub-phase 3.4: Elena & Sarah Put Card 01 Box + Type AI Interview (5.2s - 7.0s)
+        else if (pElapsed < 7.0) {
+          const t4 = Math.min(1, (pElapsed - 5.2) / 1.8);
+          setStatusMessage('[3/5] Elena & Sarah: [R] Box + [T] AI Interview Platform...');
 
-          if (t4 > 0.88 && !card1PlacedRef.current) {
+          const isDrawing = t4 < 0.45;
+          const drawProgress = Math.min(1, t4 / 0.45);
+          const drawnCard1W = lerp(30, cardW, easeInOutCubic(drawProgress));
+          const drawnCard1H = lerp(20, cardH, easeInOutCubic(drawProgress));
+
+          if (drawProgress > 0.88 && !card1PlacedRef.current) {
             card1PlacedRef.current = true;
             soundSynth.playDropThump(240);
             triggerRipple(card1X + cardW / 2, card1Y + cardH / 2, '#F59E0B');
           }
 
+          const typeProgress = Math.max(0, (t4 - 0.45) / 0.55);
+          const card1Title = 'AI Interview & Prep Platform';
+          const card1CharCount = Math.floor(typeProgress * card1Title.length);
+          const card1Typed = card1Title.substring(0, card1CharCount);
+
+          if (card1CharCount > 0 && card1Typed !== lastTypedCharRef.current && Date.now() - lastTypeTimeRef.current > 45) {
+            lastTypedCharRef.current = card1Typed;
+            lastTypeTimeRef.current = Date.now();
+            soundSynth.playTypeClick(340 + Math.random() * 50);
+          }
+
+          if (typeProgress > 0.75 && !card1BadgeSnappedRef.current) {
+            card1BadgeSnappedRef.current = true;
+            soundSynth.playSnap(740);
+          }
+
+          const sarahTypeX = card1X + 12 + Math.min(cardW - 40, card1CharCount * 6.5);
+          const sarahTypeY = card1Y + 34;
+
           agentTargets = {
             elena: {
-              x: card1X + drawnCard1W,
-              y: card1Y + drawnCard1H,
+              x: isDrawing ? card1X + drawnCard1W : card1X + cardW + 8,
+              y: isDrawing ? card1Y + drawnCard1H : card1Y + 18,
               color: '#F59E0B',
               label: 'Elena Rostova',
-              toolKey: 'R Rectangle',
-              cursorMode: 'cross',
-              isDrawing: true,
-              boxBounds: {
+              toolKey: isDrawing ? 'R Rectangle' : 'V Move',
+              cursorMode: isDrawing ? 'cross' : 'arrow',
+              isDrawing: isDrawing,
+              boxBounds: isDrawing ? {
                 x: card1X,
                 y: card1Y,
                 w: drawnCard1W,
                 h: drawnCard1H,
-                label: `Elena • [R] Card 01 (${Math.round(drawnCard1W)} × ${Math.round(drawnCard1H)}px)`
-              }
+                label: `Card 01 (${Math.round(drawnCard1W)} × ${Math.round(drawnCard1H)}px)`
+              } : null
             },
-            sarah: { hidden: true, x: card1X + 14, y: card1Y + 36 },
+            sarah: {
+              hidden: isDrawing,
+              x: sarahTypeX,
+              y: sarahTypeY,
+              color: '#FF7262',
+              label: 'Sarah Lin',
+              toolKey: 'T Text',
+              cursorMode: 'text'
+            },
             varun: { hidden: true, x: heroX + 220, y: heroY + 36 },
-            alex: { hidden: true, x: card2X + 30, y: card2Y + 20 },
+            alex: { hidden: true, x: card2X + 20, y: card2Y + 20 },
             user: { hidden: true, x: curX + curW, y: curY + curH }
           };
 
@@ -886,15 +943,19 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             heroBadgeVisible: true,
             ctaVisible: true,
             card1BoxVisible: true,
-            card1BoxActive: true,
-            card1BoxPlaced: t4 > 0.88,
-            card1TypedTitle: '',
-            card1CaretVisible: false,
+            card1BoxActive: isDrawing,
+            card1BoxPlaced: t4 > 0.4,
+            card1TypedTitle: isDrawing ? '' : card1Typed,
+            card1CaretVisible: !isDrawing && typeProgress < 0.95,
+            card1TypedSub: typeProgress > 0.35 ? 'Architected AI SaaS with Security & Grading modules' : '',
+            card1BadgesVisible: typeProgress > 0.75,
             card2BoxVisible: false,
+            card3BoxVisible: false,
+            card4BoxVisible: false,
             opacity: 1
           });
 
-          setActiveGuides([
+          setActiveGuides(isDrawing ? [
             {
               type: 'h',
               x1: card1X,
@@ -908,103 +969,72 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
               pillX: card1X + drawnCard1W / 2,
               pillY: card1Y - 12
             }
-          ]);
+          ] : []);
         }
 
-        // Sub-phase 3.5: Sarah Lin Types Card 01 Content (8.8s - 10.6s)
-        else if (pElapsed < 10.6) {
-          setStatusMessage('[3/5] Sarah Lin: [T] Typing AI Interview Platform content...');
-          const t5 = Math.min(1, (pElapsed - 8.8) / 1.8);
-          const card1Title = 'AI Interview & Prep Platform';
-          const card1CharCount = Math.floor(t5 * card1Title.length);
-          const card1Typed = card1Title.substring(0, card1CharCount);
+        // Sub-phase 3.5: Alex & Varun Put Card 02 Box + Type EventFlow (7.0s - 8.8s)
+        else if (pElapsed < 8.8) {
+          const t5 = Math.min(1, (pElapsed - 7.0) / 1.8);
+          setStatusMessage('[3/5] Alex & Varun: [R] Box + [T] EventFlow SaaS...');
 
-          if (card1CharCount > 0 && card1Typed !== lastTypedCharRef.current && Date.now() - lastTypeTimeRef.current > 45) {
-            lastTypedCharRef.current = card1Typed;
-            lastTypeTimeRef.current = Date.now();
-            soundSynth.playTypeClick(340 + Math.random() * 50);
-          }
+          const isDrawing = t5 < 0.45;
+          const drawProgress = Math.min(1, t5 / 0.45);
+          const drawnCard2W = lerp(30, cardW, easeInOutCubic(drawProgress));
+          const drawnCard2H = lerp(20, cardH, easeInOutCubic(drawProgress));
 
-          if (t5 > 0.72 && !card1BadgeSnappedRef.current) {
-            card1BadgeSnappedRef.current = true;
-            soundSynth.playSnap(760);
-          }
-
-          const sarahTypeX = card1X + 14 + Math.min(cardW - 40, card1CharCount * 7.0);
-          const sarahTypeY = card1Y + 36;
-
-          agentTargets = {
-            sarah: {
-              x: sarahTypeX,
-              y: sarahTypeY,
-              color: '#FF7262',
-              label: 'Sarah Lin',
-              toolKey: 'T Text',
-              cursorMode: 'text'
-            },
-            elena: { hidden: true, x: card1X + cardW, y: card1Y + cardH },
-            alex: { hidden: true, x: card2X + 30, y: card2Y + 20 },
-            varun: { hidden: true, x: card2X + 20, y: card2Y + 20 },
-            user: { hidden: true, x: curX + curW, y: curY + curH }
-          };
-
-          setWireframeData({
-            type: 'window',
-            x: curX,
-            y: curY,
-            w: curW,
-            h: curH,
-            heroBoxVisible: true,
-            heroTypedText: 'Designing intuitive web apps & modern interfaces',
-            heroBadgeVisible: true,
-            ctaVisible: true,
-            card1BoxVisible: true,
-            card1BoxActive: false,
-            card1BoxPlaced: true,
-            card1TypedTitle: card1Typed,
-            card1CaretVisible: t5 < 0.95,
-            card1TypedSub: t5 > 0.45 ? 'Vibecoded • AI SaaS · Security Modules' : '',
-            card1BadgesVisible: t5 > 0.72,
-            card2BoxVisible: false,
-            opacity: 1
-          });
-
-          setActiveGuides([]);
-        }
-
-        // Sub-phase 3.6: Alex Chen Puts Card 02 Box (10.6s - 12.2s)
-        else if (pElapsed < 12.2) {
-          setStatusMessage('[3/5] Alex Chen: [R] Putting Project Card 02 Box...');
-          const t6 = Math.min(1, (pElapsed - 10.6) / 1.6);
-          const drawnCard2W = lerp(30, cardW, easeInOutCubic(t6));
-          const drawnCard2H = lerp(20, cardH, easeInOutCubic(t6));
-
-          if (t6 > 0.88 && !card2PlacedRef.current) {
+          if (drawProgress > 0.88 && !card2PlacedRef.current) {
             card2PlacedRef.current = true;
-            soundSynth.playDropThump(260);
+            soundSynth.playDropThump(255);
             triggerRipple(card2X + cardW / 2, card2Y + cardH / 2, '#0ACF83');
           }
 
+          const typeProgress = Math.max(0, (t5 - 0.45) / 0.55);
+          const card2Title = 'EventFlow: Event Ticketing SaaS';
+          const card2CharCount = Math.floor(typeProgress * card2Title.length);
+          const card2Typed = card2Title.substring(0, card2CharCount);
+
+          if (card2CharCount > 0 && card2Typed !== lastTypedCharRef.current && Date.now() - lastTypeTimeRef.current > 45) {
+            lastTypedCharRef.current = card2Typed;
+            lastTypeTimeRef.current = Date.now();
+            soundSynth.playTypeClick(330 + Math.random() * 50);
+          }
+
+          if (typeProgress > 0.75 && !card2BadgeSnappedRef.current) {
+            card2BadgeSnappedRef.current = true;
+            soundSynth.playSnap(760);
+          }
+
+          const varunTypeX = card2X + 12 + Math.min(cardW - 40, card2CharCount * 6.5);
+          const varunTypeY = card2Y + 34;
+
           agentTargets = {
             alex: {
-              x: card2X + drawnCard2W,
-              y: card2Y + drawnCard2H,
+              x: isDrawing ? card2X + drawnCard2W : card2X + cardW + 8,
+              y: isDrawing ? card2Y + drawnCard2H : card2Y + 18,
               color: '#0ACF83',
               label: 'Alex Chen',
-              toolKey: 'R Rectangle',
-              cursorMode: 'cross',
-              isDrawing: true,
-              boxBounds: {
+              toolKey: isDrawing ? 'R Rectangle' : 'V Move',
+              cursorMode: isDrawing ? 'cross' : 'arrow',
+              isDrawing: isDrawing,
+              boxBounds: isDrawing ? {
                 x: card2X,
                 y: card2Y,
                 w: drawnCard2W,
                 h: drawnCard2H,
-                label: `Alex • [R] Card 02 (${Math.round(drawnCard2W)} × ${Math.round(drawnCard2H)}px)`
-              }
+                label: `Card 02 (${Math.round(drawnCard2W)} × ${Math.round(drawnCard2H)}px)`
+              } : null
             },
-            varun: { hidden: true, x: card2X + 14, y: card2Y + 36 },
-            elena: { hidden: true, x: card1X + cardW + cardsGap / 2, y: card1Y + 30 },
-            sarah: { hidden: true, x: card1X + 50, y: card1Y + 50 },
+            varun: {
+              hidden: isDrawing,
+              x: varunTypeX,
+              y: varunTypeY,
+              color: '#A259FF',
+              label: 'Varun Sehgal',
+              toolKey: 'T Text',
+              cursorMode: 'text'
+            },
+            sarah: { hidden: true, x: card1X + 40, y: card1Y + 30 },
+            elena: { hidden: true, x: card1X + cardW + cardsGap / 2, y: card1Y + 20 },
             user: { hidden: true, x: curX + curW, y: curY + curH }
           };
 
@@ -1021,13 +1051,17 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             card1BoxVisible: true,
             card1BoxPlaced: true,
             card1TypedTitle: 'AI Interview & Prep Platform',
-            card1TypedSub: 'Vibecoded • AI SaaS · Security Modules',
+            card1TypedSub: 'Architected AI SaaS with Security & Grading modules',
             card1BadgesVisible: true,
             card2BoxVisible: true,
-            card2BoxActive: true,
-            card2BoxPlaced: t6 > 0.88,
-            card2TypedTitle: '',
-            card2CaretVisible: false,
+            card2BoxActive: isDrawing,
+            card2BoxPlaced: t5 > 0.4,
+            card2TypedTitle: isDrawing ? '' : card2Typed,
+            card2CaretVisible: !isDrawing && typeProgress < 0.95,
+            card2TypedSub: typeProgress > 0.35 ? '4-step checkout flow cutting drop-off by 30%' : '',
+            card2BadgesVisible: typeProgress > 0.75,
+            card3BoxVisible: false,
+            card4BoxVisible: false,
             opacity: 1
           });
 
@@ -1040,48 +1074,77 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
               y2: cardsY + cardH,
               color: '#ec4899',
               dashed: true,
-              label: 'ΔX: 12px',
-              pillText: 'ΔX: 12px Equal Gap',
+              label: 'ΔX: 10px',
+              pillText: 'ΔX: 10px Equal Gap',
               pillX: card1X + cardW + cardsGap / 2,
               pillY: cardsY + cardH / 2
             }
           ]);
         }
 
-        // Sub-phase 3.7: Varun Sehgal Types Card 02 Content (12.2s - 14.0s)
-        else if (pElapsed < 14.0) {
-          setStatusMessage('[3/5] Varun Sehgal: [T] Typing EventFlow SaaS content...');
-          const t7 = Math.min(1, (pElapsed - 12.2) / 1.8);
-          const card2Title = 'EventFlow: Event Ticketing SaaS';
-          const card2CharCount = Math.floor(t7 * card2Title.length);
-          const card2Typed = card2Title.substring(0, card2CharCount);
+        // Sub-phase 3.6: Elena & Sarah Put Card 03 Box + Type Expensify (8.8s - 10.6s)
+        else if (pElapsed < 10.6) {
+          const t6 = Math.min(1, (pElapsed - 8.8) / 1.8);
+          setStatusMessage('[3/5] Elena & Sarah: [R] Box + [T] Expensify Budget App...');
 
-          if (card2CharCount > 0 && card2Typed !== lastTypedCharRef.current && Date.now() - lastTypeTimeRef.current > 45) {
-            lastTypedCharRef.current = card2Typed;
+          const isDrawing = t6 < 0.45;
+          const drawProgress = Math.min(1, t6 / 0.45);
+          const drawnCard3W = lerp(30, cardW, easeInOutCubic(drawProgress));
+          const drawnCard3H = lerp(20, cardH, easeInOutCubic(drawProgress));
+
+          if (drawProgress > 0.88 && !card3PlacedRef.current) {
+            card3PlacedRef.current = true;
+            soundSynth.playDropThump(270);
+            triggerRipple(card3X + cardW / 2, card3Y + cardH / 2, '#F59E0B');
+          }
+
+          const typeProgress = Math.max(0, (t6 - 0.45) / 0.55);
+          const card3Title = 'Expensify: Budget Tracker App';
+          const card3CharCount = Math.floor(typeProgress * card3Title.length);
+          const card3Typed = card3Title.substring(0, card3CharCount);
+
+          if (card3CharCount > 0 && card3Typed !== lastTypedCharRef.current && Date.now() - lastTypeTimeRef.current > 45) {
+            lastTypedCharRef.current = card3Typed;
             lastTypeTimeRef.current = Date.now();
-            soundSynth.playTypeClick(320 + Math.random() * 50);
+            soundSynth.playTypeClick(340 + Math.random() * 50);
           }
 
-          if (t7 > 0.72 && !card2BadgeSnappedRef.current) {
-            card2BadgeSnappedRef.current = true;
-            soundSynth.playSnap(800);
+          if (typeProgress > 0.75 && !card3BadgeSnappedRef.current) {
+            card3BadgeSnappedRef.current = true;
+            soundSynth.playSnap(780);
           }
 
-          const varunTypeX = card2X + 14 + Math.min(cardW - 40, card2CharCount * 7.0);
-          const varunTypeY = card2Y + 36;
+          const sarahTypeX = card3X + 12 + Math.min(cardW - 40, card3CharCount * 6.5);
+          const sarahTypeY = card3Y + 34;
 
           agentTargets = {
-            varun: {
-              x: varunTypeX,
-              y: varunTypeY,
-              color: '#A259FF',
-              label: 'Varun Sehgal',
+            elena: {
+              x: isDrawing ? card3X + drawnCard3W : card3X + cardW + 8,
+              y: isDrawing ? card3Y + drawnCard3H : card3Y + 18,
+              color: '#F59E0B',
+              label: 'Elena Rostova',
+              toolKey: isDrawing ? 'R Rectangle' : 'V Move',
+              cursorMode: isDrawing ? 'cross' : 'arrow',
+              isDrawing: isDrawing,
+              boxBounds: isDrawing ? {
+                x: card3X,
+                y: card3Y,
+                w: drawnCard3W,
+                h: drawnCard3H,
+                label: `Card 03 (${Math.round(drawnCard3W)} × ${Math.round(drawnCard3H)}px)`
+              } : null
+            },
+            sarah: {
+              hidden: isDrawing,
+              x: sarahTypeX,
+              y: sarahTypeY,
+              color: '#FF7262',
+              label: 'Sarah Lin',
               toolKey: 'T Text',
               cursorMode: 'text'
             },
-            alex: { hidden: true, x: card2X + cardW, y: card2Y + cardH },
-            elena: { hidden: true, x: card1X + cardW + cardsGap / 2, y: card1Y + 30 },
-            sarah: { hidden: true, x: card1X + 50, y: card1Y + 50 },
+            varun: { hidden: true, x: card2X + 20, y: card2Y + 20 },
+            alex: { hidden: true, x: card4X + 20, y: card4Y + 20 },
             user: { hidden: true, x: curX + curW, y: curY + curH }
           };
 
@@ -1098,29 +1161,169 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             card1BoxVisible: true,
             card1BoxPlaced: true,
             card1TypedTitle: 'AI Interview & Prep Platform',
-            card1TypedSub: 'Vibecoded • AI SaaS · Security Modules',
+            card1TypedSub: 'Architected AI SaaS with Security & Grading modules',
             card1BadgesVisible: true,
             card2BoxVisible: true,
-            card2BoxActive: false,
             card2BoxPlaced: true,
-            card2TypedTitle: card2Typed,
-            card2CaretVisible: t7 < 0.95,
-            card2TypedSub: t7 > 0.45 ? 'Design System • 30% Less Dropoff' : '',
-            card2BadgesVisible: t7 > 0.72,
+            card2TypedTitle: 'EventFlow: Event Ticketing SaaS',
+            card2TypedSub: '4-step checkout flow cutting drop-off by 30%',
+            card2BadgesVisible: true,
+            card3BoxVisible: true,
+            card3BoxActive: isDrawing,
+            card3BoxPlaced: t6 > 0.4,
+            card3TypedTitle: isDrawing ? '' : card3Typed,
+            card3CaretVisible: !isDrawing && typeProgress < 0.95,
+            card3TypedSub: typeProgress > 0.35 ? '17+ mobile screens refined for rapid expense logging' : '',
+            card3BadgesVisible: typeProgress > 0.75,
+            card4BoxVisible: false,
             opacity: 1
           });
 
-          setActiveGuides([]);
+          setActiveGuides([
+            {
+              type: 'h',
+              x1: card1X,
+              y1: card1Y + cardH + cardsGap / 2,
+              x2: card1X + cardW,
+              y2: card1Y + cardH + cardsGap / 2,
+              color: '#ec4899',
+              dashed: true,
+              label: 'ΔY: 10px',
+              pillText: 'ΔY: 10px Equal Gap',
+              pillX: card1X + cardW / 2,
+              pillY: card1Y + cardH + cardsGap / 2
+            }
+          ]);
         }
 
-        // Sub-phase 3.8: Elena Rostova Checks Auto-Layout & Smoothly Unveils Real Workspace (14.0s - 14.6s)
+        // Sub-phase 3.7: Alex & Varun Put Card 04 Box + Type CodeSrijan (10.6s - 12.4s)
+        else if (pElapsed < 12.4) {
+          const t7 = Math.min(1, (pElapsed - 10.6) / 1.8);
+          setStatusMessage('[3/5] Alex & Varun: [R] Box + [T] CodeSrijan Hackathon...');
+
+          const isDrawing = t7 < 0.45;
+          const drawProgress = Math.min(1, t7 / 0.45);
+          const drawnCard4W = lerp(30, cardW, easeInOutCubic(drawProgress));
+          const drawnCard4H = lerp(20, cardH, easeInOutCubic(drawProgress));
+
+          if (drawProgress > 0.88 && !card4PlacedRef.current) {
+            card4PlacedRef.current = true;
+            soundSynth.playDropThump(285);
+            triggerRipple(card4X + cardW / 2, card4Y + cardH / 2, '#0ACF83');
+          }
+
+          const typeProgress = Math.max(0, (t7 - 0.45) / 0.55);
+          const card4Title = 'CodeSrijan Hackathon Platform';
+          const card4CharCount = Math.floor(typeProgress * card4Title.length);
+          const card4Typed = card4Title.substring(0, card4CharCount);
+
+          if (card4CharCount > 0 && card4Typed !== lastTypedCharRef.current && Date.now() - lastTypeTimeRef.current > 45) {
+            lastTypedCharRef.current = card4Typed;
+            lastTypeTimeRef.current = Date.now();
+            soundSynth.playTypeClick(320 + Math.random() * 50);
+          }
+
+          if (typeProgress > 0.75 && !card4BadgeSnappedRef.current) {
+            card4BadgeSnappedRef.current = true;
+            soundSynth.playSnap(800);
+          }
+
+          const varunTypeX = card4X + 12 + Math.min(cardW - 40, card4CharCount * 6.5);
+          const varunTypeY = card4Y + 34;
+
+          agentTargets = {
+            alex: {
+              x: isDrawing ? card4X + drawnCard4W : card4X + cardW + 8,
+              y: isDrawing ? card4Y + drawnCard4H : card4Y + 18,
+              color: '#0ACF83',
+              label: 'Alex Chen',
+              toolKey: isDrawing ? 'R Rectangle' : 'V Move',
+              cursorMode: isDrawing ? 'cross' : 'arrow',
+              isDrawing: isDrawing,
+              boxBounds: isDrawing ? {
+                x: card4X,
+                y: card4Y,
+                w: drawnCard4W,
+                h: drawnCard4H,
+                label: `Card 04 (${Math.round(drawnCard4W)} × ${Math.round(drawnCard4H)}px)`
+              } : null
+            },
+            varun: {
+              hidden: isDrawing,
+              x: varunTypeX,
+              y: varunTypeY,
+              color: '#A259FF',
+              label: 'Varun Sehgal',
+              toolKey: 'T Text',
+              cursorMode: 'text'
+            },
+            sarah: { hidden: true, x: card3X + 40, y: card3Y + 30 },
+            elena: { hidden: true, x: card3X + cardW + cardsGap / 2, y: card3Y + 20 },
+            user: { hidden: true, x: curX + curW, y: curY + curH }
+          };
+
+          setWireframeData({
+            type: 'window',
+            x: curX,
+            y: curY,
+            w: curW,
+            h: curH,
+            heroBoxVisible: true,
+            heroTypedText: 'Designing intuitive web apps & modern interfaces',
+            heroBadgeVisible: true,
+            ctaVisible: true,
+            card1BoxVisible: true,
+            card1BoxPlaced: true,
+            card1TypedTitle: 'AI Interview & Prep Platform',
+            card1TypedSub: 'Architected AI SaaS with Security & Grading modules',
+            card1BadgesVisible: true,
+            card2BoxVisible: true,
+            card2BoxPlaced: true,
+            card2TypedTitle: 'EventFlow: Event Ticketing SaaS',
+            card2TypedSub: '4-step checkout flow cutting drop-off by 30%',
+            card2BadgesVisible: true,
+            card3BoxVisible: true,
+            card3BoxPlaced: true,
+            card3TypedTitle: 'Expensify: Budget Tracker App',
+            card3TypedSub: '17+ mobile screens refined for rapid expense logging',
+            card3BadgesVisible: true,
+            card4BoxVisible: true,
+            card4BoxActive: isDrawing,
+            card4BoxPlaced: t7 > 0.4,
+            card4TypedTitle: isDrawing ? '' : card4Typed,
+            card4CaretVisible: !isDrawing && typeProgress < 0.95,
+            card4TypedSub: typeProgress > 0.35 ? 'National hackathon ecosystem engineered for 200+ hackers' : '',
+            card4BadgesVisible: typeProgress > 0.75,
+            opacity: 1
+          });
+
+          setActiveGuides([
+            {
+              type: 'v',
+              x1: card3X + cardW + cardsGap / 2,
+              y1: card3Y,
+              x2: card3X + cardW + cardsGap / 2,
+              y2: card3Y + cardH,
+              color: '#ec4899',
+              dashed: true,
+              label: 'ΔX: 10px',
+              pillText: 'ΔX: 10px Equal Gap',
+              pillX: card3X + cardW + cardsGap / 2,
+              pillY: card3Y + cardH / 2
+            }
+          ]);
+        }
+
+        // Sub-phase 3.8: Elena & Alex Check 2x2 Auto-Layout & Reveal Real Workspace (12.4s - 14.4s)
         else {
-          const t8 = Math.min(1, (pElapsed - 14.0) / 0.6);
-          setStatusMessage('[3/5] Auto-Layout verified: revealing VarunOS workspace...');
+          const t8 = Math.min(1, (pElapsed - 12.4) / 2.0);
+          setStatusMessage('[3/5] Auto-Layout verified (2x2 Grid): revealing VarunOS workspace...');
 
-          updateStage(3, 820); // Reveal real interactive window!
+          if (t8 > 0.35) {
+            updateStage(3, 820); // Reveal real interactive window!
+          }
 
-          const wireframeOpacity = Math.max(0, 1 - t8 * 2);
+          const wireframeOpacity = Math.max(0, 1 - t8 * 2.2);
 
           agentTargets = {
             elena: {
@@ -1131,8 +1334,15 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
               toolKey: 'V Move',
               cursorMode: 'arrow'
             },
+            alex: {
+              x: card3X + cardW + cardsGap / 2,
+              y: card3Y + cardH / 2,
+              color: '#0ACF83',
+              label: 'Alex Chen',
+              toolKey: 'V Move',
+              cursorMode: 'arrow'
+            },
             varun: { hidden: true, x: heroX + 220, y: heroY + 36 },
-            alex: { hidden: true, x: curX + curW - 80, y: curY + headerH / 2 },
             sarah: { hidden: true, x: card1X + 40, y: card1Y + 40 },
             user: { hidden: true, x: curX + curW, y: curY + curH }
           };
@@ -1150,13 +1360,23 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             card1BoxVisible: true,
             card1BoxPlaced: true,
             card1TypedTitle: 'AI Interview & Prep Platform',
-            card1TypedSub: 'Vibecoded • AI SaaS · Security Modules',
+            card1TypedSub: 'Architected AI SaaS with Security & Grading modules',
             card1BadgesVisible: true,
             card2BoxVisible: true,
             card2BoxPlaced: true,
             card2TypedTitle: 'EventFlow: Event Ticketing SaaS',
-            card2TypedSub: 'Design System • 30% Less Dropoff',
+            card2TypedSub: '4-step checkout flow cutting drop-off by 30%',
             card2BadgesVisible: true,
+            card3BoxVisible: true,
+            card3BoxPlaced: true,
+            card3TypedTitle: 'Expensify: Budget Tracker App',
+            card3TypedSub: '17+ mobile screens refined for rapid expense logging',
+            card3BadgesVisible: true,
+            card4BoxVisible: true,
+            card4BoxPlaced: true,
+            card4TypedTitle: 'CodeSrijan Hackathon Platform',
+            card4TypedSub: 'National hackathon ecosystem engineered for 200+ hackers',
+            card4BadgesVisible: true,
             opacity: wireframeOpacity
           });
 
@@ -1166,36 +1386,58 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
               x1: card1X + cardW + cardsGap / 2,
               y1: cardsY,
               x2: card1X + cardW + cardsGap / 2,
-              y2: cardsY + cardH,
+              y2: card3Y + cardH,
               color: '#ec4899',
               dashed: true,
-              label: 'ΔX: 12px',
-              pillText: 'ΔX: 12px Equal Gap',
+              label: 'ΔX: 10px',
+              pillText: 'ΔX: 10px Equal Gap',
               pillX: card1X + cardW + cardsGap / 2,
-              pillY: cardsY + cardH / 2
+              pillY: cardsY + cardH + cardsGap / 2 - 16
+            },
+            {
+              type: 'h',
+              x1: card1X,
+              y1: cardsY + cardH + cardsGap / 2,
+              x2: card2X + cardW,
+              y2: cardsY + cardH + cardsGap / 2,
+              color: '#ec4899',
+              dashed: true,
+              label: 'ΔY: 10px',
+              pillText: 'ΔY: 10px Equal Gap',
+              pillX: card1X + cardW + cardsGap / 2,
+              pillY: cardsY + cardH + cardsGap / 2 + 16
             }
           ]);
         }
       }
       // =====================================================================
-      // Phase 4: Bottom macOS Dock Capsule (21.8s - 24.2s) — 2 Cursors
+      // Phase 4: Bottom macOS Dock Capsule (22.0s - 24.2s) — Alex & You
       // =====================================================================
       else if (elapsed < 24.2) {
-        setStatusMessage('[4/5] Extruding Glass Dock Capsule...');
-        const t = Math.min(1, Math.max(0, (elapsed - 21.8) / 2.4));
+        setStatusMessage('[4/5] Alex & You: [R] Framing Glass Dock Capsule...');
+        const t = Math.min(1, Math.max(0, (elapsed - 22.0) / 2.2));
         const easedMove = easeInOutCubic(t);
 
-        const dockSpan = lerp(60, dockTargetW, easedMove);
+        const dockSpan = lerp(80, dockTargetW, easedMove);
         const curLeft = (w - dockSpan) / 2;
         const curRight = (w + dockSpan) / 2;
         const curDockY = dockTargetY;
 
-        if (t > 0.5) {
-          updateStage(4, 880); // Reveal Dock
+        // Reveal Dock smoothly right at the start of framing so it glides up into place
+        if (t > 0.08) {
+          updateStage(4, 880);
         }
 
-        const alexArc = interpolateArc(w / 2, curDockY + 28, curRight, curDockY + 28, t, 18, 0.04);
-        const userArc = interpolateArc(w / 2 - 120, curDockY + 14, curLeft + dockSpan * 0.45, curDockY + 12, t, -16, 0.04);
+        // Tactile snap sound when the dock capsule locks into place
+        if (t > 0.55 && !dockSnappedRef.current) {
+          dockSnappedRef.current = true;
+          soundSynth.playSnap(680);
+          triggerRipple(curLeft + 20, curDockY + 28, '#0ACF83');
+          triggerRipple(curRight - 20, curDockY + 28, '#1ABCFE');
+        }
+
+        const alexArc = interpolateArc(w / 2 - 40, curDockY + 28, curLeft + 20, curDockY + 28, t, 16, 0.04);
+        const userArc = interpolateArc(w / 2 + 40, curDockY + 28, curRight - 20, curDockY + 28, t, -16, 0.04);
 
         agentTargets = {
           alex: {
@@ -1203,9 +1445,9 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             y: alexArc.y,
             color: '#0ACF83',
             label: 'Alex Chen',
-            toolKey: t < 0.28 ? 'R Rectangle' : null,
+            toolKey: t < 0.5 ? 'R Capsule' : null,
             cursorMode: 'cross',
-            chatText: t < 0.75 ? 'extruding glass dock capsule' : null,
+            chatText: t < 0.65 ? 'framing glass dock capsule' : null,
             isDrawing: true,
             boxBounds: {
               x: curLeft,
@@ -1220,7 +1462,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             y: userArc.y,
             color: '#1ABCFE',
             label: userName || 'You',
-            toolKey: t < 0.35 ? 'V Move' : null,
+            toolKey: t < 0.6 ? 'V Move' : null,
             cursorMode: 'arrow',
             chatText: t > 0.35 && t < 0.85 ? 'snapping dock apps' : null
           },
@@ -1594,6 +1836,58 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
                         <span className="tag-pill">Design System</span>
                         <span className="tag-pill">Figma</span>
                         <span className="tag-pill">Checkout UX</span>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="wireframe-card-placeholder" />
+                )}
+
+                {/* Card 3: Expensify (Elena puts box, Sarah types) */}
+                {wireframeData.card3BoxVisible ? (
+                  <div className={`wireframe-card ${wireframeData.card3BoxActive ? 'is-active' : ''} ${wireframeData.card3BoxPlaced ? 'is-placed' : ''}`}>
+                    <div className="card-wireframe-header">
+                      <span className="card-wireframe-tag">MOBILE UX • FINTECH</span>
+                      <span className="card-wireframe-badge">Fintech</span>
+                    </div>
+                    <div className="card-wireframe-title">
+                      {wireframeData.card3TypedTitle || ' '}
+                      {wireframeData.card3CaretVisible && <span className="typing-cursor" />}
+                    </div>
+                    <div className="card-wireframe-desc">
+                      {wireframeData.card3TypedSub || ' '}
+                    </div>
+                    {wireframeData.card3BadgesVisible && (
+                      <div className="card-wireframe-tags">
+                        <span className="tag-pill">Mobile UX</span>
+                        <span className="tag-pill">Fintech</span>
+                        <span className="tag-pill">Micro-interactions</span>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="wireframe-card-placeholder" />
+                )}
+
+                {/* Card 4: CodeSrijan (Alex puts box, Varun types) */}
+                {wireframeData.card4BoxVisible ? (
+                  <div className={`wireframe-card ${wireframeData.card4BoxActive ? 'is-active' : ''} ${wireframeData.card4BoxPlaced ? 'is-placed' : ''}`}>
+                    <div className="card-wireframe-header">
+                      <span className="card-wireframe-tag highlight">VIBECODED • VERCEL LIVE</span>
+                      <span className="card-wireframe-badge">Next.js</span>
+                    </div>
+                    <div className="card-wireframe-title">
+                      {wireframeData.card4TypedTitle || ' '}
+                      {wireframeData.card4CaretVisible && <span className="typing-cursor" />}
+                    </div>
+                    <div className="card-wireframe-desc">
+                      {wireframeData.card4TypedSub || ' '}
+                    </div>
+                    {wireframeData.card4BadgesVisible && (
+                      <div className="card-wireframe-tags">
+                        <span className="tag-pill">Vibecoded</span>
+                        <span className="tag-pill">Next.js</span>
+                        <span className="tag-pill">Vercel Live</span>
                       </div>
                     )}
                   </div>
