@@ -160,8 +160,14 @@
   transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.45s ease;
 }
 
-.desktop-in-rebuild .desktop-icons.stage-revealed .desktop-icon-stagger-item {
-  animation: iconSpringDrop 0.38s cubic-bezier(0.34, 1.56, 0.64, 1) var(--icon-delay, 0s) both;
+.desktop-in-rebuild .desktop-icons .desktop-icon-stagger-item.is-stamped-visible {
+  animation: iconSpringDrop 0.38s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.desktop-in-rebuild .desktop-icons .desktop-icon-stagger-item.is-stamped-hidden {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: scale(0.6) translateY(-14px) !important;
 }
 
 @keyframes iconSpringDrop {

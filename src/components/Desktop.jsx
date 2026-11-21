@@ -100,6 +100,27 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
     return () => window.removeEventListener('varunos-toggle-swarm-follow', handleSwarmFollowToggle);
   }, []);
 
+  // Track sequential desktop icon stamping during Swarm Rebuild (reveal 1-by-1)
+  const [stampedIconCount, setStampedIconCount] = useState(() => (swarmStage >= 2 ? 5 : 0));
+
+  useEffect(() => {
+    const handleIconStamped = (e) => {
+      if (typeof e.detail?.count === 'number') {
+        setStampedIconCount(e.detail.count);
+      }
+    };
+    window.addEventListener('varunos-swarm-icon-stamped', handleIconStamped);
+    return () => window.removeEventListener('varunos-swarm-icon-stamped', handleIconStamped);
+  }, []);
+
+  useEffect(() => {
+    if (swarmStage >= 2) {
+      setStampedIconCount(5);
+    } else if (swarmStage === 0) {
+      setStampedIconCount(0);
+    }
+  }, [swarmStage]);
+
   const applyDesktopWallpaper = (id, showToast = false) => {
     const found = desktopWallpapers.find(w => w.id === id) || desktopWallpapers[0];
     if (found.id === activeWallpaperId && !isWpTransitioning) return;
@@ -387,17 +408,24 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
       </div>
 
       <div className="desktop-content">
-        {/* Left Column Desktop Icons */}
-        <div className={`desktop-icons ${swarmStage < 5 ? (swarmStage >= 2 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
+        {/* Left Column Desktop Icons (Revealed 1-by-1 sequentially as Sarah stamps them) */}
+        <div className={`desktop-icons ${swarmStage < 5 ? (swarmStage >= 2 || stampedIconCount > 0 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
           {displayedIcons.map((id, index) => {
             const app = portfolioApps[id];
             if (!app) return null;
+            const isRevealed = swarmStage >= 2 || index < stampedIconCount;
             return (
               <DesktopIcon
                 key={app.id}
                 app={app}
-                className="desktop-icon-stagger-item"
-                style={{ '--icon-delay': `${index * 0.08}s` }}
+                className={`desktop-icon-stagger-item ${isRevealed ? 'is-stamped-visible' : 'is-stamped-hidden'}`}
+                style={{
+                  '--icon-delay': `${index * 0.08}s`,
+                  opacity: isRevealed ? 1 : 0,
+                  transform: isRevealed ? 'none' : 'scale(0.5) translateY(-8px)',
+                  pointerEvents: isRevealed ? 'auto' : 'none',
+                  transition: 'opacity 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)'
+                }}
                 onClick={() => openApp(app.id)}
                 onDoubleClick={() => openApp(app.id)}
               />

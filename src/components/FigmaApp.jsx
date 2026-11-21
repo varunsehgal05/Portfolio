@@ -2718,112 +2718,100 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     </div>
                   </div>
 
-                  {/* Section Wireframe Label */}
-                  <div className="about-section-wire-label">
-                    <span>[CENTER HERO NODE] ←—→ Impact Metrics</span>
-                  </div>
-
-                  {/* 2. MIDDLE ROW: Built On, Center Hero Photo Frame, Experience Impact Metrics */}
-                  <div className="about-middle-hero-row">
-                    {/* Left Column: BUILT ON Stack & Capabilities */}
-                    <div className="about-middle-col stack-col">
-                      <div className="figjam-cursor-tag cursor-marcus">
-                        <svg className="cursor-arrow-icon" width="14" height="14" viewBox="0 0 16 16" fill="none">
-                          <path d="M0 0L6 14L8.5 8.5L14 6L0 0Z" fill="#06b6d4" />
-                        </svg>
-                        <span className="cursor-author-name">Marcus (Top Glancer)</span>
-                      </div>
-
+                  {/* RE-ARCHITECTED CENTER: Varun Sehgal Identity & Design Technologist Nexus */}
+                  <div className="about-center-identity-nexus">
+                    {/* Flanking Card 1: Core Systems & Token Architecture */}
+                    <div className="about-nexus-card systems-card">
                       <div className="card-top-tag tag-purple">
-                        <span className="tag-text">BUILT ON</span>
+                        <span className="tag-text">SYSTEMS &amp; TOKENS</span>
                       </div>
-                      <h3 className="col-header-title">STACK &amp; CAPABILITIES</h3>
-
-                      <div className="stack-specs-list">
-                        <div className="stack-spec-item">
-                          <span className="spec-name">Figma Auto Layout v5</span>
-                          <span className="spec-level text-sky-400">Advanced</span>
+                      <h3 className="nexus-card-title">Multi-Token Hierarchy</h3>
+                      <p className="nexus-card-desc">
+                        Engineering 0-drift token pipelines with OKLCH palettes, fluid clamp() modular scales, and executable contracts mapped to React 19 &amp; Tailwind v4.
+                      </p>
+                      
+                      {/* Interactive Token Inspection Chips */}
+                      <div className="interactive-token-chips-grid">
+                        <div className="token-chip" onClick={() => showToast('Token Copied: --color-primary-500 (#38bdf8)')}>
+                          <span className="token-dot" style={{ backgroundColor: '#38bdf8' }} />
+                          <span className="token-label">primary-500</span>
+                          <span className="token-val">#38bdf8</span>
                         </div>
-                        <div className="stack-spec-item">
-                          <span className="spec-name">Design Tokens Studio</span>
-                          <span className="spec-level text-emerald-400">W3C Spec</span>
+                        <div className="token-chip" onClick={() => showToast('Token Copied: --color-accent-purple (#a855f7)')}>
+                          <span className="token-dot" style={{ backgroundColor: '#a855f7' }} />
+                          <span className="token-label">accent-purple</span>
+                          <span className="token-val">#a855f7</span>
                         </div>
-                        <div className="stack-spec-item">
-                          <span className="spec-name">React 19 &amp; Next.js</span>
-                          <span className="spec-level text-purple-400">Production</span>
+                        <div className="token-chip" onClick={() => showToast('Token Copied: --color-status-active (#10b981)')}>
+                          <span className="token-dot" style={{ backgroundColor: '#10b981' }} />
+                          <span className="token-label">status-active</span>
+                          <span className="token-val">#10b981</span>
                         </div>
-                        <div className="stack-spec-item">
-                          <span className="spec-name">TypeScript + Tailwind v4</span>
-                          <span className="spec-level text-amber-400">Modular</span>
-                        </div>
-                        <div className="stack-spec-item">
-                          <span className="spec-name">WebGL / Three.js</span>
-                          <span className="spec-level text-pink-400">Interactive</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Center Column: HERO PHOTO NODE Varun_Sehgal_Identity [240 × 240] */}
-                    <div className="about-middle-col hero-photo-col">
-                      <div className="figma-photo-bounding-frame">
-                        <div className="photo-corner-handle ch-tl" />
-                        <div className="photo-corner-handle ch-tr" />
-                        <div className="photo-corner-handle ch-bl" />
-                        <div className="photo-corner-handle ch-br" />
-
-                        <div className="photo-selection-badge">
-                          <span className="material-symbols-outlined text-[12px]">crop</span>
-                          <span>Varun_Sehgal_Identity · 240 × 240</span>
-                        </div>
-
-                        <div className="hero-photo-img-wrap">
-                          <img
-                            src="/varun.jpg"
-                            alt="Varun Sehgal"
-                            className="hero-photo-img"
-                            onError={(e) => { e.currentTarget.src = '/hero.png'; }}
-                          />
+                        <div className="token-chip" onClick={() => showToast('Token Copied: --radius-token-md (12px)')}>
+                          <span className="token-dot" style={{ backgroundColor: '#f59e0b' }} />
+                          <span className="token-label">radius-md</span>
+                          <span className="token-val">12px</span>
                         </div>
                       </div>
 
-                      {/* Photo Caption Card below */}
-                      <div className="hero-identity-caption-card">
-                        <div className="caption-name-row">
-                          <h3 className="identity-fullname">Varun Sehgal</h3>
-                          <span className="identity-pro-badge">PRO ARCHITECT</span>
-                        </div>
-                        <div className="identity-job-role">
-                          Lead Product Designer &amp; Design Technologist
-                        </div>
-                        <div className="identity-timeline-meta">
-                          Jaypee Univ. 2021–2025 · Antigravity Studio Spec
-                        </div>
+                      <div className="nexus-tools-row">
+                        <span className="nexus-tool-badge">Figma Auto-Layout v5</span>
+                        <span className="nexus-tool-badge">Design Tokens Studio</span>
+                        <span className="nexus-tool-badge">Tailwind v4</span>
                       </div>
                     </div>
 
-                    {/* Right Column: EXPERIENCE Impact & Metrics */}
-                    <div className="about-middle-col experience-col">
+                    {/* Center Focal: Interactive Portrait Frame with Auto-Layout Bounds */}
+                    <div className="about-nexus-card portrait-nexus-card">
+                      <div className="portrait-figma-badge">
+                        <span className="material-symbols-outlined text-[13px] text-purple-400">frame_person</span>
+                        <span>❖ Varun_Sehgal_Identity · Frame [Auto Layout: Hug]</span>
+                      </div>
+                      <div className="portrait-img-container">
+                        <img
+                          src="/varun.jpg"
+                          alt="Varun Sehgal"
+                          className="portrait-avatar-img"
+                          onError={(e) => { e.currentTarget.src = '/hero.png'; }}
+                        />
+                        <div className="portrait-live-status-pill">
+                          <span className="live-pulse-dot" />
+                          <span>Seeking Seed / Series-A Roles</span>
+                        </div>
+                      </div>
+                      <div className="portrait-info-block">
+                        <div className="portrait-name-row">
+                          <h2 className="portrait-full-name">Varun Sehgal</h2>
+                          <span className="portrait-pro-badge">PRO VERIFIED</span>
+                        </div>
+                        <p className="portrait-lead-title">Lead Product Designer &amp; Design Technologist</p>
+                        <p className="portrait-meta-sub">Jaypee Univ. B.Tech CSE (8.5 CGPA) · Global Remote / SF</p>
+                      </div>
+                    </div>
+
+                    {/* Flanking Card 2: Impact & Shipped Velocity */}
+                    <div className="about-nexus-card impact-card">
                       <div className="card-top-tag tag-cyan">
-                        <span className="tag-text">EXPERIENCE</span>
+                        <span className="tag-text">IMPACT &amp; VELOCITY</span>
                       </div>
-                      <h3 className="col-header-title">IMPACT &amp; METRICS</h3>
+                      <h3 className="nexus-card-title">Engineering Velocity</h3>
 
-                      <div className="metrics-2x2-grid">
-                        <div className="metric-cell">
-                          <div className="metric-number text-sky-400">4+</div>
-                          <div className="metric-label">Years Crafting Complex SaaS</div>
+                      <div className="metrics-2x2-nexus-grid">
+                        <div className="nexus-metric-box">
+                          <div className="nexus-metric-val text-sky-400">4+</div>
+                          <div className="nexus-metric-lbl">Years SaaS Design</div>
                         </div>
-                        <div className="metric-cell">
-                          <div className="metric-number text-purple-400">12+</div>
-                          <div className="metric-label">Shipped Web &amp; Native Apps</div>
+                        <div className="nexus-metric-box">
+                          <div className="nexus-metric-val text-purple-400">12+</div>
+                          <div className="nexus-metric-lbl">Shipped Products</div>
                         </div>
-                        <div className="metric-cell">
-                          <div className="metric-number text-emerald-400">99.4%</div>
-                          <div className="metric-label">Token Parity (Figma/Code)</div>
+                        <div className="nexus-metric-box">
+                          <div className="nexus-metric-val text-emerald-400">99.4%</div>
+                          <div className="nexus-metric-lbl">Token Parity (Figma/Code)</div>
                         </div>
-                        <div className="metric-cell">
-                          <div className="metric-number text-amber-400">25k+</div>
-                          <div className="metric-label">Figma Community Installs</div>
+                        <div className="nexus-metric-box">
+                          <div className="nexus-metric-val text-amber-400">25k+</div>
+                          <div className="nexus-metric-lbl">Community Installs</div>
                         </div>
                       </div>
 
@@ -2838,11 +2826,6 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                         <span className="creator-text">Official Figma Community Creator</span>
                       </div>
                     </div>
-                  </div>
-
-                  {/* Section Wireframe Label */}
-                  <div className="about-section-wire-label">
-                    <span>Export &amp; Social Action Card →</span>
                   </div>
 
                   {/* 3. BOTTOM ROW: Audio Note & Connect Dossier */}
@@ -3126,9 +3109,9 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                         </filter>
                       </defs>
 
-                      {/* Continuous Wavy Sinusoidal Path threading left-to-right through all 6 nodes */}
+                      {/* Continuous Wavy Sinusoidal Path threading left-to-right through all 5 reference nodes */}
                       <path
-                        d="M 160,230 C 220,250 280,380 345,380 C 420,380 480,200 565,200 C 645,200 710,380 790,380 C 870,380 940,180 1030,180 C 1110,180 1155,380 1210,380"
+                        d="M 160,210 C 230,220 280,380 370,380 C 460,380 500,190 590,190 C 680,190 730,380 820,380 C 910,380 970,170 1060,170"
                         stroke="url(#figjamWaveGrad)"
                         strokeWidth="3.2"
                         strokeDasharray="8 6"
@@ -3137,11 +3120,10 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                       />
 
                       {/* Wave Crest & Valley Alignment Connection Dots */}
-                      <circle cx="345" cy="380" r="5" fill="#eab308" />
-                      <circle cx="565" cy="200" r="5" fill="#38bdf8" />
-                      <circle cx="790" cy="380" r="5" fill="#facc15" />
-                      <circle cx="1030" cy="180" r="5" fill="#4ade80" />
-                      <circle cx="1210" cy="380" r="5" fill="#f472b6" />
+                      <circle cx="370" cy="380" r="5" fill="#eab308" />
+                      <circle cx="590" cy="190" r="5" fill="#38bdf8" />
+                      <circle cx="820" cy="380" r="5" fill="#facc15" />
+                      <circle cx="1060" cy="170" r="5" fill="#4ade80" />
                     </svg>
 
                     {/* 1. User Field Tape Card */}
@@ -3272,6 +3254,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                       </p>
                       <div className="sticky-footer">
                         <span className="sticky-mention">#soc2-blocker</span>
+                        <span className="sticky-reaction-pill">👍 6</span>
                       </div>
                     </div>
 
@@ -3295,29 +3278,6 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                       <div className="sticky-footer">
                         <span className="sticky-mention">@varun</span>
                         <span className="sticky-tag-sm">High Impact</span>
-                      </div>
-                    </div>
-
-                    {/* 6. Behavioral Nudge Sticky Note */}
-                    <div className="figjam-node sticky-note pink-sticky nudge-sticky">
-                      <div className="figjam-step-badge step-6">06</div>
-                      <div className="figjam-scotch-tape" />
-
-                      <div className="sticky-header">
-                        <span className="sticky-label">BEHAVIORAL NUDGE</span>
-                        <span className="sticky-emoji-badge">⚡</span>
-                      </div>
-                      <p
-                        className="sticky-body-text"
-                        contentEditable="true"
-                        suppressContentEditableWarning={true}
-                        title="Click to edit nudge text"
-                      >
-                        One-click PO generation dispatch directly paired with DocuSign.
-                      </p>
-                      <div className="sticky-footer">
-                        <span className="sticky-mention">@marcus</span>
-                        <span className="sticky-tag-sm">Auto-Route</span>
                       </div>
                     </div>
 
@@ -3499,28 +3459,30 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     </div>
                   </div>
 
-                  {/* 2-COLUMN MAIN CONTENT: Wide Left Showcase + Right Dev Console */}
-                  <div className="plugins-main-layout-grid">
-                    {/* LEFT COLUMN: Featured Cards */}
-                    <div className="plugins-left-column">
-                      {/* 1. TOP FEATURED CARD: Spectral Token Bridge */}
-                      <div className="plugin-card featured-token-bridge-card">
-                        <div className="featured-card-header">
-                          <div className="plugin-icon-wrap bg-gradient-to-br from-orange-500/20 to-red-500/20 text-orange-400">
+                  {/* RE-ARCHITECTED CENTER: Figma Community Verified Creator Hub & Interactive Plugin Studio */}
+                  <div className="plugins-center-studio">
+                    {/* 1. TOP SHELF: 3 Flagship Community Plugins */}
+                    <div className="plugins-flagship-shelf">
+                      {/* Card 1: Spectral Token Bridge */}
+                      <div className="plugin-flagship-card">
+                        <div className="flagship-card-header">
+                          <div className="flagship-icon-box bg-gradient-to-br from-orange-500/20 to-red-500/20 text-orange-400">
                             <span className="material-symbols-outlined text-[20px]">layers</span>
                           </div>
-                          <div className="plugin-headline-block">
-                            <div className="title-row">
-                              <h3 className="plugin-title">Spectral Token Bridge</h3>
-                              <span className="plugin-version-tag">v2.4</span>
+                          <div className="flagship-meta-group">
+                            <div className="flagship-title-row">
+                              <h3 className="flagship-title">Spectral Token Bridge</h3>
+                              <span className="flagship-ver">v2.4</span>
                             </div>
-                            <p className="plugin-short-desc">
-                              Real-time bi-directional synchronization between Figma design tokens, Tailwind v4, and React Native AST.
-                            </p>
+                            <span className="flagship-category">Design Tokens · Production Sync</span>
                           </div>
                         </div>
 
-                        <div className="plugin-stats-pills-row">
+                        <p className="flagship-desc">
+                          Bi-directional synchronization between Figma design tokens, Tailwind v4, and React Native AST.
+                        </p>
+
+                        <div className="flagship-stats-row">
                           <span className="stat-pill staff-pick">
                             <span className="material-symbols-outlined text-[12px]">verified</span>
                             <span>Staff Pick</span>
@@ -3529,294 +3491,219 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                           <span className="stat-pill rating">★ 4.95</span>
                         </div>
 
-                        {/* Embedded Interactive Token Sandbox */}
-                        <div className="token-sandbox-inner-panel">
-                          <div className="sandbox-header-tabs">
-                            <div className="tab-left">
-                              <span className="dot dot-red" />
-                              <span className="dot dot-yellow" />
-                              <span className="dot dot-green" />
-                              <span className="sandbox-title">Live Token Sandbox · Variable Sync Simulator</span>
-                            </div>
-                            <div className="tab-right">
-                              <span className="sandbox-engine-tag">Engine: V8 Sandbox</span>
-                              <button
-                                className="sandbox-run-btn"
-                                onClick={() => showToast('Syncing 120 Figma Variables to Code...')}
-                              >
-                                <span className="material-symbols-outlined text-[13px]">play_arrow</span>
-                                <span>Run Plugin</span>
-                              </button>
-                            </div>
-                          </div>
-
-                          <div className="sandbox-controls-and-code-grid">
-                            {/* Sliders on Left */}
-                            <div className="sandbox-sliders-col">
-                              <div className="slider-control-group">
-                                <div className="slider-label-row">
-                                  <span>Luminance Chroma</span>
-                                  <strong className="text-orange-400">{tokenChroma}</strong>
-                                </div>
-                                <input
-                                  type="range"
-                                  min="0.1"
-                                  max="1"
-                                  step="0.02"
-                                  value={tokenChroma}
-                                  onChange={(e) => setTokenChroma(parseFloat(e.target.value))}
-                                  className="token-range-slider"
-                                />
-                              </div>
-
-                              <div className="slider-control-group">
-                                <div className="slider-label-row">
-                                  <span>Radius Baseline (px)</span>
-                                  <strong className="text-sky-400">{tokenRadius}rem</strong>
-                                </div>
-                                <input
-                                  type="range"
-                                  min="0.2"
-                                  max="2"
-                                  step="0.04"
-                                  value={tokenRadius}
-                                  onChange={(e) => setTokenRadius(parseFloat(e.target.value))}
-                                  className="token-range-slider"
-                                />
-                              </div>
-
-                              <div className="sync-status-indicator">
-                                <span className="material-symbols-outlined text-[14px] text-emerald-400">check_circle</span>
-                                <span>Matching 120 Figma Variables on Canvas</span>
-                              </div>
-                            </div>
-
-                            {/* Live Code Box on Right */}
-                            <div className="sandbox-code-preview-col">
-                              <div className="code-header-pill">Generated AST Output</div>
-                              <pre className="token-code-block font-mono text-[11px] leading-tight">
-                                {`export const tokens = {
-  chroma: ${tokenChroma},
-  radius: "${tokenRadius}rem",
-  spectralGlow: "rgba(255, 87, 51, ${(tokenChroma * 0.35).toFixed(2)})",
-  synthetic: "%7F10A---2"
-};`}
-                              </pre>
-                            </div>
-                          </div>
-
-                          <div className="sandbox-footer-row">
-                            <span className="last-sync-text">Last compiled: 12 min ago · Zero Drifts</span>
-                            <div className="sandbox-actions-group">
-                              <button
-                                className="sandbox-sub-btn"
-                                onClick={() => showToast('Manifest JSON Downloaded')}
-                              >
-                                Export Manifest
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* 2. TWO-CARD GRID ROW: ShaderLab Pro & AutoGraph Flow */}
-                      <div className="plugins-subgrid-row">
-                        {/* Card 1: ShaderLab Pro */}
-                        <div className="plugin-subcard shaderlab-card">
-                          <div className="subcard-header">
-                            <div className="title-block">
-                              <h4 className="subcard-title">ShaderLab Pro</h4>
-                              <span className="subcard-ver text-purple-400">v2.0.1 GLSL / Three.js</span>
-                            </div>
-                            <span className="subcard-downloads">18.5k</span>
-                          </div>
-
-                          <p className="subcard-desc">
-                            In-canvas procedural GLSL noise, displacement mesh generator and real-time ray-marched canvas exporter.
-                          </p>
-
-                          {/* Gradient Mesh Canvas Preview */}
-                          <div className="shader-preview-banner">
-                            <div className="shader-animated-waves" />
-                            <span className="shader-tag">GPU Accelerated</span>
-                          </div>
-
-                          <div className="subcard-footer">
-                            <span className="subcard-meta">Three.js Powered</span>
-                            <button
-                              className="subcard-action-btn"
-                              onClick={() => {
-                                setIsShaderProceduralOpen(!isShaderProceduralOpen);
-                                showToast(isShaderProceduralOpen ? 'Closed ShaderLab' : 'ShaderLab Pro: Live Mesh Active');
-                              }}
-                            >
-                              <span>{isShaderProceduralOpen ? 'Close Mesh' : 'Open Procedural ↗'}</span>
-                            </button>
-                          </div>
-                        </div>
-
-                        {/* Card 2: AutoGraph Flow */}
-                        <div className="plugin-subcard autograph-card">
-                          <div className="subcard-header">
-                            <div className="title-block">
-                              <h4 className="subcard-title">AutoGraph Flow</h4>
-                              <span className="subcard-ver text-sky-400">v1.1.0 Smart Connectors</span>
-                            </div>
-                            <span className="subcard-downloads">22.1k</span>
-                          </div>
-
-                          <p className="subcard-desc">
-                            State machine graph and user flow connector generator with obstacle-avoidance routing and FigJam sticky sync.
-                          </p>
-
-                          {/* Node Diagram Preview */}
-                          <div className="autograph-diagram-preview">
-                            <div className="mini-node n-start">Origin</div>
-                            <span className="mini-connector" />
-                            <div className="mini-node n-route">Route</div>
-                            <span className="mini-connector" />
-                            <div className="mini-node n-target">Target</div>
-                          </div>
-
-                          <div className="subcard-footer">
-                            <span className="subcard-meta">Figma Best of 2024</span>
-                            <button
-                              className="subcard-action-btn"
-                              onClick={() => showToast('Flow Inspector Opened')}
-                            >
-                              <span>Inspect Flow ↗</span>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* 3. BOTTOM BANNER CARD: Fluid Type & Grid Calculator */}
-                      <div className="plugin-bottom-banner-card">
-                        <div className="banner-left-info">
-                          <div className="icon-and-title">
-                            <span className="material-symbols-outlined text-amber-400 text-[18px]">format_size</span>
-                            <h4 className="banner-card-title">Fluid Type &amp; Grid Calculator</h4>
-                            <span className="banner-ver-tag">v0.9.1 beta</span>
-                          </div>
-                          <p className="banner-desc">
-                            Calculates mathematical CSS clamp() modular scales and writes baseline Figma typography styles instantly.
-                          </p>
-                        </div>
-
-                        <div className="banner-right-action">
-                          <div className="formula-pill font-mono">clamp(1rem, 2.4vw, 3.25rem)</div>
+                        <div className="flagship-footer-action">
                           <button
-                            className="banner-open-btn"
-                            onClick={() => showToast('Type Scale Inspector Loaded')}
+                            className="flagship-action-btn primary"
+                            onClick={() => showToast('Launching Spectral Token Bridge...')}
                           >
-                            Open Calculator
+                            <span>Launch Bridge ↗</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Card 2: AutoGraph Flow */}
+                      <div className="plugin-flagship-card">
+                        <div className="flagship-card-header">
+                          <div className="flagship-icon-box bg-gradient-to-br from-sky-500/20 to-blue-500/20 text-sky-400">
+                            <span className="material-symbols-outlined text-[20px]">account_tree</span>
+                          </div>
+                          <div className="flagship-meta-group">
+                            <div className="flagship-title-row">
+                              <h3 className="flagship-title">AutoGraph Flow</h3>
+                              <span className="flagship-ver text-sky-400">v1.1</span>
+                            </div>
+                            <span className="flagship-category">State Machine · Connectors</span>
+                          </div>
+                        </div>
+
+                        <p className="flagship-desc">
+                          State machine graph and user flow connector generator with obstacle-avoidance routing and FigJam sticky sync.
+                        </p>
+
+                        <div className="flagship-stats-row">
+                          <span className="stat-pill community-choice">
+                            <span className="material-symbols-outlined text-[12px]">award_star</span>
+                            <span>Community Choice</span>
+                          </span>
+                          <span className="stat-pill runs">22.1k Runs</span>
+                          <span className="stat-pill rating">★ 4.92</span>
+                        </div>
+
+                        <div className="flagship-footer-action">
+                          <button
+                            className="flagship-action-btn"
+                            onClick={() => showToast('Flow Inspector Opened in FigJam')}
+                          >
+                            <span>Inspect Flow ↗</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Card 3: ShaderLab Pro */}
+                      <div className="plugin-flagship-card">
+                        <div className="flagship-card-header">
+                          <div className="flagship-icon-box bg-gradient-to-br from-purple-500/20 to-pink-500/20 text-purple-400">
+                            <span className="material-symbols-outlined text-[20px]">water_drop</span>
+                          </div>
+                          <div className="flagship-meta-group">
+                            <div className="flagship-title-row">
+                              <h3 className="flagship-title">ShaderLab Pro</h3>
+                              <span className="flagship-ver text-purple-400">v2.0</span>
+                            </div>
+                            <span className="flagship-category">GLSL Shaders · Three.js</span>
+                          </div>
+                        </div>
+
+                        <p className="flagship-desc">
+                          In-canvas procedural GLSL noise, displacement mesh generator and real-time ray-marched canvas exporter.
+                        </p>
+
+                        <div className="flagship-stats-row">
+                          <span className="stat-pill gpu-acc">
+                            <span className="material-symbols-outlined text-[12px]">bolt</span>
+                            <span>GPU Powered</span>
+                          </span>
+                          <span className="stat-pill runs">18.5k Runs</span>
+                          <span className="stat-pill rating">★ 4.88</span>
+                        </div>
+
+                        <div className="flagship-footer-action">
+                          <button
+                            className="flagship-action-btn"
+                            onClick={() => {
+                              setIsShaderProceduralOpen(!isShaderProceduralOpen);
+                              showToast(isShaderProceduralOpen ? 'Closed ShaderLab' : 'ShaderLab Pro: Live Mesh Active');
+                            }}
+                          >
+                            <span>{isShaderProceduralOpen ? 'Close Mesh' : 'Open Shader ↗'}</span>
                           </button>
                         </div>
                       </div>
                     </div>
 
-                    {/* RIGHT COLUMN: PLUGIN DEV CONSOLE */}
-                    <div className="plugins-right-console">
-                      <div className="console-panel-box">
-                        <div className="console-header-bar">
-                          <div className="console-title-group">
-                            <span className="material-symbols-outlined text-[15px] text-sky-400">terminal</span>
-                            <span className="console-title-text">PLUGIN DEV CONSOLE</span>
+                    {/* 2. CENTERPIECE: Live Interactive Figma Plugin Sandbox */}
+                    <div className="plugin-interactive-sandbox-center">
+                      <div className="sandbox-top-titlebar">
+                        <div className="titlebar-left">
+                          <div className="traffic-lights-sm">
+                            <span className="light-dot red" />
+                            <span className="light-dot yellow" />
+                            <span className="light-dot green" />
                           </div>
-                          <div className="console-ipc-status">
-                            <span className="ipc-dot" />
-                            <span>IPC Connected</span>
+                          <span className="sandbox-tab-title">Live Plugin Sandbox · Spectral Variable Sync Engine v2.4</span>
+                        </div>
+                        <div className="titlebar-right">
+                          <span className="sandbox-pill-tag">V8 Sandboxed Runtime</span>
+                          <span className="sandbox-status-live">
+                            <span className="pulse-dot-green" />
+                            <span>IPC Synced</span>
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="sandbox-body-grid">
+                        {/* Column 1: Tuning Sliders */}
+                        <div className="sandbox-column controls-column">
+                          <div className="column-section-title">Token Controls</div>
+
+                          <div className="sandbox-slider-item">
+                            <div className="slider-label-row">
+                              <span>Luminance Chroma</span>
+                              <strong className="text-orange-400">{tokenChroma}</strong>
+                            </div>
+                            <input
+                              type="range"
+                              min="0.1"
+                              max="1"
+                              step="0.02"
+                              value={tokenChroma}
+                              onChange={(e) => setTokenChroma(parseFloat(e.target.value))}
+                              className="token-range-slider"
+                            />
+                          </div>
+
+                          <div className="sandbox-slider-item">
+                            <div className="slider-label-row">
+                              <span>Border Radius</span>
+                              <strong className="text-sky-400">{tokenRadius}rem</strong>
+                            </div>
+                            <input
+                              type="range"
+                              min="0.2"
+                              max="2"
+                              step="0.04"
+                              value={tokenRadius}
+                              onChange={(e) => setTokenRadius(parseFloat(e.target.value))}
+                              className="token-range-slider"
+                            />
+                          </div>
+
+                          <div className="sandbox-sync-callout">
+                            <span className="material-symbols-outlined text-[15px] text-emerald-400">check_circle</span>
+                            <span>Synced to 120 Canvas Variables</span>
                           </div>
                         </div>
 
-                        {/* Manifest Inspector Header */}
-                        <div className="manifest-sub-header">
-                          <span className="plugin-name-bold">Spectral Token Bridge</span>
-                          <span className="plugin-id-tag">id: 74812</span>
+                        {/* Column 2: Live Canvas Preview Element */}
+                        <div className="sandbox-column preview-column">
+                          <div className="column-section-title">Live Layer Preview</div>
+                          <div className="preview-canvas-card-wrap">
+                            <div
+                              className="preview-dynamic-box"
+                              style={{
+                                borderRadius: `${tokenRadius * 16}px`,
+                                borderColor: `rgba(255, 114, 98, ${Math.min(1, tokenChroma + 0.2)})`,
+                                boxShadow: `0 0 ${Math.round(tokenChroma * 36)}px rgba(255, 114, 98, ${tokenChroma * 0.45})`
+                              }}
+                            >
+                              <div className="preview-inner-content">
+                                <span className="preview-box-tag">❖ Component_Card</span>
+                                <h4 className="preview-box-title">Dynamic Token Surface</h4>
+                                <p className="preview-box-desc">
+                                  Radius: {Math.round(tokenRadius * 16)}px • Chroma: {tokenChroma}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
                         </div>
 
-                        {/* Manifest JSON Syntax Highlighter */}
-                        <div className="manifest-json-viewport">
-                          <div className="json-filename-tag">manifest.json (read-only)</div>
-                          <pre className="manifest-code-content font-mono text-[10.5px]">
-                            {`{
-  "name": "Spectral Token Bridge",
-  "id": "1403010530",
-  "api": "1.0.0",
-  "main": "code.js",
-  "ui": "ui.html",
-  "editorType": ["figma", "figjam"],
-  "permissions": ["currentuser", "activeuser"],
-  "networkAccess": {
-    "allowedDomains": ["https://api.github.com"]
-  }
-}`}
+                        {/* Column 3: Code & Manifest Inspector */}
+                        <div className="sandbox-column code-column">
+                          <div className="column-section-title">Generated Token Contract</div>
+                          <pre className="token-code-block-new font-mono text-[11px]">
+                            {`export const tokens = {
+  chroma: ${tokenChroma},
+  radius: "${tokenRadius}rem",
+  spectralGlow: "rgba(255, 87, 51, ${(tokenChroma * 0.35).toFixed(2)})",
+  runtime: "Figma Plugin API v1"
+};`}
                           </pre>
                         </div>
+                      </div>
 
-                        {/* Live IPC Bridge Telemetry */}
-                        <div className="telemetry-metrics-section">
-                          <div className="telemetry-header">LIVE IPC BRIDGE TELEMETRY</div>
-                          <div className="telemetry-metrics-row">
-                            <div className="telemetry-metric-pill">
-                              <span className="metric-k">MEMORY</span>
-                              <span className="metric-v">64.8 MB</span>
-                            </div>
-                            <div className="telemetry-metric-pill">
-                              <span className="metric-k">IPC LATENCY</span>
-                              <span className="metric-v">0.4 ms</span>
-                            </div>
-                            <div className="telemetry-metric-pill">
-                              <span className="metric-k">SOCKET</span>
-                              <span className="metric-v">127.0.0.1</span>
-                            </div>
-                          </div>
+                      {/* Footer Actions */}
+                      <div className="sandbox-footer-bar">
+                        <div className="footer-meta-text">
+                          <span>Compiler Status: <strong>0 Drifts Detected</strong></span>
                         </div>
-
-                        {/* Action Buttons */}
-                        <div className="console-actions-group">
+                        <div className="footer-actions-group">
                           <button
-                            className={`console-reload-btn ${isHotReloading ? 'reloading' : ''}`}
+                            className="sandbox-footer-btn"
                             onClick={() => {
-                              setIsHotReloading(true);
-                              showToast('Hot Reloading Plugin in Figma Sandbox...');
-                              setTimeout(() => setIsHotReloading(false), 800);
+                              navigator.clipboard?.writeText(JSON.stringify({ chroma: tokenChroma, radius: `${tokenRadius}rem` }, null, 2));
+                              showToast('Token Schema Copied to Clipboard!');
                             }}
                           >
-                            <span className={`material-symbols-outlined text-[15px] ${isHotReloading ? 'animate-spin' : ''}`}>
-                              sync
-                            </span>
-                            <span>Hot Reload in Figma Sandbox</span>
+                            <span className="material-symbols-outlined text-[14px]">content_copy</span>
+                            <span>Copy Token Schema</span>
                           </button>
-
                           <button
-                            className="console-publish-primary-btn"
-                            onClick={() => showToast('Published Spectral Token Bridge v2.4 to Community!')}
+                            className="sandbox-footer-btn primary"
+                            onClick={() => showToast('Syncing 120 Figma Variables to Canvas...')}
                           >
-                            <span className="material-symbols-outlined text-[15px]">publish</span>
-                            <span>Publish v2.4</span>
+                            <span className="material-symbols-outlined text-[14px]">play_arrow</span>
+                            <span>Run in Figma Canvas</span>
                           </button>
-
-                          <button
-                            className="console-github-btn"
-                            onClick={() => window.open('https://github.com/varunsehgal05', '_blank')}
-                          >
-                            <span className="material-symbols-outlined text-[15px]">code</span>
-                            <span>GitHub Repo</span>
-                          </button>
-                        </div>
-
-                        {/* Philosophy Callout Card */}
-                        <div className="console-philosophy-card">
-                          <h5 className="philosophy-title">Varun's Open Tooling Philosophy</h5>
-                          <p className="philosophy-quote">
-                            "Bridging zero-loss creative design with executable software runtimes."
-                          </p>
-                          <div className="philosophy-stats-row">
-                            <span>75,000+ Total Installs</span>
-                            <span>•</span>
-                            <span>★ 4.9 Avg Rating</span>
-                          </div>
                         </div>
                       </div>
                     </div>
