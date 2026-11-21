@@ -86,7 +86,7 @@ const getAIResponse = (query) => {
   if (/experience|work|job|intern|career|unievent|assemble|knaptix|freelance|company|role/.test(q)) {
     return {
       topic: "Professional Work Experience",
-      answer: "Varun has 3+ years experience delivering SaaS and AI products:\n• **UI/UX Designer Intern** at **UniEvent** (Jun 2024 – Nov 2024, ended early Nov): Designed user-centric experiences for campus ticketing (EventFlow).\n• **Assistant Head of Operations** at **Assemble** (Aug 2024 – Jan 2025): Esports tournament execution.\n• **UI/UX Designer Intern** at **Knaptix Ventures** (Jun 2024 – Aug 2024): 5+ UI/UX interfaces with 40% user satisfaction increase.\n• **Freelance UI/UX Designer** (Jan 2024 – Present): 10+ projects with 95% client retention.",
+      answer: "Varun has delivered production-grade SaaS, design systems, and esports operations:\n• **UI-UX Designer** at **UniEvent** (Jul 2026 – Nov 2026 · Punjab, India Remote): Designed user-centric experiences for campus ticketing (EventFlow).\n• **Assistant Head of CODM Esports Operations** at **Assemble** (Aug 2025 – Jan 2026 · Bharatpur, India Remote): Esports tournament execution & Figma tooling.\n• **Operation internship** at **Knaptix Ventures Private Limited** (Jun 2025 – Aug 2025 · Pune, India Remote): Operations support, brand identities & conversion-focused SaaS designs.\n• **Freelance UI/UX Designer** (Jan 2024 – Present): 10+ projects with 95% client retention.",
       path: "Resume App > PROFESSIONAL EXPERIENCE",
       appId: "resume",
       appName: "Resume App",

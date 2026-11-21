@@ -72,27 +72,27 @@ const FEATURED_PROJECTS = [
 const EXPERIENCE_ITEMS = [
   {
     id: 'unievent',
-    title: 'UI/UX Designer Intern',
-    company: 'UniEvent (Remote)',
-    date: 'Jun 2024 – Nov 2024',
-    desc: 'Designed user-focused digital experiences and translated complex business requirements into clear, consistent interfaces for campus event ticketing platform (EventFlow). Completed in early Nov 2024.',
-    tags: ['Figma', 'Design Systems', 'User Research', 'EventFlow']
+    title: 'UI-UX Designer',
+    company: 'UniEvent (Remote · Punjab, India)',
+    date: 'Jul 2026 – Nov 2026',
+    desc: 'Designed user-focused digital experiences and translated complex business requirements into clear, consistent interfaces for campus event ticketing platform (EventFlow).',
+    tags: ['Figma', 'Canva', 'Design Systems', 'EventFlow']
   },
   {
     id: 'assemble',
-    title: 'Assistant Head of Operations',
-    company: 'Assemble (Remote)',
-    date: 'Aug 2024 – Jan 2025',
-    desc: 'Assisted in the planning and smooth execution of esports tournaments and gaming events.',
-    tags: ['Operations', 'Esports', 'Event Management']
+    title: 'Assistant Head of CODM Esports Operations',
+    company: 'Assemble (Remote · Bharatpur, Rajasthan)',
+    date: 'Aug 2025 – Jan 2026',
+    desc: 'Assisted in the planning and smooth execution of CODM tournaments and esports events. Designed collaborative creator workspace tools and interaction prototypes in Figma.',
+    tags: ['CODM Esports', 'Operations', 'Event Management', 'Figma']
   },
   {
     id: 'knaptix',
-    title: 'UI/UX Designer Intern',
-    company: 'Knaptix Ventures (Remote)',
-    date: 'Jun 2024 – Aug 2024',
-    desc: 'Conceptualized 5+ high-fidelity UI/UX interfaces with 40% increase in user satisfaction and 45% faster turnaround.',
-    tags: ['Mobile UX', 'SaaS', 'High-Fidelity Wireframes']
+    title: 'Operation internship',
+    company: 'Knaptix Ventures Private Limited (Remote · Pune, Maharashtra)',
+    date: 'Jun 2025 – Aug 2025',
+    desc: 'Operations internship and UI/UX design. Delivered brand identities and conversion-focused SaaS landing pages for 10+ tech startups.',
+    tags: ['Operations', 'Figma', 'UI UX Designer', 'High-Fidelity Wireframes']
   },
   {
     id: 'freelance',

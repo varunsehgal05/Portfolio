@@ -181,8 +181,7 @@ const PORTFOLIO_CONFIG_CODE = `export const PORTFOLIO_METADATA = {
   location: "Gwalior, Madhya Pradesh, India",
   education: {
     institution: "Jaypee University of Engineering & Technology (JUET)",
-    degree: "B.Tech in Computer Science & Engineering (2023–2027)",
-    cgpa: "8.5 / 10.0"
+    degree: "B.Tech in Computer Science & Engineering (2023–2027)"
   },
   contact: {
     phone: "+91-9399361193",
@@ -207,8 +206,7 @@ export const VarunSehgal = {
   education: {
     degree: "B.Tech in Computer Science & Engineering",
     institution: "Jaypee University of Engineering & Technology (JUET)",
-    timeline: "2023 — 2027",
-    cgpa: "8.5 / 10.0"
+    timeline: "2023 — 2027"
   },
   designPhilosophy: [
     "I study and craft friction-free product experiences: how interaction models shape user psychology.",
@@ -229,22 +227,22 @@ export const VarunSehgal = {
       metrics: "200+ hackers, 50+ universities, 72h sprint, live rubric scoring & matchmaking."
     },
     {
-      role: "UI/UX Designer Intern",
-      company: "UniEvent (EventFlow Ticketing)",
-      period: "Sep 2024 — Nov 2024 (Remote, Bengaluru)",
-      metrics: "Slashed transaction drop-off by 30% across a 4-step booking flow and 50+ component variants."
+      role: "UI-UX Designer",
+      company: "UniEvent · Internship",
+      period: "Jul 2026 — Nov 2026 (Punjab, India · Remote)",
+      metrics: "Slashed transaction drop-off by 30% across a 4-step booking flow and 50+ component variants. Worked with Figma & Canva."
     },
     {
-      role: "Assistant Head of Operations / UI/UX Intern",
-      company: "Assemble",
-      period: "Aug 2024 — Jan 2025 (Remote)",
-      metrics: "Designed collaborative creator workspace tools and interaction prototypes in Figma."
+      role: "Assistant Head of CODM Esports Operations",
+      company: "Assemble · Part-time",
+      period: "Aug 2025 — Jan 2026 (Bharatpur, Rajasthan, India · Remote)",
+      metrics: "Assisted in the planning and smooth execution of CODM tournaments and esports events. Designed collaborative workspace tools in Figma."
     },
     {
-      role: "UI/UX Designer Intern",
-      company: "Knaptix Ventures",
-      period: "Jun 2024 — Aug 2024 (Remote)",
-      metrics: "Delivered conversion-focused SaaS landing pages for 10+ startups with 95% client retention."
+      role: "Operation internship",
+      company: "Knaptix Ventures Private Limited · Internship",
+      period: "Jun 2025 — Aug 2025 (Pune District, Maharashtra, India · Remote)",
+      metrics: "Operations support and UI/UX design. Delivered conversion-focused SaaS landing pages for 10+ startups with 95% client retention."
     }
   ],
   honors: [

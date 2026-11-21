@@ -117,28 +117,28 @@ const ALL_PROJECTS = [
 
 const TIMELINE = [
   {
-    role: 'UI/UX Designer Intern',
-    company: 'UniEvent (EventFlow)',
-    period: 'Jun 2024 — Nov 2024 • 6 Mos (Ended early Nov)',
-    location: 'Bengaluru, Karnataka, India (Remote)',
+    role: 'UI-UX Designer',
+    company: 'UniEvent · Internship',
+    period: 'Jul 2026 — Nov 2026 • 5 Mos',
+    location: 'Punjab, India (Remote)',
     link: 'https://www.linkedin.com/in/varunsehgal02',
     desc: 'Designed campus event ticketing platform (EventFlow). Slashed transaction drop-off by 30% across 4-step booking workflow across 50+ components.'
   },
   {
-    role: 'Assistant Head of Operations / UI/UX Intern',
-    company: 'Assemble',
-    period: 'Aug 2024 — Jan 2025 • 6 Mos',
-    location: 'Remote',
+    role: 'Assistant Head of CODM Esports Operations',
+    company: 'Assemble · Part-time',
+    period: 'Aug 2025 — Jan 2026 • 6 Mos',
+    location: 'Bharatpur, Rajasthan, India (Remote)',
     link: 'https://www.linkedin.com/in/varunsehgal02',
-    desc: 'Designed collaborative creator workspace tools and interaction prototypes in Figma. Coordinated operations for multi-team competitions.'
+    desc: 'Assisted in the planning and smooth execution of CODM tournaments and esports events. Designed collaborative creator workspace tools and interaction prototypes in Figma.'
   },
   {
-    role: 'UI/UX Designer Intern',
-    company: 'Knaptix Ventures',
-    period: 'Jun 2024 — Aug 2024 • 3 Mos',
-    location: 'Remote',
+    role: 'Operation internship',
+    company: 'Knaptix Ventures Private Limited · Internship',
+    period: 'Jun 2025 — Aug 2025 • 3 Mos',
+    location: 'Pune District, Maharashtra, India (Remote)',
     link: 'https://www.linkedin.com/in/varunsehgal02',
-    desc: 'Delivered brand identities and conversion-focused SaaS landing pages for 10+ tech startups with a 95% client retention rate.'
+    desc: 'Operations internship and UI/UX design. Delivered brand identities and conversion-focused SaaS landing pages for 10+ tech startups with a 95% client retention rate.'
   },
   {
     role: 'Freelance UI/UX Designer',
@@ -269,13 +269,13 @@ const TIMELINE_ACTIVITY = [
     id: 'act-unievent',
     type: 'experience',
     category: 'Product Design',
-    date: 'Jun 2024 — Nov 2024 • 6 Mos (Ended early Nov)',
+    date: 'Jul 2026 — Nov 2026 • 5 Mos',
     icon: 'edit',
-    highlight: 'UniEvent (EventFlow)',
-    titleRest: 'completed UI/UX Design Internship (EventFlow)',
+    highlight: 'UniEvent (Internship)',
+    titleRest: 'completed UI-UX Designer Internship (EventFlow)',
     desc: 'Designed campus event ticketing platform (EventFlow). Slashed transaction drop-off by 30% across 4-step booking workflow across 50+ components.',
     quote: 'Spearheaded end-to-end design system with 50+ tokens, responsive checkout patterns, and real-time seat reservation micro-interactions.',
-    location: 'Bengaluru, Karnataka, India (Remote)',
+    location: 'Punjab, India (Remote)',
     link: 'https://www.linkedin.com/in/varunsehgal02',
     actionLabel: 'View on LinkedIn'
   },
@@ -297,12 +297,12 @@ const TIMELINE_ACTIVITY = [
     id: 'act-assemble',
     type: 'experience',
     category: 'Operations & UX',
-    date: 'Aug 2024 — Jan 2025 • 6 Mos',
+    date: 'Aug 2025 — Jan 2026 • 6 Mos',
     icon: 'terminal',
-    highlight: 'Assemble',
-    titleRest: 'appointed Assistant Head of Operations / UI/UX Intern',
-    desc: 'Designed collaborative creator workspace tools and interaction prototypes in Figma. Coordinated operations for multi-team competitions.',
-    location: 'Remote',
+    highlight: 'Assemble (Part-time)',
+    titleRest: 'appointed Assistant Head of CODM Esports Operations',
+    desc: 'Assisted in the planning and smooth execution of CODM tournaments and esports events. Designed collaborative creator workspace tools and interaction prototypes in Figma.',
+    location: 'Bharatpur, Rajasthan, India (Remote)',
     link: 'https://www.linkedin.com/in/varunsehgal02',
     actionLabel: 'View on LinkedIn'
   },
@@ -351,12 +351,12 @@ const TIMELINE_ACTIVITY = [
     id: 'act-knaptix',
     type: 'experience',
     category: 'Internship',
-    date: 'Jun 2024 — Aug 2024 • 3 Mos',
+    date: 'Jun 2025 — Aug 2025 • 3 Mos',
     icon: 'layers',
-    highlight: 'Knaptix Ventures',
-    titleRest: 'engaged Varun as UI/UX Designer Intern',
-    desc: 'Delivered brand identities and conversion-focused SaaS landing pages for 10+ tech startups with a 95% client retention rate.',
-    location: 'Remote',
+    highlight: 'Knaptix Ventures Private Limited',
+    titleRest: 'engaged Varun as Operation internship',
+    desc: 'Operations support, brand identities, and conversion-focused SaaS landing pages for 10+ tech startups with a 95% client retention rate.',
+    location: 'Pune District, Maharashtra, India (Remote)',
     link: 'https://www.linkedin.com/in/varunsehgal02',
     actionLabel: 'View on LinkedIn'
   },
@@ -572,13 +572,13 @@ const PAGE_LAYERS_MAP = {
     { id: 'e-root', title: 'Recent_Activity_Canvas (Frame)', type: 'frame', indent: 0, visible: true, locked: false },
     { id: 'e-header', title: 'Activity_Header & Filter_Pills', type: 'component', indent: 1, visible: true, locked: false },
     { id: 'e-spine', title: 'Center_Vertical_Spine (Path)', type: 'vector', indent: 1, visible: true, locked: true },
-    { id: 'e-m1', title: 'Milestone: UniEvent (UI/UX Intern - Nov 2024)', type: 'component', indent: 2, visible: true, locked: false },
+    { id: 'e-m1', title: 'Milestone: UniEvent (UI-UX Designer - Nov 2026)', type: 'component', indent: 2, visible: true, locked: false },
     { id: 'e-m2', title: 'Milestone: HAckeThor Winner (🏆 1st)', type: 'component', indent: 2, visible: true, locked: false },
-    { id: 'e-m3', title: 'Milestone: Assemble (Operations & UX)', type: 'component', indent: 2, visible: true, locked: false },
+    { id: 'e-m3', title: 'Milestone: Assemble (CODM Esports Operations)', type: 'component', indent: 2, visible: true, locked: false },
     { id: 'e-m4', title: 'Milestone: Udemy Masterclass Credential', type: 'component', indent: 2, visible: true, locked: false },
     { id: 'e-m5', title: 'Milestone: CodeSrijan (Organizing Lead)', type: 'component', indent: 2, visible: true, locked: false },
     { id: 'e-m6', title: 'Milestone: Code Conquerors (🥈 2nd)', type: 'component', indent: 2, visible: true, locked: false },
-    { id: 'e-m7', title: 'Milestone: Knaptix Ventures (Intern)', type: 'component', indent: 2, visible: true, locked: false },
+    { id: 'e-m7', title: 'Milestone: Knaptix Ventures (Operation Intern)', type: 'component', indent: 2, visible: true, locked: false },
     { id: 'e-m8', title: 'Milestone: Freelance (10+ Startups)', type: 'component', indent: 2, visible: true, locked: false }
   ],
   about: [
@@ -2799,7 +2799,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                           <span className="portrait-pro-badge">PRO VERIFIED</span>
                         </div>
                         <p className="portrait-lead-title">Lead Product Designer &amp; Design Technologist</p>
-                        <p className="portrait-meta-sub">Jaypee Univ. B.Tech CSE (8.5 CGPA) · Global Remote / SF</p>
+                        <p className="portrait-meta-sub">Jaypee Univ. B.Tech CSE · Global Remote / SF</p>
                       </div>
                     </div>
 

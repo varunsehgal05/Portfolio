@@ -246,14 +246,14 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm, onScrollToTop }) => {
           id: 'varun',
           name: 'Varun Sehgal',
           color: '#A259FF',
-          x: 120,
+          x: 140,
           y: 445,
           tool: 'T',
           chat: 'typing 6+ projects...',
           action: 'Typing Stat 1'
         }
       ]);
-      setActiveSelection({ x: 35, y: 425, w: 220, h: 80, label: '❖ Stat [1/4] • 6+ Projects' });
+      setActiveSelection({ x: 35, y: 425, w: 310, h: 85, label: '❖ Stat [1/3] • 6+ Projects' });
     }, 2850);
 
     // Stage 5 Step B: Stat 1 Reveals (3250ms)
@@ -261,31 +261,31 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm, onScrollToTop }) => {
       setBuildStage(5);
     }, 3250);
 
-    // Stage 6 Step A: Elena draws Stat 2 Box with 16px gap (3350ms)
+    // Stage 6 Step A: Elena draws Stat 2 Box (3350ms)
     schedule(() => {
       setActiveCursors([
         {
           id: 'elena',
           name: 'Elena Rostova',
           color: '#F59E0B',
-          x: 275,
+          x: 360,
           y: 425,
           tool: 'R',
-          chat: 'drawing stat 2 box (16px gap)',
+          chat: 'drawing stat 2 box',
           action: 'Drawing Pill'
         },
         {
           id: 'varun',
           name: 'Varun Sehgal',
           color: '#A259FF',
-          x: 360,
+          x: 480,
           y: 445,
           tool: 'T',
           chat: 'typing 200+ hackers...',
           action: 'Typing Stat 2'
         }
       ]);
-      setActiveSelection({ x: 275, y: 425, w: 220, h: 80, label: '❖ Stat [2/4] • 200+ Hackers' });
+      setActiveSelection({ x: 360, y: 425, w: 310, h: 85, label: '❖ Stat [2/3] • 200+ Hackers' });
     }, 3350);
 
     // Stage 6 Step B: Stat 2 Reveals (3750ms)
@@ -300,7 +300,7 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm, onScrollToTop }) => {
           id: 'elena',
           name: 'Elena Rostova',
           color: '#F59E0B',
-          x: 515,
+          x: 685,
           y: 425,
           tool: 'R',
           chat: 'drawing stat 3 box',
@@ -310,52 +310,20 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm, onScrollToTop }) => {
           id: 'sarah',
           name: 'Sarah Lin',
           color: '#0ACF83',
-          x: 600,
+          x: 800,
           y: 445,
           tool: '❖',
           chat: 'stamping 🏆 1st HACKeThor...',
           action: 'Stamping Stat 3'
         }
       ]);
-      setActiveSelection({ x: 515, y: 425, w: 220, h: 80, label: '❖ Stat [3/4] • 🏆 1st Winner' });
+      setActiveSelection({ x: 685, y: 425, w: 310, h: 85, label: '❖ Stat [3/3] • 🏆 1st Winner' });
     }, 3850);
 
-    // Stage 7 Step B: Stat 3 Reveals (4250ms)
-    schedule(() => {
-      setBuildStage(7);
-    }, 4250);
-
-    // Stage 8 Step A: Elena draws Stat 4 Box (4350ms)
-    schedule(() => {
-      setActiveCursors([
-        {
-          id: 'elena',
-          name: 'Elena Rostova',
-          color: '#F59E0B',
-          x: 755,
-          y: 425,
-          tool: 'R',
-          chat: 'drawing stat 4 box',
-          action: 'Drawing Pill'
-        },
-        {
-          id: 'varun',
-          name: 'Varun Sehgal',
-          color: '#A259FF',
-          x: 840,
-          y: 445,
-          tool: 'T',
-          chat: 'typing 8.5 CGPA JUET...',
-          action: 'Typing Stat 4'
-        }
-      ]);
-      setActiveSelection({ x: 755, y: 425, w: 220, h: 80, label: '❖ Stat [4/4] • 8.5 CGPA' });
-    }, 4350);
-
-    // Stage 8 Step B: Stat 4 Reveals (4750ms)
+    // Stage 7 Step B: Stat 3 Reveals (4250ms) and proceed directly to Stage 8
     schedule(() => {
       setBuildStage(8);
-    }, 4750);
+    }, 4250);
 
     // Stage 9 Step A: Elena frames Card 1 on empty space (4850ms)
     schedule(() => {
@@ -962,7 +930,7 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm, onScrollToTop }) => {
                   how interaction models shape user psychology, and whether enterprise systems can be made fluid, beautiful, and tactile without losing execution speed.
                 </p>
                 <p className="cv-now-line">
-                  UI/UX Designer Intern at <strong>UniEvent (EventFlow)</strong> &amp; Assistant Head of Operations at <strong>Assemble</strong>.
+                  UI-UX Designer at <strong>UniEvent</strong> &amp; Assistant Head of CODM Esports Operations at <strong>Assemble</strong>.
                 </p>
                 <p className="cv-links">
                   <a href="mailto:varun.sehgal02@gmail.com">Email</a>
@@ -995,7 +963,7 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm, onScrollToTop }) => {
               </div>
             </div>
 
-            {/* In Numbers Stats Row (4 Wob-Pills) - Sequentially stamped one by one (Stages 5, 6, 7, 8) */}
+            {/* In Numbers Stats Row (3 Wob-Pills) - Sequentially stamped one by one (Stages 5, 6, 7) */}
             <ul className="cv-stats" aria-label="In numbers">
               <li className={`cv-stat ${isBuilding && buildStage < 5 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                 <strong>6+</strong>
@@ -1008,10 +976,6 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm, onScrollToTop }) => {
               <li className={`cv-stat ${isBuilding && buildStage < 7 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                 <strong>🏆 1st</strong>
                 <span>Place Winner at HACKeThor (Unstop)</span>
-              </li>
-              <li className={`cv-stat ${isBuilding && buildStage < 8 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-                <strong>8.5</strong>
-                <span>CGPA in B.Tech CSE at JUET</span>
               </li>
             </ul>
           </section>
@@ -1050,9 +1014,9 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm, onScrollToTop }) => {
               <ol className="cv-timeline">
                 <li className="cv-job">
                   <p className="cv-job-head">
-                    <strong>UI/UX Designer Intern</strong>, UniEvent (EventFlow)
+                    <strong>UI-UX Designer</strong>, UniEvent
                   </p>
-                  <p className="cv-job-meta">Sep 2024 — Nov 2024 • 6 Mos, Bengaluru, Karnataka, India (Remote)</p>
+                  <p className="cv-job-meta">Jul 2026 — Nov 2026 • 5 Mos, Punjab, India (Remote)</p>
                   <ul>
                     <li>Designed campus event ticketing platform (EventFlow) from initial wireframes to high-fidelity clickable prototype.</li>
                     <li>Slashed transaction drop-off by 30% across a 4-step booking workflow across 50+ reusable component variants.</li>
@@ -1061,22 +1025,22 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm, onScrollToTop }) => {
 
                 <li className="cv-job">
                   <p className="cv-job-head">
-                    <strong>Assistant Head of Operations / UI/UX Intern</strong>, Assemble
+                    <strong>Assistant Head of CODM Esports Operations</strong>, Assemble
                   </p>
-                  <p className="cv-job-meta">Aug 2024 — Jan 2025 • 6 Mos, Remote</p>
+                  <p className="cv-job-meta">Aug 2025 — Jan 2026 • 6 Mos, Bharatpur, Rajasthan, India (Remote)</p>
                   <ul>
+                    <li>Assisted in the planning and smooth execution of CODM tournaments and esports events.</li>
                     <li>Designed collaborative creator workspace tools and interaction prototypes in Figma.</li>
-                    <li>Coordinated sprint operations and interface evaluations for multi-team hackathon competitions.</li>
                   </ul>
                 </li>
 
                 <li className="cv-job">
                   <p className="cv-job-head">
-                    <strong>UI/UX Designer Intern</strong>, Knaptix Ventures
+                    <strong>Operation internship</strong>, Knaptix Ventures Private Limited
                   </p>
-                  <p className="cv-job-meta">Jun 2024 — Aug 2024 • 3 Mos, Remote</p>
+                  <p className="cv-job-meta">Jun 2025 — Aug 2025 • 3 Mos, Pune District, Maharashtra, India (Remote)</p>
                   <ul>
-                    <li>Delivered brand identities and conversion-focused SaaS landing pages for 10+ tech startups with a 95% client retention rate.</li>
+                    <li>Operations support, brand identities, and conversion-focused SaaS landing pages for 10+ tech startups with a 95% client retention rate.</li>
                   </ul>
                 </li>
               </ol>
@@ -1089,7 +1053,7 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm, onScrollToTop }) => {
                   <li className="cv-entry">
                     <strong>B.Tech in Computer Science &amp; Engineering</strong>
                     <span>Jaypee University of Engineering &amp; Technology (JUET), Guna</span>
-                    <span className="cv-soft">2023 — 2027 • CGPA 8.5</span>
+                    <span className="cv-soft">2023 — 2027</span>
                   </li>
                   <li className="cv-entry">
                     <strong>Senior Secondary (Class XII)</strong>
