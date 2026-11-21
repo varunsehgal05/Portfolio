@@ -284,6 +284,13 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
   const lastTypeTimeRef = useRef(0);
   const lastTimeRef = useRef(Date.now());
   const lastStampedIndexRef = useRef(-1);
+  const heroBoxPlacedRef = useRef(false);
+  const heroCtaSnappedRef = useRef(false);
+  const card1PlacedRef = useRef(false);
+  const card1BadgeSnappedRef = useRef(false);
+  const card2PlacedRef = useRef(false);
+  const card2BadgeSnappedRef = useRef(false);
+  const lastTypedCharRef = useRef('');
   const physicsRef = useRef(null);
 
   // Screen dimensions
@@ -382,6 +389,14 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
     startTimeRef.current = Date.now();
     soundSynth.init();
     updateStage(0);
+    heroBoxPlacedRef.current = false;
+    heroCtaSnappedRef.current = false;
+    card1PlacedRef.current = false;
+    card1BadgeSnappedRef.current = false;
+    card2PlacedRef.current = false;
+    card2BadgeSnappedRef.current = false;
+    lastTypedCharRef.current = '';
+    lastStampedIndexRef.current = -1;
 
     const loop = () => {
       if (isFinishedRef.current) return;
@@ -597,132 +612,625 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         ]);
       }
       // =====================================================================
-      // Phase 3: Center Finder Window & Live Headline Typing (7.2s - 11.4s) — 2 Cursors
+      // Phase 3: Box-by-Box Window Construction & Live Content Typing (7.2s - 19.8s)
+      // Each swarm agent has their own specialized job:
+      // - Alex Chen: Box & Frame Architect ([F Frame], [R Rectangle])
+      // - Varun Sehgal: Lead Copy & Typography ([T Text])
+      // - Elena Rostova: Layout & Spacing Architect ([R Rectangle], [Smart Guides], [📐 Auto-Layout])
+      // - Sarah Lin: UI Components & Stamping ([T Text], [⌥ Component])
+      // - You (User): Window Assembly ([V Move])
       // =====================================================================
-      else if (elapsed < 11.4) {
-        setStatusMessage('[3/5] Constructing Finder Window & Typing Content...');
-        const t = Math.min(1, Math.max(0, (elapsed - 7.2) / 4.2));
+      else if (elapsed < 19.8) {
+        const pElapsed = elapsed - 7.2;
 
-        // 7.2s - 9.2s: Window frame extrusion
-        const frameProgress = Math.min(1, t / 0.52);
-        const curW = lerp(80, winTargetW, easeInOutCubic(frameProgress));
-        const curH = lerp(60, winTargetH, easeInOutCubic(frameProgress));
+        const curW = winTargetW;
+        const curH = winTargetH;
         const curX = winTargetX;
         const curY = winTargetY;
 
-        // Smoothly reveal real window when frame is drawn
-        if (t > 0.52) {
-          updateStage(3, 800);
-        }
+        // Content layout bounds inside window
+        const sidebarW = 175;
+        const headerH = 38;
+        const contentX = curX + sidebarW + 16;
+        const contentY = curY + headerH + 14;
+        const contentW = curW - sidebarW - 32;
 
-        // 9.2s - 11.4s: Authentic human typing cadence with pauses
-        const headlineText = 'Designing intuitive web apps & modern interfaces';
-        const typingTimeProgress = Math.min(1, Math.max(0, (t - 0.54) / 0.44));
-        const charCount = Math.floor(typingTimeProgress * headlineText.length);
-        const currentTyped = headlineText.substring(0, charCount);
+        // 1. Hero Box Bounds
+        const heroX = contentX;
+        const heroY = contentY;
+        const heroW = contentW;
+        const heroH = 96;
 
-        // Tactile typewriter clicks with space and punctuation pauses
-        if (typingTimeProgress > 0 && typingTimeProgress < 1 && Date.now() - lastTypeTimeRef.current > 75) {
-          soundSynth.playTypeClick(320 + Math.random() * 80);
-          lastTypeTimeRef.current = Date.now();
-        }
+        // 2. Cards Grid Bounds
+        const cardsGap = 12;
+        const cardsY = heroY + heroH + 14;
+        const cardW = Math.floor((contentW - cardsGap) / 2);
+        const cardH = Math.min(150, curH - headerH - 14 - heroH - 14 - 18);
 
-        // Alex holds pivot, User extrudes frame, then Varun types headline
-        const userFrameArc = interpolateArc(curX + 80, curY + 60, curX + curW, curY + curH, frameProgress, 20, 0.04);
-        const varunX = curX + 220 + typingTimeProgress * 290;
-        const varunY = curY + 98;
+        const card1X = contentX;
+        const card1Y = cardsY;
 
-        agentTargets = {
-          alex: {
-            hidden: t > 0.58,
-            x: curX,
-            y: curY,
-            color: '#0ACF83',
-            label: 'Alex Chen',
-            action: 'Holding Pivot (0, 0)',
-            toolKey: t < 0.25 ? 'F Frame' : null,
-            cursorMode: 'arrow'
-          },
-          user: {
-            hidden: t > 0.62,
-            x: userFrameArc.x,
-            y: userFrameArc.y,
-            color: '#1ABCFE',
-            label: userName || 'You',
-            action: 'Extruding Window Frame',
-            toolKey: t < 0.3 ? 'V Move' : null,
-            cursorMode: 'resize',
-            isDrawing: true,
-            chatText: t < 0.5 ? 'scaling frame to 920×560' : null,
-            boxBounds: {
+        const card2X = contentX + cardW + cardsGap;
+        const card2Y = cardsY;
+
+        // Sub-phase 3.1: Extrude Outer Window Frame (7.2s - 9.2s, pElapsed 0.0 - 2.0s)
+        if (pElapsed < 2.0) {
+          setStatusMessage('[3/5] Alex Chen & You: Extruding Window Frame Box...');
+          const t1 = Math.min(1, pElapsed / 2.0);
+          const drawnW = lerp(80, winTargetW, easeInOutCubic(t1));
+          const drawnH = lerp(60, winTargetH, easeInOutCubic(t1));
+
+          const userFrameArc = interpolateArc(curX + 80, curY + 60, curX + drawnW, curY + drawnH, t1, 20, 0.04);
+
+          agentTargets = {
+            alex: {
               x: curX,
               y: curY,
-              w: curW,
-              h: curH,
-              label: `VarunOS Portfolio — ${Math.round(curW)} × ${Math.round(curH)} px`
+              color: '#0ACF83',
+              label: 'Alex Chen',
+              action: 'Holding Pivot (0, 0)',
+              toolKey: 'F Frame',
+              cursorMode: 'arrow',
+              chatText: t1 < 0.6 ? 'holding window pivot' : null
+            },
+            user: {
+              x: userFrameArc.x,
+              y: userFrameArc.y,
+              color: '#1ABCFE',
+              label: userName || 'You',
+              action: 'Extruding Window Box',
+              toolKey: 'V Move',
+              cursorMode: 'resize',
+              isDrawing: true,
+              chatText: 'extruding to ' + Math.round(drawnW) + '×' + Math.round(drawnH),
+              boxBounds: {
+                x: curX,
+                y: curY,
+                w: drawnW,
+                h: drawnH,
+                label: `VarunOS Portfolio • ${Math.round(drawnW)} × ${Math.round(drawnH)}px`
+              }
+            },
+            varun: { hidden: true, x: curX + 120, y: curY + 60 },
+            sarah: { hidden: true, x: curX + drawnW, y: curY + 40 },
+            elena: { hidden: true, x: curX + drawnW / 2, y: curY + drawnH + 20 }
+          };
+
+          setWireframeData({
+            type: 'window',
+            x: curX,
+            y: curY,
+            w: drawnW,
+            h: drawnH,
+            heroBoxVisible: false,
+            card1BoxVisible: false,
+            card2BoxVisible: false,
+            opacity: 1
+          });
+
+          setActiveGuides([
+            {
+              type: 'v',
+              x1: curX + drawnW / 2,
+              y1: curY - 16,
+              x2: curX + drawnW / 2,
+              y2: curY + drawnH + 16,
+              color: '#ec4899',
+              dashed: true,
+              label: 'Center Alignment',
+              pillText: `Center: ${Math.round(drawnW)}px`,
+              pillX: curX + drawnW / 2,
+              pillY: curY + drawnH + 16
             }
-          },
-          varun: {
-            hidden: t < 0.48,
-            x: varunX,
-            y: varunY,
-            color: '#A259FF',
-            label: 'Varun Sehgal',
-            action: 'Typing Headline...',
-            toolKey: t >= 0.48 && t < 0.6 ? 'T Text' : null,
-            cursorMode: 'text',
-            caretText: currentTyped,
-            chatText: t >= 0.55 ? 'typing headlines & auto-layout' : null
-          },
-          sarah: { hidden: true, x: curX + curW - 80, y: curY + 50 },
-          elena: { hidden: true, x: curX + curW / 2, y: curY + curH + 24 }
-        };
+          ]);
+        }
 
-        const wireframeOpacity = t < 0.52 ? 1 : Math.max(0, 1 - (t - 0.52) / 0.16);
-        setWireframeData({
-          type: 'window',
-          x: curX,
-          y: curY,
-          w: curW,
-          h: curH,
-          charCount,
-          typedText: currentTyped,
-          opacity: wireframeOpacity
-        });
+        // Sub-phase 3.2: Alex Chen Puts Hero Bento Box (9.2s - 11.2s, pElapsed 2.0 - 4.0s)
+        else if (pElapsed < 4.0) {
+          setStatusMessage('[3/5] Alex Chen: [R] Putting Hero Bento Box...');
+          const t2 = Math.min(1, (pElapsed - 2.0) / 2.0);
+          const drawnHeroW = lerp(40, heroW, easeInOutCubic(t2));
+          const drawnHeroH = lerp(20, heroH, easeInOutCubic(t2));
 
-        setActiveGuides([
-          {
-            type: 'v',
-            x1: curX + curW / 2,
-            y1: curY - 20,
-            x2: curX + curW / 2,
-            y2: curY + curH + 24,
-            color: '#ec4899',
-            dashed: true,
-            label: 'Center Alignment',
-            pillText: `Center: ${Math.round(curW)}px`,
-            pillX: curX + curW / 2,
-            pillY: curY + curH + 24
-          },
-          {
-            type: 'diag',
-            x1: curX,
-            y1: curY,
-            x2: curX + curW,
-            y2: curY + curH,
-            color: '#ec4899',
-            dashed: true,
-            diamond: true,
-            opacity: 0.65
+          const alexArc = interpolateArc(heroX + 40, heroY + 20, heroX + drawnHeroW, heroY + drawnHeroH, t2, 14, 0.04);
+
+          if (t2 > 0.88 && !heroBoxPlacedRef.current) {
+            heroBoxPlacedRef.current = true;
+            soundSynth.playDropThump(220);
+            triggerRipple(heroX + heroW / 2, heroY + heroH / 2, '#0ACF83');
           }
-        ]);
+
+          agentTargets = {
+            alex: {
+              x: alexArc.x,
+              y: alexArc.y,
+              color: '#0ACF83',
+              label: 'Alex Chen',
+              action: 'Putting Hero Bento Box',
+              toolKey: 'R Rectangle',
+              cursorMode: 'cross',
+              isDrawing: true,
+              chatText: 'putting hero bento box',
+              boxBounds: {
+                x: heroX,
+                y: heroY,
+                w: drawnHeroW,
+                h: drawnHeroH,
+                label: `Alex Chen • [R] Hero Box (${Math.round(drawnHeroW)} × ${Math.round(drawnHeroH)}px)`
+              }
+            },
+            varun: {
+              x: lerp(curX + 60, heroX + 16, easeInOutCubic(t2)),
+              y: lerp(curY + 20, heroY + 36, easeInOutCubic(t2)),
+              color: '#A259FF',
+              label: 'Varun Sehgal',
+              action: 'Ready with [T Text]',
+              toolKey: 'T Text',
+              cursorMode: 'text',
+              chatText: t2 > 0.4 ? 'ready to type headline copy' : null
+            },
+            user: { hidden: true, x: curX + curW, y: curY + curH },
+            sarah: { hidden: true, x: contentX + 40, y: cardsY + 40 },
+            elena: { hidden: true, x: curX + curW / 2, y: curY + curH + 20 }
+          };
+
+          setWireframeData({
+            type: 'window',
+            x: curX,
+            y: curY,
+            w: curW,
+            h: curH,
+            heroBoxVisible: true,
+            heroBoxActive: true,
+            heroBoxPlaced: t2 > 0.88,
+            heroTypedText: '',
+            heroCaretVisible: false,
+            card1BoxVisible: false,
+            card2BoxVisible: false,
+            opacity: 1
+          });
+
+          setActiveGuides([
+            {
+              type: 'h',
+              x1: heroX,
+              y1: heroY,
+              x2: heroX + drawnHeroW,
+              y2: heroY,
+              color: '#38bdf8',
+              dashed: true,
+              label: 'Hero Top Alignment',
+              pillText: `W: ${Math.round(drawnHeroW)}px`,
+              pillX: heroX + drawnHeroW / 2,
+              pillY: heroY - 14
+            }
+          ]);
+        }
+
+        // Sub-phase 3.3: Varun Sehgal Types Headline Copy (11.2s - 13.6s, pElapsed 4.0 - 6.4s)
+        else if (pElapsed < 6.4) {
+          setStatusMessage('[3/5] Varun Sehgal: [T] Typing headline copy into box...');
+          const t3 = Math.min(1, (pElapsed - 4.0) / 2.4);
+          const headline = 'I design digital products that make complex things feel simple.';
+          const charCount = Math.floor(t3 * headline.length);
+          const currentTyped = headline.substring(0, charCount);
+
+          if (charCount > 0 && currentTyped !== lastTypedCharRef.current && Date.now() - lastTypeTimeRef.current > 55) {
+            lastTypedCharRef.current = currentTyped;
+            lastTypeTimeRef.current = Date.now();
+            soundSynth.playTypeClick(310 + Math.random() * 60);
+          }
+
+          const varunTypingX = heroX + 16 + Math.min(contentW - 140, charCount * 7.5);
+          const varunTypingY = heroY + 36;
+
+          const isCtaPlaced = t3 > 0.65;
+          if (isCtaPlaced && !heroCtaSnappedRef.current) {
+            heroCtaSnappedRef.current = true;
+            soundSynth.playSnap(720);
+            triggerRipple(heroX + heroW - 60, heroY + heroH - 22, '#1ABCFE');
+          }
+
+          agentTargets = {
+            varun: {
+              x: varunTypingX,
+              y: varunTypingY,
+              color: '#A259FF',
+              label: 'Varun Sehgal',
+              action: 'Typing Headline...',
+              toolKey: 'T Text',
+              cursorMode: 'text',
+              caretText: currentTyped,
+              chatText: t3 < 0.65 ? 'typing headline copy' : 'crafting value prop'
+            },
+            user: {
+              x: heroX + heroW - 60,
+              y: heroY + heroH - 22,
+              color: '#1ABCFE',
+              label: userName || 'You',
+              action: isCtaPlaced ? 'CTA Placed ✓' : 'Stamping CTA Button',
+              toolKey: 'V Move',
+              cursorMode: 'arrow',
+              isClicking: t3 > 0.65 && t3 < 0.8,
+              chatText: isCtaPlaced ? 'snapped See My Work button' : null
+            },
+            alex: {
+              x: lerp(heroX + heroW, card1X + 40, easeInOutCubic(t3)),
+              y: lerp(heroY + heroH, card1Y + 30, easeInOutCubic(t3)),
+              color: '#0ACF83',
+              label: 'Alex Chen',
+              action: 'Moving to Project Grid',
+              cursorMode: 'arrow'
+            },
+            sarah: { hidden: true, x: card1X + 30, y: card1Y + 30 },
+            elena: { hidden: true, x: curX + curW / 2, y: curY + curH + 20 }
+          };
+
+          setWireframeData({
+            type: 'window',
+            x: curX,
+            y: curY,
+            w: curW,
+            h: curH,
+            heroBoxVisible: true,
+            heroBoxActive: false,
+            heroBoxPlaced: true,
+            heroTypedText: currentTyped,
+            heroCaretVisible: t3 < 0.98,
+            heroBadgeVisible: t3 > 0.25,
+            ctaVisible: isCtaPlaced,
+            card1BoxVisible: false,
+            card2BoxVisible: false,
+            opacity: 1
+          });
+
+          setActiveGuides([]);
+        }
+
+        // Sub-phase 3.4: Elena Puts Card 01 Box & Sarah Types It (13.6s - 16.0s, pElapsed 6.4 - 8.8s)
+        else if (pElapsed < 8.8) {
+          const t4 = Math.min(1, (pElapsed - 6.4) / 2.4);
+          const pBox = Math.min(1, t4 / 0.42);
+          const pType = Math.max(0, (t4 - 0.42) / 0.58);
+
+          const drawnCard1W = lerp(30, cardW, easeInOutCubic(pBox));
+          const drawnCard1H = lerp(20, cardH, easeInOutCubic(pBox));
+
+          const card1Title = 'CodeSrijan Hackathon Portal';
+          const card1CharCount = Math.floor(pType * card1Title.length);
+          const card1Typed = card1Title.substring(0, card1CharCount);
+
+          if (pBox > 0.88 && !card1PlacedRef.current) {
+            card1PlacedRef.current = true;
+            soundSynth.playDropThump(240);
+            triggerRipple(card1X + cardW / 2, card1Y + cardH / 2, '#F59E0B');
+          }
+
+          if (pType > 0 && card1Typed !== lastTypedCharRef.current && Date.now() - lastTypeTimeRef.current > 55) {
+            lastTypedCharRef.current = card1Typed;
+            lastTypeTimeRef.current = Date.now();
+            soundSynth.playTypeClick(340 + Math.random() * 50);
+          }
+
+          if (pType > 0.72 && !card1BadgeSnappedRef.current) {
+            card1BadgeSnappedRef.current = true;
+            soundSynth.playSnap(760);
+          }
+
+          const sarahTypeX = card1X + 14 + Math.min(cardW - 40, card1CharCount * 6.5);
+          const sarahTypeY = card1Y + 36;
+
+          if (pType === 0) {
+            setStatusMessage('[3/5] Elena Rostova: [R] Putting Project Card 01 Box...');
+          } else {
+            setStatusMessage('[3/5] Sarah Lin: [T] Typing CodeSrijan Portal content...');
+          }
+
+          agentTargets = {
+            elena: {
+              x: card1X + drawnCard1W,
+              y: card1Y + drawnCard1H,
+              color: '#F59E0B',
+              label: 'Elena Rostova',
+              action: pBox < 1 ? 'Putting Card 01 Box' : 'Smart Guide Check',
+              toolKey: pBox < 1 ? 'R Rectangle' : null,
+              cursorMode: pBox < 1 ? 'cross' : 'arrow',
+              isDrawing: pBox < 1,
+              chatText: pBox < 1 ? 'putting card 01 box' : 'aligning layout',
+              boxBounds: pBox < 1 ? {
+                x: card1X,
+                y: card1Y,
+                w: drawnCard1W,
+                h: drawnCard1H,
+                label: `Elena • [R] Card 01 (${Math.round(drawnCard1W)} × ${Math.round(drawnCard1H)}px)`
+              } : null
+            },
+            sarah: {
+              x: sarahTypeX,
+              y: sarahTypeY,
+              color: '#FF7262',
+              label: 'Sarah Lin',
+              action: pType > 0 ? 'Typing Project 01...' : 'Entering Card 01',
+              toolKey: 'T Text',
+              cursorMode: 'text',
+              caretText: card1Typed,
+              chatText: pType > 0.2 ? 'typing portal metrics' : null
+            },
+            alex: {
+              x: lerp(card1X + cardW, card2X + 30, easeInOutCubic(t4)),
+              y: lerp(card1Y + 30, card2Y + 20, easeInOutCubic(t4)),
+              color: '#0ACF83',
+              label: 'Alex Chen',
+              action: 'Prepping Card 02 Box',
+              cursorMode: 'arrow'
+            },
+            varun: { hidden: true, x: card2X + 20, y: card2Y + 20 },
+            user: { hidden: true, x: curX + curW, y: curY + curH }
+          };
+
+          setWireframeData({
+            type: 'window',
+            x: curX,
+            y: curY,
+            w: curW,
+            h: curH,
+            heroBoxVisible: true,
+            heroTypedText: 'I design digital products that make complex things feel simple.',
+            heroBadgeVisible: true,
+            ctaVisible: true,
+            card1BoxVisible: true,
+            card1BoxActive: pBox < 1,
+            card1BoxPlaced: pBox >= 1,
+            card1TypedTitle: card1Typed,
+            card1CaretVisible: pType > 0 && pType < 0.95,
+            card1TypedSub: pType > 0.45 ? '800+ Attendees • 50+ Teams' : '',
+            card1BadgesVisible: pType > 0.72,
+            card2BoxVisible: false,
+            opacity: 1
+          });
+
+          setActiveGuides(pBox < 1 ? [
+            {
+              type: 'h',
+              x1: card1X,
+              y1: card1Y,
+              x2: card1X + drawnCard1W,
+              y2: card1Y,
+              color: '#F59E0B',
+              dashed: true,
+              label: 'Card 01 Top',
+              pillText: `W: ${Math.round(drawnCard1W)}px`,
+              pillX: card1X + drawnCard1W / 2,
+              pillY: card1Y - 12
+            }
+          ] : []);
+        }
+
+        // Sub-phase 3.5: Alex Chen Puts Card 02 Box & Varun Types It (16.0s - 18.2s, pElapsed 8.8 - 11.0s)
+        else if (pElapsed < 11.0) {
+          const t5 = Math.min(1, (pElapsed - 8.8) / 2.2);
+          const pBox2 = Math.min(1, t5 / 0.42);
+          const pType2 = Math.max(0, (t5 - 0.42) / 0.58);
+
+          const drawnCard2W = lerp(30, cardW, easeInOutCubic(pBox2));
+          const drawnCard2H = lerp(20, cardH, easeInOutCubic(pBox2));
+
+          const card2Title = 'EventFlow Experience Platform';
+          const card2CharCount = Math.floor(pType2 * card2Title.length);
+          const card2Typed = card2Title.substring(0, card2CharCount);
+
+          if (pBox2 > 0.88 && !card2PlacedRef.current) {
+            card2PlacedRef.current = true;
+            soundSynth.playDropThump(260);
+            triggerRipple(card2X + cardW / 2, card2Y + cardH / 2, '#0ACF83');
+          }
+
+          if (pType2 > 0 && card2Typed !== lastTypedCharRef.current && Date.now() - lastTypeTimeRef.current > 55) {
+            lastTypedCharRef.current = card2Typed;
+            lastTypeTimeRef.current = Date.now();
+            soundSynth.playTypeClick(320 + Math.random() * 50);
+          }
+
+          if (pType2 > 0.72 && !card2BadgeSnappedRef.current) {
+            card2BadgeSnappedRef.current = true;
+            soundSynth.playSnap(800);
+          }
+
+          const varunTypeX = card2X + 14 + Math.min(cardW - 40, card2CharCount * 6.5);
+          const varunTypeY = card2Y + 36;
+
+          if (pType2 === 0) {
+            setStatusMessage('[3/5] Alex Chen: [R] Putting Project Card 02 Box...');
+          } else {
+            setStatusMessage('[3/5] Varun Sehgal: [T] Typing EventFlow Platform content...');
+          }
+
+          agentTargets = {
+            alex: {
+              x: card2X + drawnCard2W,
+              y: card2Y + drawnCard2H,
+              color: '#0ACF83',
+              label: 'Alex Chen',
+              action: pBox2 < 1 ? 'Putting Card 02 Box' : 'Card 02 Done ✓',
+              toolKey: pBox2 < 1 ? 'R Rectangle' : null,
+              cursorMode: pBox2 < 1 ? 'cross' : 'arrow',
+              isDrawing: pBox2 < 1,
+              chatText: pBox2 < 1 ? 'putting card 02 box' : null,
+              boxBounds: pBox2 < 1 ? {
+                x: card2X,
+                y: card2Y,
+                w: drawnCard2W,
+                h: drawnCard2H,
+                label: `Alex • [R] Card 02 (${Math.round(drawnCard2W)} × ${Math.round(drawnCard2H)}px)`
+              } : null
+            },
+            varun: {
+              x: varunTypeX,
+              y: varunTypeY,
+              color: '#A259FF',
+              label: 'Varun Sehgal',
+              action: pType2 > 0 ? 'Typing Project 02...' : 'Entering Card 02',
+              toolKey: 'T Text',
+              cursorMode: 'text',
+              caretText: card2Typed,
+              chatText: pType2 > 0.2 ? 'typing EventFlow metrics' : null
+            },
+            elena: {
+              x: card1X + cardW + cardsGap / 2,
+              y: card1Y + 30,
+              color: '#F59E0B',
+              label: 'Elena Rostova',
+              action: 'Smart Guides: 12px Gap',
+              cursorMode: 'arrow'
+            },
+            sarah: { hidden: true, x: card1X + 50, y: card1Y + 50 },
+            user: { hidden: true, x: curX + curW, y: curY + curH }
+          };
+
+          setWireframeData({
+            type: 'window',
+            x: curX,
+            y: curY,
+            w: curW,
+            h: curH,
+            heroBoxVisible: true,
+            heroTypedText: 'I design digital products that make complex things feel simple.',
+            heroBadgeVisible: true,
+            ctaVisible: true,
+            card1BoxVisible: true,
+            card1BoxPlaced: true,
+            card1TypedTitle: 'CodeSrijan Hackathon Portal',
+            card1TypedSub: '800+ Attendees • 50+ Teams',
+            card1BadgesVisible: true,
+            card2BoxVisible: true,
+            card2BoxActive: pBox2 < 1,
+            card2BoxPlaced: pBox2 >= 1,
+            card2TypedTitle: card2Typed,
+            card2CaretVisible: pType2 > 0 && pType2 < 0.95,
+            card2TypedSub: pType2 > 0.45 ? '30% Less Dropoff • 4-Step Checkout' : '',
+            card2BadgesVisible: pType2 > 0.72,
+            opacity: 1
+          });
+
+          setActiveGuides([
+            {
+              type: 'v',
+              x1: card1X + cardW + cardsGap / 2,
+              y1: cardsY,
+              x2: card1X + cardW + cardsGap / 2,
+              y2: cardsY + cardH,
+              color: '#ec4899',
+              dashed: true,
+              label: 'ΔX: 12px',
+              pillText: 'ΔX: 12px Equal Gap',
+              pillX: card1X + cardW + cardsGap / 2,
+              pillY: cardsY + cardH / 2
+            }
+          ]);
+        }
+
+        // Sub-phase 3.6: Smart Guides & Seamless Real Window Unveiling (18.2s - 19.8s, pElapsed 11.0 - 12.6s)
+        else {
+          const t6 = Math.min(1, (pElapsed - 11.0) / 1.6);
+          setStatusMessage('[3/5] Elena: Snapping Auto-Layout guides & revealing workspace...');
+
+          if (t6 > 0.45) {
+            updateStage(3, 820); // Reveal real window!
+          }
+
+          const wireframeOpacity = t6 < 0.45 ? 1 : Math.max(0, 1 - (t6 - 0.45) / 0.55);
+
+          agentTargets = {
+            elena: {
+              x: card1X + cardW + cardsGap / 2,
+              y: cardsY + cardH / 2,
+              color: '#F59E0B',
+              label: 'Elena Rostova',
+              action: 'Auto-Layout Verified ✓',
+              toolKey: '📐 Layout',
+              cursorMode: 'arrow',
+              chatText: 'auto-layout gap: 12px verified'
+            },
+            varun: {
+              x: heroX + 220,
+              y: heroY + 36,
+              color: '#A259FF',
+              label: 'Varun Sehgal',
+              action: 'Content Complete ✓',
+              toolKey: 'V Move',
+              cursorMode: 'arrow'
+            },
+            alex: {
+              x: curX + curW - 80,
+              y: curY + headerH / 2,
+              color: '#0ACF83',
+              label: 'Alex Chen',
+              action: 'Window Assembled ✓',
+              cursorMode: 'arrow'
+            },
+            sarah: { hidden: true, x: card1X + 40, y: card1Y + 40 },
+            user: { hidden: true, x: curX + curW, y: curY + curH }
+          };
+
+          setWireframeData({
+            type: 'window',
+            x: curX,
+            y: curY,
+            w: curW,
+            h: curH,
+            heroBoxVisible: true,
+            heroTypedText: 'I design digital products that make complex things feel simple.',
+            heroBadgeVisible: true,
+            ctaVisible: true,
+            card1BoxVisible: true,
+            card1BoxPlaced: true,
+            card1TypedTitle: 'CodeSrijan Hackathon Portal',
+            card1TypedSub: '800+ Attendees • 50+ Teams',
+            card1BadgesVisible: true,
+            card2BoxVisible: true,
+            card2BoxPlaced: true,
+            card2TypedTitle: 'EventFlow Experience Platform',
+            card2TypedSub: '30% Less Dropoff • 4-Step Checkout',
+            card2BadgesVisible: true,
+            opacity: wireframeOpacity
+          });
+
+          setActiveGuides([
+            {
+              type: 'v',
+              x1: card1X + cardW + cardsGap / 2,
+              y1: cardsY,
+              x2: card1X + cardW + cardsGap / 2,
+              y2: cardsY + cardH,
+              color: '#ec4899',
+              dashed: true,
+              label: 'ΔX: 12px',
+              pillText: 'ΔX: 12px Equal Gap',
+              pillX: card1X + cardW + cardsGap / 2,
+              pillY: cardsY + cardH / 2
+            },
+            {
+              type: 'h',
+              x1: contentX,
+              y1: cardsY,
+              x2: contentX + contentW,
+              y2: cardsY,
+              color: '#38bdf8',
+              dashed: true,
+              label: 'Cards Baseline',
+              pillText: 'Auto-Layout Row',
+              pillX: contentX + contentW / 2,
+              pillY: cardsY - 12
+            }
+          ]);
+        }
       }
       // =====================================================================
-      // Phase 4: Bottom macOS Dock Capsule (11.4s - 13.6s) — 2 Cursors
+      // Phase 4: Bottom macOS Dock Capsule (19.8s - 22.2s) — 2 Cursors
       // =====================================================================
-      else if (elapsed < 13.6) {
+      else if (elapsed < 22.2) {
         setStatusMessage('[4/5] Extruding Glass Dock Capsule...');
-        const t = Math.min(1, Math.max(0, (elapsed - 11.4) / 2.2));
+        const t = Math.min(1, Math.max(0, (elapsed - 19.8) / 2.4));
         const easedMove = easeInOutCubic(t);
 
         const dockSpan = lerp(60, dockTargetW, easedMove);
@@ -790,11 +1298,11 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         ]);
       }
       // =====================================================================
-      // Phase 5: Built live, by a crowd of cursors! (13.6s - 15.0s) — Celebration
+      // Phase 5: Built live, by a crowd of cursors! (22.2s - 24.2s) — Celebration
       // =====================================================================
-      else if (elapsed < 15.0) {
+      else if (elapsed < 24.2) {
         setStatusMessage('[5/5] Built live, by a crowd of cursors!');
-        const t = Math.min(1, Math.max(0, (elapsed - 13.6) / 1.4));
+        const t = Math.min(1, Math.max(0, (elapsed - 22.2) / 2.0));
         const centerX = w / 2;
         const centerY = h / 2;
 
@@ -1090,30 +1598,100 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           <div className="wireframe-body">
             {/* Sidebar Wireframe */}
             <div className="wireframe-sidebar">
-              <div className="wireframe-side-item" />
-              <div className="wireframe-side-item active" />
-              <div className="wireframe-side-item" />
-              <div className="wireframe-side-item" />
+              <div className="wireframe-side-item active">
+                <span className="wireframe-side-icon">❖</span>
+                <span>Featured Works</span>
+              </div>
+              <div className="wireframe-side-item">
+                <span className="wireframe-side-icon">⚡</span>
+                <span>Tech Stack</span>
+              </div>
+              <div className="wireframe-side-item">
+                <span className="wireframe-side-icon">💼</span>
+                <span>Experience</span>
+              </div>
+              <div className="wireframe-side-item">
+                <span className="wireframe-side-icon">📄</span>
+                <span>Resume PDF</span>
+              </div>
             </div>
 
             {/* Main Area Wireframe */}
             <div className="wireframe-content">
-              {/* Hero Card Outline */}
-              <div className="wireframe-hero">
-                <div className="wireframe-badge" />
-                <div className="wireframe-heading">
-                  {wireframeData.typedText || 'Designing intuitive web apps...'}
-                  <span className="typing-cursor" />
+              {/* Hero Bento Box (Alex puts box, Varun types headline) */}
+              {wireframeData.heroBoxVisible && (
+                <div className={`wireframe-hero ${wireframeData.heroBoxActive ? 'is-active' : ''} ${wireframeData.heroBoxPlaced ? 'is-placed' : ''}`}>
+                  <div className="wireframe-hero-header">
+                    <span className="wireframe-role-badge">● PRODUCT DESIGNER · SAAS</span>
+                    {wireframeData.heroBadgeVisible && (
+                      <span className="wireframe-author-pill">Varun Sehgal</span>
+                    )}
+                  </div>
+                  <div className="wireframe-heading">
+                    {wireframeData.heroTypedText || ' '}
+                    {wireframeData.heroCaretVisible && <span className="typing-cursor" />}
+                  </div>
+                  <div className="wireframe-hero-footer">
+                    <span className="wireframe-tagline">UI/UX · SaaS · AI Products · Design Systems</span>
+                    {wireframeData.ctaVisible && (
+                      <span className="wireframe-cta-btn">See My Work →</span>
+                    )}
+                  </div>
                 </div>
-                <div className="wireframe-subline" />
-              </div>
+              )}
 
-              {/* 4 Cards Grid Wireframe */}
+              {/* Cards Grid */}
               <div className="wireframe-cards-grid">
-                <div className="wireframe-card" />
-                <div className="wireframe-card" />
-                <div className="wireframe-card" />
-                <div className="wireframe-card" />
+                {/* Card 1: CodeSrijan (Elena puts box, Sarah types) */}
+                {wireframeData.card1BoxVisible ? (
+                  <div className={`wireframe-card ${wireframeData.card1BoxActive ? 'is-active' : ''} ${wireframeData.card1BoxPlaced ? 'is-placed' : ''}`}>
+                    <div className="card-wireframe-header">
+                      <span className="card-wireframe-tag">SAAS / WEB</span>
+                      <span className="card-wireframe-badge">800+ Attendees</span>
+                    </div>
+                    <div className="card-wireframe-title">
+                      {wireframeData.card1TypedTitle || ' '}
+                      {wireframeData.card1CaretVisible && <span className="typing-cursor" />}
+                    </div>
+                    <div className="card-wireframe-desc">
+                      {wireframeData.card1TypedSub || ' '}
+                    </div>
+                    {wireframeData.card1BadgesVisible && (
+                      <div className="card-wireframe-tags">
+                        <span className="tag-pill">React</span>
+                        <span className="tag-pill">Design System</span>
+                        <span className="tag-pill">Figma</span>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="wireframe-card-placeholder" />
+                )}
+
+                {/* Card 2: EventFlow (Alex puts box, Varun types) */}
+                {wireframeData.card2BoxVisible ? (
+                  <div className={`wireframe-card ${wireframeData.card2BoxActive ? 'is-active' : ''} ${wireframeData.card2BoxPlaced ? 'is-placed' : ''}`}>
+                    <div className="card-wireframe-header">
+                      <span className="card-wireframe-tag highlight">SAAS / WEB · 30% Less Dropoff</span>
+                    </div>
+                    <div className="card-wireframe-title">
+                      {wireframeData.card2TypedTitle || ' '}
+                      {wireframeData.card2CaretVisible && <span className="typing-cursor" />}
+                    </div>
+                    <div className="card-wireframe-desc">
+                      {wireframeData.card2TypedSub || ' '}
+                    </div>
+                    {wireframeData.card2BadgesVisible && (
+                      <div className="card-wireframe-tags">
+                        <span className="tag-pill">SaaS</span>
+                        <span className="tag-pill">Figma</span>
+                        <span className="tag-pill">Event Platform</span>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="wireframe-card-placeholder" />
+                )}
               </div>
             </div>
           </div>

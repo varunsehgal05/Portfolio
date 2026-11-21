@@ -494,76 +494,139 @@
 }
 
 .wireframe-sidebar {
-  width: 180px;
-  border-right: 1px solid rgba(255, 255, 255, 0.06);
-  padding: 16px 12px;
+  width: 175px;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 14px 10px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
+  background: rgba(0, 0, 0, 0.2);
 }
 
 .wireframe-side-item {
-  height: 22px;
-  border-radius: 5px;
-  background: rgba(255, 255, 255, 0.04);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.02);
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 500;
 }
 
 .wireframe-side-item.active {
-  background: rgba(59, 130, 246, 0.15);
-  border: 1px solid rgba(59, 130, 246, 0.3);
+  background: rgba(59, 130, 246, 0.16);
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  color: #60a5fa;
+  font-weight: 600;
+}
+
+.wireframe-side-icon {
+  font-size: 12px;
+  opacity: 0.8;
 }
 
 .wireframe-content {
   flex: 1;
-  padding: 20px;
+  padding: 16px 18px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
+  overflow: hidden;
 }
 
+/* Hero Bento Box (Alex puts box, Varun types headline) */
 .wireframe-hero {
-  padding: 16px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 8px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px dashed rgba(56, 189, 248, 0.35);
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.wireframe-badge {
-  width: 120px;
-  height: 14px;
+.wireframe-hero.is-active {
+  border-style: solid;
+  border-color: #38bdf8;
+  box-shadow: 0 0 24px rgba(56, 189, 248, 0.22);
+}
+
+.wireframe-hero.is-placed {
+  border-style: solid;
+  border-color: rgba(56, 189, 248, 0.45);
+  background: rgba(14, 165, 233, 0.04);
+}
+
+.wireframe-hero-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.wireframe-role-badge {
+  font-size: 9.5px;
+  font-weight: 800;
+  color: #38bdf8;
+  letter-spacing: 0.5px;
+}
+
+.wireframe-author-pill {
+  font-size: 9.5px;
+  font-weight: 700;
+  background: rgba(162, 89, 255, 0.18);
+  border: 1px solid rgba(162, 89, 255, 0.35);
+  color: #c084fc;
+  padding: 1px 7px;
   border-radius: 999px;
-  background: rgba(34, 197, 94, 0.15);
-  border: 1px solid rgba(34, 197, 94, 0.3);
 }
 
 .wireframe-heading {
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 14.5px;
+  font-weight: 700;
   color: #ffffff;
   display: flex;
   align-items: center;
   gap: 2px;
-  min-height: 24px;
+  min-height: 22px;
+  line-height: 1.35;
 }
 
 .typing-cursor {
   display: inline-block;
   width: 2px;
-  height: 15px;
+  height: 14px;
   background: #38bdf8;
-  animation: blinkCaret 0.8s infinite;
+  animation: blinkCaret 0.75s infinite;
+  margin-left: 2px;
 }
 
-.wireframe-subline {
-  width: 70%;
-  height: 10px;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.06);
+.wireframe-hero-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2px;
 }
 
+.wireframe-tagline {
+  font-size: 10.5px;
+  color: #94a3b8;
+}
+
+.wireframe-cta-btn {
+  font-size: 10.5px;
+  font-weight: 700;
+  background: #2563eb;
+  color: #ffffff;
+  padding: 3px 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+}
+
+/* Cards Grid (Elena/Alex puts card boxes, Sarah/Varun types content) */
 .wireframe-cards-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -572,10 +635,93 @@
 }
 
 .wireframe-card {
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px dashed rgba(255, 255, 255, 0.1);
-  min-height: 80px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 125px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.wireframe-card.is-active {
+  border-style: solid;
+  border-color: #0acf83;
+  box-shadow: 0 0 20px rgba(10, 207, 131, 0.2);
+}
+
+.wireframe-card.is-placed {
+  border-style: solid;
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.card-wireframe-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.card-wireframe-tag {
+  font-size: 9.5px;
+  font-weight: 800;
+  color: #38bdf8;
+  letter-spacing: 0.4px;
+}
+
+.card-wireframe-tag.highlight {
+  color: #4ade80;
+}
+
+.card-wireframe-badge {
+  font-size: 9px;
+  font-weight: 600;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.card-wireframe-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #f1f5f9;
+  min-height: 18px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.card-wireframe-desc {
+  font-size: 10.5px;
+  color: #94a3b8;
+  min-height: 16px;
+  margin: 2px 0 6px;
+}
+
+.card-wireframe-tags {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.tag-pill {
+  font-size: 9px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.wireframe-card-placeholder {
+  border-radius: 10px;
+  border: 1px dashed rgba(255, 255, 255, 0.05);
+  min-height: 125px;
 }
 
 /* ========================================================
