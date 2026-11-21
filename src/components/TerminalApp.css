@@ -98,11 +98,11 @@
 .terminal-quick-bar {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 3px 10px;
-  min-height: 30px;
-  max-height: 30px;
-  background: rgba(10, 14, 20, 0.65);
+  gap: 5px;
+  padding: 3px 8px;
+  min-height: 28px;
+  max-height: 28px;
+  background: rgba(10, 14, 20, 0.72);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -112,6 +112,8 @@
   user-select: none;
   z-index: 10;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .terminal-quick-bar::-webkit-scrollbar {
@@ -121,14 +123,14 @@
 .quick-bar-cmds {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
   flex-shrink: 0;
 }
 
 .quick-bar-wallpapers {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
   flex-shrink: 0;
 }
 
@@ -136,14 +138,14 @@
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.16);
   color: #38bdf8;
-  width: 19px;
-  height: 20px;
+  width: 17px;
+  height: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   line-height: 1;
   padding: 0;
@@ -154,7 +156,6 @@
   background: rgba(56, 189, 248, 0.25);
   border-color: #38bdf8;
   color: #ffffff;
-  transform: translateY(-0.5px);
 }
 
 .terminal-wp-select-wrap {
@@ -170,14 +171,14 @@
   border: 1px solid rgba(56, 189, 248, 0.35);
   color: #f1f5f9;
   font-family: inherit;
-  font-size: 10px;
+  font-size: 9.5px;
   font-weight: 600;
-  padding: 2px 20px 2px 8px;
+  padding: 1.5px 16px 1.5px 6px;
   border-radius: 4px;
   cursor: pointer;
   outline: none;
   transition: all 0.15s ease;
-  max-width: 155px;
+  max-width: 105px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -192,10 +193,10 @@
 .terminal-wp-select-wrap::after {
   content: '▾';
   position: absolute;
-  right: 6px;
+  right: 5px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 10px;
+  font-size: 9px;
   color: #38bdf8;
   pointer-events: none;
 }
@@ -208,19 +209,19 @@
 }
 
 .quick-bar-label {
-  font-size: 9.5px;
+  font-size: 9px;
   color: #94a3b8;
   font-weight: 600;
   white-space: nowrap;
   letter-spacing: 0.3px;
-  margin-right: 2px;
+  margin-right: 1px;
 }
 
 .terminal-quick-divider {
   width: 1px;
-  height: 14px;
+  height: 12px;
   background: rgba(255, 255, 255, 0.12);
-  margin: 0 4px;
+  margin: 0 2px;
   flex-shrink: 0;
 }
 
@@ -228,10 +229,10 @@
   background: rgba(255, 255, 255, 0.07);
   border: 1px solid rgba(255, 255, 255, 0.12);
   color: #38bdf8;
-  padding: 1.5px 6px;
-  border-radius: 4px;
+  padding: 1px 5px;
+  border-radius: 3px;
   font-family: inherit;
-  font-size: 10px;
+  font-size: 9.5px;
   font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
@@ -243,12 +244,11 @@
   background: rgba(56, 189, 248, 0.25);
   border-color: rgba(56, 189, 248, 0.5);
   color: #ffffff;
-  transform: translateY(-0.5px);
 }
 
 .terminal-wp-pill {
   color: #cbd5e1;
-  font-size: 10px;
+  font-size: 9.5px;
 }
 
 .terminal-wp-pill.active {
@@ -264,10 +264,10 @@
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.12);
   color: #94a3b8;
-  padding: 1.5px 5px;
+  padding: 1px 5px;
   border-radius: 3px;
   font-family: inherit;
-  font-size: 9.5px;
+  font-size: 9px;
   font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
@@ -295,14 +295,15 @@
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: #94a3b8;
-  padding: 1.5px 6px;
+  padding: 1.5px 5px;
   border-radius: 4px;
   font-family: inherit;
-  font-size: 9.5px;
+  font-size: 9px;
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.15s ease;
   margin-left: auto;
+  flex-shrink: 0;
 }
 
 .terminal-bar-toggle-btn:hover {

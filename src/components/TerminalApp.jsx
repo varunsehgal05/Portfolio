@@ -462,16 +462,17 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
       {isQuickBarVisible ? (
         <div className="terminal-quick-bar">
           <div className="quick-bar-cmds">
-            <span className="quick-bar-label">⚡ Cmds:</span>
-            {['neofetch', 'skills', 'projects', 'vibecoding', 'clear'].map((cmd) => (
+            <span className="quick-bar-label">Cmds:</span>
+            {['neofetch', 'skills', 'projects', 'vibe', 'clear'].map((cmd) => (
               <button
                 key={cmd}
                 type="button"
                 className="terminal-pill-btn"
                 onClick={(e) => {
                   e.stopPropagation();
-                  executeCommand(cmd);
+                  executeCommand(cmd === 'vibe' ? 'vibecoding' : cmd);
                 }}
+                title={cmd === 'vibe' ? 'Run vibecoding' : `Run ${cmd}`}
               >
                 {cmd}
               </button>
@@ -481,7 +482,7 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
           <div className="terminal-quick-divider" />
 
           <div className="quick-bar-wallpapers">
-            <span className="quick-bar-label">🖼️ Wallpaper:</span>
+            <span className="quick-bar-label">WP:</span>
             <button
               type="button"
               className="terminal-cycle-btn"
@@ -557,7 +558,7 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
             title="Hide top bar to view full unblocked wallpaper"
           >
             <EyeOff size={11} />
-            <span>Hide Bar</span>
+            <span className="toggle-btn-text">Hide</span>
           </button>
         </div>
       ) : (
