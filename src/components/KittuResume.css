@@ -3,14 +3,15 @@
    ======================================================== */
 
 .kittu-resume-artboard-box {
-  width: 1080px;
-  max-width: 1080px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
   position: relative;
-  background: #1e1e1e;
-  border-radius: 12px;
-  padding: 12px 14px 24px 14px;
-  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+  border: none;
 }
 
 .cv-container {
@@ -647,20 +648,39 @@
 .cv-side,
 .cv-stats,
 .cv-section,
-.cv-footer {
-  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+.cv-footer,
+.cv-name,
+.cv-lede,
+.cv-now-line,
+.cv-links,
+.cv-note,
+.cv-polaroid,
+.cv-stat,
+.cv-thread,
+.cv-made li,
+.cv-timeline-wrap {
+  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
 }
 
 .cv-item-hidden {
   opacity: 0 !important;
-  transform: translateY(16px) !important;
+  transform: translateY(12px) scale(0.985) !important;
   pointer-events: none !important;
 }
 
 .cv-item-visible {
   opacity: 1 !important;
-  transform: translateY(0) !important;
+  transform: translateY(0) scale(1) !important;
   pointer-events: auto !important;
+}
+
+.cv-cursor {
+  position: absolute;
+  pointer-events: none;
+  z-index: 120;
+  will-change: transform;
+  transition: transform 0.38s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 /* Remake button bounce */

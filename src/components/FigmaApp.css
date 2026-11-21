@@ -4885,11 +4885,15 @@
 }
 
 .resume-artboard-box {
-  width: 1000px;
-  max-width: 1000px;
-  padding: 24px 24px 30px 24px;
+  width: 1080px;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 16px 20px 32px 20px;
   min-height: auto;
-  background: #1e1e24;
+  background: #18181b;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
 }
 
 .process-artboard-box {
@@ -5120,12 +5124,6 @@
 /* ========================================================
    TACTILE CREATIVE DESIGNER RESUME (Exact Image Recreation)
    ======================================================== */
-
-.resume-artboard-box {
-  width: 1000px;
-  max-width: 1000px;
-  margin: 0 auto;
-}
 
 .tactile-resume-paper-sheet {
   position: relative;

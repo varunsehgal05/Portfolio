@@ -2977,7 +2977,11 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   <KittuResumeApp
                     onBack={() => setActiveTab('home')}
                     onScrollToTop={() => {
-                      // Smoothly glide pan.y back to top (0) so user is dragged up to top of notebook
+                      // Smoothly glide canvas pan back to top so user is dragged up to top of notebook
+                      const stageW = containerRef.current?.clientWidth || 900;
+                      const targetX = Math.max(20, Math.round((stageW - 1080 * zoom) / 2));
+                      const targetY = 20;
+                      const startX = pan.x;
                       const startY = pan.y;
                       const startTime = performance.now();
                       const duration = 650;
@@ -2985,7 +2989,10 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                         const elapsed = now - startTime;
                         const progress = Math.min(1, elapsed / duration);
                         const eased = 1 - Math.pow(1 - progress, 3);
-                        setPan(p => ({ ...p, y: startY * (1 - eased) }));
+                        setPan({
+                          x: startX + (targetX - startX) * eased,
+                          y: startY + (targetY - startY) * eased
+                        });
                         if (progress < 1) {
                           requestAnimationFrame(animateScroll);
                         }
