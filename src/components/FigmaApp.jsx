@@ -3092,66 +3092,43 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
 
                   {/* FigJam Interactive Whiteboard Canvas with SVG Connectors & Sticky Nodes */}
                   <div className="figjam-canvas-stage">
-                    {/* SVG Connector Paths */}
-                    <svg className="figjam-connectors-svg" viewBox="0 0 1320 620" fill="none">
+                    {/* Continuous Sinusoidal Left-to-Right Wavy Flow (Matching Reference Image) */}
+                    <svg className="figjam-connectors-svg" viewBox="0 0 1340 620" fill="none">
                       <defs>
-                        <linearGradient id="figjamGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stopColor="#fde047" />
-                          <stop offset="100%" stopColor="#64748b" />
-                        </linearGradient>
-                        <linearGradient id="figjamGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stopColor="#fef08a" />
-                          <stop offset="100%" stopColor="#64748b" />
-                        </linearGradient>
-                        <linearGradient id="figjamGrad3" x1="0%" y1="0%" x2="100%" y2="0%">
-                          <stop offset="0%" stopColor="#64748b" />
-                          <stop offset="100%" stopColor="#86efac" />
-                        </linearGradient>
-                        <linearGradient id="figjamGrad4" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stopColor="#64748b" />
+                        <linearGradient id="figjamWaveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stopColor="#f97316" />
+                          <stop offset="20%" stopColor="#eab308" />
+                          <stop offset="42%" stopColor="#38bdf8" />
+                          <stop offset="65%" stopColor="#facc15" />
+                          <stop offset="82%" stopColor="#4ade80" />
                           <stop offset="100%" stopColor="#f472b6" />
                         </linearGradient>
+                        <filter id="waveGlow" x="-20%" y="-20%" width="140%" height="140%">
+                          <feDropShadow dx="0" dy="0" stdDeviation="3.5" floodColor="rgba(56, 189, 248, 0.45)" />
+                        </filter>
                       </defs>
 
-                      {/* Path from Pain Point 01 to Seat Audit */}
+                      {/* Continuous Wavy Sinusoidal Path threading left-to-right through all 6 nodes */}
                       <path
-                        d="M 540,160 C 600,160 620,270 660,270"
-                        stroke="url(#figjamGrad1)"
-                        strokeWidth="2.5"
-                        strokeDasharray="6 6"
+                        d="M 160,230 C 220,250 280,380 345,380 C 420,380 480,200 565,200 C 645,200 710,380 790,380 C 870,380 940,180 1030,180 C 1110,180 1155,380 1210,380"
+                        stroke="url(#figjamWaveGrad)"
+                        strokeWidth="3.2"
+                        strokeDasharray="8 6"
+                        strokeLinecap="round"
+                        filter="url(#waveGlow)"
                       />
-                      <circle cx="660" cy="270" r="4.5" fill="#fde047" />
 
-                      {/* Path from Customer Quote to Seat Audit */}
-                      <path
-                        d="M 560,370 C 600,370 620,310 660,310"
-                        stroke="url(#figjamGrad2)"
-                        strokeWidth="2.5"
-                        strokeDasharray="6 6"
-                      />
-                      <circle cx="660" cy="310" r="4.5" fill="#fef08a" />
-
-                      {/* Path from Seat Audit to Opportunity */}
-                      <path
-                        d="M 760,280 C 820,280 840,150 900,150"
-                        stroke="url(#figjamGrad3)"
-                        strokeWidth="2.5"
-                        strokeDasharray="6 6"
-                      />
-                      <circle cx="900" cy="150" r="4.5" fill="#86efac" />
-
-                      {/* Path from Seat Audit to Behavioral Nudge */}
-                      <path
-                        d="M 760,320 C 830,320 850,400 920,400"
-                        stroke="url(#figjamGrad4)"
-                        strokeWidth="2.5"
-                        strokeDasharray="6 6"
-                      />
-                      <circle cx="920" cy="400" r="4.5" fill="#f472b6" />
+                      {/* Wave Crest & Valley Alignment Connection Dots */}
+                      <circle cx="345" cy="380" r="5" fill="#eab308" />
+                      <circle cx="565" cy="200" r="5" fill="#38bdf8" />
+                      <circle cx="790" cy="380" r="5" fill="#facc15" />
+                      <circle cx="1030" cy="180" r="5" fill="#4ade80" />
+                      <circle cx="1210" cy="380" r="5" fill="#f472b6" />
                     </svg>
 
                     {/* 1. User Field Tape Card */}
                     <div className="figjam-node field-tape-card">
+                      <div className="figjam-step-badge step-1">01</div>
                       <div className="tape-card-header">
                         <div className="tape-header-left">
                           <span className="material-symbols-outlined text-[16px] text-amber-400">mic</span>
@@ -3203,6 +3180,9 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
 
                     {/* 2. Pain Point 01 Sticky Note */}
                     <div className="figjam-node sticky-note yellow-sticky pain-point-sticky">
+                      <div className="figjam-step-badge step-2">02</div>
+                      <div className="figjam-scotch-tape" />
+
                       {/* Floating Multiplayer Cursor */}
                       <div className="figjam-cursor-tag cursor-elena">
                         <svg className="cursor-arrow-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -3240,8 +3220,26 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                       </div>
                     </div>
 
-                    {/* 3. Customer Quote Sticky Note */}
+                    {/* 3. Seat Audit Decision Node */}
+                    <div className="figjam-node decision-diamond-node">
+                      <div className="figjam-step-badge step-3">03</div>
+                      <div className="diamond-inner-content">
+                        <div className="diamond-icon-wrap">
+                          <span className="material-symbols-outlined text-[20px] text-sky-400">balance</span>
+                        </div>
+                        <h4 className="diamond-title">SEAT AUDIT</h4>
+                        <span className="diamond-sub">Gatekeeper?</span>
+                        <div className="diamond-telemetry-badge">
+                          <span>Drop-off: <strong>34.2%</strong></span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 4. Customer Quote Sticky Note */}
                     <div className="figjam-node sticky-note cream-sticky quote-sticky">
+                      <div className="figjam-step-badge step-4">04</div>
+                      <div className="figjam-scotch-tape" />
+
                       <div className="sticky-header">
                         <span className="sticky-label">CUSTOMER QUOTE</span>
                         <span className="sticky-emoji-badge">🗣️</span>
@@ -3259,22 +3257,11 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                       </div>
                     </div>
 
-                    {/* 4. Seat Audit Decision Diamond */}
-                    <div className="figjam-node decision-diamond-node">
-                      <div className="diamond-inner-content">
-                        <div className="diamond-icon-wrap">
-                          <span className="material-symbols-outlined text-[20px] text-sky-400">balance</span>
-                        </div>
-                        <h4 className="diamond-title">SEAT AUDIT</h4>
-                        <span className="diamond-sub">Gatekeeper?</span>
-                        <div className="diamond-telemetry-badge">
-                          <span>Drop-off: <strong>34.2%</strong></span>
-                        </div>
-                      </div>
-                    </div>
-
                     {/* 5. Opportunity Sticky Note */}
                     <div className="figjam-node sticky-note mint-sticky opportunity-sticky">
+                      <div className="figjam-step-badge step-5">05</div>
+                      <div className="figjam-scotch-tape" />
+
                       <div className="sticky-header">
                         <span className="sticky-label">OPPORTUNITY</span>
                         <span className="sticky-emoji-badge">💡</span>
@@ -3295,6 +3282,9 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
 
                     {/* 6. Behavioral Nudge Sticky Note */}
                     <div className="figjam-node sticky-note pink-sticky nudge-sticky">
+                      <div className="figjam-step-badge step-6">06</div>
+                      <div className="figjam-scotch-tape" />
+
                       <div className="sticky-header">
                         <span className="sticky-label">BEHAVIORAL NUDGE</span>
                         <span className="sticky-emoji-badge">⚡</span>
