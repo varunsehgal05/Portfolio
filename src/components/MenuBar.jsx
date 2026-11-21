@@ -20,10 +20,18 @@ import {
   Moon,
   Coffee,
   Shield,
-  Laptop
+  Laptop,
+  HelpCircle,
+  Keyboard,
+  Monitor,
+  X,
+  Layers,
+  Compass,
+  Mail,
+  Minimize2,
+  Maximize2
 } from 'lucide-react';
 import './MenuBar.css';
-
 
 const PORTFOLIO_ROLES = [
   {
@@ -63,7 +71,7 @@ const PORTFOLIO_ROLES = [
     desc: 'ATS tactile resume, experience timeline & quick contact',
     icon: '💼',
     color: '#10b981',
-    bg: 'rgba(16, 185, 129, 0.12)',
+    bg: 'rgba(168, 185, 129, 0.12)',
     app: 'resume'
   },
   {
@@ -78,9 +86,25 @@ const PORTFOLIO_ROLES = [
   }
 ];
 
-const MenuBar = ({ userName = 'Guest', onReplaySwarm }) => {
+const MenuBar = ({ 
+  userName = 'Guest', 
+  onReplaySwarm,
+  openWindows = [],
+  minimizedWindows = [],
+  activeWindow = null,
+  portfolioApps = {},
+  onOpenApp,
+  onCloseApp,
+  onFocusApp,
+  onMinimizeApp,
+  onMinimizeActive,
+  onToggleMaximize,
+  onMinimizeAll,
+  onRestoreAll,
+  onCloseAll
+}) => {
   const [time, setTime] = useState(new Date());
-  const [activeMenu, setActiveMenu] = useState(null); // 'apple', 'file', 'edit', 'view', 'window', 'help', 'wifi', 'battery', 'sound', 'calendar'
+  const [activeMenu, setActiveMenu] = useState(null); // 'apple', 'file', 'edit', 'view', 'window', 'help', 'wifi', 'battery', 'sound', 'calendar', 'user'
   const [volume, setVolume] = useState(85);
   const [isMuted, setIsMuted] = useState(false);
   const [currentRole, setCurrentRole] = useState(() => {
@@ -91,6 +115,44 @@ const MenuBar = ({ userName = 'Guest', onReplaySwarm }) => {
     }
   });
 
+  // HUD Toast State for seamless macOS Notifications (replaces ugly browser alert)
+  const [toast, setToast] = useState(null);
+  const toastTimerRef = useRef(null);
+
+  // Modal dialog states for System & Help menus
+  const [showAboutModal, setShowAboutModal] = useState(false);
+  const [showHelpModal, setShowHelpModal] = useState(false);
+  const [helpActiveTab, setHelpActiveTab] = useState('tour'); // 'tour' | 'shortcuts' | 'easter_eggs' | 'contact'
+
+  const showToast = (title, subtitle = '', icon = '✓') => {
+    if (toastTimerRef.current) {
+      clearTimeout(toastTimerRef.current);
+    }
+    setToast({ title, subtitle, icon });
+    toastTimerRef.current = setTimeout(() => {
+      setToast(null);
+      toastTimerRef.current = null;
+    }, 2500);
+  };
+
+  const copyToClipboard = (text, title, subtitle, icon = '✓') => {
+    try {
+      if (navigator?.clipboard?.writeText) {
+        navigator.clipboard.writeText(text);
+      } else {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+      }
+    } catch (e) {
+      console.warn('Clipboard write fallback', e);
+    }
+    showToast(title, subtitle, icon);
+  };
+
   const handleSelectRole = (role) => {
     setActiveMenu(null);
     setCurrentRole(role.name);
@@ -100,9 +162,14 @@ const MenuBar = ({ userName = 'Guest', onReplaySwarm }) => {
     } catch {}
     window.dispatchEvent(new CustomEvent('varunos-user-change', { detail: { userName: role.name, roleId: role.id } }));
     if (role.app) {
-      window.dispatchEvent(new CustomEvent('varunos-open-app', { detail: { appId: role.app } }));
+      if (onOpenApp) {
+        onOpenApp(role.app);
+      } else {
+        window.dispatchEvent(new CustomEvent('varunos-open-app', { detail: { appId: role.app } }));
+      }
     }
   };
+
   const menuBarRef = useRef(null);
 
   useEffect(() => {
@@ -124,6 +191,30 @@ const MenuBar = ({ userName = 'Guest', onReplaySwarm }) => {
     };
   }, [activeMenu]);
 
+  // Handle ESC key to dismiss menus & modals
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setActiveMenu(null);
+        setShowAboutModal(false);
+        setShowHelpModal(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // External toast event listener
+  useEffect(() => {
+    const handleExternalToast = (e) => {
+      if (e.detail?.title) {
+        showToast(e.detail.title, e.detail.subtitle || '', e.detail.icon || '✓');
+      }
+    };
+    window.addEventListener('varunos-show-toast', handleExternalToast);
+    return () => window.removeEventListener('varunos-show-toast', handleExternalToast);
+  }, []);
+
   const toggleMenu = (menuName) => {
     setActiveMenu(prev => (prev === menuName ? null : menuName));
   };
@@ -138,9 +229,10 @@ const MenuBar = ({ userName = 'Guest', onReplaySwarm }) => {
     if (onReplaySwarm) {
       onReplaySwarm();
     }
+    showToast("Swarm Rebuild Started", "Agents assembling workspace live", "✨");
   };
 
-  // Swarm Follow Mouse State (defaults to true)
+  // Swarm Follow Mouse State
   const [isSwarmFollow, setIsSwarmFollow] = useState(() => {
     try {
       const saved = localStorage.getItem('varunos_swarm_follow_mouse');
@@ -185,6 +277,7 @@ const MenuBar = ({ userName = 'Guest', onReplaySwarm }) => {
       localStorage.setItem('varunos_swarm_follow_mouse', String(nextState));
     } catch {}
     window.dispatchEvent(new CustomEvent('varunos-toggle-swarm-follow', { detail: { enabled: nextState } }));
+    showToast(nextState ? "Swarm Follow Enabled" : "Swarm Follow Paused", nextState ? "Agents flock to cursor" : "Agents stay stationed", "✨");
   };
 
   const handleToggleTheme = () => {
@@ -195,10 +288,43 @@ const MenuBar = ({ userName = 'Guest', onReplaySwarm }) => {
     } catch {}
     document.documentElement.setAttribute('data-theme', nextTheme);
     window.dispatchEvent(new CustomEvent('varunos-theme-change', { detail: { mode: nextTheme } }));
+    showToast(nextTheme === 'light' ? "Light Mode Active" : "Dark Mode Active", "Theme updated", nextTheme === 'light' ? "☀️" : "🌙");
+  };
+
+  // Open / Focus app helper
+  const handleOpenAppItem = (appId) => {
+    setActiveMenu(null);
+    if (onOpenApp) {
+      onOpenApp(appId);
+    } else {
+      window.dispatchEvent(new CustomEvent('varunos-open-app', { detail: { appId } }));
+    }
+  };
+
+  // Focus specific open window
+  const handleFocusWindowItem = (appId) => {
+    setActiveMenu(null);
+    if (minimizedWindows.includes(appId) && onMinimizeApp) {
+      onMinimizeApp(appId); // Unminimizes
+    }
+    if (onFocusApp) {
+      onFocusApp(appId);
+    }
   };
 
   return (
     <div className="menu-bar" ref={menuBarRef}>
+      {/* Floating macOS HUD Toast Pill (Non-blocking, elegant feedback) */}
+      {toast && (
+        <div className="menubar-hud-toast" role="status" aria-live="polite">
+          <span className="menubar-hud-icon">{toast.icon}</span>
+          <div className="menubar-hud-content">
+            <span className="menubar-hud-title">{toast.title}</span>
+            {toast.subtitle && <span className="menubar-hud-sub">{toast.subtitle}</span>}
+          </div>
+        </div>
+      )}
+
       <div className="menu-left">
         {/* Apple / VarunOS System Trigger */}
         <div className="menu-item-wrapper">
@@ -217,6 +343,24 @@ const MenuBar = ({ userName = 'Guest', onReplaySwarm }) => {
                 <span className="apple-dropdown-user">User: {userName}</span>
               </div>
               <div className="apple-dropdown-divider" />
+              <button 
+                className="apple-dropdown-item" 
+                onClick={() => {
+                  setActiveMenu(null);
+                  setShowAboutModal(true);
+                }}
+              >
+                <Monitor size={14} className="dropdown-icon" />
+                <span>About VarunOS Sequoia...</span>
+              </button>
+              <button 
+                className="apple-dropdown-item" 
+                onClick={() => handleOpenAppItem('settings')}
+              >
+                <Sliders size={14} className="dropdown-icon" />
+                <span>System Settings...</span>
+              </button>
+              <div className="apple-dropdown-divider" />
               <button className="apple-dropdown-item primary-action" onClick={handleTriggerSwarm}>
                 <Sparkles size={14} className="dropdown-icon sparkle-icon" />
                 <span>Replay Swarm Rebuild</span>
@@ -234,8 +378,13 @@ const MenuBar = ({ userName = 'Guest', onReplaySwarm }) => {
                 <span>☕ Buy Varun a Coffee / Donate...</span>
                 <span className="dropdown-shortcut">UPI QR</span>
               </button>
-              <div className="apple-dropdown-divider" />
-              <button className="apple-dropdown-item" onClick={() => window.open('https://github.com/varunsehgal05/Portfolio', '_blank')}>
+              <button 
+                className="apple-dropdown-item" 
+                onClick={() => {
+                  setActiveMenu(null);
+                  window.open('https://github.com/varunsehgal05/Portfolio', '_blank');
+                }}
+              >
                 <Code2 size={14} className="dropdown-icon" />
                 <span>Source Code on GitHub</span>
                 <span className="dropdown-shortcut">↗</span>
@@ -243,7 +392,7 @@ const MenuBar = ({ userName = 'Guest', onReplaySwarm }) => {
               <div className="apple-dropdown-divider" />
               <button className="apple-dropdown-item" onClick={handleRestart}>
                 <Power size={14} className="dropdown-icon" />
-                <span>Restart & Reboot Setup...</span>
+                <span>Restart & Reboot Workspace...</span>
               </button>
             </div>
           )}
@@ -259,11 +408,39 @@ const MenuBar = ({ userName = 'Guest', onReplaySwarm }) => {
           </span>
           {activeMenu === 'file' && (
             <div className="apple-dropdown-menu sub-menu">
-              <button className="apple-dropdown-item" onClick={() => { setActiveMenu(null); window.open('/Varun_Sehgal_Resume_Updated.pdf', '_blank'); }}>
+              <button 
+                className="apple-dropdown-item" 
+                onClick={() => { 
+                  setActiveMenu(null); 
+                  window.open('/Varun_Sehgal_Resume_Updated.pdf', '_blank'); 
+                  showToast("Opened PDF", "Varun_Sehgal_Resume_Updated.pdf", "📄");
+                }}
+              >
                 <FolderOpen size={14} className="dropdown-icon" />
                 <span>Open Resume PDF</span>
                 <span className="dropdown-shortcut">⌘O</span>
               </button>
+              <button 
+                className="apple-dropdown-item" 
+                onClick={() => handleOpenAppItem('terminal')}
+              >
+                <Laptop size={14} className="dropdown-icon" />
+                <span>New Terminal Session</span>
+                <span className="dropdown-shortcut">⌥T</span>
+              </button>
+              {activeWindow && (
+                <button 
+                  className="apple-dropdown-item" 
+                  onClick={() => {
+                    setActiveMenu(null);
+                    if (onCloseApp) onCloseApp(activeWindow);
+                  }}
+                >
+                  <X size={14} className="dropdown-icon" />
+                  <span>Close Window</span>
+                  <span className="dropdown-shortcut">⌘W</span>
+                </button>
+              )}
               <div className="apple-dropdown-divider" />
               <button className="apple-dropdown-item" onClick={() => { setActiveMenu(null); window.location.reload(); }}>
                 <Power size={14} className="dropdown-icon" />
@@ -284,14 +461,46 @@ const MenuBar = ({ userName = 'Guest', onReplaySwarm }) => {
           </span>
           {activeMenu === 'edit' && (
             <div className="apple-dropdown-menu sub-menu">
-              <button className="apple-dropdown-item" onClick={() => { setActiveMenu(null); navigator.clipboard.writeText('varunsehgal2005@gmail.com'); alert('Copied Varun\'s email to clipboard!'); }}>
-                <Check size={14} className="dropdown-icon" />
+              <button 
+                className="apple-dropdown-item" 
+                onClick={() => { 
+                  setActiveMenu(null); 
+                  copyToClipboard('varunsehgal2005@gmail.com', "Copied Varun's Email", "varunsehgal2005@gmail.com", "📋");
+                }}
+              >
+                <Check size={14} className="dropdown-icon text-emerald-400" />
                 <span>Copy Varun's Email</span>
                 <span className="dropdown-shortcut">⌘C</span>
               </button>
-              <button className="apple-dropdown-item" onClick={() => { setActiveMenu(null); navigator.clipboard.writeText('https://www.linkedin.com/in/varunsehgal02'); alert('Copied LinkedIn URL to clipboard!'); }}>
-                <Check size={14} className="dropdown-icon" />
+              <button 
+                className="apple-dropdown-item" 
+                onClick={() => { 
+                  setActiveMenu(null); 
+                  copyToClipboard('https://www.linkedin.com/in/varunsehgal02', "Copied LinkedIn Link", "linkedin.com/in/varunsehgal02", "🔗");
+                }}
+              >
+                <Check size={14} className="dropdown-icon text-cyan-400" />
                 <span>Copy LinkedIn Link</span>
+              </button>
+              <button 
+                className="apple-dropdown-item" 
+                onClick={() => { 
+                  setActiveMenu(null); 
+                  copyToClipboard(window.location.href, "Copied Portfolio URL", window.location.href, "🌐");
+                }}
+              >
+                <Check size={14} className="dropdown-icon text-purple-400" />
+                <span>Copy Portfolio URL</span>
+              </button>
+              <button 
+                className="apple-dropdown-item" 
+                onClick={() => { 
+                  setActiveMenu(null); 
+                  copyToClipboard('https://github.com/varunsehgal05/Portfolio', "Copied GitHub Repo URL", "github.com/varunsehgal05/Portfolio", "💻");
+                }}
+              >
+                <Check size={14} className="dropdown-icon text-amber-400" />
+                <span>Copy GitHub Profile</span>
               </button>
             </div>
           )}
@@ -309,19 +518,28 @@ const MenuBar = ({ userName = 'Guest', onReplaySwarm }) => {
             <div className="apple-dropdown-menu sub-menu">
               <button className="apple-dropdown-item" onClick={() => { setActiveMenu(null); document.fullscreenElement ? document.exitFullscreen?.() : document.documentElement.requestFullscreen?.(); }}>
                 <Eye size={14} className="dropdown-icon" />
-                <span>Toggle Browser Full Screen</span>
+                <span>Toggle Full Screen</span>
                 <span className="dropdown-shortcut">^⌘F</span>
+              </button>
+              <button className="apple-dropdown-item" onClick={() => { setActiveMenu(null); handleToggleTheme(); }}>
+                {currentTheme === 'light' ? <Moon size={14} className="dropdown-icon" /> : <Sun size={14} className="dropdown-icon" />}
+                <span>Toggle {currentTheme === 'light' ? 'Dark' : 'Light'} Mode</span>
               </button>
               <div className="apple-dropdown-divider" />
               <button className="apple-dropdown-item" onClick={handleTriggerSwarm}>
                 <Sparkles size={14} className="dropdown-icon sparkle-icon" />
                 <span>Re-run Swarm Physics</span>
+                <span className="dropdown-shortcut">⌘R</span>
+              </button>
+              <button className="apple-dropdown-item" onClick={() => { setActiveMenu(null); handleToggleSwarmFollow(); }}>
+                <Sparkles size={14} className="dropdown-icon text-sky-400" />
+                <span>{isSwarmFollow ? "Turn Off Swarm Follow" : "Turn On Swarm Follow"}</span>
               </button>
             </div>
           )}
         </div>
 
-        {/* Window Menu */}
+        {/* Window Menu - Fully Functional with Active App Controls & Dynamic App Stacking List */}
         <div className="menu-item-wrapper">
           <span 
             className={`menu-item ${activeMenu === 'window' ? 'active' : ''}`}
@@ -330,19 +548,125 @@ const MenuBar = ({ userName = 'Guest', onReplaySwarm }) => {
             Window
           </span>
           {activeMenu === 'window' && (
-            <div className="apple-dropdown-menu sub-menu">
-              <button className="apple-dropdown-item" onClick={() => { setActiveMenu(null); window.dispatchEvent(new CustomEvent('varunos:minimize-all')); }}>
-                <span>Minimize All Windows</span>
+            <div className="apple-dropdown-menu sub-menu window-dropdown-menu">
+              {/* Active Window Minimize */}
+              <button 
+                className={`apple-dropdown-item ${!activeWindow ? 'disabled' : ''}`} 
+                onClick={() => { 
+                  if (!activeWindow) return;
+                  setActiveMenu(null); 
+                  if (onMinimizeActive) {
+                    onMinimizeActive();
+                  } else if (onMinimizeApp) {
+                    onMinimizeApp(activeWindow);
+                  }
+                  showToast("Minimized Window", activeWindow, "🗕");
+                }}
+                disabled={!activeWindow}
+              >
+                <Minimize2 size={14} className="dropdown-icon" />
+                <span>Minimize</span>
                 <span className="dropdown-shortcut">⌘M</span>
               </button>
-              <button className="apple-dropdown-item" onClick={() => { setActiveMenu(null); window.dispatchEvent(new CustomEvent('varunos:restore-all')); }}>
+
+              {/* Active Window Zoom/Maximize */}
+              <button 
+                className={`apple-dropdown-item ${!activeWindow ? 'disabled' : ''}`} 
+                onClick={() => { 
+                  if (!activeWindow) return;
+                  setActiveMenu(null); 
+                  if (onToggleMaximize) {
+                    onToggleMaximize(activeWindow);
+                  }
+                  showToast("Toggled Window Zoom", activeWindow, "🗖");
+                }}
+                disabled={!activeWindow}
+              >
+                <Maximize2 size={14} className="dropdown-icon" />
+                <span>Zoom Window</span>
+              </button>
+
+              <div className="apple-dropdown-divider" />
+
+              {/* Minimize All */}
+              <button 
+                className={`apple-dropdown-item ${openWindows.length === 0 ? 'disabled' : ''}`} 
+                onClick={() => { 
+                  if (openWindows.length === 0) return;
+                  setActiveMenu(null); 
+                  if (onMinimizeAll) onMinimizeAll();
+                  showToast("All Windows Minimized", "Desktop cleared", "🗕");
+                }}
+                disabled={openWindows.length === 0}
+              >
+                <span>Minimize All Windows</span>
+                <span className="dropdown-shortcut">⌥⌘M</span>
+              </button>
+
+              {/* Bring All to Front / Restore All */}
+              <button 
+                className="apple-dropdown-item" 
+                onClick={() => { 
+                  setActiveMenu(null); 
+                  if (onRestoreAll) onRestoreAll();
+                  showToast("All Windows Restored", "Brought to front", "📂");
+                }}
+              >
                 <span>Bring All to Front</span>
               </button>
+
+              {/* Close All Windows */}
+              <button 
+                className={`apple-dropdown-item ${openWindows.length === 0 ? 'disabled' : ''}`} 
+                onClick={() => { 
+                  if (openWindows.length === 0) return;
+                  setActiveMenu(null); 
+                  if (onCloseAll) onCloseAll();
+                  showToast("All Windows Closed", "Workspace reset", "✕");
+                }}
+                disabled={openWindows.length === 0}
+              >
+                <span>Close All Windows</span>
+                <span className="dropdown-shortcut">⌥⌘W</span>
+              </button>
+
+              <div className="apple-dropdown-divider" />
+
+              {/* Dynamic Open Windows Header & List */}
+              <div className="dropdown-section-label">
+                <span>OPEN WINDOWS ({openWindows.length})</span>
+              </div>
+
+              {openWindows.length === 0 ? (
+                <div className="apple-dropdown-empty-item">
+                  <span>No active windows</span>
+                </div>
+              ) : (
+                <div className="window-items-container">
+                  {openWindows.map((appId) => {
+                    const app = portfolioApps[appId] || { name: appId, icon: '📁' };
+                    const isActive = activeWindow === appId && !minimizedWindows.includes(appId);
+                    const isMin = minimizedWindows.includes(appId);
+                    return (
+                      <button
+                        key={appId}
+                        className={`apple-dropdown-item window-stack-item ${isActive ? 'active-app' : ''}`}
+                        onClick={() => handleFocusWindowItem(appId)}
+                      >
+                        <span className="window-stack-check">{isActive ? '✓' : ''}</span>
+                        <span className="window-stack-icon">{app.icon}</span>
+                        <span className="window-stack-name">{app.name}</span>
+                        {isMin && <span className="window-stack-tag">minimized</span>}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           )}
         </div>
 
-        {/* Help Menu */}
+        {/* Help Menu - Interactive Help Center & Shortcuts Tour */}
         <div className="menu-item-wrapper">
           <span 
             className={`menu-item ${activeMenu === 'help' ? 'active' : ''}`}
@@ -351,13 +675,87 @@ const MenuBar = ({ userName = 'Guest', onReplaySwarm }) => {
             Help
           </span>
           {activeMenu === 'help' && (
-            <div className="apple-dropdown-menu sub-menu">
-              <button className="apple-dropdown-item" onClick={() => { setActiveMenu(null); window.open('https://www.linkedin.com/in/varunsehgal02', '_blank'); }}>
-                <ExternalLink size={14} className="dropdown-icon" />
-                <span>Contact Varun on LinkedIn</span>
+            <div className="apple-dropdown-menu sub-menu help-dropdown-menu">
+              <button 
+                className="apple-dropdown-item primary-action" 
+                onClick={() => {
+                  setActiveMenu(null);
+                  setHelpActiveTab('tour');
+                  setShowHelpModal(true);
+                }}
+              >
+                <HelpCircle size={14} className="dropdown-icon text-cyan-400" />
+                <span>VarunOS Help Center & Tour</span>
               </button>
-              <button className="apple-dropdown-item" onClick={() => { setActiveMenu(null); window.open('mailto:varunsehgal2005@gmail.com'); }}>
-                <Info size={14} className="dropdown-icon" />
+
+              <button 
+                className="apple-dropdown-item" 
+                onClick={() => {
+                  setActiveMenu(null);
+                  setHelpActiveTab('shortcuts');
+                  setShowHelpModal(true);
+                }}
+              >
+                <Keyboard size={14} className="dropdown-icon text-purple-400" />
+                <span>Keyboard Shortcuts Guide</span>
+                <span className="dropdown-shortcut">⌘/</span>
+              </button>
+
+              <button 
+                className="apple-dropdown-item" 
+                onClick={() => {
+                  setActiveMenu(null);
+                  setHelpActiveTab('easter_eggs');
+                  setShowHelpModal(true);
+                }}
+              >
+                <Sparkles size={14} className="dropdown-icon text-amber-400" />
+                <span>Portfolio Easter Eggs & Tips</span>
+              </button>
+
+              <div className="apple-dropdown-divider" />
+
+              <button 
+                className="apple-dropdown-item" 
+                onClick={() => {
+                  setActiveMenu(null);
+                  setShowAboutModal(true);
+                }}
+              >
+                <Monitor size={14} className="dropdown-icon text-blue-400" />
+                <span>Hardware & System Specs</span>
+              </button>
+
+              <button className="apple-dropdown-item" onClick={handleTriggerSwarm}>
+                <Sparkles size={14} className="dropdown-icon sparkle-icon" />
+                <span>Replay Swarm Rebuild</span>
+                <span className="dropdown-shortcut">⌘R</span>
+              </button>
+
+              <div className="apple-dropdown-divider" />
+
+              <button 
+                className="apple-dropdown-item" 
+                onClick={() => { 
+                  setActiveMenu(null); 
+                  window.open('https://www.linkedin.com/in/varunsehgal02', '_blank'); 
+                  showToast("Opening LinkedIn", "varunsehgal02", "↗");
+                }}
+              >
+                <ExternalLink size={14} className="dropdown-icon text-blue-400" />
+                <span>Contact Varun on LinkedIn</span>
+                <span className="dropdown-shortcut">↗</span>
+              </button>
+              
+              <button 
+                className="apple-dropdown-item" 
+                onClick={() => { 
+                  setActiveMenu(null); 
+                  window.open('mailto:varunsehgal2005@gmail.com'); 
+                  showToast("Opening Mail Client", "varunsehgal2005@gmail.com", "✉");
+                }}
+              >
+                <Mail size={14} className="dropdown-icon text-emerald-400" />
                 <span>Send Email to Varun</span>
               </button>
             </div>
@@ -366,7 +764,7 @@ const MenuBar = ({ userName = 'Guest', onReplaySwarm }) => {
       </div>
       
       <div className="menu-right">
-        {/* Active Collaborator / Role Switcher Popover (Option 1) */}
+        {/* Active Collaborator / Role Switcher Popover */}
         <div className="menu-item-wrapper">
           <div 
             className={`menu-user-presence ${activeMenu === 'user' ? 'active' : ''}`}
@@ -388,7 +786,7 @@ const MenuBar = ({ userName = 'Guest', onReplaySwarm }) => {
                 <p className="role-switcher-sub">Select how you want to experience VarunOS</p>
               </div>
 
-              <div className="dropdown-divider" />
+              <div className="apple-dropdown-divider" />
 
               <div className="role-options-list">
                 {PORTFOLIO_ROLES.map((role) => {
@@ -422,6 +820,7 @@ const MenuBar = ({ userName = 'Guest', onReplaySwarm }) => {
           )}
         </div>
 
+        {/* Swarm Rebuild Trigger */}
         <button 
           className="menu-swarm-replay-btn" 
           onClick={handleTriggerSwarm} 
@@ -431,7 +830,7 @@ const MenuBar = ({ userName = 'Guest', onReplaySwarm }) => {
           <span>Swarm Rebuild</span>
         </button>
 
-        {/* Quick Califa Swarm Follow Toggle */}
+        {/* Quick Swarm Follow Toggle */}
         <button 
           className={`menu-swarm-follow-btn ${isSwarmFollow ? 'active' : ''}`}
           onClick={handleToggleSwarmFollow} 
@@ -440,7 +839,6 @@ const MenuBar = ({ userName = 'Guest', onReplaySwarm }) => {
           <Sparkles size={11} />
           <span>{isSwarmFollow ? "Swarm Follow: ON" : "Swarm Follow"}</span>
         </button>
-
 
         {/* Quick Light/Dark Mode Switcher */}
         <button
@@ -581,6 +979,403 @@ const MenuBar = ({ userName = 'Guest', onReplaySwarm }) => {
           )}
         </div>
       </div>
+
+      {/* About VarunOS Modal Dialog (macOS Sequoia Style) */}
+      {showAboutModal && (
+        <div className="varunos-modal-backdrop" onClick={() => setShowAboutModal(false)}>
+          <div className="varunos-about-dialog" onClick={(e) => e.stopPropagation()}>
+            <div className="about-window-traffic-lights">
+              <span className="traffic-dot close-dot" onClick={() => setShowAboutModal(false)} />
+              <span className="traffic-dot min-dot" />
+              <span className="traffic-dot max-dot" />
+            </div>
+
+            <div className="about-dialog-body">
+              <div className="about-os-icon-wrap">
+                <div className="about-os-logo-halo" />
+                <div className="about-os-logo"></div>
+              </div>
+
+              <div className="about-os-details">
+                <h2 className="about-os-title">VarunOS Sequoia</h2>
+                <div className="about-os-version">Version 15.2 (Build 24B83)</div>
+                <div className="about-author-badge">Designed & Engineered by Varun Sehgal</div>
+
+                <div className="about-specs-table">
+                  <div className="about-spec-row">
+                    <span className="about-spec-label">Designer</span>
+                    <span className="about-spec-val">Varun Sehgal (Lead UI/UX & Product Designer)</span>
+                  </div>
+                  <div className="about-spec-row">
+                    <span className="about-spec-label">Chip</span>
+                    <span className="about-spec-val">Apple M3 Max (16-core CPU, 40-core GPU)</span>
+                  </div>
+                  <div className="about-spec-row">
+                    <span className="about-spec-label">Swarm Engine</span>
+                    <span className="about-spec-val">Califa Multi-Agent Physics (60 FPS Vector Math)</span>
+                  </div>
+                  <div className="about-spec-row">
+                    <span className="about-spec-label">Memory</span>
+                    <span className="about-spec-val">36 GB Unified LPDDR5</span>
+                  </div>
+                  <div className="about-spec-row">
+                    <span className="about-spec-label">Stack</span>
+                    <span className="about-spec-val">React 18 + Vite + Tailwind/OKLCH + Framer Motion</span>
+                  </div>
+                </div>
+
+                <div className="about-actions-row">
+                  <button 
+                    className="about-action-btn primary"
+                    onClick={() => {
+                      setShowAboutModal(false);
+                      setShowHelpModal(true);
+                      setHelpActiveTab('tour');
+                    }}
+                  >
+                    System Tour & Help...
+                  </button>
+                  <button 
+                    className="about-action-btn"
+                    onClick={() => {
+                      setShowAboutModal(false);
+                      window.open('https://www.linkedin.com/in/varunsehgal02', '_blank');
+                    }}
+                  >
+                    Varun's LinkedIn ↗
+                  </button>
+                  <button 
+                    className="about-action-btn"
+                    onClick={() => setShowAboutModal(false)}
+                  >
+                    Done
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* VarunOS Help Center Modal Dialog */}
+      {showHelpModal && (
+        <div className="varunos-modal-backdrop" onClick={() => setShowHelpModal(false)}>
+          <div className="varunos-help-dialog" onClick={(e) => e.stopPropagation()}>
+            <div className="help-dialog-header">
+              <div className="help-window-traffic-lights">
+                <span className="traffic-dot close-dot" onClick={() => setShowHelpModal(false)} />
+                <span className="traffic-dot min-dot" />
+                <span className="traffic-dot max-dot" />
+              </div>
+              <div className="help-dialog-title">
+                <HelpCircle size={15} className="text-cyan-400" />
+                <span>VarunOS Help Center & Interactive Guide</span>
+              </div>
+              <button className="help-close-btn" onClick={() => setShowHelpModal(false)}>
+                <X size={14} />
+              </button>
+            </div>
+
+            <div className="help-dialog-nav">
+              <button 
+                className={`help-nav-pill ${helpActiveTab === 'tour' ? 'active' : ''}`}
+                onClick={() => setHelpActiveTab('tour')}
+              >
+                <Compass size={13} />
+                <span>Desktop Tour</span>
+              </button>
+              <button 
+                className={`help-nav-pill ${helpActiveTab === 'shortcuts' ? 'active' : ''}`}
+                onClick={() => setHelpActiveTab('shortcuts')}
+              >
+                <Keyboard size={13} />
+                <span>Keyboard Shortcuts</span>
+              </button>
+              <button 
+                className={`help-nav-pill ${helpActiveTab === 'easter_eggs' ? 'active' : ''}`}
+                onClick={() => setHelpActiveTab('easter_eggs')}
+              >
+                <Sparkles size={13} />
+                <span>Features & Easter Eggs</span>
+              </button>
+              <button 
+                className={`help-nav-pill ${helpActiveTab === 'contact' ? 'active' : ''}`}
+                onClick={() => setHelpActiveTab('contact')}
+              >
+                <Mail size={13} />
+                <span>Contact & Connect</span>
+              </button>
+            </div>
+
+            <div className="help-dialog-content">
+              {helpActiveTab === 'tour' && (
+                <div className="help-tab-pane">
+                  <h3 className="help-section-title">Welcome to Varun Sehgal's Interactive macOS Portfolio</h3>
+                  <p className="help-section-intro">
+                    VarunOS transforms traditional static portfolio design into an interactive operating system with real multi-agent swarms, editable Figma prototypes, and live code environments.
+                  </p>
+                  
+                  <div className="help-cards-grid">
+                    <div className="help-card" onClick={() => handleOpenAppItem('figma')}>
+                      <div className="help-card-header">
+                        <span className="help-card-icon">🎨</span>
+                        <h4>Figma Case Studies & Systems</h4>
+                      </div>
+                      <p>Explore production UI/UX case studies: EventFlow campus ticketing, FigJam friction boards, interactive design system tokens, and auto-layout frames.</p>
+                      <span className="help-card-link">Open Figma App →</span>
+                    </div>
+
+                    <div className="help-card" onClick={() => handleOpenAppItem('vscode')}>
+                      <div className="help-card-header">
+                        <span className="help-card-icon">💻</span>
+                        <h4>VS Code IDE Studio</h4>
+                      </div>
+                      <p>Browse full source code for Varun's production projects, run live code snippets, and explore frontend architecture with monaco syntax highlighting.</p>
+                      <span className="help-card-link">Open VS Code IDE →</span>
+                    </div>
+
+                    <div className="help-card" onClick={() => handleOpenAppItem('resume')}>
+                      <div className="help-card-header">
+                        <span className="help-card-icon">📄</span>
+                        <h4>Tactile ATS Notebook Resume</h4>
+                      </div>
+                      <p>Interactive lined notebook resume with sticky notes, career milestones, live experience timeline, and downloadable ATS PDF.</p>
+                      <span className="help-card-link">Open Resume App →</span>
+                    </div>
+
+                    <div className="help-card" onClick={() => handleOpenAppItem('terminal')}>
+                      <div className="help-card-header">
+                        <span className="help-card-icon">⌨️</span>
+                        <h4>Unix zsh Terminal</h4>
+                      </div>
+                      <p>Fully functional command-line terminal with neofetch, skills, projects, contact, and custom wallpaper switching commands.</p>
+                      <span className="help-card-link">Open Terminal →</span>
+                    </div>
+
+                    <div className="help-card" onClick={() => handleOpenAppItem('trash')}>
+                      <div className="help-card-header">
+                        <span className="help-card-icon">🗑️</span>
+                        <h4>Trash & AI Sentinel</h4>
+                      </div>
+                      <p>Humorous design graveyard guarded by VarunOS AI Sentinel: node_modules black hole, imposter_syndrome.exe, and final_v2_FINAL.fig.</p>
+                      <span className="help-card-link">Open Trash Can →</span>
+                    </div>
+
+                    <div className="help-card" onClick={handleTriggerSwarm}>
+                      <div className="help-card-header">
+                        <span className="help-card-icon">✨</span>
+                        <h4>Swarm Rebuild Engine</h4>
+                      </div>
+                      <p>Watch 4 AI swarm agents (Alex, Varun, Elena, Sarah) collaborate in real-time: placing frames, typing copy letter-by-letter, and wiring tokens.</p>
+                      <span className="help-card-link">Replay Swarm Rebuild →</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {helpActiveTab === 'shortcuts' && (
+                <div className="help-tab-pane">
+                  <h3 className="help-section-title">VarunOS Keyboard Shortcuts Cheat Sheet</h3>
+                  <p className="help-section-intro">Use these macOS keyboard shortcuts for rapid navigation and productivity.</p>
+                  
+                  <div className="shortcuts-table">
+                    <div className="shortcut-row">
+                      <div className="shortcut-keys">
+                        <kbd>⌥</kbd> + <kbd>1</kbd> .. <kbd>5</kbd>
+                      </div>
+                      <div className="shortcut-desc">
+                        <strong>Switch Desktop Wallpapers</strong>
+                        <span>Instantly crossfade between Sequoia Dark, Minecraft Sunset, Cyberpunk, and Dynamic backdrops.</span>
+                      </div>
+                    </div>
+
+                    <div className="shortcut-row">
+                      <div className="shortcut-keys">
+                        <kbd>⌘</kbd> + <kbd>M</kbd>
+                      </div>
+                      <div className="shortcut-desc">
+                        <strong>Minimize Active Window</strong>
+                        <span>Minimizes currently focused app window to dock.</span>
+                      </div>
+                    </div>
+
+                    <div className="shortcut-row">
+                      <div className="shortcut-keys">
+                        <kbd>⌥</kbd> + <kbd>⌘</kbd> + <kbd>M</kbd>
+                      </div>
+                      <div className="shortcut-desc">
+                        <strong>Minimize All Windows</strong>
+                        <span>Minimizes all open workspace windows to reveal clean desktop.</span>
+                      </div>
+                    </div>
+
+                    <div className="shortcut-row">
+                      <div className="shortcut-keys">
+                        <kbd>⌘</kbd> + <kbd>W</kbd>
+                      </div>
+                      <div className="shortcut-desc">
+                        <strong>Close Active Window</strong>
+                        <span>Closes the active app window cleanly.</span>
+                      </div>
+                    </div>
+
+                    <div className="shortcut-row">
+                      <div className="shortcut-keys">
+                        <kbd>⌘</kbd> + <kbd>R</kbd>
+                      </div>
+                      <div className="shortcut-desc">
+                        <strong>Replay Swarm Rebuild</strong>
+                        <span>Triggers the collaborative multi-agent assembly animation.</span>
+                      </div>
+                    </div>
+
+                    <div className="shortcut-row">
+                      <div className="shortcut-keys">
+                        <kbd>^</kbd> + <kbd>⌘</kbd> + <kbd>F</kbd>
+                      </div>
+                      <div className="shortcut-desc">
+                        <strong>Toggle Full Screen</strong>
+                        <span>Expands browser viewport to authentic native fullscreen mode.</span>
+                      </div>
+                    </div>
+
+                    <div className="shortcut-row">
+                      <div className="shortcut-keys">
+                        <kbd>Esc</kbd>
+                      </div>
+                      <div className="shortcut-desc">
+                        <strong>Dismiss Menus & Modals</strong>
+                        <span>Instantly closes any open dropdowns or help modals.</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {helpActiveTab === 'easter_eggs' && (
+                <div className="help-tab-pane">
+                  <h3 className="help-section-title">VarunOS Interactive Features & Easter Eggs</h3>
+                  
+                  <div className="tips-list">
+                    <div className="tip-item">
+                      <span className="tip-badge">Perspective Switcher</span>
+                      <p>Click on the role badge in the top-right menubar (Designer, Developer, Architect, Recruiter, Visitor) to tailor the experience to your exact needs.</p>
+                    </div>
+
+                    <div className="tip-item">
+                      <span className="tip-badge">Live Sound & Spatial Audio</span>
+                      <p>Open the volume control in the top-right menubar to adjust spatial audio volume or mute system sound effects.</p>
+                    </div>
+
+                    <div className="tip-item">
+                      <span className="tip-badge">Battery & Wi-Fi Telemetry</span>
+                      <p>Inspect the top-right Wi-Fi 6E network specs and 96W USB-C battery health monitor in real-time.</p>
+                    </div>
+
+                    <div className="tip-item">
+                      <span className="tip-badge">Swarm Mouse Flocking</span>
+                      <p>Notice the two AI swarm agents following your cursor around the desktop? Click the "Swarm Follow: ON" button in the menubar anytime to toggle mouse flocking.</p>
+                    </div>
+
+                    <div className="tip-item">
+                      <span className="tip-badge">Clippy Smart Recommendations</span>
+                      <p>Our friendly Microsoft Clippy assistant appears occasionally with contextual recommendations. Tips auto-dismiss after 3 seconds or when clicked.</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {helpActiveTab === 'contact' && (
+                <div className="help-tab-pane">
+                  <h3 className="help-section-title">Get In Touch with Varun Sehgal</h3>
+                  <p className="help-section-intro">Looking for a product designer, UI/UX specialist, or design systems engineer? Let's connect!</p>
+
+                  <div className="contact-methods-grid">
+                    <div className="contact-channel-card">
+                      <div className="contact-channel-header">
+                        <span className="channel-icon">💼</span>
+                        <div>
+                          <h4>LinkedIn</h4>
+                          <span className="channel-sub">Professional Network & Recommendations</span>
+                        </div>
+                      </div>
+                      <div className="channel-action-row">
+                        <button 
+                          className="channel-action-btn primary"
+                          onClick={() => window.open('https://www.linkedin.com/in/varunsehgal02', '_blank')}
+                        >
+                          Visit LinkedIn Profile ↗
+                        </button>
+                        <button 
+                          className="channel-action-btn"
+                          onClick={() => copyToClipboard('https://www.linkedin.com/in/varunsehgal02', "Copied LinkedIn Link", "linkedin.com/in/varunsehgal02", "🔗")}
+                        >
+                          Copy Link
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="contact-channel-card">
+                      <div className="contact-channel-header">
+                        <span className="channel-icon">✉️</span>
+                        <div>
+                          <h4>Email</h4>
+                          <span className="channel-sub">varunsehgal2005@gmail.com</span>
+                        </div>
+                      </div>
+                      <div className="channel-action-row">
+                        <button 
+                          className="channel-action-btn primary"
+                          onClick={() => window.open('mailto:varunsehgal2005@gmail.com')}
+                        >
+                          Send Email Direct ✉
+                        </button>
+                        <button 
+                          className="channel-action-btn"
+                          onClick={() => copyToClipboard('varunsehgal2005@gmail.com', "Copied Email Address", "varunsehgal2005@gmail.com", "📋")}
+                        >
+                          Copy Email
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="contact-channel-card">
+                      <div className="contact-channel-header">
+                        <span className="channel-icon">💻</span>
+                        <div>
+                          <h4>GitHub</h4>
+                          <span className="channel-sub">github.com/varunsehgal05</span>
+                        </div>
+                      </div>
+                      <div className="channel-action-row">
+                        <button 
+                          className="channel-action-btn primary"
+                          onClick={() => window.open('https://github.com/varunsehgal05', '_blank')}
+                        >
+                          View GitHub Repos ↗
+                        </button>
+                        <button 
+                          className="channel-action-btn"
+                          onClick={() => copyToClipboard('https://github.com/varunsehgal05', "Copied GitHub Profile", "github.com/varunsehgal05", "💻")}
+                        >
+                          Copy URL
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="help-dialog-footer">
+              <span className="help-footer-status">VarunOS Help Center • Sequoia 15.2 Active</span>
+              <button className="help-footer-close" onClick={() => setShowHelpModal(false)}>
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

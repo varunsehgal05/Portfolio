@@ -167,15 +167,36 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
       }
     };
 
+    const handleMinimizeAllEvent = () => minimizeAll();
+    const handleRestoreAllEvent = () => restoreAll();
+    const handleCloseAllEvent = () => closeAll();
+    const handleMinimizeActiveEvent = () => minimizeActive();
+
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('varunos-set-desktop-wallpaper', handleCustomWallpaperChange);
     window.addEventListener('varunos-open-app', handleGlobalOpenApp);
+    window.addEventListener('varunos:minimize-all', handleMinimizeAllEvent);
+    window.addEventListener('varunos-minimize-all', handleMinimizeAllEvent);
+    window.addEventListener('varunos:restore-all', handleRestoreAllEvent);
+    window.addEventListener('varunos-restore-all', handleRestoreAllEvent);
+    window.addEventListener('varunos:close-all', handleCloseAllEvent);
+    window.addEventListener('varunos-close-all', handleCloseAllEvent);
+    window.addEventListener('varunos:minimize-active', handleMinimizeActiveEvent);
+    window.addEventListener('varunos-minimize-active', handleMinimizeActiveEvent);
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('varunos-set-desktop-wallpaper', handleCustomWallpaperChange);
       window.removeEventListener('varunos-open-app', handleGlobalOpenApp);
+      window.removeEventListener('varunos:minimize-all', handleMinimizeAllEvent);
+      window.removeEventListener('varunos-minimize-all', handleMinimizeAllEvent);
+      window.removeEventListener('varunos:restore-all', handleRestoreAllEvent);
+      window.removeEventListener('varunos-restore-all', handleRestoreAllEvent);
+      window.removeEventListener('varunos:close-all', handleCloseAllEvent);
+      window.removeEventListener('varunos-close-all', handleCloseAllEvent);
+      window.removeEventListener('varunos:minimize-active', handleMinimizeActiveEvent);
+      window.removeEventListener('varunos-minimize-active', handleMinimizeActiveEvent);
     };
-  }, []);
+  }, [openWindows, activeWindow]);
 
   const triggerAppBounce = (appId) => {
     setBouncingApp(appId);
@@ -240,6 +261,33 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
 
   const focusApp = (appId) => {
     bringToFront(appId);
+  };
+
+  const minimizeActive = () => {
+    if (activeWindow && !minimizedWindows.includes(activeWindow)) {
+      toggleMinimize(activeWindow);
+    }
+  };
+
+  const minimizeAll = () => {
+    setMinimizedWindows([...openWindows]);
+    setActiveWindow(null);
+  };
+
+  const restoreAll = () => {
+    setMinimizedWindows([]);
+    if (openWindows.length > 0) {
+      const last = openWindows[openWindows.length - 1];
+      bringToFront(last);
+    }
+  };
+
+  const closeAll = () => {
+    setOpenWindows([]);
+    setMinimizedWindows([]);
+    setMaximizedWindows([]);
+    setWindowOrder([]);
+    setActiveWindow(null);
   };
 
   const handleDockClick = (appId) => {
@@ -319,7 +367,23 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
 
       {/* Top MenuBar wrapper */}
       <div className={`desktop-menubar-wrap ${swarmStage < 5 ? (swarmStage >= 1 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
-        <MenuBar userName={userName} onReplaySwarm={handleInternalReplaySwarm} />
+        <MenuBar 
+          userName={userName} 
+          onReplaySwarm={handleInternalReplaySwarm}
+          openWindows={openWindows}
+          minimizedWindows={minimizedWindows}
+          activeWindow={activeWindow}
+          portfolioApps={portfolioApps}
+          onOpenApp={openApp}
+          onCloseApp={closeApp}
+          onFocusApp={focusApp}
+          onMinimizeApp={toggleMinimize}
+          onMinimizeActive={minimizeActive}
+          onToggleMaximize={toggleMaximizeWindow}
+          onMinimizeAll={minimizeAll}
+          onRestoreAll={restoreAll}
+          onCloseAll={closeAll}
+        />
       </div>
 
       <div className="desktop-content">
