@@ -290,6 +290,17 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
     }
   };
 
+  const lastSidebarStepRef = useRef(-1);
+  const dispatchSidebarStep = (step) => {
+    if (lastSidebarStepRef.current !== step) {
+      lastSidebarStepRef.current = step;
+      if (typeof window !== 'undefined') {
+        window.__varunos_sidebar_step = step;
+        window.dispatchEvent(new CustomEvent('varunos-sidebar-step', { detail: { step } }));
+      }
+    }
+  };
+
   // Screen dimensions
   const [dims, setDims] = useState({
     w: typeof window !== 'undefined' ? window.innerWidth : 1440,
@@ -326,6 +337,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
     soundSynth.playChime();
     setCompleteBanner(true);
     setStatusMessage('✓ VarunOS Workspace Assembled & Ready!');
+    dispatchSidebarStep(15);
     dispatchFinderStep(7);
     if (onStageChange) onStageChange(5);
 
@@ -404,7 +416,9 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
     lastStampedIndexRef.current = -1;
     lastStampedDockIndexRef.current = -1;
     lastFinderStepRef.current = -1;
+    lastSidebarStepRef.current = -1;
     dispatchFinderStep(0);
+    dispatchSidebarStep(0);
 
     // Reset desktop icon & dock reveal counts to 0 at start of rebuild
     if (typeof window !== 'undefined') {
@@ -510,9 +524,33 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             cursorMode: 'arrow',
             chatText: t > 0.4 && t < 0.95 ? 'applying wallpaper' : null
           },
-          sarah: { hidden: true, x: 56, y: 48 },
-          alex: { hidden: true, x: w / 2, y: 28 },
-          user: { hidden: true, x: w - 80, y: 20 }
+          sarah: {
+            x: 36,
+            y: drawnH - 24,
+            color: '#FF7262',
+            label: 'Sarah Lin',
+            action: 'Bottom-Left Canvas Anchor',
+            toolKey: 'V Move',
+            cursorMode: 'arrow'
+          },
+          alex: {
+            x: drawnW - 36,
+            y: drawnH - 24,
+            color: '#0ACF83',
+            label: 'Alex Chen',
+            action: 'Bottom-Right Canvas Anchor',
+            toolKey: 'V Move',
+            cursorMode: 'arrow'
+          },
+          user: {
+            x: drawnW - 40,
+            y: 36,
+            color: '#1ABCFE',
+            label: userName || 'You',
+            action: 'Top-Right Canvas Anchor',
+            toolKey: 'V Move',
+            cursorMode: 'arrow'
+          }
         };
 
         setWireframeData(null);
@@ -584,9 +622,33 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             cursorMode: 'arrow',
             chatText: t > 0.45 && t < 0.95 ? 'aligning status tray' : null
           },
-          sarah: { hidden: true, x: 56, y: 48 },
-          varun: { hidden: true, x: w / 2, y: h / 2 },
-          user: { hidden: true, x: w - 80, y: 20 }
+          varun: {
+            x: w / 2,
+            y: 14,
+            color: '#A259FF',
+            label: 'Varun Sehgal',
+            action: 'Centering Apple Brand Menu',
+            toolKey: 'V Move',
+            cursorMode: 'arrow'
+          },
+          sarah: {
+            x: Math.max(120, menuDrawnW - 120),
+            y: 14,
+            color: '#FF7262',
+            label: 'Sarah Lin',
+            action: 'Mounting Status Bar Items',
+            toolKey: 'V Move',
+            cursorMode: 'arrow'
+          },
+          user: {
+            x: Math.max(80, menuDrawnW - 24),
+            y: 14,
+            color: '#1ABCFE',
+            label: userName || 'You',
+            action: 'Reviewing Top Bar',
+            toolKey: 'V Move',
+            cursorMode: 'arrow'
+          }
         };
 
         setWireframeData(null);
@@ -660,12 +722,11 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             color: '#FF7262',
             label: 'Sarah Lin',
             action: `Stamping: ${iconNames[iconIndex]}`,
-            toolKey: '⌥ Option',
+            toolKey: '⌥ Stamp',
             cursorMode: subProgress < 0.65 ? 'grab' : 'arrow',
             isClicking: isSarahClicking,
             isDrawing: true,
-            chatText: t < 0.85 ? 'stamping desktop apps (⌥ dup)' : null,
-            dupBadge: `⌥ Duplicate +${iconIndex + 1}`,
+            chatText: t < 0.85 ? 'stamping desktop apps' : null,
             boxBounds: {
               x: iconX,
               y: iconYPositions[iconIndex],
@@ -673,10 +734,42 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
               h: iconH
             }
           },
-          elena: { hidden: true, x: iconX + iconW + 40, y: sarahPos.y - 14 },
-          varun: { hidden: true, x: winTargetX + 220, y: winTargetY + 98 },
-          user: { hidden: true, x: winTargetX + 80, y: winTargetY + 60 },
-          alex: { hidden: true, x: winTargetX, y: winTargetY }
+          elena: {
+            x: iconX + iconW + 36,
+            y: sarahPos.y,
+            color: '#0D99FF',
+            label: 'Elena Rostova',
+            action: 'Verifying ΔY: 16px Spacing',
+            toolKey: 'V Move',
+            cursorMode: 'arrow'
+          },
+          alex: {
+            x: iconX + iconW / 2,
+            y: iconYPositions[5] + iconH + 24,
+            color: '#0ACF83',
+            label: 'Alex Chen',
+            action: 'Holding Grid Baseline',
+            toolKey: 'V Move',
+            cursorMode: 'arrow'
+          },
+          varun: {
+            x: winTargetX + 80,
+            y: winTargetY + 60,
+            color: '#A259FF',
+            label: 'Varun Sehgal',
+            action: 'Staging Window Frame',
+            toolKey: 'V Move',
+            cursorMode: 'arrow'
+          },
+          user: {
+            x: w - 80,
+            y: 48,
+            color: '#1ABCFE',
+            label: userName || 'You',
+            action: 'Observing Assembly',
+            toolKey: 'V Move',
+            cursorMode: 'arrow'
+          }
         };
 
         setWireframeData(null);
@@ -766,9 +859,33 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
               cursorMode: 'arrow',
               chatText: tA > 0.35 && tA < 0.85 ? 'applying glass styling' : null
             },
-            sarah: { hidden: true, x: curLeft, y: curDockY + 28 },
-            user: { hidden: true, x: curRight, y: curDockY + 28 },
-            elena: { hidden: true, x: w / 2, y: curDockY }
+            sarah: {
+              x: curLeft - 18,
+              y: curDockY + 28,
+              color: '#FF7262',
+              label: 'Sarah Lin',
+              action: 'Holding Left Margin',
+              toolKey: 'V Move',
+              cursorMode: 'arrow'
+            },
+            elena: {
+              x: curRight + 18,
+              y: curDockY + 28,
+              color: '#0D99FF',
+              label: 'Elena Rostova',
+              action: 'Holding Right Margin',
+              toolKey: 'V Move',
+              cursorMode: 'arrow'
+            },
+            user: {
+              x: w / 2,
+              y: curDockY - 20,
+              color: '#1ABCFE',
+              label: userName || 'You',
+              action: 'Reviewing Dock Geometry',
+              toolKey: 'V Move',
+              cursorMode: 'arrow'
+            }
           };
 
           setWireframeData(null);
@@ -828,14 +945,14 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             }
           }
 
-          agentTargets = {
+            agentTargets = {
             sarah: {
               x: sarahPos.x,
               y: sarahPos.y,
               color: '#FF7262',
               label: 'Sarah Lin',
               action: `Stamping Dock App: ${dockAppNames[dockIndex]}`,
-              toolKey: '⌥ Option',
+              toolKey: '⌥ Stamp',
               cursorMode: 'arrow',
               isClicking: isClicking,
               isDrawing: true,
@@ -847,10 +964,42 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
                 h: ICON_SIZE
               }
             },
-            alex: { hidden: true, x: curDockLeft, y: curDockY + 28 },
-            varun: { hidden: true, x: curDockLeft + dockTargetW, y: curDockY + 28 },
-            user: { hidden: true, x: w / 2, y: curDockY },
-            elena: { hidden: true, x: w / 2, y: curDockY }
+            alex: {
+              x: curDockLeft + 8,
+              y: curDockY + 28,
+              color: '#0ACF83',
+              label: 'Alex Chen',
+              action: 'Holding Dock Anchor',
+              toolKey: 'V Move',
+              cursorMode: 'arrow'
+            },
+            varun: {
+              x: curDockLeft + dockTargetW - 8,
+              y: curDockY + 28,
+              color: '#A259FF',
+              label: 'Varun Sehgal',
+              action: 'Holding Dock End',
+              toolKey: 'V Move',
+              cursorMode: 'arrow'
+            },
+            elena: {
+              x: w / 2,
+              y: curDockY - 18,
+              color: '#0D99FF',
+              label: 'Elena Rostova',
+              action: 'Inspecting Glass Blur',
+              toolKey: 'V Move',
+              cursorMode: 'arrow'
+            },
+            user: {
+              x: w / 2 + 100,
+              y: curDockY - 18,
+              color: '#1ABCFE',
+              label: userName || 'You',
+              action: 'Reviewing Dock Items',
+              toolKey: 'V Move',
+              cursorMode: 'arrow'
+            }
           };
 
           setWireframeData(null);
@@ -873,18 +1022,18 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         }
       }
       // =====================================================================
-      // Phase 5: Center Box (Finder Portfolio Window & 2x2 Project Grid with Live Text Swarm) (19.5s - 43.0s)
+      // Phase 5: Center Box (Finder Portfolio Window & 2x2 Project Grid with Live Text Swarm) (19.5s - 44.0s)
       // Unhurried, deliberate assembly right over the real window:
       // 5.1 (19.5s - 22.5s): Alex Chen extrudes outer Window Frame Box (3.0s) -> step 0
-      // 5.2 (22.5s - 25.5s): Elena Rostova drafts Sidebar Navigation (3.0s) -> step 1
-      // 5.3 (25.5s - 28.5s): Varun Sehgal styles Hero Bento Banner & Types Headline (3.0s) -> step 2
-      // 5.4 (28.5s - 31.5s): Card 01 - AI Interview (Sarah Lin Frame + Varun Sehgal Text Swarm) (3.0s) -> step 3
-      // 5.5 (31.5s - 34.5s): Card 02 - EventFlow SaaS (Alex Chen Frame + Varun Sehgal Text Swarm) (3.0s) -> step 4
-      // 5.6 (34.5s - 37.5s): Card 03 - Expensify Budget (Elena Rostova Frame + Varun Sehgal Text Swarm) (3.0s) -> step 5
-      // 5.7 (37.5s - 40.5s): Card 04 - CodeSrijan Hackathon (Sarah Lin Frame + Varun Sehgal Text Swarm) (3.0s) -> step 6
-      // 5.8 (40.5s - 43.0s): Swarm Final Verification & Celebration (2.5s) -> step 7
+      // 5.2 (22.5s - 26.5s): Elena Rostova stamps Sidebar Navigation 1-by-1 (4.0s) -> step 1
+      // 5.3 (26.5s - 29.5s): Varun Sehgal styles Hero Bento Banner & Types Headline (3.0s) -> step 2
+      // 5.4 (29.5s - 32.5s): Card 01 - AI Interview (Sarah Lin Frame + Varun Sehgal Text Swarm) (3.0s) -> step 3
+      // 5.5 (32.5s - 35.5s): Card 02 - EventFlow SaaS (Alex Chen Frame + Varun Sehgal Text Swarm) (3.0s) -> step 4
+      // 5.6 (35.5s - 38.5s): Card 03 - Expensify Budget (Elena Rostova Frame + Varun Sehgal Text Swarm) (3.0s) -> step 5
+      // 5.7 (38.5s - 41.5s): Card 04 - CodeSrijan Hackathon (Sarah Lin Frame + Varun Sehgal Text Swarm) (3.0s) -> step 6
+      // 5.8 (41.5s - 44.0s): Swarm Final Verification & Celebration (2.5s) -> step 7
       // =====================================================================
-      else if (elapsed < 43.0) {
+      else if (elapsed < 44.0) {
         const pWin = elapsed - 19.5;
 
         // Dynamic DOM Measuring helper guaranteeing pixel-perfect alignment to real rendered window & cards
@@ -989,6 +1138,25 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           'CodeSrijan Hackathon Platform'
         ];
 
+        // 15 Sidebar Items for deliberate, sequential 1-by-1 stamping by Elena Rostova
+        const SIDEBAR_ITEMS = [
+          { step: 1, label: 'Sidebar Frame', chat: 'extruding sidebar frame (200px)', yRel: 14, h: 28, isHeader: false },
+          { step: 2, label: 'Favorites', chat: 'stamping Favorites section', yRel: 34, h: 20, isHeader: true },
+          { step: 3, label: 'Featured Works', chat: 'stamping # Featured Works', yRel: 58, h: 26, isHeader: false },
+          { step: 4, label: 'Tech Stack', chat: 'stamping </> Tech Stack', yRel: 86, h: 26, isHeader: false },
+          { step: 5, label: 'Experience', chat: 'stamping [💼] Experience', yRel: 114, h: 26, isHeader: false },
+          { step: 6, label: 'Locations', chat: 'stamping Locations section', yRel: 146, h: 20, isHeader: true },
+          { step: 7, label: 'VS Code Projects', chat: 'stamping VS Code Projects', yRel: 170, h: 26, isHeader: false },
+          { step: 8, label: 'GitHub Repos', chat: 'stamping GitHub Repos', yRel: 198, h: 26, isHeader: false },
+          { step: 9, label: 'Resume PDF', chat: 'stamping Resume PDF', yRel: 226, h: 26, isHeader: false },
+          { step: 10, label: 'Tags', chat: 'stamping Tags section', yRel: 258, h: 20, isHeader: true },
+          { step: 11, label: 'Tag: Work', chat: 'stamping 🔴 Work tag', yRel: 280, h: 20, isHeader: false },
+          { step: 12, label: 'Tag: Design', chat: 'stamping 🟠 Design tag', yRel: 300, h: 20, isHeader: false },
+          { step: 13, label: 'Tag: AI & LLM', chat: 'stamping 🟣 AI & LLM tag', yRel: 320, h: 20, isHeader: false },
+          { step: 14, label: 'Tag: Personal', chat: 'stamping 🔵 Personal tag', yRel: 340, h: 20, isHeader: false },
+          { step: 15, label: 'Varun Profile Card', chat: 'mounting profile card', yRel: Math.max(380, sidebarBox.h - 52), h: 48, isHeader: false }
+        ];
+
         // 5.1: Alex Chen Extrudes Outer Window Frame Box (19.5s - 22.5s) -> Step 0
         if (pWin < 3.0) {
           setStatusMessage('[5/5] Alex Chen: [F] Extruding Window Frame Box (920 × 560px)...');
@@ -1019,10 +1187,43 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
                 label: `VarunOS Portfolio • ${Math.round(drawnW)} × ${Math.round(drawnH)}px`
               }
             },
-            varun: { hidden: true, x: curX + 120, y: curY + 60 },
-            user: { hidden: true, x: curX + drawnW, y: curY + drawnH },
-            sarah: { hidden: true, x: curX + drawnW, y: curY + 40 },
-            elena: { hidden: true, x: curX + drawnW / 2, y: curY + drawnH + 20 }
+            varun: {
+              x: curX + 120,
+              y: curY + 60,
+              color: '#A259FF',
+              label: 'Varun Sehgal',
+              action: 'Holding Window Pivot',
+              toolKey: 'V Move',
+              cursorMode: 'arrow',
+              chatText: 'aligning window container'
+            },
+            sarah: {
+              x: curX + 60,
+              y: curY + drawnH - 30,
+              color: '#FF7262',
+              label: 'Sarah Lin',
+              action: 'Holding Bottom-Left Anchor',
+              toolKey: 'V Move',
+              cursorMode: 'arrow'
+            },
+            elena: {
+              x: curX + 220,
+              y: curY + 40,
+              color: '#0D99FF',
+              label: 'Elena Rostova',
+              action: 'Staging Sidebar Auto-Layout',
+              toolKey: 'V Move',
+              cursorMode: 'arrow'
+            },
+            user: {
+              x: curX + drawnW - 40,
+              y: curY + 28,
+              color: '#1ABCFE',
+              label: userName || 'You',
+              action: 'Reviewing Window',
+              toolKey: 'V Move',
+              cursorMode: 'arrow'
+            }
           };
 
           setWireframeData(null);
@@ -1043,44 +1244,95 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             }
           ]);
         }
-        // 5.2: Elena Rostova Drafts Sidebar Navigation (22.5s - 25.5s) -> Step 1
-        else if (pWin < 6.0) {
-          const t2 = Math.min(1, (pWin - 3.0) / 3.0);
-          if (t2 >= 0.85) {
+        // 5.2: Elena Rostova Stamps Sidebar Navigation 1-by-1 (22.5s - 26.5s) -> Step 1
+        else if (pWin < 7.0) {
+          const t2 = Math.min(1, Math.max(0, (pWin - 3.0) / 4.0));
+          const stepFloat = t2 * 15;
+          const itemIdx = Math.min(14, Math.floor(stepFloat));
+          const subProg = stepFloat - itemIdx;
+          const currentItem = SIDEBAR_ITEMS[itemIdx];
+
+          setStatusMessage(`[5/5] Elena Rostova: [⌥ Stamp] Placing ${currentItem.label} (${itemIdx + 1}/15)...`);
+
+          if (lastSidebarStepRef.current !== currentItem.step) {
+            lastSidebarStepRef.current = currentItem.step;
+            soundSynth.playSnap(460 + itemIdx * 24, 0.035);
+            triggerRipple(sidebarBox.x + 80, sidebarBox.y + currentItem.yRel + currentItem.h / 2, '#0D99FF');
+            dispatchSidebarStep(currentItem.step);
+          }
+
+          if (t2 >= 0.95) {
             dispatchFinderStep(1);
           }
-          setStatusMessage('[5/5] Elena Rostova: Drafting Sidebar Navigation & Tags...');
-          const drawnSideH = Math.max(40, sidebarBox.h * easeInOutCubic(t2));
-          const elenaArc = interpolateArc(sidebarBox.x + sidebarBox.w, sidebarBox.y, sidebarBox.x + sidebarBox.w, sidebarBox.y + drawnSideH, t2, 12, 0.03);
 
-          if (t2 > 0.85 && !heroCtaSnappedRef.current) {
-            heroCtaSnappedRef.current = true;
-            soundSynth.playSnap(720);
-            triggerRipple(sidebarBox.x + sidebarBox.w / 2, sidebarBox.y + 120, '#0D99FF');
-          }
+          const prevItem = itemIdx === 0 ? currentItem : SIDEBAR_ITEMS[itemIdx - 1];
+          const elenaPos = interpolateArc(
+            sidebarBox.x + 50,
+            sidebarBox.y + prevItem.yRel + prevItem.h / 2,
+            sidebarBox.x + 50,
+            sidebarBox.y + currentItem.yRel + currentItem.h / 2,
+            subProg,
+            -12,
+            0.04
+          );
 
           agentTargets = {
             elena: {
-              x: elenaArc.x,
-              y: elenaArc.y,
+              x: elenaPos.x,
+              y: elenaPos.y,
               color: '#0D99FF',
               label: 'Elena Rostova',
-              toolKey: 'V Move',
-              cursorMode: 'arrow',
+              toolKey: currentItem.isHeader ? 'T Text' : (itemIdx === 0 ? 'F Frame' : '⌥ Stamp'),
+              cursorMode: currentItem.isHeader ? 'text' : 'arrow',
+              isClicking: subProg > 0.65 && subProg < 0.95,
               isDrawing: true,
-              chatText: t2 < 0.8 ? 'drafting sidebar layout' : null,
+              chatText: currentItem.chat,
               boxBounds: {
-                x: sidebarBox.x,
-                y: sidebarBox.y,
-                w: sidebarBox.w,
-                h: drawnSideH,
-                label: 'Sidebar Auto-Layout: 200px'
+                x: sidebarBox.x + 8,
+                y: sidebarBox.y + currentItem.yRel,
+                w: sidebarBox.w - 16,
+                h: currentItem.h,
+                label: currentItem.label
               }
             },
-            varun: { hidden: true, x: heroBox.x + 40, y: heroBox.y + 30 },
-            alex: { hidden: true, x: curX + curW, y: curY + curH },
-            sarah: { hidden: true, x: c1Box.x, y: c1Box.y },
-            user: { hidden: true, x: curX + curW, y: curY + curH }
+            varun: {
+              x: heroBox.x + 60,
+              y: heroBox.y + 45,
+              color: '#A259FF',
+              label: 'Varun Sehgal',
+              action: 'Staging Hero Typography',
+              toolKey: 'T Text',
+              cursorMode: 'arrow',
+              chatText: 'staging hero typography'
+            },
+            alex: {
+              x: curX + curW - 50,
+              y: curY + 28,
+              color: '#0ACF83',
+              label: 'Alex Chen',
+              action: 'Holding Window Anchor',
+              toolKey: 'F Frame',
+              cursorMode: 'arrow',
+              chatText: 'frame locked'
+            },
+            sarah: {
+              x: c1Box.x + 40,
+              y: c1Box.y + 20,
+              color: '#FF7262',
+              label: 'Sarah Lin',
+              action: 'Aligning 2×2 Grid',
+              toolKey: '⌥ Layout',
+              cursorMode: 'arrow'
+            },
+            user: {
+              x: curX + curW - 80,
+              y: curY + curH - 24,
+              color: '#1ABCFE',
+              label: userName || 'You',
+              action: 'Reviewing Navigation',
+              toolKey: 'V Move',
+              cursorMode: 'arrow'
+            }
           };
 
           setWireframeData(null);
@@ -1095,15 +1347,15 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
               color: '#ec4899',
               dashed: true,
               label: 'Sidebar 200px',
-              pillText: 'Sidebar: 200px',
+              pillText: `Sidebar: 200px (${itemIdx + 1}/15 items)`,
               pillX: sidebarBox.x + sidebarBox.w,
-              pillY: sidebarBox.y + 120
+              pillY: sidebarBox.y + currentItem.yRel + currentItem.h / 2
             }
           ]);
         }
-        // 5.3: Varun Sehgal Styles Hero Bento Banner & Types Headline (25.5s - 28.5s) -> Step 2
-        else if (pWin < 9.0) {
-          const t3 = Math.min(1, (pWin - 6.0) / 3.0);
+        // 5.3: Varun Sehgal Styles Hero Bento Banner & Types Headline (26.5s - 29.5s) -> Step 2
+        else if (pWin < 10.0) {
+          const t3 = Math.min(1, (pWin - 7.0) / 3.0);
           window.dispatchEvent(new CustomEvent('varunos-hero-type-progress', { detail: { progress: t3 } }));
           if (t3 >= 0.85) {
             dispatchFinderStep(2);
@@ -1142,10 +1394,44 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
                 label: `Hero Bento Box • ${Math.round(drawnHeroW)} × ${heroBox.h}px`
               }
             },
-            elena: { hidden: true, x: sidebarBox.x + sidebarBox.w, y: sidebarBox.y + 100 },
-            alex: { hidden: true, x: c2Box.x, y: c2Box.y },
-            sarah: { hidden: true, x: c1Box.x, y: c1Box.y },
-            user: { hidden: true, x: curX + curW, y: curY + curH }
+            elena: {
+              x: sidebarBox.x + sidebarBox.w - 14,
+              y: sidebarBox.y + 36,
+              color: '#0D99FF',
+              label: 'Elena Rostova',
+              action: 'Sidebar Assembled ✓',
+              toolKey: 'V Move',
+              cursorMode: 'arrow',
+              chatText: 'sidebar assembled ✓'
+            },
+            alex: {
+              x: heroBox.x + heroBox.w - 14,
+              y: heroBox.y + heroBox.h / 2,
+              color: '#0ACF83',
+              label: 'Alex Chen',
+              action: 'Hero Width Anchor',
+              toolKey: 'F Frame',
+              cursorMode: 'arrow'
+            },
+            sarah: {
+              x: c1Box.x + 30,
+              y: c1Box.y + 20,
+              color: '#FF7262',
+              label: 'Sarah Lin',
+              action: 'Preparing Card 01',
+              toolKey: 'R Rectangle',
+              cursorMode: 'cross',
+              chatText: 'preparing Card 01'
+            },
+            user: {
+              x: curX + curW - 80,
+              y: curY + curH - 24,
+              color: '#1ABCFE',
+              label: userName || 'You',
+              action: 'Reviewing Headline',
+              toolKey: 'V Move',
+              cursorMode: 'arrow'
+            }
           };
 
           setWireframeData(null);
@@ -1166,10 +1452,10 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             }
           ]);
         }
-        // 5.4: Card 01 - AI Interview Platform (28.5s - 31.5s) -> Step 3
+        // 5.4: Card 01 - AI Interview Platform (29.5s - 32.5s) -> Step 3
         // Sarah Lin draws container box + Varun Sehgal Text Swarm types title
-        else if (pWin < 12.0) {
-          const t4 = Math.min(1, (pWin - 9.0) / 3.0);
+        else if (pWin < 13.0) {
+          const t4 = Math.min(1, (pWin - 10.0) / 3.0);
           const cardTitle = CARD_TITLES[0];
 
           // Subphase A (0% - 28%): Sarah frames empty rectangle box
@@ -1215,9 +1501,35 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
                 isDrawing: false,
                 chatText: 'ready to type'
               },
-              alex: { hidden: true, x: c2Box.x, y: c2Box.y },
-              elena: { hidden: true, x: c3Box.x, y: c3Box.y },
-              user: { hidden: true, x: curX + curW, y: curY + curH }
+              alex: {
+                x: c2Box.x + 30,
+                y: c2Box.y + 20,
+                color: '#0ACF83',
+                label: 'Alex Chen',
+                action: 'Staging Card 02 Frame',
+                toolKey: 'R Rectangle',
+                cursorMode: 'cross',
+                chatText: 'staging Card 02'
+              },
+              elena: {
+                x: c3Box.x + 30,
+                y: c3Box.y + 20,
+                color: '#0D99FF',
+                label: 'Elena Rostova',
+                action: 'Staging Card 03 Frame',
+                toolKey: 'R Rectangle',
+                cursorMode: 'cross',
+                chatText: 'staging Card 03'
+              },
+              user: {
+                x: curX + curW - 80,
+                y: curY + curH - 24,
+                color: '#1ABCFE',
+                label: userName || 'You',
+                action: 'Reviewing Card 01',
+                toolKey: 'V Move',
+                cursorMode: 'arrow'
+              }
             };
           }
           // Subphase B (28% - 88%): Varun Sehgal Text Swarm types title letter-by-letter
@@ -1263,9 +1575,33 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
                 cursorMode: 'arrow',
                 chatText: 'padding: 14px'
               },
-              alex: { hidden: true, x: c2Box.x, y: c2Box.y },
-              elena: { hidden: true, x: c3Box.x, y: c3Box.y },
-              user: { hidden: true, x: curX + curW, y: curY + curH }
+              alex: {
+                x: c2Box.x + 30,
+                y: c2Box.y + 20,
+                color: '#0ACF83',
+                label: 'Alex Chen',
+                action: 'Staging Card 02',
+                toolKey: 'R Rectangle',
+                cursorMode: 'cross'
+              },
+              elena: {
+                x: c3Box.x + 30,
+                y: c3Box.y + 20,
+                color: '#0D99FF',
+                label: 'Elena Rostova',
+                action: 'Staging Card 03',
+                toolKey: 'R Rectangle',
+                cursorMode: 'cross'
+              },
+              user: {
+                x: curX + curW - 80,
+                y: curY + curH - 24,
+                color: '#1ABCFE',
+                label: userName || 'You',
+                action: 'Observing Card 01',
+                toolKey: 'V Move',
+                cursorMode: 'arrow'
+              }
             };
           }
           // Subphase C (88% - 100%): Card 01 Complete & Stamped
@@ -1307,11 +1643,28 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
                 y: c2Box.y + 10,
                 color: '#0ACF83',
                 label: 'Alex Chen',
+                action: 'Preparing Card 02 Frame',
                 toolKey: 'R Rectangle',
                 cursorMode: 'cross'
               },
-              elena: { hidden: true, x: c3Box.x, y: c3Box.y },
-              user: { hidden: true, x: curX + curW, y: curY + curH }
+              elena: {
+                x: c3Box.x + 30,
+                y: c3Box.y + 20,
+                color: '#0D99FF',
+                label: 'Elena Rostova',
+                action: 'Staging Card 03 Frame',
+                toolKey: 'R Rectangle',
+                cursorMode: 'cross'
+              },
+              user: {
+                x: curX + curW - 80,
+                y: curY + curH - 24,
+                color: '#1ABCFE',
+                label: userName || 'You',
+                action: 'Observing Assembly',
+                toolKey: 'V Move',
+                cursorMode: 'arrow'
+              }
             };
           }
 
@@ -1333,10 +1686,10 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             }
           ]);
         }
-        // 5.5: Card 02 - EventFlow SaaS (31.5s - 34.5s) -> Step 4
+        // 5.5: Card 02 - EventFlow SaaS (32.5s - 35.5s) -> Step 4
         // Alex Chen draws container box + Varun Sehgal Text Swarm types title
-        else if (pWin < 15.0) {
-          const t5 = Math.min(1, (pWin - 12.0) / 3.0);
+        else if (pWin < 16.0) {
+          const t5 = Math.min(1, (pWin - 13.0) / 3.0);
           const cardTitle = CARD_TITLES[1];
 
           // Subphase A (0% - 28%): Alex frames empty rectangle box
@@ -1382,9 +1735,33 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
                 isDrawing: false,
                 chatText: 'ready to type'
               },
-              sarah: { hidden: true, x: c1Box.x, y: c1Box.y },
-              elena: { hidden: true, x: c3Box.x, y: c3Box.y },
-              user: { hidden: true, x: curX + curW, y: curY + curH }
+              sarah: {
+                x: c1Box.x + c1Box.w / 2,
+                y: c1Box.y + c1Box.h / 2,
+                color: '#FF7262',
+                label: 'Sarah Lin',
+                action: 'Card 01 Verified',
+                toolKey: 'V Move',
+                cursorMode: 'arrow'
+              },
+              elena: {
+                x: c3Box.x + 30,
+                y: c3Box.y + 20,
+                color: '#0D99FF',
+                label: 'Elena Rostova',
+                action: 'Staging Card 03',
+                toolKey: 'R Rectangle',
+                cursorMode: 'cross'
+              },
+              user: {
+                x: curX + curW - 80,
+                y: curY + curH - 24,
+                color: '#1ABCFE',
+                label: userName || 'You',
+                action: 'Observing Assembly',
+                toolKey: 'V Move',
+                cursorMode: 'arrow'
+              }
             };
           }
           // Subphase B (28% - 88%): Varun Sehgal Text Swarm types title letter-by-letter
@@ -1430,9 +1807,34 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
                 cursorMode: 'arrow',
                 chatText: 'padding: 14px'
               },
-              sarah: { hidden: true, x: c1Box.x, y: c1Box.y },
-              elena: { hidden: true, x: c3Box.x, y: c3Box.y },
-              user: { hidden: true, x: curX + curW, y: curY + curH }
+              sarah: {
+                x: Math.round((c1Box.x + c1Box.w + c2Box.x) / 2),
+                y: c1Box.y + c1Box.h / 2,
+                color: '#FF7262',
+                label: 'Sarah Lin',
+                action: 'Holding ΔX: 14px Gap',
+                toolKey: 'V Move',
+                cursorMode: 'arrow',
+                chatText: 'gap: 14px locked'
+              },
+              elena: {
+                x: c3Box.x + 30,
+                y: c3Box.y + 20,
+                color: '#0D99FF',
+                label: 'Elena Rostova',
+                action: 'Staging Card 03',
+                toolKey: 'R Rectangle',
+                cursorMode: 'cross'
+              },
+              user: {
+                x: curX + curW - 80,
+                y: curY + curH - 24,
+                color: '#1ABCFE',
+                label: userName || 'You',
+                action: 'Observing Assembly',
+                toolKey: 'V Move',
+                cursorMode: 'arrow'
+              }
             };
           }
           // Subphase C (88% - 100%): Card 02 Complete & Stamped
@@ -1474,11 +1876,28 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
                 y: c3Box.y + 10,
                 color: '#0D99FF',
                 label: 'Elena Rostova',
+                action: 'Preparing Card 03 Frame',
                 toolKey: 'R Rectangle',
                 cursorMode: 'cross'
               },
-              sarah: { hidden: true, x: c1Box.x, y: c1Box.y },
-              user: { hidden: true, x: curX + curW, y: curY + curH }
+              sarah: {
+                x: c1Box.x + c1Box.w / 2,
+                y: c1Box.y + c1Box.h / 2,
+                color: '#FF7262',
+                label: 'Sarah Lin',
+                action: 'Card 01 Verified',
+                toolKey: 'V Move',
+                cursorMode: 'arrow'
+              },
+              user: {
+                x: curX + curW - 80,
+                y: curY + curH - 24,
+                color: '#1ABCFE',
+                label: userName || 'You',
+                action: 'Observing Assembly',
+                toolKey: 'V Move',
+                cursorMode: 'arrow'
+              }
             };
           }
 
@@ -1501,10 +1920,10 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             }
           ]);
         }
-        // 5.6: Card 03 - Expensify Budget (34.5s - 37.5s) -> Step 5
+        // 5.6: Card 03 - Expensify Budget (35.5s - 38.5s) -> Step 5
         // Elena Rostova draws container box + Varun Sehgal Text Swarm types title
-        else if (pWin < 18.0) {
-          const t6 = Math.min(1, (pWin - 15.0) / 3.0);
+        else if (pWin < 19.0) {
+          const t6 = Math.min(1, (pWin - 16.0) / 3.0);
           const cardTitle = CARD_TITLES[2];
 
           // Subphase A (0% - 28%): Elena frames empty rectangle box
@@ -1550,9 +1969,34 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
                 isDrawing: false,
                 chatText: 'ready to type'
               },
-              alex: { hidden: true, x: c4Box.x, y: c4Box.y },
-              sarah: { hidden: true, x: c1Box.x, y: c1Box.y },
-              user: { hidden: true, x: curX + curW, y: curY + curH }
+              alex: {
+                x: c2Box.x + c2Box.w / 2,
+                y: c2Box.y + c2Box.h / 2,
+                color: '#0ACF83',
+                label: 'Alex Chen',
+                action: 'Card 02 Verified',
+                toolKey: 'V Move',
+                cursorMode: 'arrow'
+              },
+              sarah: {
+                x: c1Box.x + c1Box.w / 2,
+                y: Math.round((c1Box.y + c1Box.h + c3Box.y) / 2),
+                color: '#FF7262',
+                label: 'Sarah Lin',
+                action: 'Holding ΔY: 14px Gap',
+                toolKey: 'V Move',
+                cursorMode: 'arrow',
+                chatText: 'ΔY: 14px locked'
+              },
+              user: {
+                x: curX + curW - 80,
+                y: curY + curH - 24,
+                color: '#1ABCFE',
+                label: userName || 'You',
+                action: 'Observing Assembly',
+                toolKey: 'V Move',
+                cursorMode: 'arrow'
+              }
             };
           }
           // Subphase B (28% - 88%): Varun Sehgal Text Swarm types title letter-by-letter
@@ -1598,9 +2042,34 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
                 cursorMode: 'arrow',
                 chatText: 'padding: 14px'
               },
-              alex: { hidden: true, x: c4Box.x, y: c4Box.y },
-              sarah: { hidden: true, x: c1Box.x, y: c1Box.y },
-              user: { hidden: true, x: curX + curW, y: curY + curH }
+              sarah: {
+                x: c1Box.x + c1Box.w / 2,
+                y: Math.round((c1Box.y + c1Box.h + c3Box.y) / 2),
+                color: '#FF7262',
+                label: 'Sarah Lin',
+                action: 'Holding ΔY: 14px Gap',
+                toolKey: 'V Move',
+                cursorMode: 'arrow',
+                chatText: 'ΔY: 14px locked'
+              },
+              alex: {
+                x: c4Box.x + 20,
+                y: c4Box.y + 20,
+                color: '#0ACF83',
+                label: 'Alex Chen',
+                action: 'Staging Card 04 Frame',
+                toolKey: 'R Rectangle',
+                cursorMode: 'cross'
+              },
+              user: {
+                x: curX + curW - 80,
+                y: curY + curH - 24,
+                color: '#1ABCFE',
+                label: userName || 'You',
+                action: 'Observing Assembly',
+                toolKey: 'V Move',
+                cursorMode: 'arrow'
+              }
             };
           }
           // Subphase C (88% - 100%): Card 03 Complete & Stamped
@@ -1642,11 +2111,28 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
                 y: c4Box.y + 10,
                 color: '#FF7262',
                 label: 'Sarah Lin',
+                action: 'Preparing Card 04 Frame',
                 toolKey: 'R Rectangle',
                 cursorMode: 'cross'
               },
-              alex: { hidden: true, x: c2Box.x, y: c2Box.y },
-              user: { hidden: true, x: curX + curW, y: curY + curH }
+              alex: {
+                x: c2Box.x + c2Box.w / 2,
+                y: c2Box.y + c2Box.h / 2,
+                color: '#0ACF83',
+                label: 'Alex Chen',
+                action: 'Card 02 Verified',
+                toolKey: 'V Move',
+                cursorMode: 'arrow'
+              },
+              user: {
+                x: curX + curW - 80,
+                y: curY + curH - 24,
+                color: '#1ABCFE',
+                label: userName || 'You',
+                action: 'Observing Assembly',
+                toolKey: 'V Move',
+                cursorMode: 'arrow'
+              }
             };
           }
 
@@ -1670,10 +2156,10 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             }
           ]);
         }
-        // 5.7: Card 04 - CodeSrijan Hackathon (37.5s - 40.5s) -> Step 6
+        // 5.7: Card 04 - CodeSrijan Hackathon (38.5s - 41.5s) -> Step 6
         // Sarah Lin draws container box + Varun Sehgal Text Swarm types title
-        else if (pWin < 21.0) {
-          const t7 = Math.min(1, (pWin - 18.0) / 3.0);
+        else if (pWin < 22.0) {
+          const t7 = Math.min(1, (pWin - 19.0) / 3.0);
           const cardTitle = CARD_TITLES[3];
 
           // Subphase A (0% - 28%): Sarah frames empty rectangle box
@@ -1719,9 +2205,35 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
                 isDrawing: false,
                 chatText: 'ready to type'
               },
-              alex: { hidden: true, x: c2Box.x, y: c2Box.y },
-              elena: { hidden: true, x: c3Box.x, y: c3Box.y },
-              user: { hidden: true, x: curX + curW, y: curY + curH }
+              alex: {
+                x: Math.round((c3Box.x + c3Box.w + c4Box.x) / 2),
+                y: c3Box.y + c3Box.h / 2,
+                color: '#0ACF83',
+                label: 'Alex Chen',
+                action: 'Holding Bottom Gap',
+                toolKey: 'V Move',
+                cursorMode: 'arrow',
+                chatText: 'bottom gap verified'
+              },
+              elena: {
+                x: c2Box.x + c2Box.w / 2,
+                y: Math.round((c2Box.y + c2Box.h + c4Box.y) / 2),
+                color: '#0D99FF',
+                label: 'Elena Rostova',
+                action: 'Holding Right Gap',
+                toolKey: 'V Move',
+                cursorMode: 'arrow',
+                chatText: 'right gap verified'
+              },
+              user: {
+                x: curX + curW - 80,
+                y: curY + curH - 24,
+                color: '#1ABCFE',
+                label: userName || 'You',
+                action: 'Reviewing 2×2 Grid',
+                toolKey: 'V Move',
+                cursorMode: 'arrow'
+              }
             };
           }
           // Subphase B (28% - 88%): Varun Sehgal Text Swarm types title letter-by-letter
@@ -1767,9 +2279,33 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
                 cursorMode: 'arrow',
                 chatText: 'padding: 14px'
               },
-              alex: { hidden: true, x: c2Box.x, y: c2Box.y },
-              elena: { hidden: true, x: c3Box.x, y: c3Box.y },
-              user: { hidden: true, x: curX + curW, y: curY + curH }
+              alex: {
+                x: Math.round((c3Box.x + c3Box.w + c4Box.x) / 2),
+                y: c3Box.y + c3Box.h / 2,
+                color: '#0ACF83',
+                label: 'Alex Chen',
+                action: 'Holding Bottom Gap',
+                toolKey: 'V Move',
+                cursorMode: 'arrow'
+              },
+              elena: {
+                x: c2Box.x + c2Box.w / 2,
+                y: Math.round((c2Box.y + c2Box.h + c4Box.y) / 2),
+                color: '#0D99FF',
+                label: 'Elena Rostova',
+                action: 'Holding Right Gap',
+                toolKey: 'V Move',
+                cursorMode: 'arrow'
+              },
+              user: {
+                x: curX + curW - 80,
+                y: curY + curH - 24,
+                color: '#1ABCFE',
+                label: userName || 'You',
+                action: 'Reviewing 2×2 Grid',
+                toolKey: 'V Move',
+                cursorMode: 'arrow'
+              }
             };
           }
           // Subphase C (88% - 100%): Card 04 Complete & Stamped
@@ -1807,9 +2343,33 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
                 cursorMode: 'arrow',
                 chatText: '✨ Live assembly complete!'
               },
-              alex: { hidden: true, x: c2Box.x, y: c2Box.y },
-              elena: { hidden: true, x: c3Box.x, y: c3Box.y },
-              user: { hidden: true, x: curX + curW, y: curY + curH }
+              alex: {
+                x: c2Box.x + c2Box.w / 2,
+                y: c2Box.y + c2Box.h / 2,
+                color: '#0ACF83',
+                label: 'Alex Chen',
+                action: 'Card 02 Verified',
+                toolKey: 'V Move',
+                cursorMode: 'arrow'
+              },
+              elena: {
+                x: c3Box.x + c3Box.w / 2,
+                y: c3Box.y + c3Box.h / 2,
+                color: '#0D99FF',
+                label: 'Elena Rostova',
+                action: 'Card 03 Verified',
+                toolKey: 'V Move',
+                cursorMode: 'arrow'
+              },
+              user: {
+                x: curX + curW - 80,
+                y: curY + curH - 24,
+                color: '#1ABCFE',
+                label: userName || 'You',
+                action: 'Reviewing Final Grid',
+                toolKey: 'V Move',
+                cursorMode: 'arrow'
+              }
             };
           }
 
@@ -1832,11 +2392,10 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             }
           ]);
         }
-        // 5.8: Auto-Layout Verification & Celebration (40.5s - 43.0s) -> Step 7
+        // 5.8: Auto-Layout Verification & Celebration (41.5s - 44.0s) -> Step 7
         else {
           dispatchFinderStep(7);
           setStatusMessage('[5/5] Auto-Layout Verified ✓ 2×2 Project Grid Complete!');
-          const t8 = Math.min(1, (pWin - 21.0) / 2.5);
 
           const gapX = Math.round((c1Box.x + c1Box.w + c2Box.x) / 2);
           const gapY = Math.round((c1Box.y + c1Box.h + c3Box.y) / 2);
@@ -1872,18 +2431,24 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
               chatText: '✨ Built live, by a crowd of cursors!'
             },
             sarah: {
-              x: 56,
-              y: 438,
+              x: c1Box.x + 20,
+              y: c1Box.y - 14,
               color: '#FF7262',
               label: 'Sarah Lin',
-              cursorMode: 'arrow'
+              action: 'Grid 01-04 Verified ✓',
+              toolKey: 'V Move',
+              cursorMode: 'arrow',
+              chatText: 'all 4 cards ready'
             },
             user: {
-              x: (w + dockTargetW) / 2,
-              y: dockTargetY + 28,
+              x: c2Box.x + c2Box.w - 20,
+              y: c4Box.y + c4Box.h + 20,
               color: '#1ABCFE',
               label: userName || 'You',
-              cursorMode: 'arrow'
+              action: 'Workspace Ready',
+              toolKey: 'V Move',
+              cursorMode: 'arrow',
+              chatText: 'workspace assembled!'
             }
           };
 
@@ -1919,7 +2484,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           ]);
         }
       }
-      // Rebuild complete! (elapsed >= 43.0s)
+      // Rebuild complete! (elapsed >= 44.0s)
       else {
         finishSwarm();
         return;

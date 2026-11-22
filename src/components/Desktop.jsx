@@ -365,7 +365,9 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
   const handleInternalReplaySwarm = () => {
     if (typeof window !== 'undefined') {
       window.__varunos_finder_step = 0;
+      window.__varunos_sidebar_step = 0;
       window.dispatchEvent(new CustomEvent('varunos-swarm-finder-step', { detail: { step: 0 } }));
+      window.dispatchEvent(new CustomEvent('varunos-sidebar-step', { detail: { step: 0 } }));
       window.dispatchEvent(new CustomEvent('varunos-card-building', { detail: { index: -1, phase: 'reset' } }));
     }
     setOpenWindows(['finder']);
@@ -381,7 +383,9 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
     if (swarmStage < 5) {
       if (typeof window !== 'undefined' && swarmStage === 0) {
         window.__varunos_finder_step = 0;
+        window.__varunos_sidebar_step = 0;
         window.dispatchEvent(new CustomEvent('varunos-swarm-finder-step', { detail: { step: 0 } }));
+        window.dispatchEvent(new CustomEvent('varunos-sidebar-step', { detail: { step: 0 } }));
         window.dispatchEvent(new CustomEvent('varunos-card-building', { detail: { index: -1, phase: 'reset' } }));
       }
       setOpenWindows(['finder']);
