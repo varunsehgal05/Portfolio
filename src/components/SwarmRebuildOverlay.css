@@ -208,6 +208,7 @@
   will-change: transform;
   transform: translate3d(0, 0, 0);
   transition: opacity 0.3s ease;
+  contain: layout style;
 }
 
 /* Click Compression Animation (Kittu.pro cv-press) */
@@ -402,6 +403,8 @@
   box-sizing: border-box;
   pointer-events: none;
   z-index: 999998;
+  will-change: transform, width, height, left, top;
+  contain: layout style;
 }
 
 .box-handle {

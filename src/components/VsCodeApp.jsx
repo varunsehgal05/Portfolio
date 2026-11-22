@@ -246,7 +246,7 @@ export const VarunSehgal = {
     }
   ],
   honors: [
-    "🏆 1st Place Winner at HACKeThor (National Level Hackathon, Unstop) out of 500+ participants.",
+    "🥈 1st Runner-Up (2nd Place) at HACKeThor (National Level Hackathon, Unstop) out of 500+ participants.",
     "⚡ Lead Organizer & Platform Architect at CodeSrijan Hackathon."
   ],
   contact: {

@@ -18,11 +18,11 @@ const SwarmCursor = React.memo(({
   // Pure role tag: no personal names, no tool key clutter
   const displayRole = roleTag || role || (
     label === 'Sarah Lin' ? 'Stamping' :
-    label === 'Varun Sehgal' ? 'Typing' :
-    label === 'Alex Chen' ? 'Framing' :
-    label === 'Elena Rostova' ? 'Layout' :
-    (label === 'You' || label === 'Guest') ? 'Recruiter' :
-    label || 'Agent'
+      label === 'Varun Sehgal' ? 'Typing' :
+        label === 'Alex Chen' ? 'Framing' :
+          label === 'Elena Rostova' ? 'Layout' :
+            (label === 'You' || label === 'Guest') ? 'Recruiter' :
+              label || 'Agent'
   );
   return (
     <>
@@ -307,10 +307,14 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
     }
   };
 
-  const lastToolbarStepRef = useRef(-1);
+  const lastToolbarPayloadRef = useRef('');
   const dispatchToolbarStep = (detail) => {
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('varunos-toolbar-step', { detail }));
+    const key = `${detail.step ?? ''}_${detail.typedPath ?? ''}_${detail.typedSearch ?? ''}`;
+    if (lastToolbarPayloadRef.current !== key) {
+      lastToolbarPayloadRef.current = key;
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('varunos-toolbar-step', { detail }));
+      }
     }
   };
 
@@ -323,6 +327,41 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
       }
     }
   };
+
+  const lastHeroCharCountRef = useRef(-1);
+  const dispatchHeroTypeProgress = (progress, charCount) => {
+    if (lastHeroCharCountRef.current !== charCount) {
+      lastHeroCharCountRef.current = charCount;
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('varunos-hero-type-progress', { detail: { progress, charCount } }));
+      }
+    }
+  };
+
+  const lastCardBuildingKeyRef = useRef('');
+  const dispatchCardBuilding = (detail) => {
+    const key = `${detail.index}_${detail.phase}_${detail.typedText ?? Math.round((detail.progress ?? 0) * 8)}`;
+    if (lastCardBuildingKeyRef.current !== key) {
+      lastCardBuildingKeyRef.current = key;
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('varunos-card-building', { detail }));
+      }
+    }
+  };
+
+  const lastStatusMessageRef = useRef('');
+  const updateStatusMessage = (msg) => {
+    if (lastStatusMessageRef.current !== msg) {
+      lastStatusMessageRef.current = msg;
+      setStatusMessage(msg);
+    }
+  };
+
+  // High-performance DOM measuring refs: caches geometry to prevent layout thrashing
+  const domBoxCacheRef = useRef(null);
+  const lastDomMeasureRef = useRef(0);
+  const iconCacheRef = useRef(null);
+  const lastIconMeasureRef = useRef(0);
 
   // Screen dimensions
   const [dims, setDims] = useState({
@@ -443,6 +482,13 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
     lastFinderStepRef.current = -1;
     lastSidebarStepRef.current = -1;
     lastToolbarStepRef.current = -1;
+    lastToolbarPayloadRef.current = '';
+    lastHeroCharCountRef.current = -1;
+    lastCardBuildingKeyRef.current = '';
+    domBoxCacheRef.current = null;
+    lastDomMeasureRef.current = 0;
+    iconCacheRef.current = null;
+    lastIconMeasureRef.current = 0;
     heroBoxVisibleRef.current = false;
     dispatchFinderStep(0);
     dispatchSidebarStep(0);
@@ -702,7 +748,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
       // Phase 3: Desktop App Icons Stamping (4.2s - 8.2s) — 4 Swarm Collaborative
       // =====================================================================
       else if (elapsed < 8.2) {
-        setStatusMessage('[3/5] Swarm Team: Stamping Left Desktop Apps (1-by-1)...');
+        updateStatusMessage('[3/5] Swarm Team: Stamping Left Desktop Apps (1-by-1)...');
         const t = Math.min(1, Math.max(0, (elapsed - 4.2) / 4.0));
 
         if (t > 0.05) {
@@ -710,18 +756,23 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         }
 
         const iconNames = ['Figma', 'VS Code', 'Resume.pdf', 'Contact', 'Buy Me a Coffee', 'Trash'];
-        const domIcons = typeof document !== 'undefined' ? document.querySelectorAll('.desktop-icon-container') : null;
-        let iconYPositions = [46, 138, 230, 322, 414, 506];
-        let iconX = 20;
-        let iconW = 72;
-        let iconH = 76;
-        if (domIcons && domIcons.length >= 6) {
-          iconYPositions = Array.from(domIcons).map(el => Math.round(el.getBoundingClientRect().top));
-          const r0 = domIcons[0].getBoundingClientRect();
-          iconX = Math.round(r0.left) || 20;
-          iconW = Math.round(r0.width) || 72;
-          iconH = Math.round(r0.height) || 76;
+        if (!iconCacheRef.current || (now - lastIconMeasureRef.current > 500)) {
+          lastIconMeasureRef.current = now;
+          const domIcons = typeof document !== 'undefined' ? document.querySelectorAll('.desktop-icon-container') : null;
+          let iconYPositions = [46, 138, 230, 322, 414, 506];
+          let iconX = 20;
+          let iconW = 72;
+          let iconH = 76;
+          if (domIcons && domIcons.length >= 6) {
+            iconYPositions = Array.from(domIcons).map(el => Math.round(el.getBoundingClientRect().top));
+            const r0 = domIcons[0].getBoundingClientRect();
+            iconX = Math.round(r0.left) || 20;
+            iconW = Math.round(r0.width) || 72;
+            iconH = Math.round(r0.height) || 76;
+          }
+          iconCacheRef.current = { iconYPositions, iconX, iconW, iconH };
         }
+        const { iconYPositions, iconX, iconW, iconH } = iconCacheRef.current;
 
         const totalIcons = 6;
         const iconFloat = t * totalIcons;
@@ -1069,25 +1120,6 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
       else if (elapsed < 24.5) {
         const pWin = elapsed - 13.0;
 
-        // Dynamic DOM Measuring helper guaranteeing pixel-perfect alignment to real rendered window & cards
-        const getDomBox = (selector, fallback) => {
-          if (typeof document !== 'undefined') {
-            const el = document.querySelector(selector);
-            if (el) {
-              const r = el.getBoundingClientRect();
-              if (r.width > 20 && r.height > 15) {
-                return {
-                  x: Math.round(r.left),
-                  y: Math.round(r.top),
-                  w: Math.round(r.width),
-                  h: Math.round(r.height)
-                };
-              }
-            }
-          }
-          return fallback;
-        };
-
         const DOCK_CLEARANCE = 86;
         const MENUBAR_HEIGHT = 28;
         const availableHeight = Math.max(200, h - MENUBAR_HEIGHT - DOCK_CLEARANCE);
@@ -1096,73 +1128,99 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         const fallbackWinX = Math.max(10, Math.round((w - fallbackWinW) / 2));
         const fallbackWinY = Math.max(MENUBAR_HEIGHT + 10, Math.round(MENUBAR_HEIGHT + (availableHeight - fallbackWinH) / 2));
 
-        const winBox = getDomBox('.window-inner', {
-          x: fallbackWinX,
-          y: fallbackWinY,
-          w: fallbackWinW,
-          h: fallbackWinH
-        });
-
-        const curX = winBox.x;
-        const curY = winBox.y;
-        const curW = winBox.w;
-        const curH = winBox.h;
-
         const sidebarW = 200;
         const headerH = 38;
         const toolbarH = 42;
 
-        // Sidebar box: strictly starts at curY + headerH (below titlebar) so it never covers red/yellow/green lights
-        const sidebarBox = getDomBox('.finder-sidebar', {
-          x: curX,
-          y: curY + headerH,
-          w: sidebarW,
-          h: curH - headerH
-        });
+        if (!domBoxCacheRef.current || (now - lastDomMeasureRef.current > 400)) {
+          lastDomMeasureRef.current = now;
+          const getDomBox = (selector, fallback) => {
+            if (typeof document !== 'undefined') {
+              const el = document.querySelector(selector);
+              if (el) {
+                const r = el.getBoundingClientRect();
+                if (r.width > 20 && r.height > 15) {
+                  return {
+                    x: Math.round(r.left),
+                    y: Math.round(r.top),
+                    w: Math.round(r.width),
+                    h: Math.round(r.height)
+                  };
+                }
+              }
+            }
+            return fallback;
+          };
 
-        const contentX = curX + sidebarW;
-        const contentY = curY + headerH + toolbarH;
-        const contentW = curW - sidebarW;
+          const winBox = getDomBox('.window-inner', {
+            x: fallbackWinX,
+            y: fallbackWinY,
+            w: fallbackWinW,
+            h: fallbackWinH
+          });
 
-        const heroBox = getDomBox('.finder-hero-card', {
-          x: contentX + 16,
-          y: contentY + 16,
-          w: contentW - 32,
-          h: 118
-        });
+          const curX = winBox.x;
+          const curY = winBox.y;
+          const curW = winBox.w;
+          const curH = winBox.h;
 
-        const cardsGap = 14;
-        const fallbackCardsY = heroBox.y + heroBox.h + 34;
-        const fallbackCardW = Math.floor((contentW - 32 - cardsGap) / 2);
-        const fallbackCardH = 135;
+          const sidebarBox = getDomBox('.finder-sidebar', {
+            x: curX,
+            y: curY + headerH,
+            w: sidebarW,
+            h: curH - headerH
+          });
 
-        const c1Box = getDomBox('.finder-cards-grid > .finder-project-card:nth-child(1)', {
-          x: contentX + 16,
-          y: fallbackCardsY,
-          w: fallbackCardW,
-          h: fallbackCardH
-        });
+          const contentX = curX + sidebarW;
+          const contentY = curY + headerH + toolbarH;
+          const contentW = curW - sidebarW;
 
-        const c2Box = getDomBox('.finder-cards-grid > .finder-project-card:nth-child(2)', {
-          x: c1Box.x + c1Box.w + cardsGap,
-          y: c1Box.y,
-          w: c1Box.w,
-          h: c1Box.h
-        });
+          const heroBox = getDomBox('.finder-hero-card', {
+            x: contentX + 16,
+            y: contentY + 16,
+            w: contentW - 32,
+            h: 118
+          });
 
-        const c3Box = getDomBox('.finder-cards-grid > .finder-project-card:nth-child(3)', {
-          x: c1Box.x,
-          y: c1Box.y + c1Box.h + cardsGap,
-          w: c1Box.w,
-          h: c1Box.h
-        });
+          const cardsGap = 14;
+          const fallbackCardsY = heroBox.y + heroBox.h + 34;
+          const fallbackCardW = Math.floor((contentW - 32 - cardsGap) / 2);
+          const fallbackCardH = 135;
 
-        const c4Box = getDomBox('.finder-cards-grid > .finder-project-card:nth-child(4)', {
-          x: c2Box.x,
-          y: c3Box.y,
-          w: c2Box.w,
-          h: c3Box.h
-        });
+          const c1Box = getDomBox('.finder-cards-grid > .finder-project-card:nth-child(1)', {
+            x: contentX + 16,
+            y: fallbackCardsY,
+            w: fallbackCardW,
+            h: fallbackCardH
+          });
+
+          const c2Box = getDomBox('.finder-cards-grid > .finder-project-card:nth-child(2)', {
+            x: c1Box.x + c1Box.w + cardsGap,
+            y: c1Box.y,
+            w: c1Box.w,
+            h: c1Box.h
+          });
+
+          const c3Box = getDomBox('.finder-cards-grid > .finder-project-card:nth-child(3)', {
+            x: c1Box.x,
+            y: c1Box.y + c1Box.h + cardsGap,
+            w: c1Box.w,
+            h: c1Box.h
+          });
+
+          const c4Box = getDomBox('.finder-cards-grid > .finder-project-card:nth-child(4)', {
+            x: c2Box.x,
+            y: c3Box.y,
+            w: c2Box.w,
+            h: c3Box.h
+          });
+
+          domBoxCacheRef.current = {
+            winBox, curX, curY, curW, curH, sidebarBox, contentX, contentY, contentW, heroBox, c1Box, c2Box, c3Box, c4Box
+          };
+        }
+
+        const { winBox, curX, curY, curW, curH, sidebarBox, contentX, contentY, contentW, heroBox, c1Box, c2Box, c3Box, c4Box } = domBoxCacheRef.current;
 
         const CARD_TITLES = [
           'AI Interview & Prep Platform',
@@ -1343,12 +1401,12 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           } else {
             // Varun types Hero Headline
             const subT = (tMulti - 0.52) / 0.48;
-            window.dispatchEvent(new CustomEvent('varunos-hero-type-progress', { detail: { progress: subT } }));
+            const heroText = "Designing intuitive web apps & modern interfaces";
+            const charCount = Math.min(heroText.length, Math.floor(subT * heroText.length * 1.15));
+            dispatchHeroTypeProgress(subT, charCount);
             if (subT >= 0.85) {
               dispatchFinderStep(2);
             }
-            const heroText = "Designing intuitive web apps & modern interfaces";
-            const charCount = Math.min(heroText.length, Math.floor(subT * heroText.length * 1.15));
             const currentTypingSlice = heroText.slice(0, charCount);
             const typeX = heroBox.x + 24 + Math.min(heroBox.w - 60, charCount * 8.2);
             varunPos = { x: typeX, y: heroBox.y + 54 };
@@ -1525,11 +1583,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             const drawnH1 = lerp(30, c1Box.h, easeInOutCubic(frameP));
             const sarahArc = interpolateArc(c1Box.x, c1Box.y, c1Box.x + drawnW1, c1Box.y + drawnH1, frameP, 12, 0.04);
 
-            window.dispatchEvent(new CustomEvent('varunos-card-building', {
-              detail: { index: 0, phase: 'frame', progress: frameP }
-            }));
-
-            setStatusMessage('[5/5] Sarah Lin: [R] Framing Card 01 (Auto-Layout Frame)...');
+            dispatchCardBuilding({ index: 0, phase: 'frame', progress: frameP });
+            updateStatusMessage('[5/5] Sarah Lin: [R] Framing Card 01 (Auto-Layout Frame)...');
 
             agentTargets = {
               sarah: {
@@ -1600,11 +1655,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             const typeX = c1Box.x + 18 + Math.min(c1Box.w - 45, charCount * 7.8);
             const typeY = c1Box.y + 26;
 
-            window.dispatchEvent(new CustomEvent('varunos-card-building', {
-              detail: { index: 0, phase: 'type', progress: typeP, typedText: typedSlice }
-            }));
-
-            setStatusMessage(`[5/5] Varun Sehgal: [T] Typing: "${typedSlice}" into Card 01...`);
+            dispatchCardBuilding({ index: 0, phase: 'type', progress: typeP, typedText: typedSlice });
+            updateStatusMessage(`[5/5] Varun Sehgal: [T] Typing: "${typedSlice}" into Card 01...`);
 
             agentTargets = {
               varun: {
@@ -1672,11 +1724,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
               triggerRipple(c1Box.x + c1Box.w / 2, c1Box.y + c1Box.h / 2, '#FF7262');
             }
             dispatchFinderStep(3);
-            window.dispatchEvent(new CustomEvent('varunos-card-building', {
-              detail: { index: 0, phase: 'complete' }
-            }));
-
-            setStatusMessage('[5/5] Card 01 Complete ✓ AI Interview & Prep Platform');
+            dispatchCardBuilding({ index: 0, phase: 'complete' });
+            updateStatusMessage('[5/5] Card 01 Complete ✓ AI Interview & Prep Platform');
 
             agentTargets = {
               sarah: {
@@ -1759,11 +1808,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             const drawnH2 = lerp(30, c2Box.h, easeInOutCubic(frameP));
             const alexArc = interpolateArc(c2Box.x, c2Box.y, c2Box.x + drawnW2, c2Box.y + drawnH2, frameP, 12, 0.04);
 
-            window.dispatchEvent(new CustomEvent('varunos-card-building', {
-              detail: { index: 1, phase: 'frame', progress: frameP }
-            }));
-
-            setStatusMessage('[5/5] Alex Chen: [R] Framing Card 02 (Auto-Layout Frame)...');
+            dispatchCardBuilding({ index: 1, phase: 'frame', progress: frameP });
+            updateStatusMessage('[5/5] Alex Chen: [R] Framing Card 02 (Auto-Layout Frame)...');
 
             agentTargets = {
               alex: {
@@ -1832,11 +1878,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             const typeX = c2Box.x + 18 + Math.min(c2Box.w - 45, charCount * 7.8);
             const typeY = c2Box.y + 26;
 
-            window.dispatchEvent(new CustomEvent('varunos-card-building', {
-              detail: { index: 1, phase: 'type', progress: typeP, typedText: typedSlice }
-            }));
-
-            setStatusMessage(`[5/5] Varun Sehgal: [T] Typing: "${typedSlice}" into Card 02...`);
+            dispatchCardBuilding({ index: 1, phase: 'type', progress: typeP, typedText: typedSlice });
+            updateStatusMessage(`[5/5] Varun Sehgal: [T] Typing: "${typedSlice}" into Card 02...`);
 
             agentTargets = {
               varun: {
@@ -1905,11 +1948,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
               triggerRipple(c2Box.x + c2Box.w / 2, c2Box.y + c2Box.h / 2, '#0ACF83');
             }
             dispatchFinderStep(4);
-            window.dispatchEvent(new CustomEvent('varunos-card-building', {
-              detail: { index: 1, phase: 'complete' }
-            }));
-
-            setStatusMessage('[5/5] Card 02 Complete ✓ EventFlow: Event Ticketing SaaS');
+            dispatchCardBuilding({ index: 1, phase: 'complete' });
+            updateStatusMessage('[5/5] Card 02 Complete ✓ EventFlow: Event Ticketing SaaS');
 
             agentTargets = {
               alex: {
@@ -1993,11 +2033,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             const drawnH3 = lerp(30, c3Box.h, easeInOutCubic(frameP));
             const elenaArc = interpolateArc(c3Box.x, c3Box.y, c3Box.x + drawnW3, c3Box.y + drawnH3, frameP, 12, 0.04);
 
-            window.dispatchEvent(new CustomEvent('varunos-card-building', {
-              detail: { index: 2, phase: 'frame', progress: frameP }
-            }));
-
-            setStatusMessage('[5/5] Elena Rostova: [R] Framing Card 03 (Auto-Layout Frame)...');
+            dispatchCardBuilding({ index: 2, phase: 'frame', progress: frameP });
+            updateStatusMessage('[5/5] Elena Rostova: [R] Framing Card 03 (Auto-Layout Frame)...');
 
             agentTargets = {
               elena: {
@@ -2067,11 +2104,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             const typeX = c3Box.x + 18 + Math.min(c3Box.w - 45, charCount * 7.8);
             const typeY = c3Box.y + 26;
 
-            window.dispatchEvent(new CustomEvent('varunos-card-building', {
-              detail: { index: 2, phase: 'type', progress: typeP, typedText: typedSlice }
-            }));
-
-            setStatusMessage(`[5/5] Varun Sehgal: [T] Typing: "${typedSlice}" into Card 03...`);
+            dispatchCardBuilding({ index: 2, phase: 'type', progress: typeP, typedText: typedSlice });
+            updateStatusMessage(`[5/5] Varun Sehgal: [T] Typing: "${typedSlice}" into Card 03...`);
 
             agentTargets = {
               varun: {
@@ -2140,11 +2174,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
               triggerRipple(c3Box.x + c3Box.w / 2, c3Box.y + c3Box.h / 2, '#0D99FF');
             }
             dispatchFinderStep(5);
-            window.dispatchEvent(new CustomEvent('varunos-card-building', {
-              detail: { index: 2, phase: 'complete' }
-            }));
-
-            setStatusMessage('[5/5] Card 03 Complete ✓ Expensify: Budget Tracker App');
+            dispatchCardBuilding({ index: 2, phase: 'complete' });
+            updateStatusMessage('[5/5] Card 03 Complete ✓ Expensify: Budget Tracker App');
 
             agentTargets = {
               elena: {
@@ -2229,11 +2260,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             const drawnH4 = lerp(30, c4Box.h, easeInOutCubic(frameP));
             const sarahArc = interpolateArc(c4Box.x, c4Box.y, c4Box.x + drawnW4, c4Box.y + drawnH4, frameP, 12, 0.04);
 
-            window.dispatchEvent(new CustomEvent('varunos-card-building', {
-              detail: { index: 3, phase: 'frame', progress: frameP }
-            }));
-
-            setStatusMessage('[5/5] Sarah Lin: [R] Framing Card 04 (Auto-Layout Frame)...');
+            dispatchCardBuilding({ index: 3, phase: 'frame', progress: frameP });
+            updateStatusMessage('[5/5] Sarah Lin: [R] Framing Card 04 (Auto-Layout Frame)...');
 
             agentTargets = {
               sarah: {
@@ -2304,11 +2332,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             const typeX = c4Box.x + 18 + Math.min(c4Box.w - 45, charCount * 7.8);
             const typeY = c4Box.y + 26;
 
-            window.dispatchEvent(new CustomEvent('varunos-card-building', {
-              detail: { index: 3, phase: 'type', progress: typeP, typedText: typedSlice }
-            }));
-
-            setStatusMessage(`[5/5] Varun Sehgal: [T] Typing: "${typedSlice}" into Card 04...`);
+            dispatchCardBuilding({ index: 3, phase: 'type', progress: typeP, typedText: typedSlice });
+            updateStatusMessage(`[5/5] Varun Sehgal: [T] Typing: "${typedSlice}" into Card 04...`);
 
             agentTargets = {
               varun: {
@@ -2376,11 +2401,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
               triggerRipple(c4Box.x + c4Box.w / 2, c4Box.y + c4Box.h / 2, '#A259FF');
             }
             dispatchFinderStep(6);
-            window.dispatchEvent(new CustomEvent('varunos-card-building', {
-              detail: { index: 3, phase: 'complete' }
-            }));
-
-            setStatusMessage('[5/5] Card 04 Complete ✓ CodeSrijan Hackathon Platform');
+            dispatchCardBuilding({ index: 3, phase: 'complete' });
+            updateStatusMessage('[5/5] Card 04 Complete ✓ CodeSrijan Hackathon Platform');
 
             agentTargets = {
               sarah: {
@@ -2550,10 +2572,9 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         return;
       }
 
-      // Smooth dampening physics with fluid particle trails (smoothRate = 13.0 for silky flow)
+      // Smooth dampening physics with fluid particle trails (smoothRate = 22.0 for responsive silky glide)
       const updatedCursors = {};
-      const smoothRate = 13.0;
-      const smoothingFactor = 1 - Math.exp(-smoothRate * dt);
+      const baseSmoothRate = 22.0;
 
       Object.entries(agentTargets).forEach(([key, target]) => {
         let p = physicsRef.current[key];
@@ -2572,22 +2593,25 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           return;
         }
 
+        const agentSmoothRate = target.isClicking ? 32.0 : baseSmoothRate;
+        const smoothingFactor = 1 - Math.exp(-agentSmoothRate * dt);
+
         p.x += (target.x - p.x) * smoothingFactor;
         p.y += (target.y - p.y) * smoothingFactor;
 
         if (!p.trail) p.trail = [];
         const lastPt = p.trail[0];
         const distSq = lastPt ? (p.x - lastPt.x) ** 2 + (p.y - lastPt.y) ** 2 : 999;
-        if (distSq > 3) {
+        if (distSq > 4) {
           p.trail.unshift({ x: p.x, y: p.y });
-          if (p.trail.length > 8) p.trail.pop();
+          if (p.trail.length > 3) p.trail.pop();
         }
 
         updatedCursors[key] = {
           ...target,
           x: p.x,
           y: p.y,
-          trail: p.trail.map((pt, idx) => ({ ...pt, opacity: Math.max(0, (1 - idx / 8) * 0.5) }))
+          trail: p.trail.map((pt, idx) => ({ ...pt, opacity: Math.max(0, (1 - idx / 3) * 0.45) }))
         };
       });
 

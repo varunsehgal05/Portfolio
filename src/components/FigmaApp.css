@@ -4761,6 +4761,85 @@
   color: #94a3b8 !important;
 }
 
+/* =========================================================================
+   AUTHENTIC FIGMA WIREFRAME MODE FOR KITTU NOTEBOOK RESUME (SHIFT+O)
+   ========================================================================= */
+.wireframe-mode-active .cv-container,
+.wireframe-mode-stage .cv-container {
+  background: #0d121c !important;
+  color: #94a3b8 !important;
+  border: 1.5px dashed #475569 !important;
+  box-shadow: 0 0 0 1px rgba(100, 116, 139, 0.2), inset 0 0 30px rgba(0, 0, 0, 0.6) !important;
+}
+
+.wireframe-mode-active .cv-container:before,
+.wireframe-mode-active .cv-container:after,
+.wireframe-mode-stage .cv-container:before,
+.wireframe-mode-stage .cv-container:after {
+  display: none !important;
+}
+
+.wireframe-mode-active .cv-note,
+.wireframe-mode-stage .cv-note {
+  background: rgba(30, 41, 59, 0.7) !important;
+  border: 1.5px dashed #64748b !important;
+  box-shadow: none !important;
+  color: #cbd5e1 !important;
+}
+
+.wireframe-mode-active .cv-polaroid,
+.wireframe-mode-stage .cv-polaroid {
+  background: rgba(30, 41, 59, 0.9) !important;
+  border: 1.5px solid #64748b !important;
+  box-shadow: none !important;
+  position: relative;
+}
+
+.wireframe-mode-active .cv-polaroid img,
+.wireframe-mode-stage .cv-polaroid img {
+  filter: grayscale(100%) opacity(0.3) !important;
+}
+
+.wireframe-mode-active .cv-polaroid:before,
+.wireframe-mode-stage .cv-polaroid:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  height: 180px;
+  background: linear-gradient(to top right, transparent calc(50% - 1px), #64748b, transparent calc(50% + 1px)),
+              linear-gradient(to bottom right, transparent calc(50% - 1px), #64748b, transparent calc(50% + 1px)) !important;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.6;
+}
+
+.wireframe-mode-active .cv-stat,
+.wireframe-mode-stage .cv-stat {
+  background: rgba(30, 41, 59, 0.5) !important;
+  border: 1.5px solid #475569 !important;
+  box-shadow: none !important;
+  color: #e2e8f0 !important;
+}
+
+.wireframe-mode-active .cv-stat strong,
+.wireframe-mode-stage .cv-stat strong {
+  color: #38bdf8 !important;
+}
+
+.wireframe-mode-active .cv-thread,
+.wireframe-mode-stage .cv-thread {
+  background: rgba(30, 41, 59, 0.6) !important;
+  border: 1.5px dashed #64748b !important;
+  box-shadow: none !important;
+}
+
+.wireframe-mode-active .cv-thread h3,
+.wireframe-mode-stage .cv-thread h3 {
+  color: #f1f5f9 !important;
+}
+
 .canvas-tool-pill {
   display: flex;
   align-items: center;
