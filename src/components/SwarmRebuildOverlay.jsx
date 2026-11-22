@@ -472,17 +472,17 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
       let agentTargets = {};
 
       // =====================================================================
-      // Phase 1: Wallpaper Stamping & Backdrop Extrusion (0.0s - 3.4s) — Elena & Varun
+      // Phase 1: Wallpaper Stamping & Backdrop Extrusion (0.0s - 2.0s) — Elena & Varun
       // =====================================================================
-      if (elapsed < 3.4) {
+      if (elapsed < 2.0) {
         setStatusMessage('[1/5] Elena & Varun: Stamping Wallpaper Backdrop (100vw × 100vh)...');
-        const t = Math.min(1, Math.max(0, elapsed / 3.4));
+        const t = Math.min(1, Math.max(0, elapsed / 2.0));
 
         if (t >= 0.85) {
           updateStage(1, 580); // Reveal real wallpaper only when swarm finishes stamping!
         }
 
-        if (t > 0.65 && !wallpaperSnappedRef.current) {
+        if (t > 0.60 && !wallpaperSnappedRef.current) {
           wallpaperSnappedRef.current = true;
           soundSynth.playSnap(580);
           triggerRipple(w / 2, h / 2, '#A259FF');
@@ -572,17 +572,17 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         ]);
       }
       // =====================================================================
-      // Phase 2: Top MenuBar Extrusion & Apple Tray (3.4s - 6.6s) — Alex & Elena
+      // Phase 2: Top MenuBar Extrusion & Apple Tray (2.0s - 4.2s) — Alex & Elena
       // =====================================================================
-      else if (elapsed < 6.6) {
+      else if (elapsed < 4.2) {
         setStatusMessage('[2/5] Alex & Elena: Extruding MenuBar Frame & Status Bar...');
-        const t = Math.min(1, Math.max(0, (elapsed - 3.4) / 3.2));
+        const t = Math.min(1, Math.max(0, (elapsed - 2.0) / 2.2));
 
         if (t >= 0.85) {
           updateStage(2, 680); // Reveal MenuBar only when swarm finishes extruding!
         }
 
-        if (t > 0.65 && !menubarSnappedRef.current) {
+        if (t > 0.60 && !menubarSnappedRef.current) {
           menubarSnappedRef.current = true;
           soundSynth.playSnap(680);
           triggerRipple(40, 14, '#10B981');
@@ -670,11 +670,11 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         ]);
       }
       // =====================================================================
-      // Phase 3: Desktop App Icons Stamping (6.6s - 12.2s) — Sarah Lin (NO EXTRA NAME!)
+      // Phase 3: Desktop App Icons Stamping (4.2s - 8.2s) — 4 Swarm Collaborative
       // =====================================================================
-      else if (elapsed < 12.2) {
-        setStatusMessage('[3/5] Sarah Lin: Stamping Desktop App Icons (1-by-1)...');
-        const t = Math.min(1, Math.max(0, (elapsed - 6.6) / 5.6));
+      else if (elapsed < 8.2) {
+        setStatusMessage('[3/5] Swarm Team: Stamping Left Desktop Apps (1-by-1)...');
+        const t = Math.min(1, Math.max(0, (elapsed - 4.2) / 4.0));
 
         if (t > 0.05) {
           updateStage(3, 740); // Reveal Desktop Icons container in Desktop.jsx
@@ -689,7 +689,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         if (domIcons && domIcons.length >= 6) {
           iconYPositions = Array.from(domIcons).map(el => Math.round(el.getBoundingClientRect().top));
           const r0 = domIcons[0].getBoundingClientRect();
-          iconX = Math.round(r0.left);
+          iconX = Math.round(r0.left) || 20;
           iconW = Math.round(r0.width) || 72;
           iconH = Math.round(r0.height) || 76;
         }
@@ -703,9 +703,10 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         const nextY = iconYPositions[iconIndex];
         const sarahPos = interpolateArc(iconX + iconW / 2, prevY + 20, iconX + iconW / 2, nextY + 20, subProgress, -16, 0.05);
 
-        const isSarahClicking = subProgress > 0.72 && subProgress < 0.95;
+        const isSarahClicking = subProgress >= 0.65 && subProgress < 0.95;
 
-        if (lastStampedIndexRef.current !== iconIndex) {
+        // Stamp exactly when Sarah reaches the icon and clicks down
+        if (subProgress >= 0.65 && lastStampedIndexRef.current !== iconIndex) {
           lastStampedIndexRef.current = iconIndex;
           soundSynth.playDropThump(220 + iconIndex * 28);
           triggerRipple(iconX + iconW / 2, iconYPositions[iconIndex] + 20, '#FF7262');
@@ -714,7 +715,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           }
         }
 
-        // ONLY Sarah Lin is visible! (Elena, Alex, Varun are hidden -> NO extra name or overlap!)
+        // 4 Swarm Agents actively working simultaneously on the left desktop apps!
         agentTargets = {
           sarah: {
             x: sarahPos.x,
@@ -726,7 +727,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             cursorMode: subProgress < 0.65 ? 'grab' : 'arrow',
             isClicking: isSarahClicking,
             isDrawing: true,
-            chatText: t < 0.85 ? 'stamping desktop apps' : null,
+            chatText: t < 0.85 ? 'stamping apps' : null,
             boxBounds: {
               x: iconX,
               y: iconYPositions[iconIndex],
@@ -739,26 +740,33 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             y: sarahPos.y,
             color: '#0D99FF',
             label: 'Elena Rostova',
-            action: 'Verifying ΔY: 16px Spacing',
+            action: iconIndex > 0 ? 'Measuring ΔY: 16px Gap' : 'Aligning Left Grid',
             toolKey: 'V Move',
             cursorMode: 'arrow'
           },
           alex: {
-            x: iconX + iconW / 2,
-            y: iconYPositions[5] + iconH + 24,
+            x: iconX - 6,
+            y: sarahPos.y + 12,
             color: '#0ACF83',
             label: 'Alex Chen',
-            action: 'Holding Grid Baseline',
-            toolKey: 'V Move',
-            cursorMode: 'arrow'
+            action: 'Framing Column Layout [72×520]',
+            toolKey: 'R Frame',
+            cursorMode: 'arrow',
+            boxBounds: {
+              x: iconX - 8,
+              y: iconYPositions[0] - 8,
+              w: iconW + 16,
+              h: (iconYPositions[5] - iconYPositions[0]) + iconH + 16,
+              label: 'Auto-Layout Col • 72px'
+            }
           },
           varun: {
-            x: winTargetX + 80,
-            y: winTargetY + 60,
+            x: iconX + iconW / 2,
+            y: iconYPositions[iconIndex] + iconH - 6,
             color: '#A259FF',
             label: 'Varun Sehgal',
-            action: 'Staging Window Frame',
-            toolKey: 'V Move',
+            action: `Labeling: ${iconNames[iconIndex]}`,
+            toolKey: 'T Type',
             cursorMode: 'arrow'
           },
           user: {
@@ -797,17 +805,17 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         ]);
       }
       // =====================================================================
-      // Phase 4: Bottom Bar (Dock) & Dock Apps (12.2s - 19.5s)
-      // 4A: Frame Glass Dock Capsule (12.2s - 15.0s) — Alex & Varun
-      // 4B: Stamp Dock Apps 1-by-1 (15.0s - 19.5s) — Sarah Lin
+      // Phase 4: Bottom Bar (Dock) & Dock Apps (8.2s - 13.0s)
+      // 4A: Frame Glass Dock Capsule (8.2s - 10.0s) — Alex & Varun
+      // 4B: Stamp Dock Apps 1-by-1 (10.0s - 13.0s) — Sarah Lin
       // =====================================================================
-      else if (elapsed < 19.5) {
-        const pDock = elapsed - 12.2;
+      else if (elapsed < 13.0) {
+        const pDock = elapsed - 8.2;
 
-        // Sub-phase 4A: The Bar of the Bottom (12.2s - 15.0s)
-        if (pDock < 2.8) {
+        // Sub-phase 4A: The Bar of the Bottom (8.2s - 10.0s)
+        if (pDock < 1.8) {
           setStatusMessage('[4/5] Alex & Varun: [R] Framing Glass Dock Capsule...');
-          const tA = Math.min(1, Math.max(0, pDock / 2.8));
+          const tA = Math.min(1, Math.max(0, pDock / 1.8));
           const easedMove = easeInOutCubic(tA);
 
           const dockSpan = lerp(60, dockTargetW, easedMove);
@@ -820,7 +828,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             updateStage(4, 680);
           }
 
-          if (tA > 0.65 && !dockSnappedRef.current) {
+          if (tA > 0.60 && !dockSnappedRef.current) {
             dockSnappedRef.current = true;
             soundSynth.playSnap(680);
             triggerRipple(curLeft + 20, curDockY + 28, '#0ACF83');
@@ -906,10 +914,10 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             }
           ]);
         }
-        // Sub-phase 4B: The Apps of the Bottom (15.0s - 19.5s) — Sarah Lin (4.5s for 9 apps)
+        // Sub-phase 4B: The Apps of the Bottom (10.0s - 13.0s) — Sarah Lin (3.0s for 9 apps)
         else {
           setStatusMessage('[4/5] Sarah Lin: Stamping Dock App Icons (1-by-1)...');
-          const tB = Math.min(1, Math.max(0, (pDock - 2.8) / 4.5));
+          const tB = Math.min(1, Math.max(0, (pDock - 1.8) / 3.0));
 
           const dockAppNames = ['Finder', 'VS Code', 'Figma', 'Terminal', 'Resume', 'Contact', 'Settings', 'Buy Me a Coffee', 'Trash'];
           const totalDockApps = 9;
@@ -934,9 +942,9 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           const nextItemX = getDockItemX(dockIndex);
           const sarahPos = interpolateArc(prevItemX, curDockY + 28, nextItemX, curDockY + 28, subProgress, -18, 0.04);
 
-          const isClicking = subProgress > 0.65 && subProgress < 0.95;
+          const isClicking = subProgress >= 0.65 && subProgress < 0.95;
 
-          if (lastStampedDockIndexRef.current !== dockIndex) {
+          if (subProgress >= 0.65 && lastStampedDockIndexRef.current !== dockIndex) {
             lastStampedDockIndexRef.current = dockIndex;
             soundSynth.playDropThump(280 + dockIndex * 22);
             triggerRipple(nextItemX, curDockY + 28, '#FF7262');
@@ -1022,19 +1030,19 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         }
       }
       // =====================================================================
-      // Phase 5: Center Box (Finder Portfolio Window & 2x2 Project Grid with Live Text Swarm) (19.5s - 44.0s)
+      // Phase 5: Center Box (Finder Portfolio Window & 2x2 Project Grid with Live Text Swarm) (13.0s - 24.5s)
       // Unhurried, deliberate assembly right over the real window:
-      // 5.1 (19.5s - 22.5s): Alex Chen extrudes outer Window Frame Box (3.0s) -> step 0
-      // 5.2 (22.5s - 26.5s): Elena Rostova stamps Sidebar Navigation 1-by-1 (4.0s) -> step 1
-      // 5.3 (26.5s - 29.5s): Varun Sehgal styles Hero Bento Banner & Types Headline (3.0s) -> step 2
-      // 5.4 (29.5s - 32.5s): Card 01 - AI Interview (Sarah Lin Frame + Varun Sehgal Text Swarm) (3.0s) -> step 3
-      // 5.5 (32.5s - 35.5s): Card 02 - EventFlow SaaS (Alex Chen Frame + Varun Sehgal Text Swarm) (3.0s) -> step 4
-      // 5.6 (35.5s - 38.5s): Card 03 - Expensify Budget (Elena Rostova Frame + Varun Sehgal Text Swarm) (3.0s) -> step 5
-      // 5.7 (38.5s - 41.5s): Card 04 - CodeSrijan Hackathon (Sarah Lin Frame + Varun Sehgal Text Swarm) (3.0s) -> step 6
-      // 5.8 (41.5s - 44.0s): Swarm Final Verification & Celebration (2.5s) -> step 7
+      // 5.1 (13.0s - 14.4s): Alex Chen extrudes outer Window Frame Box (1.4s) -> step 0
+      // 5.2 (14.4s - 16.6s): Elena Rostova stamps Sidebar Navigation 1-by-1 (2.2s) -> step 1
+      // 5.3 (16.6s - 18.2s): Varun Sehgal styles Hero Bento Banner & Types Headline (1.6s) -> step 2
+      // 5.4 (18.2s - 19.5s): Card 01 - AI Interview (Sarah Lin Frame + Varun Sehgal Text Swarm) (1.3s) -> step 3
+      // 5.5 (19.5s - 20.8s): Card 02 - EventFlow SaaS (Alex Chen Frame + Varun Sehgal Text Swarm) (1.3s) -> step 4
+      // 5.6 (20.8s - 22.1s): Card 03 - Expensify Budget (Elena Rostova Frame + Varun Sehgal Text Swarm) (1.3s) -> step 5
+      // 5.7 (22.1s - 23.4s): Card 04 - CodeSrijan Hackathon (Sarah Lin Frame + Varun Sehgal Text Swarm) (1.3s) -> step 6
+      // 5.8 (23.4s - 24.5s): Swarm Final Verification & Celebration (1.1s) -> step 7
       // =====================================================================
-      else if (elapsed < 44.0) {
-        const pWin = elapsed - 19.5;
+      else if (elapsed < 24.5) {
+        const pWin = elapsed - 13.0;
 
         // Dynamic DOM Measuring helper guaranteeing pixel-perfect alignment to real rendered window & cards
         const getDomBox = (selector, fallback) => {
@@ -1157,10 +1165,10 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           { step: 15, label: 'Varun Profile Card', chat: 'mounting profile card', yRel: Math.max(380, sidebarBox.h - 52), h: 48, isHeader: false }
         ];
 
-        // 5.1: Alex Chen Extrudes Outer Window Frame Box (19.5s - 22.5s) -> Step 0
-        if (pWin < 3.0) {
+        // 5.1: Alex Chen Extrudes Outer Window Frame Box (13.0s - 14.4s) -> Step 0
+        if (pWin < 1.4) {
           setStatusMessage('[5/5] Alex Chen: [F] Extruding Window Frame Box (920 × 560px)...');
-          const t1 = Math.min(1, pWin / 3.0);
+          const t1 = Math.min(1, pWin / 1.4);
           if (t1 >= 0.85) {
             updateStage(5, 780); // Reveal real Window container only when Alex completes extruding!
             dispatchFinderStep(0);
@@ -1244,9 +1252,9 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             }
           ]);
         }
-        // 5.2: Elena Rostova Stamps Sidebar Navigation 1-by-1 (22.5s - 26.5s) -> Step 1
-        else if (pWin < 7.0) {
-          const t2 = Math.min(1, Math.max(0, (pWin - 3.0) / 4.0));
+        // 5.2: Elena Rostova Stamps Sidebar Navigation 1-by-1 (14.4s - 16.6s) -> Step 1
+        else if (pWin < 3.6) {
+          const t2 = Math.min(1, Math.max(0, (pWin - 1.4) / 2.2));
           const stepFloat = t2 * 15;
           const itemIdx = Math.min(14, Math.floor(stepFloat));
           const subProg = stepFloat - itemIdx;
@@ -1353,9 +1361,9 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             }
           ]);
         }
-        // 5.3: Varun Sehgal Styles Hero Bento Banner & Types Headline (26.5s - 29.5s) -> Step 2
-        else if (pWin < 10.0) {
-          const t3 = Math.min(1, (pWin - 7.0) / 3.0);
+        // 5.3: Varun Sehgal Styles Hero Bento Banner & Types Headline (16.6s - 18.2s) -> Step 2
+        else if (pWin < 5.2) {
+          const t3 = Math.min(1, (pWin - 3.6) / 1.6);
           window.dispatchEvent(new CustomEvent('varunos-hero-type-progress', { detail: { progress: t3 } }));
           if (t3 >= 0.85) {
             dispatchFinderStep(2);
@@ -1452,10 +1460,10 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             }
           ]);
         }
-        // 5.4: Card 01 - AI Interview Platform (29.5s - 32.5s) -> Step 3
+        // 5.4: Card 01 - AI Interview Platform (18.2s - 19.5s) -> Step 3
         // Sarah Lin draws container box + Varun Sehgal Text Swarm types title
-        else if (pWin < 13.0) {
-          const t4 = Math.min(1, (pWin - 10.0) / 3.0);
+        else if (pWin < 6.5) {
+          const t4 = Math.min(1, (pWin - 5.2) / 1.3);
           const cardTitle = CARD_TITLES[0];
 
           // Subphase A (0% - 28%): Sarah frames empty rectangle box
@@ -1686,10 +1694,10 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             }
           ]);
         }
-        // 5.5: Card 02 - EventFlow SaaS (32.5s - 35.5s) -> Step 4
+        // 5.5: Card 02 - EventFlow SaaS (19.5s - 20.8s) -> Step 4
         // Alex Chen draws container box + Varun Sehgal Text Swarm types title
-        else if (pWin < 16.0) {
-          const t5 = Math.min(1, (pWin - 13.0) / 3.0);
+        else if (pWin < 7.8) {
+          const t5 = Math.min(1, (pWin - 6.5) / 1.3);
           const cardTitle = CARD_TITLES[1];
 
           // Subphase A (0% - 28%): Alex frames empty rectangle box
@@ -1920,10 +1928,10 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             }
           ]);
         }
-        // 5.6: Card 03 - Expensify Budget (35.5s - 38.5s) -> Step 5
+        // 5.6: Card 03 - Expensify Budget (20.8s - 22.1s) -> Step 5
         // Elena Rostova draws container box + Varun Sehgal Text Swarm types title
-        else if (pWin < 19.0) {
-          const t6 = Math.min(1, (pWin - 16.0) / 3.0);
+        else if (pWin < 9.1) {
+          const t6 = Math.min(1, (pWin - 7.8) / 1.3);
           const cardTitle = CARD_TITLES[2];
 
           // Subphase A (0% - 28%): Elena frames empty rectangle box
@@ -2156,10 +2164,10 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             }
           ]);
         }
-        // 5.7: Card 04 - CodeSrijan Hackathon (38.5s - 41.5s) -> Step 6
+        // 5.7: Card 04 - CodeSrijan Hackathon (22.1s - 23.4s) -> Step 6
         // Sarah Lin draws container box + Varun Sehgal Text Swarm types title
-        else if (pWin < 22.0) {
-          const t7 = Math.min(1, (pWin - 19.0) / 3.0);
+        else if (pWin < 10.4) {
+          const t7 = Math.min(1, (pWin - 9.1) / 1.3);
           const cardTitle = CARD_TITLES[3];
 
           // Subphase A (0% - 28%): Sarah frames empty rectangle box
@@ -2392,7 +2400,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             }
           ]);
         }
-        // 5.8: Auto-Layout Verification & Celebration (41.5s - 44.0s) -> Step 7
+        // 5.8: Auto-Layout Verification & Celebration (23.4s - 24.5s) -> Step 7
         else {
           dispatchFinderStep(7);
           setStatusMessage('[5/5] Auto-Layout Verified ✓ 2×2 Project Grid Complete!');
@@ -2484,7 +2492,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           ]);
         }
       }
-      // Rebuild complete! (elapsed >= 44.0s)
+      // Rebuild complete! (elapsed >= 24.5s)
       else {
         finishSwarm();
         return;

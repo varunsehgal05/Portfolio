@@ -21,6 +21,12 @@ const KittuResumeApp = ({
   const [buildStage, setBuildStage] = useState(0);
   const [typedName, setTypedName] = useState('');
   const [typedLede, setTypedLede] = useState('');
+  const [typedNoteHead, setTypedNoteHead] = useState('');
+  const [typedNoteBody, setTypedNoteBody] = useState('');
+  const [typedPolaroidCaption, setTypedPolaroidCaption] = useState('');
+  const [typedStat1, setTypedStat1] = useState('');
+  const [typedStat2, setTypedStat2] = useState('');
+  const [typedStat3, setTypedStat3] = useState('');
   const [typedWork, setTypedWork] = useState({});
   const [typedTimeline, setTypedTimeline] = useState('');
   const [typedProjects, setTypedProjects] = useState({});
@@ -61,8 +67,51 @@ const KittuResumeApp = ({
     return id;
   };
 
+  // Helper to coordinate all 4 Swarm agents simultaneously
+  const set4Swarm = ({
+    varun = {},
+    elena = {},
+    sarah = {},
+    alex = {}
+  }) => {
+    setActiveCursors([
+      {
+        id: 'varun',
+        name: 'Varun Sehgal',
+        color: '#A259FF',
+        tool: 'T',
+        action: 'Typing Content',
+        ...varun
+      },
+      {
+        id: 'elena',
+        name: 'Elena Rostova',
+        color: '#F59E0B',
+        tool: 'R',
+        action: 'Framing Wireframe',
+        ...elena
+      },
+      {
+        id: 'sarah',
+        name: 'Sarah Lin',
+        color: '#0ACF83',
+        tool: '❖',
+        action: 'Stamping Component',
+        ...sarah
+      },
+      {
+        id: 'alex',
+        name: 'Alex Chen',
+        color: '#1ABCFE',
+        tool: 'V',
+        action: 'Measuring ΔY',
+        ...alex
+      }
+    ]);
+  };
+
   // Human-calibrated letter-by-letter typing helper
-  const typeText = (str, setter, startDelay, interval = 32) => {
+  const typeText = (str, setter, startDelay, interval = 28) => {
     for (let i = 1; i <= str.length; i++) {
       schedule(() => {
         setter(str.slice(0, i));
@@ -88,13 +137,20 @@ const KittuResumeApp = ({
     };
   };
 
-  // Build Top Section: Title -> Lede -> Sticky -> Polaroid -> 3 Stats
+  // Build Top Section: 4 Swarm Agents collaborating simultaneously
+  // (Elena Frames Wireframe Bounds, Alex Measures Grid Tokens, Sarah Stamps Materials, Varun Types Content)
   const buildTopSection = () => {
     clearTimeouts();
     setIsBuilding(true);
     setBuildStage(0);
     setTypedName('');
     setTypedLede('');
+    setTypedNoteHead('');
+    setTypedNoteBody('');
+    setTypedPolaroidCaption('');
+    setTypedStat1('');
+    setTypedStat2('');
+    setTypedStat3('');
     setTypedWork({});
     setTypedTimeline('');
     setTypedProjects({});
@@ -115,329 +171,133 @@ const KittuResumeApp = ({
       contact: false
     });
 
-    // 1. Cursors enter top of blank notebook
-    schedule(() => {
-      setActiveCursors([
-        {
-          id: 'elena',
-          name: 'Elena Rostova',
-          color: '#F59E0B',
-          x: 40,
-          y: 40,
-          tool: 'R',
-          chat: 'setting up notebook sheet...',
-          action: 'Measuring Grid'
-        }
-      ]);
-    }, 120);
-
-    // 2. Stage 1 Step A: Elena draws Title Box alone
+    // 1. All 4 Swarm agents enter top of blank sheet together
     schedule(() => {
       const box = getBox('.cv-name', { x: 28, y: 35, w: 460, h: 75 });
-      setActiveCursors([
-        {
-          id: 'elena',
-          name: 'Elena Rostova',
-          color: '#F59E0B',
-          x: box.x,
-          y: box.y,
-          tool: 'R',
-          chat: `drawing title frame [${box.w} × ${box.h}]`,
-          action: 'Framing Title'
-        }
-      ]);
+      set4Swarm({
+        elena: { x: box.x, y: box.y, tool: 'R', action: `Framing Title [${box.w} × ${box.h}]`, chat: 'framing title box...' },
+        alex: { x: box.x + box.w + 24, y: box.y + 12, tool: 'V', action: 'Pad: 28px • Baseline Y: 35px' },
+        sarah: { x: box.x + 12, y: box.y + 44, tool: '❖', action: 'Stamping Grid Anchor' },
+        varun: { x: box.x + 35, y: box.y + 18, tool: 'T', action: 'Drafting Name' }
+      });
       setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Title Frame • Elena [R]' });
-    }, 800);
+      setActiveGuides([{ type: 'h', y: box.y + box.h, x1: box.x, x2: box.x + box.w, label: 'Title Baseline' }]);
+    }, 150);
 
-    // Stage 1 Step B: Elena steps aside, Varun enters alone to type "Varun Sehgal"
+    // 2. Stage 1: Varun types "Varun Sehgal" with tracking cursor
     schedule(() => {
       const box = getBox('.cv-name', { x: 28, y: 35, w: 460, h: 75 });
-      setActiveCursors([
-        {
-          id: 'varun',
-          name: 'Varun Sehgal',
-          color: '#A259FF',
-          x: box.x + 35,
-          y: box.y + 16,
-          tool: 'T',
-          chat: 'typing title...',
-          action: 'Typing Name'
-        }
-      ]);
-    }, 1800);
+      set4Swarm({
+        elena: { x: box.x + box.w - 10, y: box.y + box.h, tool: 'R', action: 'Holding Title Bounds' },
+        alex: { x: box.x + box.w + 24, y: box.y + 12, tool: 'V', action: 'Tracking Kerning' },
+        sarah: { x: box.x + box.w / 2, y: box.y + box.h + 20, tool: '❖', action: 'Pre-staging Lede' },
+        varun: { x: box.x + 35, y: box.y + 18, tool: 'T', action: 'Typing: Varun Sehgal' }
+      });
+      typeText('Varun Sehgal', setTypedName, 50, 42);
+    }, 450);
 
-    // Varun types name smoothly
-    typeText('Varun Sehgal', setTypedName, 1950, 65);
-
-    // Stage 1 Step C: Title complete
+    // 3. Stage 2: Value Prop / Lede (4 Swarm Coordinated)
     schedule(() => {
       setBuildStage(1);
-    }, 3000);
+      const boxLede = getBox('.cv-lede', { x: 28, y: 125, w: 600, h: 160 });
+      set4Swarm({
+        elena: { x: boxLede.x, y: boxLede.y, tool: 'R', action: `Framing Lede [${boxLede.w} × ${boxLede.h}]`, chat: 'framing value prop...' },
+        alex: { x: boxLede.x + boxLede.w + 20, y: boxLede.y + 24, tool: 'V', action: 'Token: Atkinson 1.15rem' },
+        sarah: { x: boxLede.x + 100, y: boxLede.y + 115, tool: '❖', action: 'Stamping Contact Pills' },
+        varun: { x: boxLede.x + 24, y: boxLede.y + 20, tool: 'T', action: 'Writing Philosophy' }
+      });
+      setActiveSelection({ x: boxLede.x, y: boxLede.y, w: boxLede.w, h: boxLede.h, label: '❖ Value Prop • Elena [R]' });
+      setActiveGuides([{ type: 'v', x: boxLede.x + boxLede.w, y1: boxLede.y, y2: boxLede.y + boxLede.h, label: 'W: 600px' }]);
+      typeText('I study and craft friction-free product experiences: tactile, beautiful, and fast.', setTypedLede, 120, 20);
+    }, 1100);
 
-    // 3. Stage 2: Elena draws Lede Box alone
-    schedule(() => {
-      const box = getBox('.cv-lede', { x: 28, y: 125, w: 600, h: 160 });
-      setActiveCursors([
-        {
-          id: 'elena',
-          name: 'Elena Rostova',
-          color: '#F59E0B',
-          x: box.x,
-          y: box.y,
-          tool: 'R',
-          chat: 'drawing value prop frame',
-          action: 'Framing Lede'
-        }
-      ]);
-      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Value Prop Frame • Elena [R]' });
-    }, 3300);
-
-    // Varun enters alone to type value prop
-    schedule(() => {
-      const box = getBox('.cv-lede', { x: 28, y: 125, w: 600, h: 160 });
-      setActiveCursors([
-        {
-          id: 'varun',
-          name: 'Varun Sehgal',
-          color: '#A259FF',
-          x: box.x + 100,
-          y: box.y + 20,
-          tool: 'T',
-          chat: 'typing value prop & philosophy...',
-          action: 'Writing Philosophy'
-        }
-      ]);
-    }, 4300);
-
-    // Varun types lede sentence smoothly
-    typeText('I study and craft friction-free product experiences: tactile, beautiful, and fast.', setTypedLede, 4450, 26);
-
-    // Lede reveals
+    // 4. Stage 3: Sticky Note (Tactile Stamp & Live Typing)
     schedule(() => {
       setBuildStage(2);
-    }, 6800);
+      const boxNote = getBox('.cv-note', { x: 690, y: 60, w: 340, h: 160 });
+      set4Swarm({
+        elena: { x: boxNote.x, y: boxNote.y, tool: 'R', action: 'Framing Sticky Note [340×160]', chat: 'framing sticky bounds...' },
+        alex: { x: boxNote.x + boxNote.w + 16, y: boxNote.y + 20, tool: 'V', action: 'Align: Right Col (690px)' },
+        sarah: { x: boxNote.x + 40, y: boxNote.y + 14, tool: '❖', action: 'Stamping Sticky Paper & Tape' },
+        varun: { x: boxNote.x + 20, y: boxNote.y + 26, tool: 'T', action: 'Drafting Note Headline' }
+      });
+      setActiveSelection({ x: boxNote.x, y: boxNote.y, w: boxNote.w, h: boxNote.h, label: '❖ Sticky Note • Elena [R]' });
+      setActiveGuides([{ type: 'v', x: boxNote.x, y1: boxNote.y - 20, y2: boxNote.y + 350, label: `Right Column (${boxNote.x}px)` }]);
+      setBuildStage(3); // Pops with cv-stamp-pop!
+      typeText('Now: AI Interview & EventFlow', setTypedNoteHead, 80, 24);
+      typeText('Architecting multi-token design systems in Figma and translating them with sub-millisecond fidelity into Next.js & Tailwind components.', setTypedNoteBody, 650, 9);
+    }, 2800);
 
-    // 4. Stage 3: Elena draws Sticky Note alone
+    // 5. Stage 4: Polaroid Photo (Tactile Stamp & Caption Typing)
     schedule(() => {
-      const box = getBox('.cv-note', { x: 690, y: 60, w: 340, h: 160 });
-      setActiveCursors([
-        {
-          id: 'elena',
-          name: 'Elena Rostova',
-          color: '#F59E0B',
-          x: box.x,
-          y: box.y,
-          tool: 'R',
-          chat: 'drawing sticky note bounds',
-          action: 'Framing Sticky'
-        }
-      ]);
-      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Sticky Note • Elena [R]' });
-      setActiveGuides([{ type: 'v', x: box.x, y1: box.y - 20, y2: box.y + 350, label: `Right Column (${box.x}px)` }]);
-    }, 7100);
-
-    // Sarah Lin enters alone to stamp sticky note
-    schedule(() => {
-      const box = getBox('.cv-note', { x: 690, y: 60, w: 340, h: 160 });
-      setActiveCursors([
-        {
-          id: 'sarah',
-          name: 'Sarah Lin',
-          color: '#0ACF83',
-          x: box.x + 70,
-          y: box.y + 20,
-          tool: '❖',
-          chat: 'stamping sticky note...',
-          action: 'Stamping Note'
-        }
-      ]);
-    }, 8100);
-
-    // Sticky reveals
-    schedule(() => {
-      setBuildStage(3);
-    }, 9100);
-
-    // 5. Stage 4: Elena draws Polaroid Frame alone
-    schedule(() => {
-      const box = getBox('.cv-polaroid', { x: 730, y: 240, w: 260, h: 260 });
-      setActiveCursors([
-        {
-          id: 'elena',
-          name: 'Elena Rostova',
-          color: '#F59E0B',
-          x: box.x,
-          y: box.y,
-          tool: 'R',
-          chat: 'drawing polaroid frame',
-          action: 'Holding Frame'
-        }
-      ]);
-      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Polaroid Photo • Elena [R]' });
+      const boxPol = getBox('.cv-polaroid', { x: 730, y: 240, w: 260, h: 260 });
+      set4Swarm({
+        elena: { x: boxPol.x, y: boxPol.y, tool: 'R', action: 'Framing Polaroid Frame [260×260]' },
+        alex: { x: boxPol.x + boxPol.w + 16, y: boxPol.y + 40, tool: 'V', action: 'Spacing ΔY: 20px' },
+        sarah: { x: boxPol.x + boxPol.w / 2, y: boxPol.y + 90, tool: '❖', action: 'Placing Photo Material', chat: 'stamping photo...' },
+        varun: { x: boxPol.x + 28, y: boxPol.y + boxPol.h - 18, tool: 'T', action: 'Writing Photo Caption' }
+      });
+      setActiveSelection({ x: boxPol.x, y: boxPol.y, w: boxPol.w, h: boxPol.h, label: '❖ Polaroid Photo • Sarah [❖]' });
       setActiveGuides([]);
-    }, 9400);
-
-    // Sarah Lin enters alone to place Varun's photo
-    schedule(() => {
-      const box = getBox('.cv-polaroid', { x: 730, y: 240, w: 260, h: 260 });
-      setActiveCursors([
-        {
-          id: 'sarah',
-          name: 'Sarah Lin',
-          color: '#0ACF83',
-          x: box.x + 110,
-          y: box.y + 80,
-          tool: '❖',
-          chat: 'stamping Varun Sehgal photo...',
-          action: 'Placing Photo'
-        }
-      ]);
-    }, 10400);
-
-    // Polaroid reveals
-    schedule(() => {
-      setBuildStage(4);
-    }, 11400);
+      setBuildStage(4); // Pops with cv-stamp-pop!
+      typeText('Varun Sehgal, 2026 →', setTypedPolaroidCaption, 80, 25);
+    }, 4200);
 
     // 6. Stage 5: Stat 1 (6+ Projects)
     schedule(() => {
-      const box = getBox('.cv-stats li:nth-child(1)', { x: 28, y: 520, w: 320, h: 85 });
-      setActiveCursors([
-        {
-          id: 'elena',
-          name: 'Elena Rostova',
-          color: '#F59E0B',
-          x: box.x,
-          y: box.y,
-          tool: 'R',
-          chat: 'drawing stat 1 box',
-          action: 'Framing Stat 1'
-        }
-      ]);
-      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Stat [1/3] • 6+ Projects' });
-    }, 11700);
-
-    schedule(() => {
-      const box = getBox('.cv-stats li:nth-child(1)', { x: 28, y: 520, w: 320, h: 85 });
-      setActiveCursors([
-        {
-          id: 'varun',
-          name: 'Varun Sehgal',
-          color: '#A259FF',
-          x: box.x + 80,
-          y: box.y + 20,
-          tool: 'T',
-          chat: 'typing 6+ projects...',
-          action: 'Typing Stat 1'
-        }
-      ]);
-    }, 12500);
-
-    schedule(() => {
+      const box1 = getBox('.cv-stats li:nth-child(1)', { x: 28, y: 520, w: 320, h: 85 });
+      set4Swarm({
+        elena: { x: box1.x, y: box1.y, tool: 'R', action: 'Framing Stat [1/3] • 6+ Projects' },
+        alex: { x: box1.x + box1.w + 12, y: box1.y + 16, tool: 'V', action: 'ΔX: 24px Gap' },
+        sarah: { x: box1.x + box1.w / 2, y: box1.y + 24, tool: '❖', action: 'Stamping Pill Container' },
+        varun: { x: box1.x + 36, y: box1.y + 22, tool: 'T', action: 'Typing: 6+' }
+      });
+      setActiveSelection({ x: box1.x, y: box1.y, w: box1.w, h: box1.h, label: '❖ Stat 1 • 6+ Projects' });
       setBuildStage(5);
-    }, 13300);
+      typeText('6+', setTypedStat1, 60, 40);
+    }, 5400);
 
     // 7. Stage 6: Stat 2 (200+ Hackers)
     schedule(() => {
-      const box = getBox('.cv-stats li:nth-child(2)', { x: 372, y: 520, w: 320, h: 85 });
-      setActiveCursors([
-        {
-          id: 'elena',
-          name: 'Elena Rostova',
-          color: '#F59E0B',
-          x: box.x,
-          y: box.y,
-          tool: 'R',
-          chat: 'drawing stat 2 box',
-          action: 'Framing Stat 2'
-        }
-      ]);
-      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Stat [2/3] • 200+ Hackers' });
-    }, 13600);
-
-    schedule(() => {
-      const box = getBox('.cv-stats li:nth-child(2)', { x: 372, y: 520, w: 320, h: 85 });
-      setActiveCursors([
-        {
-          id: 'varun',
-          name: 'Varun Sehgal',
-          color: '#A259FF',
-          x: box.x + 90,
-          y: box.y + 20,
-          tool: 'T',
-          chat: 'typing 200+ hackers...',
-          action: 'Typing Stat 2'
-        }
-      ]);
-    }, 14400);
-
-    schedule(() => {
+      const box2 = getBox('.cv-stats li:nth-child(2)', { x: 372, y: 520, w: 320, h: 85 });
+      set4Swarm({
+        elena: { x: box2.x, y: box2.y, tool: 'R', action: 'Framing Stat [2/3] • 200+ Hackers' },
+        alex: { x: box2.x + box2.w + 12, y: box2.y + 16, tool: 'V', action: 'Equal 24px Gap' },
+        sarah: { x: box2.x + box2.w / 2, y: box2.y + 24, tool: '❖', action: 'Stamping Pill Container' },
+        varun: { x: box2.x + 36, y: box2.y + 22, tool: 'T', action: 'Typing: 200+' }
+      });
+      setActiveSelection({ x: box2.x, y: box2.y, w: box2.w, h: box2.h, label: '❖ Stat 2 • 200+ Hackers' });
       setBuildStage(6);
-    }, 15200);
+      typeText('200+', setTypedStat2, 60, 40);
+    }, 6300);
 
     // 8. Stage 7/8: Stat 3 (🥈 1st Runner-Up at HACKeThor)
     schedule(() => {
-      const box = getBox('.cv-stats li:nth-child(3)', { x: 716, y: 520, w: 320, h: 85 });
-      setActiveCursors([
-        {
-          id: 'elena',
-          name: 'Elena Rostova',
-          color: '#F59E0B',
-          x: box.x,
-          y: box.y,
-          tool: 'R',
-          chat: 'drawing stat 3 box',
-          action: 'Framing Stat 3'
-        }
-      ]);
-      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Stat [3/3] • 🥈 1st Runner-Up' });
-    }, 15500);
+      const box3 = getBox('.cv-stats li:nth-child(3)', { x: 716, y: 520, w: 320, h: 85 });
+      set4Swarm({
+        elena: { x: box3.x, y: box3.y, tool: 'R', action: 'Framing Stat [3/3] • Hackathon Winner' },
+        alex: { x: box3.x + box3.w - 10, y: box3.y + 16, tool: 'V', action: 'Col 3 Alignment' },
+        sarah: { x: box3.x + box3.w / 2, y: box3.y + 24, tool: '❖', action: 'Stamping Trophy Medal' },
+        varun: { x: box3.x + 36, y: box3.y + 22, tool: 'T', action: 'Typing: 🥈 1st Runner-Up' }
+      });
+      setActiveSelection({ x: box3.x, y: box3.y, w: box3.w, h: box3.h, label: '❖ Stat 3 • 🥈 1st Runner-Up' });
+      setBuildStage(7);
+      typeText('🥈 1st Runner-Up', setTypedStat3, 60, 35);
+    }, 7200);
 
-    schedule(() => {
-      const box = getBox('.cv-stats li:nth-child(3)', { x: 716, y: 520, w: 320, h: 85 });
-      setActiveCursors([
-        {
-          id: 'sarah',
-          name: 'Sarah Lin',
-          color: '#0ACF83',
-          x: box.x + 100,
-          y: box.y + 20,
-          tool: '❖',
-          chat: 'stamping 🥈 1st Runner-Up (2nd Place)...',
-          action: 'Stamping Stat 3'
-        }
-      ]);
-    }, 16300);
-
-    // Stat 3 reveals -> Top section complete!
+    // 9. Top section complete! All 4 Swarm members await scroll
     schedule(() => {
       setBuildStage(8);
       setActiveSelection(null);
       setActiveGuides([]);
       const statBox = getBox('.cv-stats li:nth-child(2)', { x: 372, y: 520, w: 320, h: 85 });
-      setActiveCursors([
-        {
-          id: 'elena',
-          name: 'Elena Rostova',
-          color: '#F59E0B',
-          x: statBox.x - 20,
-          y: statBox.y + statBox.h + 30,
-          tool: '✓',
-          chat: '✨ Top section ready! Scroll down to build lower sections...',
-          action: 'Ready'
-        },
-        {
-          id: 'varun',
-          name: 'Varun Sehgal',
-          color: '#A259FF',
-          x: statBox.x + 140,
-          y: statBox.y + statBox.h + 30,
-          tool: '↓',
-          chat: '👇 Keep scrolling to craft lower sections',
-          action: 'Waiting for Scroll'
-        }
-      ]);
-    }, 17200);
+      set4Swarm({
+        elena: { x: statBox.x - 60, y: statBox.y + statBox.h + 35, tool: '✓', action: 'Top Section Ready ✓', chat: '✨ Top section ready! Scroll down for What I work on' },
+        alex: { x: statBox.x + 50, y: statBox.y + statBox.h + 35, tool: 'V', action: 'Layout 1080px Locked' },
+        sarah: { x: statBox.x + 170, y: statBox.y + statBox.h + 35, tool: '❖', action: 'Components Ready' },
+        varun: { x: statBox.x + 290, y: statBox.y + statBox.h + 35, tool: '↓', action: 'Waiting for Scroll', chat: '👇 Scroll down to craft lower sections' }
+      });
+    }, 8100);
   };
 
   // Progressive section builders triggered dynamically on scroll
@@ -1268,7 +1128,37 @@ const KittuResumeApp = ({
               </div>
             ))}
 
-            {/* Active Collaborative Cursors (1 or 2 at a time) */}
+            {/* Real-time Multiplayer Dashed Network Lines between the 4 Swarm Agents */}
+            {activeCursors.length > 1 && (
+              <svg
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  width: '100%',
+                  height: '100%',
+                  pointerEvents: 'none',
+                  zIndex: 115
+                }}
+              >
+                {activeCursors.map((c, i) => {
+                  const nextC = activeCursors[(i + 1) % activeCursors.length];
+                  return (
+                    <line
+                      key={`net-${c.id}-${nextC.id}`}
+                      x1={c.x + 4}
+                      y1={c.y + 4}
+                      x2={nextC.x + 4}
+                      y2={nextC.y + 4}
+                      stroke="rgba(162, 89, 255, 0.22)"
+                      strokeWidth="1.2"
+                      strokeDasharray="4 4"
+                    />
+                  );
+                })}
+              </svg>
+            )}
+
+            {/* Active Collaborative Cursors (4 Swarm at once) */}
             {activeCursors.map((c) => (
               <div
                 key={c.id}
@@ -1401,37 +1291,43 @@ const KittuResumeApp = ({
             {/* Right side: Sticky note (Stage 3) + Polaroid photo (Stage 4) */}
             <div className="cv-side">
               <aside
-                className={`cv-note ${isBuilding && buildStage < 3 ? 'cv-item-hidden' : 'cv-item-visible'}`}
+                className={`cv-note ${isBuilding && buildStage < 3 ? 'cv-item-hidden' : 'cv-item-visible cv-stamp-pop'}`}
                 aria-label="What I'm working on now"
               >
-                <p className="cv-note-head">Now: AI Interview &amp; EventFlow</p>
+                <p className="cv-note-head">
+                  {typedNoteHead || (!isBuilding ? 'Now: AI Interview & EventFlow' : '\u00A0')}
+                  {isBuilding && buildStage === 3 && typedNoteHead && <span className="cv-typing-caret">|</span>}
+                </p>
                 <p>
-                  Architecting multi-token design systems in Figma and translating them with sub-millisecond fidelity into Next.js &amp; Tailwind components.
+                  {typedNoteBody || (!isBuilding ? 'Architecting multi-token design systems in Figma and translating them with sub-millisecond fidelity into Next.js & Tailwind components.' : '\u00A0')}
                 </p>
               </aside>
 
-              <div className={`cv-polaroid ${isBuilding && buildStage < 4 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+              <div className={`cv-polaroid ${isBuilding && buildStage < 4 ? 'cv-item-hidden' : 'cv-item-visible cv-stamp-pop'}`}>
                 <img
                   src="/varun.jpg"
                   alt="Varun Sehgal"
                   onError={(e) => { e.currentTarget.src = '/profile/varun.jpg'; }}
                 />
-                <span>Varun Sehgal, 2026 →</span>
+                <span>
+                  {typedPolaroidCaption || (!isBuilding ? 'Varun Sehgal, 2026 →' : '\u00A0')}
+                  {isBuilding && buildStage === 4 && typedPolaroidCaption && <span className="cv-typing-caret">|</span>}
+                </span>
               </div>
             </div>
 
             {/* In Numbers Stats Row (3 Wob-Pills) - Sequentially stamped one by one (Stages 5, 6, 7) */}
             <ul className="cv-stats" aria-label="In numbers">
-              <li className={`cv-stat ${isBuilding && buildStage < 5 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-                <strong>6+</strong>
+              <li className={`cv-stat ${isBuilding && buildStage < 5 ? 'cv-item-hidden' : 'cv-item-visible cv-stamp-pop'}`}>
+                <strong>{typedStat1 || (!isBuilding ? '6+' : '\u00A0')}</strong>
                 <span>industry &amp; SaaS projects shipped</span>
               </li>
-              <li className={`cv-stat ${isBuilding && buildStage < 6 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-                <strong>200+</strong>
+              <li className={`cv-stat ${isBuilding && buildStage < 6 ? 'cv-item-hidden' : 'cv-item-visible cv-stamp-pop'}`}>
+                <strong>{typedStat2 || (!isBuilding ? '200+' : '\u00A0')}</strong>
                 <span>hackers organized at CodeSrijan</span>
               </li>
-              <li className={`cv-stat ${isBuilding && buildStage < 7 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-                <strong>🥈 1st Runner-Up</strong>
+              <li className={`cv-stat ${isBuilding && buildStage < 7 ? 'cv-item-hidden' : 'cv-item-visible cv-stamp-pop'}`}>
+                <strong>{typedStat3 || (!isBuilding ? '🥈 1st Runner-Up' : '\u00A0')}</strong>
                 <span>(2nd Place) at HACKeThor (Unstop)</span>
               </li>
             </ul>
