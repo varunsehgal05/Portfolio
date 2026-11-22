@@ -239,89 +239,90 @@ const Dock = ({
           className="dock"
           onMouseMove={handleMouseMove}
         >
-        {(() => {
-          let appCounter = 0;
-          return DOCK_ITEMS.map((item, idx) => {
-            if (item.isSeparator) {
-              const isSepRevealed = stampedDockCount >= 7;
+          {(() => {
+            let appCounter = 0;
+            return DOCK_ITEMS.map((item, idx) => {
+              if (item.isSeparator) {
+                const isSepRevealed = stampedDockCount >= 7;
+                return (
+                  <div
+                    key={`sep-${idx}`}
+                    className="dock-separator"
+                    style={{
+                      opacity: isSepRevealed ? 1 : 0,
+                      transition: 'opacity 0.28s ease'
+                    }}
+                  />
+                );
+              }
+
+              const currentAppIdx = appCounter;
+              appCounter++;
+              const isRevealed = stampedDockCount >= 9 || currentAppIdx < stampedDockCount;
+              const IconComponent = item.icon;
+              const isOpen = openWindows.includes(item.id);
+              const isMin = minimizedWindows.includes(item.id);
+              const isActive = activeWindow === item.id && !isMin;
+              const isBouncing = bouncingApp === item.id || bouncingAppProp === item.id;
+
+              // Geometric position of item center for accurate smooth cosine curve
+              const ICON_SIZE = 44;
+              const DOCK_GAP = 12;
+              const DOCK_PAD_LEFT = 16;
+              const SEPARATOR_SLOT = 17; // 1px separator + 8px margin each side
+
+              const getExactItemCenter = (index) => {
+                if (index < 8) {
+                  return DOCK_PAD_LEFT + index * (ICON_SIZE + DOCK_GAP) + ICON_SIZE / 2;
+                }
+                const itemsBeforeSep = 8 * (ICON_SIZE + DOCK_GAP);
+                return DOCK_PAD_LEFT + itemsBeforeSep + SEPARATOR_SLOT + DOCK_GAP + ICON_SIZE / 2;
+              };
+
+              // Compute magnification scale & dynamic horizontal expansion to prevent overlap
+              let scale = 1;
+              let translateY = 0;
+              let marginX = 0;
+
+              if (mouseX !== null && dockRef.current) {
+                const itemCenter = getExactItemCenter(idx);
+                const dist = Math.abs(mouseX - itemCenter);
+                const maxDist = 100;
+
+                if (dist < maxDist) {
+                  const factor = Math.cos((dist / maxDist) * (Math.PI / 2));
+                  scale = 1 + 0.28 * factor;
+                  translateY = -8 * factor;
+                  marginX = Math.max(0, (scale - 1) * 8);
+                }
+              }
+
               return (
-                <div 
-                  key={`sep-${idx}`} 
-                  className="dock-separator"
+                <div
+                  key={item.id}
+                  data-app-id={item.id}
+                  className={`dock-item ${isMin ? 'minimized-app' : ''} ${isBouncing ? 'dock-bouncing' : ''}`}
+                  onClick={() => handleClick(item.id)}
                   style={{
-                    opacity: isSepRevealed ? 1 : 0,
-                    transition: 'opacity 0.28s ease'
+                    transform: isRevealed
+                      ? `translate3d(0, ${translateY}px, 0) scale(${scale})`
+                      : 'scale(0.4) translateY(18px)',
+                    opacity: isRevealed ? 1 : 0,
+                    margin: `0 ${marginX.toFixed(1)}px`,
+                    zIndex: Math.round(scale * 50),
+                    pointerEvents: isRevealed ? 'auto' : 'none',
+                    transition: 'opacity 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)'
                   }}
-                />
-              );
-            }
-
-            const currentAppIdx = appCounter;
-            appCounter++;
-            const isRevealed = stampedDockCount >= 9 || currentAppIdx < stampedDockCount;
-            const IconComponent = item.icon;
-            const isOpen = openWindows.includes(item.id);
-            const isMin = minimizedWindows.includes(item.id);
-            const isActive = activeWindow === item.id && !isMin;
-            const isBouncing = bouncingApp === item.id || bouncingAppProp === item.id;
-
-            // Geometric position of item center for accurate smooth cosine curve
-            const ICON_SIZE = 44;
-            const DOCK_GAP = 12;
-            const DOCK_PAD_LEFT = 16;
-            const SEPARATOR_SLOT = 17; // 1px separator + 8px margin each side
-
-            const getExactItemCenter = (index) => {
-              if (index < 8) {
-                return DOCK_PAD_LEFT + index * (ICON_SIZE + DOCK_GAP) + ICON_SIZE / 2;
-              }
-              const itemsBeforeSep = 8 * (ICON_SIZE + DOCK_GAP);
-              return DOCK_PAD_LEFT + itemsBeforeSep + SEPARATOR_SLOT + DOCK_GAP + ICON_SIZE / 2;
-            };
-
-            // Compute magnification scale & dynamic horizontal expansion to prevent overlap
-            let scale = 1;
-            let translateY = 0;
-            let marginX = 0;
-
-            if (mouseX !== null && dockRef.current) {
-              const itemCenter = getExactItemCenter(idx);
-              const dist = Math.abs(mouseX - itemCenter);
-              const maxDist = 100;
-
-              if (dist < maxDist) {
-                const factor = Math.cos((dist / maxDist) * (Math.PI / 2));
-                scale = 1 + 0.28 * factor;
-                translateY = -8 * factor;
-                marginX = Math.max(0, (scale - 1) * 8);
-              }
-            }
-
-            return (
-              <div
-                key={item.id}
-                data-app-id={item.id}
-                className={`dock-item ${isMin ? 'minimized-app' : ''} ${isBouncing ? 'dock-bouncing' : ''}`}
-                onClick={() => handleClick(item.id)}
-                style={{
-                  transform: isRevealed
-                    ? `translate3d(0, ${translateY}px, 0) scale(${scale})`
-                    : 'scale(0.4) translateY(18px)',
-                  opacity: isRevealed ? 1 : 0,
-                  margin: `0 ${marginX.toFixed(1)}px`,
-                  zIndex: Math.round(scale * 50),
-                  pointerEvents: isRevealed ? 'auto' : 'none',
-                  transition: 'opacity 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)'
-                }}
-              >
-                <div className="dock-tooltip">{item.name}</div>
-                <div className="dock-icon-wrapper">
-                  <IconComponent />
+                >
+                  <div className="dock-tooltip">{item.name}</div>
+                  <div className="dock-icon-wrapper">
+                    <IconComponent />
+                  </div>
+                  {isOpen && <div className={`dock-dot ${isActive ? 'active' : ''}`} />}
                 </div>
-              </div>
-            );
-          });
-        })()}
+              );
+            });
+          })()}
         </div>
       </div>
     </>
