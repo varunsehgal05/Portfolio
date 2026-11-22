@@ -297,31 +297,31 @@ const Dock = ({
               }
             }
 
-          return (
-            <div 
-              key={item.id} 
-              data-app-id={item.id}
-              className={`dock-item ${isMin ? 'minimized-app' : ''} ${isBouncing ? 'dock-bouncing' : ''}`}
-              onClick={() => handleClick(item.id)}
-              style={{
-                transform: isRevealed 
-                  ? `translate3d(0, ${translateY}px, 0) scale(${scale})` 
-                  : 'scale(0.4) translateY(18px)',
-                opacity: isRevealed ? 1 : 0,
-                margin: `0 ${marginX.toFixed(1)}px`,
-                zIndex: Math.round(scale * 50),
-                pointerEvents: isRevealed ? 'auto' : 'none',
-                transition: 'opacity 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)'
-              }}
-            >
-              <div className="dock-tooltip">{item.name}</div>
-              <div className="dock-icon-wrapper">
-                <IconComponent />
+            return (
+              <div
+                key={item.id}
+                data-app-id={item.id}
+                className={`dock-item ${isMin ? 'minimized-app' : ''} ${isBouncing ? 'dock-bouncing' : ''}`}
+                onClick={() => handleClick(item.id)}
+                style={{
+                  transform: isRevealed
+                    ? `translate3d(0, ${translateY}px, 0) scale(${scale})`
+                    : 'scale(0.4) translateY(18px)',
+                  opacity: isRevealed ? 1 : 0,
+                  margin: `0 ${marginX.toFixed(1)}px`,
+                  zIndex: Math.round(scale * 50),
+                  pointerEvents: isRevealed ? 'auto' : 'none',
+                  transition: 'opacity 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)'
+                }}
+              >
+                <div className="dock-tooltip">{item.name}</div>
+                <div className="dock-icon-wrapper">
+                  <IconComponent />
+                </div>
               </div>
-            </div>
-          );
-        });
-      })()}
+            );
+          });
+        })()}
         </div>
       </div>
     </>
