@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
   Hash, 
   Layers, 
@@ -116,6 +116,27 @@ const FinderApp = ({ onOpenApp }) => {
   const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'list'
   const [searchFilter, setSearchFilter] = useState('');
 
+  // Staged reveal synchronized with Swarm Rebuild Phase 5
+  const [rebuildStep, setRebuildStep] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const isDirect = Boolean(new URLSearchParams(window.location.search).get('app'));
+      if (isDirect) return 7;
+      return window.__varunos_finder_step !== undefined ? window.__varunos_finder_step : 7;
+    }
+    return 7;
+  });
+
+  useEffect(() => {
+    const handleStep = (e) => {
+      if (typeof e.detail?.step === 'number') {
+        window.__varunos_finder_step = e.detail.step;
+        setRebuildStep(e.detail.step);
+      }
+    };
+    window.addEventListener('varunos-swarm-finder-step', handleStep);
+    return () => window.removeEventListener('varunos-swarm-finder-step', handleStep);
+  }, []);
+
   const handleNavClick = (tabId) => {
     if (tabId === 'resume' && onOpenApp) {
       onOpenApp('resume');
@@ -145,7 +166,15 @@ const FinderApp = ({ onOpenApp }) => {
   return (
     <div className="finder-container">
       {/* 1. Left Sidebar */}
-      <aside className="finder-sidebar">
+      <aside 
+        className="finder-sidebar"
+        style={{
+          opacity: rebuildStep >= 1 ? 1 : 0,
+          transform: rebuildStep >= 1 ? 'none' : 'translateX(-12px)',
+          transition: 'opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)',
+          pointerEvents: rebuildStep >= 1 ? 'auto' : 'none'
+        }}
+      >
         <div className="finder-sidebar-content">
           {/* Section: Favorites */}
           <div className="finder-sidebar-section">
@@ -274,7 +303,15 @@ const FinderApp = ({ onOpenApp }) => {
         </div>
 
         {/* Hero Card */}
-        <div className="finder-hero-card">
+        <div 
+          className="finder-hero-card"
+          style={{
+            opacity: rebuildStep >= 2 ? 1 : 0,
+            transform: rebuildStep >= 2 ? 'none' : 'scale(0.96) translateY(-8px)',
+            transition: 'opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)',
+            pointerEvents: rebuildStep >= 2 ? 'auto' : 'none'
+          }}
+        >
           <div className="finder-status-badge">
             <span className="status-dot"></span>
             <span>Available for New Product Roles & Projects</span>
@@ -290,32 +327,50 @@ const FinderApp = ({ onOpenApp }) => {
         {/* Content Section: Featured Works */}
         {activeTab === 'featured' && (
           <div className="finder-body-wrap">
-            <div className="finder-section-header">
+            <div 
+              className="finder-section-header"
+              style={{
+                opacity: rebuildStep >= 3 ? 1 : 0,
+                transition: 'opacity 0.35s ease'
+              }}
+            >
               <span className="finder-content-heading">Selected Highlights</span>
               <span className="finder-item-count">{filteredProjects.length} items</span>
             </div>
 
             {viewMode === 'grid' ? (
               <div className="finder-cards-grid">
-                {filteredProjects.map((proj) => (
-                  <div key={proj.id} className="finder-project-card">
-                    <div>
-                      <div className="finder-card-top">
-                        <span className="finder-card-title">{proj.title}</span>
-                        <a href={proj.link} target="_blank" rel="noreferrer" title="Open Showcase">
-                          <ExternalLink size={13} className="finder-card-icon" />
-                        </a>
+                {filteredProjects.map((proj, pIdx) => {
+                  const isCardRevealed = rebuildStep >= 3 + pIdx;
+                  return (
+                    <div 
+                      key={proj.id} 
+                      className="finder-project-card"
+                      style={{
+                        opacity: isCardRevealed ? 1 : 0,
+                        transform: isCardRevealed ? 'none' : 'scale(0.92) translateY(12px)',
+                        transition: 'opacity 0.38s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                        pointerEvents: isCardRevealed ? 'auto' : 'none'
+                      }}
+                    >
+                      <div>
+                        <div className="finder-card-top">
+                          <span className="finder-card-title">{proj.title}</span>
+                          <a href={proj.link} target="_blank" rel="noreferrer" title="Open Showcase">
+                            <ExternalLink size={13} className="finder-card-icon" />
+                          </a>
+                        </div>
+                        <span className="finder-card-cat">{proj.category}</span>
+                        <p className="finder-card-desc">{proj.desc}</p>
                       </div>
-                      <span className="finder-card-cat">{proj.category}</span>
-                      <p className="finder-card-desc">{proj.desc}</p>
+                      <div className="finder-card-tags">
+                        {proj.tags.map((tag, tIdx) => (
+                          <span key={tIdx} className="finder-card-tag">{tag}</span>
+                        ))}
+                      </div>
                     </div>
-                    <div className="finder-card-tags">
-                      {proj.tags.map((tag, tIdx) => (
-                        <span key={tIdx} className="finder-card-tag">{tag}</span>
-                      ))}
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             ) : (
               <div className="finder-list-table">

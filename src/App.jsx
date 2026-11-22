@@ -7,9 +7,10 @@ import './index.css';
 const IDLE_TIMEOUT = 180000; // 3 minutes
 
 function App() {
-  // Rebuild runs on startup/refresh to construct the workspace
-  const [bootState, setBootState] = useState('swarm');
-  const [swarmStage, setSwarmStage] = useState(0); // 0 = start animation
+  const isDirectAppLaunch = typeof window !== 'undefined' && Boolean(new URLSearchParams(window.location.search).get('app'));
+  // Rebuild runs on startup/refresh to construct the workspace unless a deep link app is opened
+  const [bootState, setBootState] = useState(() => isDirectAppLaunch ? 'ready' : 'swarm');
+  const [swarmStage, setSwarmStage] = useState(() => isDirectAppLaunch ? 5 : 0); // 0 = start animation
   const [rebuildKey, setRebuildKey] = useState(1);
   const [userName, setUserName] = useState(() => {
     try {
@@ -87,6 +88,7 @@ function App() {
         userName={userName}
         onReplaySwarm={handleReplaySwarm}
         swarmStage={bootState === 'swarm' ? swarmStage : 5}
+        isRebuilding={bootState === 'swarm'}
       />
 
       {/* 2. Swarm Rebuild Overlay Animation (on boot & replay) */}

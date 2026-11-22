@@ -621,7 +621,14 @@ const PAGE_LAYERS_MAP = {
 };
 
 const FigmaApp = ({ isInteracting, userName, onOpenApp }) => {
-  const [activeTab, setActiveTab] = useState('home'); // 'home' | 'projects' | 'experience' | 'about' | 'resume' | 'process' | 'plugins'
+  const [activeTab, setActiveTab] = useState(() => {
+    try {
+      const p = new URLSearchParams(window.location.search);
+      const t = p.get('tab');
+      if (t && ['home', 'projects', 'experience', 'about', 'resume', 'process', 'plugins'].includes(t)) return t;
+    } catch {}
+    return 'home';
+  }); // 'home' | 'projects' | 'experience' | 'about' | 'resume' | 'process' | 'plugins'
   const [showAssets, setShowAssets] = useState(false);
   const [colorMenuOpen, setColorMenuOpen] = useState(false);
   const [currentTheme, setCurrentTheme] = useState('default');
@@ -2879,6 +2886,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
 
                   {/* Pixel-perfect recreation of https://www.kittu.pro/resume with crowd-of-cursors engine */}
                   <KittuResumeApp
+                    isParentLoading={isAppLoading}
                     onBack={() => setActiveTab('home')}
                     onScrollToTop={() => {
                       // Smoothly glide canvas pan back to top so user is dragged up to top of notebook

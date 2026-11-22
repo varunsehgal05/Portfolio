@@ -10,7 +10,7 @@
   width: 100vw;
   height: 100vh;
   pointer-events: none;
-  z-index: 999999; /* Above windows, loading screens, and modal dialogs */
+  z-index: 400; /* Stays below loading screens (99999) and modal dialogs */
   overflow: hidden;
   user-select: none;
 }

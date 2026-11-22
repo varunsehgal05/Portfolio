@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { 
-  Settings, 
-  Trash2, 
+import {
+  Settings,
+  Trash2,
   FileText,
   Mail,
   Folder,
@@ -11,11 +11,11 @@ import './Dock.css';
 
 const FigmaLogo = () => (
   <svg width="18" height="27" viewBox="0 0 38 57" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M0 9.5C0 4.25329 4.25329 0 9.5 0H19V19H9.5C4.25329 19 0 14.7467 0 9.5Z" fill="#F24E1E"/>
-    <path d="M19 0H28.5C33.7467 0 38 4.25329 38 9.5C38 14.7467 33.7467 19 28.5 19H19V0Z" fill="#FF7262"/>
-    <path d="M0 28.5C0 23.2533 4.25329 19 9.5 19H19V38H9.5C4.25329 38 0 33.7467 0 28.5Z" fill="#A259FF"/>
-    <path d="M19 28.5C19 23.2533 23.2533 19 28.5 19C33.7467 19 38 23.2533 38 28.5C38 33.7467 33.7467 38 28.5 38C23.2533 38 19 33.7467 19 28.5Z" fill="#1ABCFE"/>
-    <path d="M0 47.5C0 42.2533 4.25329 38 9.5 38H19V47.5C19 52.7467 14.7467 57 9.5 57C4.25329 57 0 52.7467 0 47.5Z" fill="#0ACF83"/>
+    <path d="M0 9.5C0 4.25329 4.25329 0 9.5 0H19V19H9.5C4.25329 19 0 14.7467 0 9.5Z" fill="#F24E1E" />
+    <path d="M19 0H28.5C33.7467 0 38 4.25329 38 9.5C38 14.7467 33.7467 19 28.5 19H19V0Z" fill="#FF7262" />
+    <path d="M0 28.5C0 23.2533 4.25329 19 9.5 19H19V38H9.5C4.25329 38 0 33.7467 0 28.5Z" fill="#A259FF" />
+    <path d="M19 28.5C19 23.2533 23.2533 19 28.5 19C33.7467 19 38 23.2533 38 28.5C38 33.7467 33.7467 38 28.5 38C23.2533 38 19 33.7467 19 28.5Z" fill="#1ABCFE" />
+    <path d="M0 47.5C0 42.2533 4.25329 38 9.5 38H19V47.5C19 52.7467 14.7467 57 9.5 57C4.25329 57 0 52.7467 0 47.5Z" fill="#0ACF83" />
   </svg>
 );
 
@@ -94,11 +94,11 @@ const DOCK_ITEMS = [
   { id: 'trash', name: 'Trash', icon: TrashDockIcon }
 ];
 
-const Dock = ({ 
-  openWindows = [], 
-  minimizedWindows = [], 
-  activeWindow, 
-  bouncingAppProp = null, 
+const Dock = ({
+  openWindows = [],
+  minimizedWindows = [],
+  activeWindow,
+  bouncingAppProp = null,
   isFullScreenActive = false,
   onAppClick,
   stampedDockCount = 10
@@ -220,7 +220,7 @@ const Dock = ({
     <>
       {/* Invisible bottom edge sensor hotspot (active only in full-screen to reveal dock on mouse hover) */}
       {isFullScreenActive && (
-        <div 
+        <div
           className="dock-edge-sensor"
           onMouseEnter={() => {
             if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
@@ -229,69 +229,73 @@ const Dock = ({
         />
       )}
 
-      <div 
+      <div
         className={`dock-container ${isDockVisible ? 'dock-visible' : 'dock-hidden'}`}
         onMouseEnter={handleMouseEnterDock}
         onMouseLeave={handleMouseLeaveDock}
       >
-        <div 
+        <div
           ref={dockRef}
           className="dock"
           onMouseMove={handleMouseMove}
         >
-        {DOCK_ITEMS.map((item, idx) => {
-          if (item.isSeparator) {
-            const isSepRevealed = stampedDockCount >= 7;
-            return (
-              <div 
-                key={`sep-${idx}`} 
-                className="dock-separator"
-                style={{
-                  opacity: isSepRevealed ? 1 : 0,
-                  transition: 'opacity 0.28s ease'
-                }}
-              />
-            );
-          }
-
-          const isRevealed = stampedDockCount >= 10 || idx < stampedDockCount;
-          const IconComponent = item.icon;
-          const isOpen = openWindows.includes(item.id);
-          const isMin = minimizedWindows.includes(item.id);
-          const isActive = activeWindow === item.id && !isMin;
-          const isBouncing = bouncingApp === item.id || bouncingAppProp === item.id;
-
-          // Geometric position of item center for accurate smooth cosine curve
-          const ICON_SIZE = 44;
-          const DOCK_GAP = 12;
-          const DOCK_PAD_LEFT = 16;
-          const SEPARATOR_SLOT = 17; // 1px separator + 8px margin each side
-
-          const getExactItemCenter = (index) => {
-            if (index < 8) {
-              return DOCK_PAD_LEFT + index * (ICON_SIZE + DOCK_GAP) + ICON_SIZE / 2;
+        {(() => {
+          let appCounter = 0;
+          return DOCK_ITEMS.map((item, idx) => {
+            if (item.isSeparator) {
+              const isSepRevealed = stampedDockCount >= 7;
+              return (
+                <div 
+                  key={`sep-${idx}`} 
+                  className="dock-separator"
+                  style={{
+                    opacity: isSepRevealed ? 1 : 0,
+                    transition: 'opacity 0.28s ease'
+                  }}
+                />
+              );
             }
-            const itemsBeforeSep = 8 * (ICON_SIZE + DOCK_GAP);
-            return DOCK_PAD_LEFT + itemsBeforeSep + SEPARATOR_SLOT + DOCK_GAP + ICON_SIZE / 2;
-          };
 
-          // Compute magnification scale & dynamic horizontal expansion to prevent overlap
-          let scale = 1;
-          let translateY = 0;
-          let marginX = 0;
+            const currentAppIdx = appCounter;
+            appCounter++;
+            const isRevealed = stampedDockCount >= 9 || currentAppIdx < stampedDockCount;
+            const IconComponent = item.icon;
+            const isOpen = openWindows.includes(item.id);
+            const isMin = minimizedWindows.includes(item.id);
+            const isActive = activeWindow === item.id && !isMin;
+            const isBouncing = bouncingApp === item.id || bouncingAppProp === item.id;
 
-          if (mouseX !== null && dockRef.current) {
-            const itemCenter = getExactItemCenter(idx);
-            const dist = Math.abs(mouseX - itemCenter);
-            const maxDist = 100;
+            // Geometric position of item center for accurate smooth cosine curve
+            const ICON_SIZE = 44;
+            const DOCK_GAP = 12;
+            const DOCK_PAD_LEFT = 16;
+            const SEPARATOR_SLOT = 17; // 1px separator + 8px margin each side
 
-            if (dist < maxDist) {
-              const factor = Math.cos((dist / maxDist) * (Math.PI / 2));
-              scale = 1 + 0.28 * factor;
-              translateY = -8 * factor;
-              marginX = Math.max(0, (scale - 1) * 8);
+            const getExactItemCenter = (index) => {
+              if (index < 8) {
+                return DOCK_PAD_LEFT + index * (ICON_SIZE + DOCK_GAP) + ICON_SIZE / 2;
+              }
+              const itemsBeforeSep = 8 * (ICON_SIZE + DOCK_GAP);
+              return DOCK_PAD_LEFT + itemsBeforeSep + SEPARATOR_SLOT + DOCK_GAP + ICON_SIZE / 2;
+            };
+
+            // Compute magnification scale & dynamic horizontal expansion to prevent overlap
+            let scale = 1;
+            let translateY = 0;
+            let marginX = 0;
+
+            if (mouseX !== null && dockRef.current) {
+              const itemCenter = getExactItemCenter(idx);
+              const dist = Math.abs(mouseX - itemCenter);
+              const maxDist = 100;
+
+              if (dist < maxDist) {
+                const factor = Math.cos((dist / maxDist) * (Math.PI / 2));
+                scale = 1 + 0.28 * factor;
+                translateY = -8 * factor;
+                marginX = Math.max(0, (scale - 1) * 8);
+              }
             }
-          }
 
           return (
             <div 
@@ -314,14 +318,12 @@ const Dock = ({
               <div className="dock-icon-wrapper">
                 <IconComponent />
               </div>
-              <div className="dock-dot-slot">
-                {isOpen && <div className={`dock-dot ${isActive ? 'active' : ''}`} />}
-              </div>
             </div>
           );
-        })}
+        });
+      })()}
+        </div>
       </div>
-    </div>
     </>
   );
 };

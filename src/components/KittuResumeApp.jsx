@@ -8,7 +8,7 @@ import './KittuResume.css';
  * and the collaborative multiplayer cursor build animation ("one by one or 2 at a time").
  */
 
-const KittuResumeApp = ({ onBack, onTriggerSwarm, onScrollToTop }) => {
+const KittuResumeApp = ({ onBack, onTriggerSwarm, onScrollToTop, isParentLoading = false }) => {
   const [copied, setCopied] = useState(false);
   const [isBuilding, setIsBuilding] = useState(true);
   const [buildStage, setBuildStage] = useState(0);
@@ -725,10 +725,33 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm, onScrollToTop }) => {
     setActiveGuides([]);
   };
 
+  const hasTriggeredRef = useRef(false);
+
   useEffect(() => {
-    replayBuild();
-    return () => clearTimeouts();
-  }, []);
+    if (isParentLoading) {
+      clearTimeouts();
+      setIsBuilding(true);
+      setBuildStage(0);
+      setTypedName('');
+      setActiveCursors([]);
+      setActiveSelection(null);
+      setActiveGuides([]);
+      hasTriggeredRef.current = false;
+      return;
+    }
+
+    if (!hasTriggeredRef.current) {
+      hasTriggeredRef.current = true;
+      // Slight 160ms breather after Figma loading screen fades out so blank sheet is appreciated before cursors enter
+      const timer = setTimeout(() => {
+        replayBuild();
+      }, 160);
+      return () => {
+        clearTimeout(timer);
+        clearTimeouts();
+      };
+    }
+  }, [isParentLoading]);
 
   return (
     <div className="kittu-resume-artboard-box" ref={containerRef}>

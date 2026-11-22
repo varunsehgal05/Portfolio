@@ -9,13 +9,41 @@ import { desktopWallpapers } from '../config/wallpapers';
 import LiveMouseSwarm from './LiveMouseSwarm';
 import './Desktop.css';
 
-const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) => {
-  const [openWindows, setOpenWindows] = useState(['finder']);
+const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, isRebuilding = false }) => {
+  const [openWindows, setOpenWindows] = useState(() => {
+    try {
+      const p = new URLSearchParams(window.location.search);
+      const app = p.get('app');
+      if (app && portfolioApps[app]) return [app];
+    } catch {}
+    return ['finder'];
+  });
   const [minimizedWindows, setMinimizedWindows] = useState([]);
-  const [activeWindow, setActiveWindow] = useState('finder');
-  const [maximizedWindows, setMaximizedWindows] = useState([]);
+  const [activeWindow, setActiveWindow] = useState(() => {
+    try {
+      const p = new URLSearchParams(window.location.search);
+      const app = p.get('app');
+      if (app && portfolioApps[app]) return app;
+    } catch {}
+    return 'finder';
+  });
+  const [maximizedWindows, setMaximizedWindows] = useState(() => {
+    try {
+      const p = new URLSearchParams(window.location.search);
+      const app = p.get('app');
+      if (app && ['figma', 'vscode'].includes(app)) return [app];
+    } catch {}
+    return [];
+  });
   // Window Stacking Order: most recently focused window is always at the end
-  const [windowOrder, setWindowOrder] = useState(['finder']);
+  const [windowOrder, setWindowOrder] = useState(() => {
+    try {
+      const p = new URLSearchParams(window.location.search);
+      const app = p.get('app');
+      if (app && portfolioApps[app]) return [app];
+    } catch {}
+    return ['finder'];
+  });
 
   const bringToFront = (appId) => {
     setWindowOrder(prev => {
@@ -101,7 +129,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
   }, []);
 
   // Track sequential desktop icon stamping during Swarm Rebuild (reveal 1-by-1 in Stage 3)
-  const [stampedIconCount, setStampedIconCount] = useState(() => (swarmStage >= 3 ? 6 : 0));
+  const [stampedIconCount, setStampedIconCount] = useState(() => (swarmStage >= 5 ? 6 : 0));
   // Track sequential dock icon stamping during Swarm Rebuild (reveal 1-by-1 in Stage 4)
   const [stampedDockCount, setStampedDockCount] = useState(() => (swarmStage >= 5 ? 10 : 0));
 
@@ -125,14 +153,12 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
   }, []);
 
   useEffect(() => {
-    if (swarmStage >= 3) {
+    if (swarmStage >= 5) {
       setStampedIconCount(6);
+      setStampedDockCount(10);
     } else if (swarmStage === 0) {
       setStampedIconCount(0);
       setStampedDockCount(0);
-    }
-    if (swarmStage >= 5) {
-      setStampedDockCount(10);
     }
   }, [swarmStage]);
 
@@ -397,7 +423,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
       )}
 
       {/* Collaborative Swarm Live Mouse Flocking & App Assembly Engine (5 Elite Collaborative Agents) */}
-      <LiveMouseSwarm isEnabled={isSwarmFollowEnabled} isRebuildActive={swarmStage < 5} agentCount={5} />
+      <LiveMouseSwarm isEnabled={isSwarmFollowEnabled && activeWindow !== 'figma' && !isRebuilding} isRebuildActive={isRebuilding} agentCount={5} />
 
       {/* Top MenuBar wrapper (revealed in Stage 2) */}
       <div className={`desktop-menubar-wrap ${swarmStage < 5 ? (swarmStage >= 2 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
@@ -426,7 +452,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5 }) 
           {displayedIcons.map((id, index) => {
             const app = portfolioApps[id];
             if (!app) return null;
-            const isRevealed = swarmStage >= 3 || index < stampedIconCount;
+            const isRevealed = swarmStage >= 5 || index < stampedIconCount;
             return (
               <DesktopIcon
                 key={app.id}

@@ -46,8 +46,8 @@ const createInitialAgents = (count) => {
       vy: (Math.random() - 0.5) * 1.5,
       offsetX: Math.cos(angle) * radius,
       offsetY: Math.sin(angle) * radius,
-      damping: 0.95,
-      spring: 0.012,
+      damping: 0.94,
+      spring: 0.008,
       separationDist: 60,
       wobblePhase: i * 1.25
     });
@@ -243,7 +243,7 @@ const LiveMouseSwarm = ({ isEnabled = true, isRebuildActive = false, agentCount 
           agent.action = agent.role;
 
           // 1. Goal Seeking: pull toward mouse with personal orbital offset (calm, slow drift)
-          const orbitalTime = now * 0.0004;
+          const orbitalTime = now * 0.0002;
           const currentTargetX = targetX + Math.cos(orbitalTime + agent.wobblePhase) * agent.offsetX;
           const currentTargetY = targetY + Math.sin(orbitalTime + agent.wobblePhase) * agent.offsetY;
 
@@ -253,7 +253,7 @@ const LiveMouseSwarm = ({ isEnabled = true, isRebuildActive = false, agentCount 
           agent.vx = (agent.vx + seekFx) * agent.damping;
           agent.vy = (agent.vy + seekFy) * agent.damping;
 
-          // 2. Separation: repel nearby agents to avoid stacking
+          // 2. Separation: repel nearby agents gently to avoid stacking
           for (let j = i + 1; j < agents.length; j++) {
             const other = agents[j];
             const dx = other.x - agent.x;
@@ -262,8 +262,8 @@ const LiveMouseSwarm = ({ isEnabled = true, isRebuildActive = false, agentCount 
 
             if (dist < agent.separationDist && dist > 0) {
               const force = (agent.separationDist - dist) / agent.separationDist;
-              const pushX = (dx / dist) * force * 1.5;
-              const pushY = (dy / dist) * force * 1.5;
+              const pushX = (dx / dist) * force * 0.75;
+              const pushY = (dy / dist) * force * 0.75;
 
               agent.vx -= pushX;
               agent.vy -= pushY;
