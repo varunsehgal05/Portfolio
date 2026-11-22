@@ -46,8 +46,8 @@ const createInitialAgents = (count) => {
       vy: (Math.random() - 0.5) * 1.5,
       offsetX: Math.cos(angle) * radius,
       offsetY: Math.sin(angle) * radius,
-      damping: 0.94,
-      spring: 0.008,
+      damping: 0.96,
+      spring: 0.0035,
       separationDist: 60,
       wobblePhase: i * 1.25
     });
@@ -137,7 +137,7 @@ const LiveMouseSwarm = ({ isEnabled = true, isRebuildActive = false, agentCount 
         active: true,
         appName: appName || 'App Window',
         startTime: performance.now(),
-        duration: 2800,
+        duration: 3600,
         box
       };
 
@@ -150,7 +150,7 @@ const LiveMouseSwarm = ({ isEnabled = true, isRebuildActive = false, agentCount 
       // Clear assembly UI once completed
       setTimeout(() => {
         setAssemblyUI(null);
-      }, 2900);
+      }, 3700);
     };
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
@@ -203,7 +203,7 @@ const LiveMouseSwarm = ({ isEnabled = true, isRebuildActive = false, agentCount 
         for (let i = 0; i < agents.length; i++) {
           const a = agents[i];
           const target = targets[i] || { x: x + w / 2, y: y + h / 2, action: 'Assembling' };
-          const spring = 0.038; // Silky smooth collaborative dash
+          const spring = 0.022; // Silky smooth calm collaborative dash
           const dx = target.x - a.x;
           const dy = target.y - a.y;
 

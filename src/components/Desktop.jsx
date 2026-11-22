@@ -372,6 +372,9 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
 
   // Replay Swarm Rebuild handler guaranteeing clean workspace & Finder is open
   const handleInternalReplaySwarm = () => {
+    if (typeof window !== 'undefined') {
+      window.__varunos_finder_step = 0;
+    }
     setOpenWindows(['finder']);
     setMinimizedWindows([]);
     setMaximizedWindows([]);
@@ -383,6 +386,9 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
   // Ensure Finder is cleanly prepared when entering rebuild mode
   useEffect(() => {
     if (swarmStage < 5) {
+      if (typeof window !== 'undefined' && swarmStage === 0) {
+        window.__varunos_finder_step = 0;
+      }
       setOpenWindows(['finder']);
       setMinimizedWindows([]);
       setMaximizedWindows([]);

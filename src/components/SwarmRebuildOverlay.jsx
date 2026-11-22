@@ -463,8 +463,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         setStatusMessage('[1/5] Elena & Varun: Stamping Wallpaper Backdrop (100vw × 100vh)...');
         const t = Math.min(1, Math.max(0, elapsed / 3.4));
 
-        if (t > 0.35) {
-          updateStage(1, 580); // Reveal real wallpaper in Desktop.jsx
+        if (t >= 0.85) {
+          updateStage(1, 580); // Reveal real wallpaper only when swarm finishes stamping!
         }
 
         if (t > 0.65 && !wallpaperSnappedRef.current) {
@@ -539,8 +539,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         setStatusMessage('[2/5] Alex & Elena: Extruding MenuBar Frame & Status Bar...');
         const t = Math.min(1, Math.max(0, (elapsed - 3.4) / 3.2));
 
-        if (t > 0.35) {
-          updateStage(2, 680); // Reveal MenuBar in Desktop.jsx
+        if (t >= 0.85) {
+          updateStage(2, 680); // Reveal MenuBar only when swarm finishes extruding!
         }
 
         if (t > 0.65 && !menubarSnappedRef.current) {
@@ -618,28 +618,40 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         }
 
         const iconNames = ['Figma', 'VS Code', 'Resume.pdf', 'Contact', 'Buy Me a Coffee', 'Trash'];
-        const iconYPositions = [48, 126, 204, 282, 360, 438];
+        const domIcons = typeof document !== 'undefined' ? document.querySelectorAll('.desktop-icon-container') : null;
+        let iconYPositions = [46, 138, 230, 322, 414, 506];
+        let iconX = 20;
+        let iconW = 72;
+        let iconH = 76;
+        if (domIcons && domIcons.length >= 6) {
+          iconYPositions = Array.from(domIcons).map(el => Math.round(el.getBoundingClientRect().top));
+          const r0 = domIcons[0].getBoundingClientRect();
+          iconX = Math.round(r0.left);
+          iconW = Math.round(r0.width) || 72;
+          iconH = Math.round(r0.height) || 76;
+        }
+
         const totalIcons = 6;
         const iconFloat = t * totalIcons;
         const iconIndex = Math.min(5, Math.floor(iconFloat));
         const subProgress = iconFloat - iconIndex;
 
-        const prevY = iconIndex === 0 ? 48 : iconYPositions[iconIndex - 1];
+        const prevY = iconIndex === 0 ? iconYPositions[0] : iconYPositions[iconIndex - 1];
         const nextY = iconYPositions[iconIndex];
-        const sarahPos = interpolateArc(56, prevY, 56, nextY, subProgress, -16, 0.05);
+        const sarahPos = interpolateArc(iconX + iconW / 2, prevY + 20, iconX + iconW / 2, nextY + 20, subProgress, -16, 0.05);
 
         const isSarahClicking = subProgress > 0.72 && subProgress < 0.95;
 
         if (lastStampedIndexRef.current !== iconIndex) {
           lastStampedIndexRef.current = iconIndex;
           soundSynth.playDropThump(220 + iconIndex * 28);
-          triggerRipple(56, iconYPositions[iconIndex] + 20, '#FF7262');
+          triggerRipple(iconX + iconW / 2, iconYPositions[iconIndex] + 20, '#FF7262');
           if (typeof window !== 'undefined') {
             window.dispatchEvent(new CustomEvent('varunos-swarm-icon-stamped', { detail: { count: iconIndex + 1 } }));
           }
         }
 
-        // ONLY Sarah Lin is visible! (Elena is hidden -> removes extra name!)
+        // ONLY Sarah Lin is visible! (Elena, Alex, Varun are hidden -> NO extra name or overlap!)
         agentTargets = {
           sarah: {
             x: sarahPos.x,
@@ -654,14 +666,13 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             chatText: t < 0.85 ? 'stamping desktop apps (⌥ dup)' : null,
             dupBadge: `⌥ Duplicate +${iconIndex + 1}`,
             boxBounds: {
-              x: 20,
+              x: iconX,
               y: iconYPositions[iconIndex],
-              w: 72,
-              h: 70
-              // NOTE: NO bottom label like "Trash" -> removes extra name clutter!
+              w: iconW,
+              h: iconH
             }
           },
-          elena: { hidden: true, x: 142, y: sarahPos.y - 14 },
+          elena: { hidden: true, x: iconX + iconW + 40, y: sarahPos.y - 14 },
           varun: { hidden: true, x: winTargetX + 220, y: winTargetY + 98 },
           user: { hidden: true, x: winTargetX + 80, y: winTargetY + 60 },
           alex: { hidden: true, x: winTargetX, y: winTargetY }
@@ -669,24 +680,24 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
 
         setWireframeData(null);
 
-        const prevIconY = iconIndex > 0 ? iconYPositions[iconIndex - 1] : 48;
+        const prevIconY = iconIndex > 0 ? iconYPositions[iconIndex - 1] : iconYPositions[0];
         const currentIconY = iconYPositions[iconIndex];
         const gapMidY = (prevIconY + currentIconY) / 2 + 35;
 
         setActiveGuides([
-          { type: 'v', x1: 20, y1: 40, x2: 20, y2: 510, color: '#ec4899', dashed: true, label: 'X: 20px (Margin)' },
-          { type: 'v', x1: 92, y1: 40, x2: 92, y2: 510, color: '#ec4899', dashed: true, label: 'W: 72px' },
+          { type: 'v', x1: iconX, y1: iconYPositions[0] - 6, x2: iconX, y2: iconYPositions[5] + iconH + 6, color: '#ec4899', dashed: true, label: `X: ${iconX}px` },
+          { type: 'v', x1: iconX + iconW, y1: iconYPositions[0] - 6, x2: iconX + iconW, y2: iconYPositions[5] + iconH + 6, color: '#ec4899', dashed: true, label: `W: ${iconW}px` },
           ...(iconIndex > 0 ? [{
             type: 'v',
-            x1: 142,
-            y1: prevIconY + 70,
-            x2: 142,
+            x1: iconX + iconW + 40,
+            y1: prevIconY + iconH,
+            x2: iconX + iconW + 40,
             y2: currentIconY,
             color: '#ec4899',
             dashed: false,
-            label: 'ΔY: 78px',
-            pillText: 'ΔY: 78px Equal Spacing',
-            pillX: 142,
+            label: 'ΔY: 16px',
+            pillText: 'ΔY: 16px Equal Spacing',
+            pillX: iconX + iconW + 40,
             pillY: gapMidY
           }] : [])
         ]);
@@ -875,24 +886,22 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
       else if (elapsed < 40.5) {
         const pWin = elapsed - 19.5;
 
-        // Reveal the real Finder window outer layer directly in Stage 5 so the swarm builds ON TOP of the real window
-        updateStage(5, 780);
-
         const curW = winTargetW;
         const curH = winTargetH;
         const curX = winTargetX;
         const curY = winTargetY;
 
         const sidebarW = 200; // Matches .finder-sidebar width: 200px
-        const headerH = 38;
+        const headerH = 38; // Window titlebar height
+        const toolbarH = 42; // Matches .finder-toolbar height
         const contentX = curX + sidebarW;
-        const contentY = curY + headerH;
+        const contentY = curY + headerH + toolbarH;
         const contentW = curW - sidebarW;
 
         const heroX = contentX + 16;
-        const heroY = contentY + 16;
+        const heroY = contentY + 16; // Matches .finder-hero-card margin: 16px
         const heroW = contentW - 32;
-        const heroH = 110;
+        const heroH = 118;
 
         const cardsGap = 14;
         const cardsY = heroY + heroH + 34; // Accounts for .finder-section-header
@@ -910,9 +919,12 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
 
         // 5.1: Alex Chen Extrudes Outer Window Frame Box (19.5s - 22.5s) -> Step 0
         if (pWin < 3.0) {
-          dispatchFinderStep(0);
           setStatusMessage('[5/5] Alex Chen: [F] Extruding Window Frame Box (920 × 560px)...');
           const t1 = Math.min(1, pWin / 3.0);
+          if (t1 >= 0.85) {
+            updateStage(5, 780); // Reveal real Window container only when Alex completes extruding!
+            dispatchFinderStep(0);
+          }
           const drawnW = lerp(120, winTargetW, easeInOutCubic(t1));
           const drawnH = lerp(80, winTargetH, easeInOutCubic(t1));
           const alexArc = interpolateArc(curX + 120, curY + 80, curX + drawnW, curY + drawnH, t1, 14, 0.03);
@@ -961,9 +973,11 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         }
         // 5.2: Elena Rostova Drafts Sidebar Navigation (22.5s - 25.5s) -> Step 1
         else if (pWin < 6.0) {
-          dispatchFinderStep(1);
-          setStatusMessage('[5/5] Elena Rostova: Drafting Sidebar Navigation & Tags...');
           const t2 = Math.min(1, (pWin - 3.0) / 3.0);
+          if (t2 >= 0.85) {
+            dispatchFinderStep(1);
+          }
+          setStatusMessage('[5/5] Elena Rostova: Drafting Sidebar Navigation & Tags...');
           const drawnSideH = lerp(60, curH - headerH, easeInOutCubic(t2));
           const elenaArc = interpolateArc(curX + sidebarW, curY + headerH, curX + sidebarW, curY + headerH + drawnSideH, t2, 12, 0.03);
 
@@ -1015,13 +1029,21 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             }
           ]);
         }
-        // 5.3: Varun Sehgal Styles Hero Bento Banner (25.5s - 28.5s) -> Step 2
+        // 5.3: Varun Sehgal Styles Hero Bento Banner & Types Headline (25.5s - 28.5s) -> Step 2
         else if (pWin < 9.0) {
-          dispatchFinderStep(2);
-          setStatusMessage('[5/5] Varun Sehgal: [T] Styling Hero Headline & Badges...');
           const t3 = Math.min(1, (pWin - 6.0) / 3.0);
+          window.dispatchEvent(new CustomEvent('varunos-hero-type-progress', { detail: { progress: t3 } }));
+          if (t3 >= 0.85) {
+            dispatchFinderStep(2);
+          }
+          const heroText = "Designing intuitive web apps & modern interfaces";
+          const charCount = Math.min(heroText.length, Math.floor(t3 * heroText.length * 1.15));
+          const currentTypingSlice = heroText.slice(0, charCount);
+
+          setStatusMessage(`[5/5] Varun Sehgal: [T] Typing: "${currentTypingSlice.slice(-22)}"...`);
           const drawnHeroW = lerp(60, heroW, easeInOutCubic(t3));
-          const varunArc = interpolateArc(heroX, heroY + 28, heroX + drawnHeroW, heroY + 28, t3, -12, 0.03);
+          const typeX = heroX + 24 + Math.min(heroW - 60, charCount * 8.4);
+          const varunArc = { x: typeX, y: heroY + 54 };
 
           if (t3 > 0.85 && !heroBoxPlacedRef.current) {
             heroBoxPlacedRef.current = true;
@@ -1035,17 +1057,17 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
               y: varunArc.y,
               color: '#A259FF',
               label: 'Varun Sehgal',
-              action: 'Styling Hero Bento Banner',
+              action: 'Typing Headline',
               toolKey: 'T Text',
               cursorMode: 'text',
               isDrawing: true,
-              chatText: t3 < 0.85 ? 'styling hero headline & badges' : null,
+              chatText: t3 < 0.95 ? `typing: "${currentTypingSlice.slice(-16)}"` : 'headline styled ✓',
               boxBounds: {
                 x: heroX,
                 y: heroY,
                 w: drawnHeroW,
                 h: heroH,
-                label: 'Hero Bento Box • Headline & Role'
+                label: `Hero Bento Box • ${Math.round(drawnHeroW)} × ${heroH}px`
               }
             },
             elena: { hidden: true, x: curX + sidebarW, y: curY + 100 },
@@ -1074,9 +1096,11 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         }
         // 5.4: Sarah Lin Crafts Card 01 - AI Interview (28.5s - 31.0s) -> Step 3
         else if (pWin < 11.5) {
-          dispatchFinderStep(3);
-          setStatusMessage('[5/5] Sarah Lin: [R] Box + [T] AI Interview & Prep Platform...');
           const t4 = Math.min(1, (pWin - 9.0) / 2.5);
+          if (t4 >= 0.85) {
+            dispatchFinderStep(3);
+          }
+          setStatusMessage('[5/5] Sarah Lin: [R] Box + [T] AI Interview & Prep Platform...');
           const drawnW1 = lerp(40, cardW, easeInOutCubic(t4));
           const drawnH1 = lerp(30, cardH, easeInOutCubic(t4));
           const sarahArc = interpolateArc(card1X, card1Y, card1X + drawnW1, card1Y + drawnH1, t4, 14, 0.04);
@@ -1132,9 +1156,11 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         }
         // 5.5: Alex Chen Crafts Card 02 - EventFlow SaaS (31.0s - 33.5s) -> Step 4
         else if (pWin < 14.0) {
-          dispatchFinderStep(4);
-          setStatusMessage('[5/5] Alex Chen: [R] Box + [T] EventFlow Ticketing SaaS...');
           const t5 = Math.min(1, (pWin - 11.5) / 2.5);
+          if (t5 >= 0.85) {
+            dispatchFinderStep(4);
+          }
+          setStatusMessage('[5/5] Alex Chen: [R] Box + [T] EventFlow Ticketing SaaS...');
           const drawnW2 = lerp(40, cardW, easeInOutCubic(t5));
           const drawnH2 = lerp(30, cardH, easeInOutCubic(t5));
           const alexArc = interpolateArc(card2X, card2Y, card2X + drawnW2, card2Y + drawnH2, t5, 14, 0.04);
@@ -1190,9 +1216,11 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         }
         // 5.6: Elena Rostova Crafts Card 03 - Expensify Budget (33.5s - 36.0s) -> Step 5
         else if (pWin < 16.5) {
-          dispatchFinderStep(5);
-          setStatusMessage('[5/5] Elena Rostova: [R] Box + [T] Expensify Budget App...');
           const t6 = Math.min(1, (pWin - 14.0) / 2.5);
+          if (t6 >= 0.85) {
+            dispatchFinderStep(5);
+          }
+          setStatusMessage('[5/5] Elena Rostova: [R] Box + [T] Expensify Budget App...');
           const drawnW3 = lerp(40, cardW, easeInOutCubic(t6));
           const drawnH3 = lerp(30, cardH, easeInOutCubic(t6));
           const elenaArc = interpolateArc(card3X, card3Y, card3X + drawnW3, card3Y + drawnH3, t6, 14, 0.04);
@@ -1248,9 +1276,11 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         }
         // 5.7: Varun Sehgal Crafts Card 04 - CodeSrijan Hackathon (36.0s - 38.5s) -> Step 6
         else if (pWin < 19.0) {
-          dispatchFinderStep(6);
-          setStatusMessage('[5/5] Varun Sehgal: [R] Box + [T] CodeSrijan Hackathon...');
           const t7 = Math.min(1, (pWin - 16.5) / 2.5);
+          if (t7 >= 0.85) {
+            dispatchFinderStep(6);
+          }
+          setStatusMessage('[5/5] Varun Sehgal: [R] Box + [T] CodeSrijan Hackathon...');
           const drawnW4 = lerp(40, cardW, easeInOutCubic(t7));
           const drawnH4 = lerp(30, cardH, easeInOutCubic(t7));
           const varunArc = interpolateArc(card4X, card4Y, card4X + drawnW4, card4Y + drawnH4, t7, 14, 0.04);

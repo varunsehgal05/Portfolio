@@ -117,14 +117,30 @@ const FinderApp = ({ onOpenApp }) => {
   const [searchFilter, setSearchFilter] = useState('');
 
   // Staged reveal synchronized with Swarm Rebuild Phase 5
+  const FULL_HERO_TITLE = "Designing intuitive web apps & modern interfaces";
   const [rebuildStep, setRebuildStep] = useState(() => {
     if (typeof window !== 'undefined') {
       const isDirect = Boolean(new URLSearchParams(window.location.search).get('app'));
       if (isDirect) return 7;
-      return window.__varunos_finder_step !== undefined ? window.__varunos_finder_step : 7;
+      return window.__varunos_finder_step !== undefined ? window.__varunos_finder_step : 0;
     }
     return 7;
   });
+  const [typedTitle, setTypedTitle] = useState(() => (window.__varunos_finder_step ?? 0) >= 2 ? FULL_HERO_TITLE : '');
+
+  useEffect(() => {
+    if (rebuildStep >= 2) {
+      setTypedTitle(FULL_HERO_TITLE);
+      return;
+    }
+    const handleProgress = (e) => {
+      const p = e.detail?.progress || 0;
+      const count = Math.min(FULL_HERO_TITLE.length, Math.floor(p * FULL_HERO_TITLE.length * 1.15));
+      setTypedTitle(FULL_HERO_TITLE.slice(0, count));
+    };
+    window.addEventListener('varunos-hero-type-progress', handleProgress);
+    return () => window.removeEventListener('varunos-hero-type-progress', handleProgress);
+  }, [rebuildStep]);
 
   useEffect(() => {
     const handleStep = (e) => {
@@ -317,7 +333,7 @@ const FinderApp = ({ onOpenApp }) => {
             <span>Available for New Product Roles & Projects</span>
           </div>
           <h1 className="finder-hero-title">
-            Designing intuitive web apps & modern interfaces
+            {rebuildStep >= 2 ? FULL_HERO_TITLE : (typedTitle || <span className="typing-cursor" style={{ opacity: 0.7, color: '#38bdf8' }}>|</span>)}
           </h1>
           <p className="finder-hero-desc">
             UI/UX & Product Designer with 3+ years delivering high-impact SaaS and AI product experiences. Skilled in user research, wireframing, rapid prototyping, and design systems.

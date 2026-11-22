@@ -1475,20 +1475,6 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
               <span className="material-symbols-outlined text-[15px]">pan_tool</span>
             </button>
           </div>
-
-          {/* Wireframe View Mode Toggle */}
-          <button
-            type="button"
-            className={`wireframe-toggle-btn ${isWireframeMode ? 'active' : ''}`}
-            onClick={() => {
-              setIsWireframeMode(!isWireframeMode);
-              showToast(isWireframeMode ? 'Wireframe mode off' : 'Wireframe blueprint mode active');
-            }}
-            title="Toggle Figma Blueprint Wireframe View (Shift+O)"
-          >
-            <span className="material-symbols-outlined text-[15px]">grid_on</span>
-            <span>Wireframe</span>
-          </button>
         </div>
 
         <div className="nav-right-section">
@@ -2649,7 +2635,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
           )}
 
           {/* =========================================================================
-              VIEW 4: ABOUT (Design Engineering Vision & Identity Blueprint - Image 2)
+              VIEW 4: ABOUT (Infinite Designer Canvas & Blueprint)
               ========================================================================= */}
           {activeTab === 'about' && (
             <div
@@ -2660,10 +2646,9 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
               }}
             >
               <div className="view-content-wrapper" style={{ padding: '36px 40px 140px' }}>
-                {/* About Blueprint Canvas matching Image 2 */}
                 <div
                   className={`figma-artboard-box about-blueprint-artboard figma-selectable-node ${selectedNodeId === 'about-artboard' ? 'is-selected' : ''}`}
-                  style={getNodeStyle('about-artboard', 1380, 760)}
+                  style={getNodeStyle('about-artboard', 1280, 820)}
                   onClick={(e) => {
                     e.stopPropagation();
                     handleSelectNode('about-artboard', 'Varun_Sehgal_Identity Frame', 'Frame');
@@ -2671,23 +2656,23 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 >
                   <div className="figma-artboard-header-tag">
                     <span className="artboard-hash">#</span>
-                    <span className="artboard-name">Varun_Sehgal_Identity.fig — Lead Product Designer &amp; Design Technologist</span>
-                    <span className="artboard-dims">[{nodeProps['about-artboard']?.w || 1380} × {nodeProps['about-artboard']?.h || 760}]</span>
+                    <span className="artboard-name">Varun_Sehgal_Identity.fig — Lead Product Designer &amp; Design Engineer</span>
+                    <span className="artboard-dims">[{nodeProps['about-artboard']?.w || 1280} × {nodeProps['about-artboard']?.h || 820}]</span>
                   </div>
 
                   {selectedNodeId === 'about-artboard' && (
                     <div className="figma-selection-overlay">
-                      <div className="selection-tag">❖ Varun_Sehgal_Identity [1380×760]</div>
+                      <div className="selection-tag">❖ Varun_Sehgal_Identity [1280×820]</div>
                       <div className="selection-handle tl" /><div className="selection-handle tr" />
                       <div className="selection-handle bl" /><div className="selection-handle br" />
                     </div>
                   )}
 
-                  {/* Canvas Header & Breadcrumbs matching Image 2 */}
+                  {/* Top Bar with multiplayer cursor */}
                   <div className="about-canvas-top-status">
                     <div className="top-status-left">
                       <span className="material-symbols-outlined text-[16px] text-sky-400">code</span>
-                      <span className="top-doc-title">Varun_Sehgal_Portfolio.fig</span>
+                      <span className="top-doc-title">Varun_Sehgal_Portfolio.fig / Identity Blueprint</span>
                       <span className="top-version-badge">v2.4</span>
                     </div>
 
@@ -2698,148 +2683,102 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                         </svg>
                         <span className="cursor-author-name">Elena (Product Lead) [Live Viewing]</span>
                       </div>
-                      <div className="top-zoom-badge">100%</div>
+                      <div className="top-zoom-badge">{Math.round(zoom * 100)}%</div>
                       <button className="top-share-btn" onClick={() => showToast('Share Link Copied!')}>Share</button>
                     </div>
                   </div>
 
-                  {/* 1. TOP ROW: Philosophy & Status (2 Wide Cards) */}
-                  <div className="about-top-cards-row">
-                    {/* Top-Left Card: PHILOSOPHY */}
-                    <div className="about-wide-card philosophy-card">
-                      <div className="card-top-tag tag-orange">
-                        <span className="tag-text">PHILOSOPHY</span>
-                        <span className="tag-ver">v2.4</span>
-                      </div>
-                      <h2 className="wide-card-title">Design Engineering Vision</h2>
-                      <p className="wide-card-desc">
-                        Bridging the deep chasm between Figma multiplayer ergonomics and production React 19/Tailwind codebases. I build interfaces where design tokens are executable contracts, not static documentation.
-                      </p>
-                      <div className="wide-card-badges-row">
-                        <span className="spec-badge">Zero Handoff Friction</span>
-                        <span className="spec-badge">Design Systems at Scale</span>
-                      </div>
-                    </div>
-
-                    {/* Top-Right Card: STATUS */}
-                    <div className="about-wide-card status-card">
-                      <div className="card-top-tag tag-teal">
-                        <span className="tag-dot-pulse" />
-                        <span className="tag-text">STATUS</span>
-                        <span className="tag-sub">Seeking gigs</span>
-                      </div>
-                      <h2 className="wide-card-title">Lead Product Designer</h2>
-                      <p className="wide-card-desc">
-                        Independent consultant partnering with Seed to Series-A venture-backed AI &amp; Developer-Tooling founders. Architecting zero-to-one product experiences, component architectures, and fluid desktop apps.
-                      </p>
-                      <div className="wide-card-badges-row">
-                        <span className="spec-badge">San Francisco / Remote</span>
-                        <span className="spec-badge status-active">Global Remote · Active</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* 2. BOTTOM ROW: Audio Note & Connect Dossier */}
-                  <div className="about-bottom-cards-row">
-                    {/* Left Bottom Card: AUDIO NOTE */}
-                    <div className="about-bottom-card audio-note-card">
-                      <div className="card-top-tag tag-orange">
-                        <span className="tag-text">AUDIO NOTE</span>
-                        <span className="tag-sub">48kHz Spatial</span>
-                      </div>
-                      <h3 className="bottom-card-title">"Why I Design Directly in Code"</h3>
-                      <p className="bottom-card-desc">
-                        A quick audio memo on how thinking in ASTs and flexbox prevents unbuildable Figma dreams.
-                      </p>
-
-                      <div className="audio-player-widget">
-                        <button
-                          className="audio-play-round-btn"
-                          onClick={() => {
-                            setIsPlayingAudioNote(!isPlayingAudioNote);
-                            showToast(isPlayingAudioNote ? 'Audio Paused' : 'Playing "Why I Design Directly in Code"');
-                          }}
-                        >
-                          <span className="material-symbols-outlined text-[18px]">
-                            {isPlayingAudioNote ? 'pause' : 'play_arrow'}
+                  {/* Clean Infinite Canvas Center Blueprint */}
+                  <div className="about-clean-blueprint-canvas" style={{ padding: '24px 30px' }}>
+                    {/* Hero Bio Node */}
+                    <div className="about-hero-blueprint-card" style={{ background: '#181920', border: '1px solid #27272a', borderRadius: '16px', padding: '26px 30px', marginBottom: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '30px' }}>
+                      <div style={{ maxWidth: '780px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '3px 10px', borderRadius: '9999px', background: 'rgba(34, 197, 94, 0.12)', color: '#4ade80', fontSize: '11.5px', fontWeight: '700' }}>
+                            <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#22c55e' }} />
+                            Available for Staff &amp; Senior Product Roles
                           </span>
-                        </button>
-
-                        <div className={`audio-equalizer-bars ${isPlayingAudioNote ? 'active' : ''}`}>
-                          {[40, 75, 95, 60, 30, 85, 100, 50, 70, 90, 45, 65, 80, 55, 95, 35, 75, 50].map((h, i) => (
-                            <span
-                              key={i}
-                              className="eq-bar"
-                              style={{
-                                height: `${h}%`,
-                                animationDelay: `${i * 0.08}s`
-                              }}
-                            />
-                          ))}
+                          <span style={{ fontSize: '11px', color: '#64748b' }}>San Francisco · Remote Global</span>
                         </div>
-
-                        <span className="audio-duration-meta">01:14 / 02:45</span>
+                        <h1 style={{ fontSize: '26px', fontWeight: '800', color: '#ffffff', margin: '0 0 10px', letterSpacing: '-0.02em' }}>
+                          Varun Sehgal — Product Designer &amp; Design Engineer
+                        </h1>
+                        <p style={{ fontSize: '14px', lineHeight: '1.6', color: '#94a3b8', margin: '0' }}>
+                          Designing zero-to-one developer platforms, AI agent interfaces, and high-performance design systems. Bridging multiplayer Figma ergonomics with production React 19/Tailwind codebases.
+                        </p>
                       </div>
-                    </div>
 
-                    {/* Right Bottom Card: CONNECT */}
-                    <div className="about-bottom-card connect-action-card">
-                      <div className="card-top-tag tag-teal">
-                        <span className="tag-text">CONNECT</span>
-                      </div>
-                      <h3 className="bottom-card-title">Request Dossier &amp; Collaboration</h3>
-                      <p className="bottom-card-desc">
-                        Get immediate access to comprehensive resume, design system specs, and availability schedule.
-                      </p>
-
-                      <div className="connect-actions-row">
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', minWidth: '180px' }}>
                         <button
+                          type="button"
                           className="connect-resume-primary-btn"
-                          onClick={() => {
-                            if (onOpenApp) onOpenApp('resume');
-                            showToast('Opening Resume Application...');
-                          }}
+                          onClick={() => setActiveTab('resume')}
+                          style={{ width: '100%', textAlign: 'center', justifyContent: 'center' }}
                         >
                           <span className="material-symbols-outlined text-[16px]">description</span>
-                          <span>Resume (2.1 MB)</span>
+                          <span>Tactile Resume</span>
                         </button>
-
                         <button
-                          className="connect-icon-btn"
+                          type="button"
+                          className="plugin-run-btn"
                           onClick={() => {
                             navigator.clipboard?.writeText('varun.sehgal02@gmail.com');
-                            showToast('Email copied: varun.sehgal02@gmail.com');
+                            showToast('Email Copied: varun.sehgal02@gmail.com');
                           }}
-                          title="Copy Email"
+                          style={{ width: '100%', justifyContent: 'center', padding: '8px' }}
                         >
-                          <span className="material-symbols-outlined text-[16px]">mail</span>
+                          <span>Email Varun</span>
                         </button>
+                      </div>
+                    </div>
 
-                        <button
-                          className="connect-icon-btn"
-                          onClick={() => window.open('https://github.com/varunsehgal05', '_blank')}
-                          title="GitHub Profile"
-                        >
-                          <span className="material-symbols-outlined text-[16px]">terminal</span>
+                    {/* 3 Blueprint Architecture Pillars */}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '18px', marginBottom: '24px' }}>
+                      {/* Pillar 1 */}
+                      <div style={{ background: '#181920', border: '1px solid #27272a', borderTop: '3px solid #38bdf8', borderRadius: '14px', padding: '20px' }}>
+                        <div style={{ fontSize: '11px', fontWeight: '700', color: '#38bdf8', textTransform: 'uppercase', marginBottom: '8px' }}>ARCHITECTURE 01</div>
+                        <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#ffffff', margin: '0 0 8px' }}>Tokens as Executable Code</h3>
+                        <p style={{ fontSize: '12.5px', color: '#94a3b8', lineHeight: '1.55', margin: 0 }}>
+                          Eliminating the Figma-to-code translation layer. Color scales, spacing curves, and components are live typed contracts.
+                        </p>
+                      </div>
+
+                      {/* Pillar 2 */}
+                      <div style={{ background: '#181920', border: '1px solid #27272a', borderTop: '3px solid #a855f7', borderRadius: '14px', padding: '20px' }}>
+                        <div style={{ fontSize: '11px', fontWeight: '700', color: '#a855f7', textTransform: 'uppercase', marginBottom: '8px' }}>ARCHITECTURE 02</div>
+                        <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#ffffff', margin: '0 0 8px' }}>Tactile Micro-interactions</h3>
+                        <p style={{ fontSize: '12.5px', color: '#94a3b8', lineHeight: '1.55', margin: 0 }}>
+                          Multiplayer cursors, physics spring bounds, fluid sound synthesizers, and live spatial tactile feedback.
+                        </p>
+                      </div>
+
+                      {/* Pillar 3 */}
+                      <div style={{ background: '#181920', border: '1px solid #27272a', borderTop: '3px solid #10b981', borderRadius: '14px', padding: '20px' }}>
+                        <div style={{ fontSize: '11px', fontWeight: '700', color: '#10b981', textTransform: 'uppercase', marginBottom: '8px' }}>ARCHITECTURE 03</div>
+                        <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#ffffff', margin: '0 0 8px' }}>Zero-to-One Velocity</h3>
+                        <p style={{ fontSize: '12.5px', color: '#94a3b8', lineHeight: '1.55', margin: 0 }}>
+                          Organized 200+ hackers at CodeSrijan, 1st place hackathon winner, and engineered full-stack SaaS from napkin sketch to deploy.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Tooling & Live Nodes on Canvas */}
+                    <div style={{ background: '#181920', border: '1px solid #27272a', borderRadius: '14px', padding: '18px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{ fontSize: '12px', fontWeight: '700', color: '#64748b', textTransform: 'uppercase' }}>Core Stack Nodes:</span>
+                        {['Figma', 'React 19', 'TailwindCSS', 'TypeScript', 'Next.js', 'Vite', 'Node.js'].map(tech => (
+                          <span key={tech} style={{ padding: '4px 10px', borderRadius: '6px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', fontSize: '12px', color: '#e2e8f0', fontWeight: '500' }}>
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <button type="button" className="plugin-run-btn" onClick={() => window.open('https://github.com/varunsehgal05', '_blank')}>
+                          <span>GitHub</span>
                         </button>
-
-                        <button
-                          className="connect-icon-btn"
-                          onClick={() => window.open('https://twitter.com', '_blank')}
-                          title="Twitter / X"
-                        >
-                          <span className="material-symbols-outlined text-[16px]">share</span>
-                        </button>
-
-                        <button
-                          className="connect-icon-btn"
-                          onClick={() => {
-                            navigator.clipboard?.writeText(window.location.href);
-                            showToast('Portfolio Link Copied!');
-                          }}
-                          title="Copy Share Link"
-                        >
-                          <span className="material-symbols-outlined text-[16px]">link</span>
+                        <button type="button" className="plugin-run-btn" onClick={() => setActiveTab('projects')}>
+                          <span>View Projects</span>
                         </button>
                       </div>
                     </div>
@@ -2887,6 +2826,8 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   {/* Pixel-perfect recreation of https://www.kittu.pro/resume with crowd-of-cursors engine */}
                   <KittuResumeApp
                     isParentLoading={isAppLoading}
+                    canvasPan={pan}
+                    canvasZoom={zoom}
                     onBack={() => setActiveTab('home')}
                     onScrollToTop={() => {
                       // Smoothly glide canvas pan back to top so user is dragged up to top of notebook
@@ -2918,7 +2859,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
           )}
 
           {/* =========================================================================
-              VIEW 6: PROCESS (FigJam Interactive Sprint Process Board - Image 1)
+              VIEW 6: PROCESS (FigJam Interactive Sprint Process Board - Image 2)
               ========================================================================= */}
           {activeTab === 'process' && (
             <div
@@ -2929,10 +2870,10 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
               }}
             >
               <div className="view-content-wrapper" style={{ padding: '36px 40px 140px' }}>
-                {/* FigJam Process Board Canvas matching Image 1 */}
+                {/* FigJam Process Board Canvas matching Image 2 */}
                 <div
                   className={`figma-artboard-box figjam-process-artboard figma-selectable-node ${selectedNodeId === 'process-artboard' ? 'is-selected' : ''}`}
-                  style={getNodeStyle('process-artboard', 1400, 600)}
+                  style={getNodeStyle('process-artboard', 1400, 840)}
                   onClick={(e) => {
                     e.stopPropagation();
                     handleSelectNode('process-artboard', 'FigJam Process Board', 'Frame');
@@ -2941,18 +2882,18 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   <div className="figma-artboard-header-tag">
                     <span className="artboard-hash">#</span>
                     <span className="artboard-name">Varun_Sehgal_Portfolio.fig — FigJam Process Board (Interactive Sprint)</span>
-                    <span className="artboard-dims">[{nodeProps['process-artboard']?.w || 1400} × {nodeProps['process-artboard']?.h || 600}]</span>
+                    <span className="artboard-dims">[{nodeProps['process-artboard']?.w || 1400} × {nodeProps['process-artboard']?.h || 840}]</span>
                   </div>
 
                   {selectedNodeId === 'process-artboard' && (
                     <div className="figma-selection-overlay">
-                      <div className="selection-tag">❖ FigJam_Process_Sprint_04 [1400×600]</div>
+                      <div className="selection-tag">❖ FigJam_Process_Sprint_04 [1400×840]</div>
                       <div className="selection-handle tl" /><div className="selection-handle tr" />
                       <div className="selection-handle bl" /><div className="selection-handle br" />
                     </div>
                   )}
 
-                  {/* Top Canvas Bar matching Image 1 */}
+                  {/* Top Canvas Bar */}
                   <div className="figjam-canvas-topbar">
                     <div className="figjam-topbar-left">
                       <div className="figjam-sprint-badge">
@@ -3010,9 +2951,118 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     </p>
                   </div>
 
-                  {/* FigJam Interactive Whiteboard Canvas Stage (Center part removed) */}
-                  <div className="figjam-canvas-stage">
-                    {/* Bottom Floating FigJam Toolbar matching Image 1 */}
+                  {/* FigJam Interactive Whiteboard Canvas Stage (Image 2) */}
+                  <div className="figjam-canvas-stage" style={{ position: 'relative', minHeight: '520px', padding: '20px 0 100px' }}>
+                    {/* SVG Spline connecting cards with directional markers */}
+                    <svg className="figjam-journey-svg" viewBox="0 0 1320 460" fill="none" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '460px', pointerEvents: 'none', zIndex: 1 }}>
+                      <defs>
+                        <linearGradient id="journeySplineGrad" x1="0%" y1="50%" x2="100%" y2="50%">
+                          <stop offset="0%" stopColor="#34d399" />
+                          <stop offset="35%" stopColor="#38bdf8" />
+                          <stop offset="65%" stopColor="#fbbf24" />
+                          <stop offset="100%" stopColor="#f472b6" />
+                        </linearGradient>
+                      </defs>
+                      <path
+                        d="M 180 320 C 260 220, 310 120, 440 120 C 560 120, 600 330, 710 330 C 820 330, 870 120, 990 120 C 1110 120, 1150 280, 1260 300"
+                        stroke="url(#journeySplineGrad)"
+                        strokeWidth="3.5"
+                        strokeDasharray="8 8"
+                        strokeLinecap="round"
+                      />
+                      <polygon points="280,185 290,177 282,193" fill="#38bdf8" />
+                      <polygon points="560,210 568,222 558,222" fill="#38bdf8" />
+                      <polygon points="850,220 860,208 850,206" fill="#fbbf24" />
+                      <polygon points="1135,210 1145,222 1133,220" fill="#f472b6" />
+                    </svg>
+
+                    {/* Collaborative Multi-Card Journey Layer */}
+                    <div className="figjam-notes-layer" style={{ position: 'relative', zIndex: 2, height: '460px' }}>
+                      {/* Card 01: PAIN POINT 01 (Yellow Sticky Note) */}
+                      <div className="figjam-note-item" style={{ left: '20px', top: '220px', width: '250px', background: '#fef08a', color: '#1c1917', transform: 'rotate(-1.5deg)' }}>
+                        <div className="figjam-tape-strip" />
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                          <span style={{ width: '22px', height: '22px', borderRadius: '50%', background: '#ca8a04', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '800' }}>01</span>
+                          <span style={{ fontSize: '11px', fontWeight: '800', letterSpacing: '0.04em', textTransform: 'uppercase', color: '#854d0e' }}>PAIN POINT 01 👾</span>
+                        </div>
+                        <p style={{ fontSize: '13px', lineHeight: '1.45', margin: '0 0 14px', fontWeight: '500' }}>
+                          "Procurement leads get locked out if tax exemption require manual approval queue."
+                        </p>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid rgba(0,0,0,0.08)', paddingTop: '8px', fontSize: '11.5px', color: '#78716c' }}>
+                          <span>@varun</span>
+                          <span style={{ background: '#fef9c3', padding: '2px 6px', borderRadius: '4px', fontWeight: '700', color: '#ea580c' }}>🔥 12</span>
+                        </div>
+                      </div>
+
+                      {/* Elena Cursor pointing along curve */}
+                      <div style={{ position: 'absolute', left: '260px', top: '190px', display: 'flex', alignItems: 'center', gap: '4px', zIndex: 5, pointerEvents: 'none' }}>
+                        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M0 0L6 14L8.5 8.5L14 6L0 0Z" fill="#a855f7" /></svg>
+                        <span style={{ background: '#a855f7', color: '#ffffff', fontSize: '11px', fontWeight: '700', padding: '2px 7px', borderRadius: '4px' }}>Elena (PM)</span>
+                      </div>
+
+                      {/* Card 03: SEAT AUDIT (Cyan Outlined Box) */}
+                      <div className="figjam-note-item" style={{ left: '330px', top: '35px', width: '240px', background: '#091528', border: '2.5px solid #0ea5e9', color: '#ffffff', borderRadius: '16px', padding: '20px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                          <span style={{ width: '24px', height: '24px', borderRadius: '50%', background: '#0284c7', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: '800' }}>03</span>
+                          <span style={{ color: '#38bdf8', fontSize: '14px', fontWeight: '700' }}>∡Δ</span>
+                        </div>
+                        <h3 style={{ fontSize: '17px', fontWeight: '800', margin: '0 0 4px', textAlign: 'center', letterSpacing: '0.02em' }}>SEAT AUDIT</h3>
+                        <p style={{ fontSize: '12.5px', color: '#94a3b8', margin: '0 0 14px', textAlign: 'center' }}>Gatekeeper?</p>
+                        <div style={{ textAlign: 'center' }}>
+                          <span style={{ background: '#ef4444', color: '#ffffff', padding: '4px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: '700', display: 'inline-block' }}>Drop-off: 34.2%</span>
+                        </div>
+                      </div>
+
+                      {/* Card 04: CUSTOMER QUOTE (Light Yellow Note) */}
+                      <div className="figjam-note-item" style={{ left: '590px', top: '230px', width: '260px', background: '#fef9c3', color: '#1c1917', transform: 'rotate(1deg)' }}>
+                        <div className="figjam-tape-strip" />
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                          <span style={{ width: '22px', height: '22px', borderRadius: '50%', background: '#eab308', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '800' }}>04</span>
+                          <span style={{ fontSize: '11px', fontWeight: '800', letterSpacing: '0.04em', textTransform: 'uppercase', color: '#854d0e' }}>CUSTOMER QUOTE 👻</span>
+                        </div>
+                        <p style={{ fontSize: '13px', lineHeight: '1.45', margin: '0 0 14px', fontWeight: '500' }}>
+                          "Why can't I invite our legal counsel before typing my corporate credit card numbers?"
+                        </p>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid rgba(0,0,0,0.08)', paddingTop: '8px', fontSize: '11.5px', color: '#78716c' }}>
+                          <span style={{ color: '#0284c7', fontWeight: '600' }}>#soc2-blocker</span>
+                          <span style={{ background: '#fef08a', padding: '2px 6px', borderRadius: '4px', fontWeight: '700' }}>💬 8</span>
+                        </div>
+                      </div>
+
+                      {/* Card 05: OPPORTUNITY (Mint Green Sticky Note) */}
+                      <div className="figjam-note-item" style={{ left: '880px', top: '30px', width: '270px', background: '#a7f3d0', color: '#064e3b', transform: 'rotate(-0.8deg)' }}>
+                        <div className="figjam-tape-strip" />
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                          <span style={{ width: '22px', height: '22px', borderRadius: '50%', background: '#059669', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '800' }}>05</span>
+                          <span style={{ fontSize: '11px', fontWeight: '800', letterSpacing: '0.04em', textTransform: 'uppercase', color: '#047857' }}>OPPORTUNITY 💡</span>
+                        </div>
+                        <p style={{ fontSize: '13px', lineHeight: '1.45', margin: '0 0 14px', fontWeight: '500' }}>
+                          "Shadow Approval System: Allow instant trial provisioning with 14-day async invoice generation."
+                        </p>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid rgba(0,0,0,0.08)', paddingTop: '8px', fontSize: '11.5px', color: '#065f46' }}>
+                          <span>@varun</span>
+                          <span style={{ background: '#d1fae5', padding: '2px 8px', borderRadius: '4px', fontWeight: '700', color: '#059669' }}>🚀 High Impact</span>
+                        </div>
+                      </div>
+
+                      {/* Card 06: BEHAVIOR AUDIT (Pink Sticky Note) */}
+                      <div className="figjam-note-item" style={{ left: '1140px', top: '230px', width: '230px', background: '#fbcfe8', color: '#831843', transform: 'rotate(1.5deg)' }}>
+                        <div className="figjam-tape-strip" />
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                          <span style={{ width: '22px', height: '22px', borderRadius: '50%', background: '#db2777', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '800' }}>06</span>
+                          <span style={{ fontSize: '11px', fontWeight: '800', letterSpacing: '0.04em', textTransform: 'uppercase', color: '#9d174d' }}>BEHAVIOR AUDIT</span>
+                        </div>
+                        <p style={{ fontSize: '13px', lineHeight: '1.45', margin: '0 0 14px', fontWeight: '500' }}>
+                          "One-click dispatch to DocuSign workflow bypassing credit card wall for verified domains."
+                        </p>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid rgba(0,0,0,0.08)', paddingTop: '8px', fontSize: '11.5px', color: '#9d174d' }}>
+                          <span>@marcus</span>
+                          <span style={{ background: '#fce7f3', padding: '2px 6px', borderRadius: '4px', fontWeight: '700' }}>⚡ Fast-track</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Bottom Floating FigJam Toolbar */}
                     <div className="figjam-floating-toolbar">
                       <div className="toolbar-tools-group">
                         <button
@@ -3088,7 +3138,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
           )}
 
           {/* =========================================================================
-              VIEW 7: PLUGINS (Creative Figma Community Ecosystem & Dev Console - Image 3)
+              VIEW 7: PLUGINS (Creative Figma Community Marketplace - Image 3)
               ========================================================================= */}
           {activeTab === 'plugins' && (
             <div
@@ -3099,93 +3149,174 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
               }}
             >
               <div className="view-content-wrapper" style={{ padding: '36px 40px 140px' }}>
-                {/* Plugins Ecosystem Canvas matching Image 3 */}
                 <div
                   className={`figma-artboard-box plugins-ecosystem-artboard figma-selectable-node ${selectedNodeId === 'plugins-artboard' ? 'is-selected' : ''}`}
-                  style={getNodeStyle('plugins-artboard', 1440, 480)}
+                  style={getNodeStyle('plugins-artboard', 1100, 840)}
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleSelectNode('plugins-artboard', 'Varuns_Plugin_Lab_Ecosystem', 'Frame');
+                    handleSelectNode('plugins-artboard', 'Plugins Marketplace', 'Frame');
                   }}
                 >
                   <div className="figma-artboard-header-tag">
                     <span className="artboard-hash">#</span>
-                    <span className="artboard-name">COMMUNITY + EXTENSIONS / Varun's Plugin Lab &amp; Ecosystem [Verified Creator]</span>
-                    <span className="artboard-dims">[{nodeProps['plugins-artboard']?.w || 1440} × {nodeProps['plugins-artboard']?.h || 480}]</span>
+                    <span className="artboard-name">COMMUNITY + EXTENSIONS / Installed &amp; Discover</span>
+                    <span className="artboard-dims">[{nodeProps['plugins-artboard']?.w || 1100} × {nodeProps['plugins-artboard']?.h || 840}]</span>
                   </div>
 
                   {selectedNodeId === 'plugins-artboard' && (
                     <div className="figma-selection-overlay">
-                      <div className="selection-tag">❖ Varuns_Plugin_Lab_Ecosystem [1440×480]</div>
+                      <div className="selection-tag">❖ Plugins [1100×840]</div>
                       <div className="selection-handle tl" /><div className="selection-handle tr" />
                       <div className="selection-handle bl" /><div className="selection-handle br" />
                     </div>
                   )}
 
-                  {/* Top Header Banner matching Image 3 */}
-                  <div className="plugins-top-banner-row">
-                    <div className="banner-badge-group">
-                      <span className="material-symbols-outlined text-orange-400 text-[18px]">extension</span>
-                      <span className="banner-breadcrumb-text">
-                        <strong>COMMUNITY + EXTENSIONS</strong> / Varun's Plugin Lab &amp; Ecosystem
-                      </span>
-                      <span className="verified-creator-pill">Verified Creator</span>
+                  <div className="plugins-marketplace-view">
+                    <div className="plugins-market-header">
+                      <h1 className="plugins-market-title">Plugins</h1>
+                      <p className="plugins-market-desc">
+                        Supercharge your creative workflow with installed extensions. These tools seamlessly integrate into your workspace to automate tasks, source assets, and bridge development.
+                      </p>
                     </div>
 
-                    <div className="banner-status-group">
-                      <div className="figjam-avatar-stack sm">
-                        <div className="figjam-avatar av-1">VS</div>
-                        <div className="figjam-avatar av-2">ER</div>
-                        <div className="figjam-avatar-counter">+6</div>
+                    {/* Search & Filter Bar matching Image 3 */}
+                    <div className="plugins-search-filter-row">
+                      <div className="plugins-search-box">
+                        <span className="material-symbols-outlined text-[16px] text-zinc-400">search</span>
+                        <input
+                          type="text"
+                          placeholder="Search plugins..."
+                          value={pluginSearch}
+                          onChange={(e) => setPluginSearch(e.target.value)}
+                        />
                       </div>
-                      <span className="realtime-active-indicator">
-                        <span className="active-dot" />
-                        <span>Realtime Active</span>
-                      </span>
-                    </div>
-                  </div>
 
-                  {/* Filter Tabs & Search Bar */}
-                  <div className="plugins-filters-row">
-                    <div className="filter-pills-group">
-                      <button
-                        className={`filter-pill ${pluginFilter === 'all' ? 'active' : ''}`}
-                        onClick={() => setPluginFilter('all')}
-                      >
-                        All Plugins (12)
-                      </button>
-                      <button
-                        className={`filter-pill ${pluginFilter === 'featured' ? 'active' : ''}`}
-                        onClick={() => setPluginFilter('featured')}
-                      >
-                        Featured &amp; Community Picks
-                      </button>
-                      <button
-                        className={`filter-pill ${pluginFilter === 'published' ? 'active' : ''}`}
-                        onClick={() => setPluginFilter('published')}
-                      >
-                        Published by Varun
-                      </button>
-                      <button
-                        className={`filter-pill ${pluginFilter === 'dev' ? 'active' : ''}`}
-                        onClick={() => setPluginFilter('dev')}
-                      >
-                        In Development
-                      </button>
+                      <div className="plugins-filter-toggles">
+                        <button
+                          type="button"
+                          className={`plugin-toggle-pill ${pluginFilter === 'installed' || pluginFilter === 'all' ? 'active' : ''}`}
+                          onClick={() => setPluginFilter('installed')}
+                        >
+                          <span className="material-symbols-outlined text-[14px]">check_circle</span>
+                          <span>Installed</span>
+                        </button>
+                        <button
+                          type="button"
+                          className={`plugin-toggle-pill ${pluginFilter === 'discover' ? 'active' : ''}`}
+                          onClick={() => {
+                            setPluginFilter('discover');
+                            showToast('Browsing Figma Community plugins catalog...');
+                          }}
+                        >
+                          <span>Discover</span>
+                        </button>
+                      </div>
                     </div>
 
-                    <div className="plugins-search-bar-wrap">
-                      <span className="material-symbols-outlined text-[15px] text-zinc-400">search</span>
-                      <input
-                        type="text"
-                        placeholder="Filter plugins, runtimes, APIs..."
-                        value={pluginSearch}
-                        onChange={(e) => setPluginSearch(e.target.value)}
-                        className="plugins-search-input"
-                      />
-                      <div className="view-mode-icons">
-                        <span className="material-symbols-outlined text-[16px] text-sky-400">grid_view</span>
-                        <span className="material-symbols-outlined text-[16px] text-zinc-500">view_list</span>
+                    {/* 2x2 Grid matching Image 3 */}
+                    <div className="plugins-cards-2x2">
+                      {/* 1. Autoflow */}
+                      <div className="plugin-item-card">
+                        <div className="plugin-card-top">
+                          <div className="plugin-icon-container" style={{ background: '#7c2d12' }}>
+                            <span style={{ color: '#fb923c', fontSize: '20px' }}>〰</span>
+                          </div>
+                          <div className="plugin-name-badge">
+                            <h3 className="plugin-name-title">Autoflow</h3>
+                            <span className="plugin-tag-badge" style={{ background: 'rgba(251, 146, 60, 0.15)', color: '#fb923c' }}>Productivity</span>
+                          </div>
+                        </div>
+                        <p className="plugin-card-desc">
+                          Automatically draw flow arrows between frames. Select any two shapes or frames while holding shift, and a connector magically appears.
+                        </p>
+                        <div className="plugin-card-bottom">
+                          <span className="plugin-version-text">v2.1.4</span>
+                          <button
+                            type="button"
+                            className="plugin-run-btn"
+                            onClick={() => showToast('Running Autoflow v2.1.4... Connectors active!')}
+                          >
+                            <span>▶ Run</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* 2. Figmotion */}
+                      <div className="plugin-item-card">
+                        <div className="plugin-card-top">
+                          <div className="plugin-icon-container" style={{ background: '#581c87' }}>
+                            <span style={{ color: '#c084fc', fontSize: '20px' }}>🌀</span>
+                          </div>
+                          <div className="plugin-name-badge">
+                            <h3 className="plugin-name-title">Figmotion</h3>
+                            <span className="plugin-tag-badge" style={{ background: 'rgba(192, 132, 252, 0.15)', color: '#c084fc' }}>Animation</span>
+                          </div>
+                        </div>
+                        <p className="plugin-card-desc">
+                          An animation tool built right in. Manage timelines, keyframes, and export complex micro-interactions directly to CSS or JSON.
+                        </p>
+                        <div className="plugin-card-bottom">
+                          <span className="plugin-version-text">v3.0.1</span>
+                          <button
+                            type="button"
+                            className="plugin-run-btn"
+                            onClick={() => showToast('Launching Figmotion Timeline Editor...')}
+                          >
+                            <span>▶ Run</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* 3. Unsplash */}
+                      <div className="plugin-item-card">
+                        <div className="plugin-card-top">
+                          <div className="plugin-icon-container" style={{ background: '#27272a' }}>
+                            <span className="material-symbols-outlined text-[20px] text-zinc-300">image</span>
+                          </div>
+                          <div className="plugin-name-badge">
+                            <h3 className="plugin-name-title">Unsplash</h3>
+                            <span className="plugin-tag-badge" style={{ background: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8' }}>Assets</span>
+                          </div>
+                        </div>
+                        <p className="plugin-card-desc">
+                          Insert beautiful, high-quality images directly into your designs. Search the entire library without leaving the canvas.
+                        </p>
+                        <div className="plugin-card-bottom">
+                          <span className="plugin-version-text">v1.8.0</span>
+                          <button
+                            type="button"
+                            className="plugin-run-btn"
+                            onClick={() => showToast('Unsplash Media Picker opened!')}
+                          >
+                            <span>▶ Run</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* 4. Iconify */}
+                      <div className="plugin-item-card">
+                        <div className="plugin-card-top">
+                          <div className="plugin-icon-container" style={{ background: '#0c4a6e' }}>
+                            <span className="material-symbols-outlined text-[20px] text-sky-400">sentiment_satisfied</span>
+                          </div>
+                          <div className="plugin-name-badge">
+                            <h3 className="plugin-name-title">Iconify</h3>
+                            <span className="plugin-tag-badge" style={{ background: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8' }}>Assets</span>
+                          </div>
+                        </div>
+                        <p className="plugin-card-desc">
+                          Import over 100,000 vector icons to your project. Includes Material Design, FontAwesome, Jam Icons, and more.
+                        </p>
+                        <div className="plugin-card-bottom">
+                          <span className="plugin-version-text">v2.4.2</span>
+                          <button
+                            type="button"
+                            className="plugin-run-btn"
+                            onClick={() => showToast('Iconify 100k Vector Library Ready!')}
+                          >
+                            <span>▶ Run</span>
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>

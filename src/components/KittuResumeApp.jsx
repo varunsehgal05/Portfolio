@@ -8,7 +8,14 @@ import './KittuResume.css';
  * and the collaborative multiplayer cursor build animation ("one by one or 2 at a time").
  */
 
-const KittuResumeApp = ({ onBack, onTriggerSwarm, onScrollToTop, isParentLoading = false }) => {
+const KittuResumeApp = ({
+  onBack,
+  onTriggerSwarm,
+  onScrollToTop,
+  isParentLoading = false,
+  canvasPan = { x: 0, y: 0 },
+  canvasZoom = 1
+}) => {
   const [copied, setCopied] = useState(false);
   const [isBuilding, setIsBuilding] = useState(true);
   const [buildStage, setBuildStage] = useState(0);
@@ -16,8 +23,15 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm, onScrollToTop, isParentLoading
   const [activeCursors, setActiveCursors] = useState([]);
   const [activeSelection, setActiveSelection] = useState(null);
   const [activeGuides, setActiveGuides] = useState([]);
+  const [sectionsTriggered, setSectionsTriggered] = useState({
+    workOn: false,
+    timeline: false,
+    projects: false,
+    contact: false
+  });
   const containerRef = useRef(null);
   const buildTimeoutRef = useRef([]);
+  const hasTriggeredRef = useRef(false);
 
   const copyEmail = () => {
     navigator.clipboard?.writeText('varun.sehgal02@gmail.com');
@@ -30,9 +44,30 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm, onScrollToTop, isParentLoading
     buildTimeoutRef.current = [];
   };
 
-  // Replay the build animation: drag user back up to the top, reset state, and swarm assemble
-  // Choreography: Elena draws the box FIRST on empty space -> Collaborator types/stamps -> Content reveals!
-  const replayBuild = () => {
+  const schedule = (fn, delay) => {
+    const id = setTimeout(fn, delay);
+    buildTimeoutRef.current.push(id);
+    return id;
+  };
+
+  // Helper to dynamically get real rendered bounding box relative to .cv-container
+  const getBox = (selector) => {
+    if (!containerRef.current) return null;
+    const container = containerRef.current.querySelector('.cv-container') || containerRef.current;
+    const el = container.querySelector(selector);
+    if (!el) return null;
+    const cRect = container.getBoundingClientRect();
+    const eRect = el.getBoundingClientRect();
+    return {
+      x: Math.round(eRect.left - cRect.left),
+      y: Math.round(eRect.top - cRect.top),
+      w: Math.round(eRect.width),
+      h: Math.round(eRect.height)
+    };
+  };
+
+  // Build Top Section: Title -> Lede -> Sticky -> Polaroid -> 3 Stats
+  const buildTopSection = () => {
     clearTimeouts();
     setIsBuilding(true);
     setBuildStage(0);
@@ -40,32 +75,14 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm, onScrollToTop, isParentLoading
     setActiveCursors([]);
     setActiveSelection(null);
     setActiveGuides([]);
+    setSectionsTriggered({
+      workOn: false,
+      timeline: false,
+      projects: false,
+      contact: false
+    });
 
-    // 1. Smoothly scroll canvas/viewport back up to top ("drag me up")
-    if (onScrollToTop) {
-      onScrollToTop();
-    }
-    try {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      if (containerRef.current) {
-        let parent = containerRef.current.parentElement;
-        while (parent) {
-          if (parent.scrollTop > 0) {
-            parent.scrollTo({ top: 0, behavior: 'smooth' });
-          }
-          parent = parent.parentElement;
-        }
-      }
-    } catch (e) {
-      // ignore
-    }
-
-    const schedule = (fn, delay) => {
-      const id = setTimeout(fn, delay);
-      buildTimeoutRef.current.push(id);
-    };
-
-    // Stage 0: Cursors enter at top of blank notebook (0ms - 400ms)
+    // Cursors enter top of blank notebook
     schedule(() => {
       setActiveCursors([
         {
@@ -89,57 +106,59 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm, onScrollToTop, isParentLoading
           action: 'Drafting Header'
         }
       ]);
-    }, 60);
+    }, 80);
 
-    // Stage 1 Step A: Elena draws the Title Box on empty sheet (400ms)
+    // Stage 1 Step A: Elena draws Title Box
     schedule(() => {
+      const box = getBox('.cv-name') || { x: 35, y: 70, w: 460, h: 75 };
       setActiveCursors([
         {
           id: 'elena',
           name: 'Elena Rostova',
           color: '#F59E0B',
-          x: 35,
-          y: 70,
+          x: box.x,
+          y: box.y,
           tool: 'R',
-          chat: 'drawing title frame [460 x 75]',
+          chat: `drawing title frame [${box.w} × ${box.h}]`,
           action: 'Drawing Box'
         },
         {
           id: 'varun',
           name: 'Varun Sehgal',
           color: '#A259FF',
-          x: 90,
-          y: 85,
+          x: box.x + 60,
+          y: box.y + 15,
           tool: 'T',
           chat: 'typing title...',
           action: 'Typing'
         }
       ]);
-      setActiveSelection({ x: 35, y: 70, w: 460, h: 75, label: '❖ Title Frame • Elena [R]' });
-    }, 400);
+      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Title Frame • Elena [R]' });
+    }, 500);
 
-    // Stage 1 Step B: Varun moves cursor in and types "Varun Sehgal" letter-by-letter (500ms - 900ms)
+    // Stage 1 Step B: Varun types "Varun Sehgal" letter-by-letter (calm & readable speed)
     const nameString = 'Varun Sehgal';
     for (let i = 1; i <= nameString.length; i++) {
       schedule(() => {
         setTypedName(nameString.slice(0, i));
-      }, 500 + i * 35);
+      }, 650 + i * 65);
     }
 
-    // Stage 1 Step C: Title complete (950ms)
+    // Stage 1 Step C: Title complete
     schedule(() => {
       setBuildStage(1);
-    }, 950);
+    }, 1500);
 
-    // Stage 2 Step A: Elena moves down to draw the Lede Box on empty sheet (1050ms)
+    // Stage 2: Elena draws Lede Box & Varun types value prop
     schedule(() => {
+      const box = getBox('.cv-lede') || { x: 35, y: 160, w: 580, h: 140 };
       setActiveCursors([
         {
           id: 'elena',
           name: 'Elena Rostova',
           color: '#F59E0B',
-          x: 35,
-          y: 160,
+          x: box.x,
+          y: box.y,
           tool: 'R',
           chat: 'drawing value prop frame',
           action: 'Drawing Box'
@@ -148,96 +167,99 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm, onScrollToTop, isParentLoading
           id: 'varun',
           name: 'Varun Sehgal',
           color: '#A259FF',
-          x: 180,
-          y: 180,
+          x: box.x + 140,
+          y: box.y + 20,
           tool: 'T',
           chat: 'typing value prop & philosophy...',
           action: 'Typing Lede'
         }
       ]);
-      setActiveSelection({ x: 35, y: 160, w: 580, h: 140, label: '❖ Value Prop Frame • Elena [R]' });
-    }, 1050);
+      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Value Prop Frame • Elena [R]' });
+    }, 1650);
 
-    // Stage 2 Step B: Lede & Links Reveal (1550ms)
+    // Lede reveals
     schedule(() => {
       setBuildStage(2);
-    }, 1550);
+    }, 2450);
 
-    // Stage 3 Step A: Elena draws Sticky Note frame on empty space (1650ms)
+    // Stage 3: Sticky Note
     schedule(() => {
+      const box = getBox('.cv-note') || { x: 670, y: 110, w: 320, h: 140 };
       setActiveCursors([
         {
           id: 'elena',
           name: 'Elena Rostova',
           color: '#F59E0B',
-          x: 670,
-          y: 110,
+          x: box.x,
+          y: box.y,
           tool: 'R',
-          chat: 'drawing sticky note bounds [320 x 140]',
+          chat: 'drawing sticky note bounds',
           action: 'Framing Sticky'
         },
         {
           id: 'sarah',
           name: 'Sarah Lin',
           color: '#0ACF83',
-          x: 740,
-          y: 130,
+          x: box.x + 70,
+          y: box.y + 20,
           tool: '❖',
           chat: 'stamping sticky note...',
           action: 'Stamping Note'
         }
       ]);
-      setActiveSelection({ x: 670, y: 110, w: 320, h: 140, label: '❖ Sticky Note • Elena [R]' });
-      setActiveGuides([{ type: 'v', x: 670, y1: 80, y2: 480, label: 'Right Column (670px)' }]);
-    }, 1650);
+      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Sticky Note • Elena [R]' });
+      setActiveGuides([{ type: 'v', x: box.x, y1: box.y - 30, y2: box.y + 350, label: `Right Column (${box.x}px)` }]);
+    }, 2650);
 
-    // Stage 3 Step B: Sticky Note Reveals (2150ms)
+    // Sticky reveals
     schedule(() => {
       setBuildStage(3);
-    }, 2150);
+    }, 3400);
 
-    // Stage 4 Step A: Elena draws Polaroid Frame on empty space (2250ms)
+    // Stage 4: Polaroid Photo
     schedule(() => {
+      const box = getBox('.cv-polaroid') || { x: 670, y: 270, w: 260, h: 260 };
       setActiveCursors([
         {
           id: 'elena',
           name: 'Elena Rostova',
           color: '#F59E0B',
-          x: 670,
-          y: 270,
+          x: box.x,
+          y: box.y,
           tool: 'R',
-          chat: 'drawing polaroid frame [260 x 260]',
+          chat: 'drawing polaroid frame',
           action: 'Holding Photo Frame'
         },
         {
           id: 'sarah',
           name: 'Sarah Lin',
           color: '#0ACF83',
-          x: 780,
-          y: 350,
+          x: box.x + 110,
+          y: box.y + 80,
           tool: '❖',
           chat: 'stamping Varun Sehgal photo...',
           action: 'Stamping Photo'
         }
       ]);
-      setActiveSelection({ x: 670, y: 270, w: 260, h: 260, label: '❖ Polaroid Photo • Sarah [❖]' });
+      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Polaroid Photo • Sarah [❖]' });
       setActiveGuides([]);
-    }, 2250);
+    }, 3600);
 
-    // Stage 4 Step B: Polaroid Reveals (2750ms)
+    // Polaroid reveals
     schedule(() => {
       setBuildStage(4);
-    }, 2750);
+    }, 4350);
 
-    // Stage 5 Step A: Elena draws Stat 1 Box (2850ms)
+    // Stage 5: Stat 1 (6+ Projects)
     schedule(() => {
+      const box = getBox('.cv-stats li:nth-child(1)') || { x: 35, y: 425, w: 310, h: 85 };
       setActiveCursors([
         {
           id: 'elena',
           name: 'Elena Rostova',
           color: '#F59E0B',
-          x: 35,
-          y: 425,
+          x: box.x,
+          y: box.y,
           tool: 'R',
           chat: 'drawing stat 1 box',
           action: 'Drawing Pill'
@@ -246,30 +268,30 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm, onScrollToTop, isParentLoading
           id: 'varun',
           name: 'Varun Sehgal',
           color: '#A259FF',
-          x: 140,
-          y: 445,
+          x: box.x + 100,
+          y: box.y + 20,
           tool: 'T',
           chat: 'typing 6+ projects...',
           action: 'Typing Stat 1'
         }
       ]);
-      setActiveSelection({ x: 35, y: 425, w: 310, h: 85, label: '❖ Stat [1/3] • 6+ Projects' });
-    }, 2850);
+      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Stat [1/3] • 6+ Projects' });
+    }, 4550);
 
-    // Stage 5 Step B: Stat 1 Reveals (3250ms)
     schedule(() => {
       setBuildStage(5);
-    }, 3250);
+    }, 5250);
 
-    // Stage 6 Step A: Elena draws Stat 2 Box (3350ms)
+    // Stage 6: Stat 2 (200+ Hackers)
     schedule(() => {
+      const box = getBox('.cv-stats li:nth-child(2)') || { x: 360, y: 425, w: 310, h: 85 };
       setActiveCursors([
         {
           id: 'elena',
           name: 'Elena Rostova',
           color: '#F59E0B',
-          x: 360,
-          y: 425,
+          x: box.x,
+          y: box.y,
           tool: 'R',
           chat: 'drawing stat 2 box',
           action: 'Drawing Pill'
@@ -278,30 +300,30 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm, onScrollToTop, isParentLoading
           id: 'varun',
           name: 'Varun Sehgal',
           color: '#A259FF',
-          x: 480,
-          y: 445,
+          x: box.x + 120,
+          y: box.y + 20,
           tool: 'T',
           chat: 'typing 200+ hackers...',
           action: 'Typing Stat 2'
         }
       ]);
-      setActiveSelection({ x: 360, y: 425, w: 310, h: 85, label: '❖ Stat [2/3] • 200+ Hackers' });
-    }, 3350);
+      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Stat [2/3] • 200+ Hackers' });
+    }, 5450);
 
-    // Stage 6 Step B: Stat 2 Reveals (3750ms)
     schedule(() => {
       setBuildStage(6);
-    }, 3750);
+    }, 6150);
 
-    // Stage 7 Step A: Elena draws Stat 3 Box (3850ms)
+    // Stage 7/8: Stat 3 (🏆 1st Winner)
     schedule(() => {
+      const box = getBox('.cv-stats li:nth-child(3)') || { x: 685, y: 425, w: 310, h: 85 };
       setActiveCursors([
         {
           id: 'elena',
           name: 'Elena Rostova',
           color: '#F59E0B',
-          x: 685,
-          y: 425,
+          x: box.x,
+          y: box.y,
           tool: 'R',
           chat: 'drawing stat 3 box',
           action: 'Drawing Pill'
@@ -310,409 +332,514 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm, onScrollToTop, isParentLoading
           id: 'sarah',
           name: 'Sarah Lin',
           color: '#0ACF83',
-          x: 800,
-          y: 445,
+          x: box.x + 110,
+          y: box.y + 20,
           tool: '❖',
           chat: 'stamping 🏆 1st HACKeThor...',
           action: 'Stamping Stat 3'
         }
       ]);
-      setActiveSelection({ x: 685, y: 425, w: 310, h: 85, label: '❖ Stat [3/3] • 🏆 1st Winner' });
-    }, 3850);
+      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Stat [3/3] • 🏆 1st Winner' });
+    }, 6350);
 
-    // Stage 7 Step B: Stat 3 Reveals (4250ms) and proceed directly to Stage 8
+    // Stat 3 reveals -> Top section complete!
     schedule(() => {
       setBuildStage(8);
-    }, 4250);
-
-    // Stage 9 Step A: Elena frames Card 1 on empty space (4850ms)
-    schedule(() => {
-      setActiveCursors([
-        {
-          id: 'elena',
-          name: 'Elena Rostova',
-          color: '#F59E0B',
-          x: 35,
-          y: 550,
-          tool: 'R',
-          chat: 'framing sticky card 1 [310 x 170]',
-          action: 'Framing Card'
-        },
-        {
-          id: 'varun',
-          name: 'Varun Sehgal',
-          color: '#A259FF',
-          x: 160,
-          y: 590,
-          tool: 'T',
-          chat: 'writing Product Design & Systems...',
-          action: 'Writing Thread 1'
-        }
-      ]);
-      setActiveSelection({ x: 35, y: 550, w: 310, h: 170, label: '❖ Thread [1/3] • Design Systems' });
-    }, 4850);
-
-    // Stage 9 Step B: Card 1 Reveals (5350ms)
-    schedule(() => {
-      setBuildStage(9);
-    }, 5350);
-
-    // Stage 10 Step A: Elena frames Card 2 on empty space (5450ms)
-    schedule(() => {
-      setActiveCursors([
-        {
-          id: 'elena',
-          name: 'Elena Rostova',
-          color: '#F59E0B',
-          x: 360,
-          y: 550,
-          tool: 'R',
-          chat: 'framing sticky card 2 [310 x 170]',
-          action: 'Framing Card'
-        },
-        {
-          id: 'sarah',
-          name: 'Sarah Lin',
-          color: '#0ACF83',
-          x: 480,
-          y: 590,
-          tool: '❖',
-          chat: 'dropping Tactile Hi-Fi Prototyping...',
-          action: 'Dropping Note'
-        }
-      ]);
-      setActiveSelection({ x: 360, y: 550, w: 310, h: 170, label: '❖ Thread [2/3] • Prototyping' });
-    }, 5450);
-
-    // Stage 10 Step B: Card 2 Reveals (5950ms)
-    schedule(() => {
-      setBuildStage(10);
-    }, 5950);
-
-    // Stage 11 Step A: Elena frames Card 3 on empty space (6050ms)
-    schedule(() => {
-      setActiveCursors([
-        {
-          id: 'elena',
-          name: 'Elena Rostova',
-          color: '#F59E0B',
-          x: 685,
-          y: 550,
-          tool: 'R',
-          chat: 'framing sticky card 3 [310 x 170]',
-          action: 'Framing Card'
-        },
-        {
-          id: 'varun',
-          name: 'Varun Sehgal',
-          color: '#A259FF',
-          x: 800,
-          y: 590,
-          tool: 'T',
-          chat: 'writing Design Engineering handoff...',
-          action: 'Writing Thread 3'
-        }
-      ]);
-      setActiveSelection({ x: 685, y: 550, w: 310, h: 170, label: '❖ Thread [3/3] • Engineering' });
-    }, 6050);
-
-    // Stage 11 Step B: Card 3 Reveals (6550ms)
-    schedule(() => {
-      setBuildStage(11);
-    }, 6550);
-
-    // Stage 12 Step A: Elena rules timeline spine & frames experience (6650ms)
-    schedule(() => {
-      setActiveCursors([
-        {
-          id: 'elena',
-          name: 'Elena Rostova',
-          color: '#F59E0B',
-          x: 35,
-          y: 850,
-          tool: 'R',
-          chat: 'ruling timeline spine & education bounds',
-          action: 'Ruling Spine'
-        },
-        {
-          id: 'varun',
-          name: 'Varun Sehgal',
-          color: '#A259FF',
-          x: 280,
-          y: 910,
-          tool: 'T',
-          chat: 'syncing UniEvent, Assemble, Knaptix roles...',
-          action: 'Syncing Roles'
-        }
-      ]);
-      setActiveSelection({ x: 35, y: 850, w: 960, h: 360, label: '❖ Experience & Education' });
-    }, 6650);
-
-    // Stage 12 Step B: Timeline & Education Reveal (7250ms)
-    schedule(() => {
-      setBuildStage(12);
-    }, 7250);
-
-    // Stage 13 Step A: Elena frames CodeSrijan Hero Card (7350ms)
-    schedule(() => {
-      setActiveCursors([
-        {
-          id: 'elena',
-          name: 'Elena Rostova',
-          color: '#F59E0B',
-          x: 35,
-          y: 1360,
-          tool: 'R',
-          chat: 'framing CodeSrijan hero card [960 x 220]',
-          action: 'Hero Frame'
-        },
-        {
-          id: 'sarah',
-          name: 'Sarah Lin',
-          color: '#0ACF83',
-          x: 480,
-          y: 1420,
-          tool: '❖',
-          chat: 'attaching Figma design link...',
-          action: 'Linking Figma'
-        }
-      ]);
-      setActiveSelection({ x: 35, y: 1360, w: 960, h: 220, label: '❖ Project [1/6] • CodeSrijan Portal' });
-    }, 7350);
-
-    // Stage 13 Step B: CodeSrijan Reveals (7950ms)
-    schedule(() => {
-      setBuildStage(13);
-    }, 7950);
-
-    // Stage 14 Step A: Elena frames EventFlow Card (8050ms)
-    schedule(() => {
-      setActiveCursors([
-        {
-          id: 'elena',
-          name: 'Elena Rostova',
-          color: '#F59E0B',
-          x: 35,
-          y: 1620,
-          tool: 'R',
-          chat: 'framing EventFlow card [310 x 220]',
-          action: 'Card Frame'
-        },
-        {
-          id: 'varun',
-          name: 'Varun Sehgal',
-          color: '#A259FF',
-          x: 160,
-          y: 1680,
-          tool: 'T',
-          chat: 'stamping EventFlow Ticketing...',
-          action: 'Stamping Card'
-        }
-      ]);
-      setActiveSelection({ x: 35, y: 1620, w: 310, h: 220, label: '❖ Project [2/6] • EventFlow' });
-    }, 8050);
-
-    // Stage 14 Step B: EventFlow Reveals (8550ms)
-    schedule(() => {
-      setBuildStage(14);
-    }, 8550);
-
-    // Stage 15 Step A: Elena frames AI Interview Card (8650ms)
-    schedule(() => {
-      setActiveCursors([
-        {
-          id: 'elena',
-          name: 'Elena Rostova',
-          color: '#F59E0B',
-          x: 360,
-          y: 1620,
-          tool: 'R',
-          chat: 'framing AI Interview card',
-          action: 'Card Frame'
-        },
-        {
-          id: 'sarah',
-          name: 'Sarah Lin',
-          color: '#0ACF83',
-          x: 480,
-          y: 1680,
-          tool: '❖',
-          chat: 'stamping Audio Mock Coach UI...',
-          action: 'Stamping Card'
-        }
-      ]);
-      setActiveSelection({ x: 360, y: 1620, w: 310, h: 220, label: '❖ Project [3/6] • AI Interview' });
-    }, 8650);
-
-    // Stage 15 Step B: AI Interview Reveals (9150ms)
-    schedule(() => {
-      setBuildStage(15);
-    }, 9150);
-
-    // Stage 16 Step A: Elena frames Expensify Card (9250ms)
-    schedule(() => {
-      setActiveCursors([
-        {
-          id: 'elena',
-          name: 'Elena Rostova',
-          color: '#F59E0B',
-          x: 685,
-          y: 1620,
-          tool: 'R',
-          chat: 'framing Expensify card',
-          action: 'Card Frame'
-        },
-        {
-          id: 'varun',
-          name: 'Varun Sehgal',
-          color: '#A259FF',
-          x: 800,
-          y: 1680,
-          tool: 'T',
-          chat: 'stamping Expensify Budget...',
-          action: 'Stamping Card'
-        }
-      ]);
-      setActiveSelection({ x: 685, y: 1620, w: 310, h: 220, label: '❖ Project [4/6] • Expensify' });
-    }, 9250);
-
-    // Stage 16 Step B: Expensify Reveals (9750ms)
-    schedule(() => {
-      setBuildStage(16);
-    }, 9750);
-
-    // Stage 17 Step A: Elena frames Movie Tickets Card (9850ms)
-    schedule(() => {
-      setActiveCursors([
-        {
-          id: 'elena',
-          name: 'Elena Rostova',
-          color: '#F59E0B',
-          x: 35,
-          y: 1870,
-          tool: 'R',
-          chat: 'framing Movie card',
-          action: 'Card Frame'
-        },
-        {
-          id: 'sarah',
-          name: 'Sarah Lin',
-          color: '#0ACF83',
-          x: 160,
-          y: 1930,
-          tool: '❖',
-          chat: 'stamping seat selection matrix...',
-          action: 'Stamping Card'
-        }
-      ]);
-      setActiveSelection({ x: 35, y: 1870, w: 310, h: 220, label: '❖ Project [5/6] • Movie Tickets' });
-    }, 9850);
-
-    // Stage 17 Step B: Movie Tickets Reveals (10350ms)
-    schedule(() => {
-      setBuildStage(17);
-    }, 10350);
-
-    // Stage 18 Step A: Elena frames SaaS Landing Card (10450ms)
-    schedule(() => {
-      setActiveCursors([
-        {
-          id: 'elena',
-          name: 'Elena Rostova',
-          color: '#F59E0B',
-          x: 360,
-          y: 1870,
-          tool: 'R',
-          chat: 'framing SaaS landing card',
-          action: 'Card Frame'
-        },
-        {
-          id: 'varun',
-          name: 'Varun Sehgal',
-          color: '#A259FF',
-          x: 480,
-          y: 1930,
-          tool: 'T',
-          chat: 'stamping 10+ startups shipped...',
-          action: 'Stamping Card'
-        }
-      ]);
-      setActiveSelection({ x: 360, y: 1870, w: 310, h: 220, label: '❖ Project [6/6] • SaaS Landing' });
-    }, 10450);
-
-    // Stage 18 Step B: SaaS Landing Reveals (10950ms)
-    schedule(() => {
-      setBuildStage(18);
-    }, 10950);
-
-    // Stage 19 Step A: Elena frames Contact Section (11050ms)
-    schedule(() => {
-      setActiveCursors([
-        {
-          id: 'elena',
-          name: 'Elena Rostova',
-          color: '#F59E0B',
-          x: 35,
-          y: 2120,
-          tool: 'R',
-          chat: 'holding contact frame',
-          action: 'Contact Frame'
-        },
-        {
-          id: 'varun',
-          name: 'Varun Sehgal',
-          color: '#A259FF',
-          x: 280,
-          y: 2160,
-          tool: 'T',
-          chat: 'writing varun.sehgal02@gmail.com...',
-          action: 'Writing Email'
-        }
-      ]);
-      setActiveSelection({ x: 35, y: 2120, w: 960, h: 180, label: '❖ Say Hello • Contact' });
-    }, 11050);
-
-    // Stage 19 Step B: Contact Reveals (11550ms)
-    schedule(() => {
-      setBuildStage(19);
-    }, 11550);
-
-    // Stage 20: Celebration & Completion (11650ms)
-    schedule(() => {
-      setBuildStage(20);
-      setActiveCursors([
-        {
-          id: 'elena',
-          name: 'Elena Rostova',
-          color: '#F59E0B',
-          x: 420,
-          y: 2320,
-          tool: '✓',
-          chat: '✨ All 18 components stamped!',
-          action: 'Ready!'
-        },
-        {
-          id: 'varun',
-          name: 'Varun Sehgal',
-          color: '#A259FF',
-          x: 560,
-          y: 2320,
-          tool: '✓',
-          chat: '🚀 Notebook live and interactive!',
-          action: 'Complete!'
-        }
-      ]);
-      setActiveSelection(null);
-    }, 11650);
-
-    // Stage 21: Done (12600ms)
-    schedule(() => {
-      setIsBuilding(false);
-      setBuildStage(21);
-      setActiveCursors([]);
       setActiveSelection(null);
       setActiveGuides([]);
-    }, 12600);
+      const statBox = getBox('.cv-stats li:nth-child(2)') || { x: 360, y: 425, w: 310, h: 85 };
+      setActiveCursors([
+        {
+          id: 'elena',
+          name: 'Elena Rostova',
+          color: '#F59E0B',
+          x: statBox.x - 20,
+          y: statBox.y + statBox.h + 30,
+          tool: '✓',
+          chat: '✨ Top section ready! Scroll down to build more...',
+          action: 'Ready'
+        },
+        {
+          id: 'varun',
+          name: 'Varun Sehgal',
+          color: '#A259FF',
+          x: statBox.x + 140,
+          y: statBox.y + statBox.h + 30,
+          tool: '↓',
+          chat: '👇 Keep scrolling to craft lower sections',
+          action: 'Waiting for Scroll'
+        }
+      ]);
+    }, 7050);
+  };
+
+  // Progressive section builders triggered dynamically on scroll
+  const triggerSection = (sectionKey) => {
+    setSectionsTriggered(prev => {
+      if (prev[sectionKey]) return prev;
+      const next = { ...prev, [sectionKey]: true };
+
+      if (sectionKey === 'workOn') {
+        // Section: What I work on (Cards 1, 2, 3)
+        // Card 1
+        schedule(() => {
+          const box = getBox('.cv-thread-0') || { x: 35, y: 550, w: 310, h: 170 };
+          setActiveCursors([
+            {
+              id: 'elena',
+              name: 'Elena Rostova',
+              color: '#F59E0B',
+              x: box.x,
+              y: box.y,
+              tool: 'R',
+              chat: 'framing sticky card 1',
+              action: 'Framing Card'
+            },
+            {
+              id: 'varun',
+              name: 'Varun Sehgal',
+              color: '#A259FF',
+              x: box.x + 120,
+              y: box.y + 40,
+              tool: 'T',
+              chat: 'writing Product Design & Systems...',
+              action: 'Writing Thread 1'
+            }
+          ]);
+          setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Thread [1/3] • Design Systems' });
+        }, 100);
+
+        schedule(() => {
+          setBuildStage(s => Math.max(s, 9));
+        }, 800);
+
+        // Card 2
+        schedule(() => {
+          const box = getBox('.cv-thread-1') || { x: 360, y: 550, w: 310, h: 170 };
+          setActiveCursors([
+            {
+              id: 'elena',
+              name: 'Elena Rostova',
+              color: '#F59E0B',
+              x: box.x,
+              y: box.y,
+              tool: 'R',
+              chat: 'framing sticky card 2',
+              action: 'Framing Card'
+            },
+            {
+              id: 'sarah',
+              name: 'Sarah Lin',
+              color: '#0ACF83',
+              x: box.x + 120,
+              y: box.y + 40,
+              tool: '❖',
+              chat: 'dropping Tactile Hi-Fi Prototyping...',
+              action: 'Dropping Note'
+            }
+          ]);
+          setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Thread [2/3] • Prototyping' });
+        }, 950);
+
+        schedule(() => {
+          setBuildStage(s => Math.max(s, 10));
+        }, 1650);
+
+        // Card 3
+        schedule(() => {
+          const box = getBox('.cv-thread-2') || { x: 685, y: 550, w: 310, h: 170 };
+          setActiveCursors([
+            {
+              id: 'elena',
+              name: 'Elena Rostova',
+              color: '#F59E0B',
+              x: box.x,
+              y: box.y,
+              tool: 'R',
+              chat: 'framing sticky card 3',
+              action: 'Framing Card'
+            },
+            {
+              id: 'varun',
+              name: 'Varun Sehgal',
+              color: '#A259FF',
+              x: box.x + 120,
+              y: box.y + 40,
+              tool: 'T',
+              chat: 'writing Design Engineering handoff...',
+              action: 'Writing Thread 3'
+            }
+          ]);
+          setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Thread [3/3] • Engineering' });
+        }, 1800);
+
+        schedule(() => {
+          setBuildStage(s => Math.max(s, 11));
+          setActiveSelection(null);
+        }, 2500);
+      }
+      else if (sectionKey === 'timeline') {
+        // Section: Where I've worked & Study
+        schedule(() => {
+          const box = getBox('.cv-timeline-wrap') || { x: 35, y: 850, w: 960, h: 360 };
+          setActiveCursors([
+            {
+              id: 'elena',
+              name: 'Elena Rostova',
+              color: '#F59E0B',
+              x: box.x,
+              y: box.y,
+              tool: 'R',
+              chat: 'ruling timeline spine & education bounds',
+              action: 'Ruling Spine'
+            },
+            {
+              id: 'varun',
+              name: 'Varun Sehgal',
+              color: '#A259FF',
+              x: box.x + 240,
+              y: box.y + 60,
+              tool: 'T',
+              chat: 'syncing UniEvent, Assemble, Knaptix roles...',
+              action: 'Syncing Roles'
+            }
+          ]);
+          setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Experience & Education' });
+        }, 100);
+
+        schedule(() => {
+          setBuildStage(s => Math.max(s, 12));
+          setActiveSelection(null);
+        }, 950);
+      }
+      else if (sectionKey === 'projects') {
+        // Section: Things I've made (6 Projects)
+        // Project 1: CodeSrijan (Hero)
+        schedule(() => {
+          const box = getBox('.cv-made > li:nth-child(1)') || { x: 35, y: 1360, w: 960, h: 220 };
+          setActiveCursors([
+            {
+              id: 'elena',
+              name: 'Elena Rostova',
+              color: '#F59E0B',
+              x: box.x,
+              y: box.y,
+              tool: 'R',
+              chat: 'framing CodeSrijan hero card',
+              action: 'Hero Frame'
+            },
+            {
+              id: 'sarah',
+              name: 'Sarah Lin',
+              color: '#0ACF83',
+              x: box.x + 400,
+              y: box.y + 60,
+              tool: '❖',
+              chat: 'attaching Figma design link...',
+              action: 'Linking Figma'
+            }
+          ]);
+          setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Project [1/6] • CodeSrijan Portal' });
+        }, 100);
+
+        schedule(() => {
+          setBuildStage(s => Math.max(s, 13));
+        }, 850);
+
+        // Project 2: EventFlow
+        schedule(() => {
+          const box = getBox('.cv-made > li:nth-child(2)') || { x: 35, y: 1620, w: 310, h: 220 };
+          setActiveCursors([
+            {
+              id: 'elena',
+              name: 'Elena Rostova',
+              color: '#F59E0B',
+              x: box.x,
+              y: box.y,
+              tool: 'R',
+              chat: 'framing EventFlow card',
+              action: 'Card Frame'
+            },
+            {
+              id: 'varun',
+              name: 'Varun Sehgal',
+              color: '#A259FF',
+              x: box.x + 120,
+              y: box.y + 60,
+              tool: 'T',
+              chat: 'stamping EventFlow Ticketing...',
+              action: 'Stamping Card'
+            }
+          ]);
+          setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Project [2/6] • EventFlow' });
+        }, 1000);
+
+        schedule(() => {
+          setBuildStage(s => Math.max(s, 14));
+        }, 1700);
+
+        // Project 3: AI Interview
+        schedule(() => {
+          const box = getBox('.cv-made > li:nth-child(3)') || { x: 360, y: 1620, w: 310, h: 220 };
+          setActiveCursors([
+            {
+              id: 'elena',
+              name: 'Elena Rostova',
+              color: '#F59E0B',
+              x: box.x,
+              y: box.y,
+              tool: 'R',
+              chat: 'framing AI Interview card',
+              action: 'Card Frame'
+            },
+            {
+              id: 'sarah',
+              name: 'Sarah Lin',
+              color: '#0ACF83',
+              x: box.x + 120,
+              y: box.y + 60,
+              tool: '❖',
+              chat: 'stamping Audio Mock Coach UI...',
+              action: 'Stamping Card'
+            }
+          ]);
+          setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Project [3/6] • AI Interview' });
+        }, 1850);
+
+        schedule(() => {
+          setBuildStage(s => Math.max(s, 15));
+        }, 2550);
+
+        // Project 4: Expensify
+        schedule(() => {
+          const box = getBox('.cv-made > li:nth-child(4)') || { x: 685, y: 1620, w: 310, h: 220 };
+          setActiveCursors([
+            {
+              id: 'elena',
+              name: 'Elena Rostova',
+              color: '#F59E0B',
+              x: box.x,
+              y: box.y,
+              tool: 'R',
+              chat: 'framing Expensify card',
+              action: 'Card Frame'
+            },
+            {
+              id: 'varun',
+              name: 'Varun Sehgal',
+              color: '#A259FF',
+              x: box.x + 120,
+              y: box.y + 60,
+              tool: 'T',
+              chat: 'stamping Expensify Budget...',
+              action: 'Stamping Card'
+            }
+          ]);
+          setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Project [4/6] • Expensify' });
+        }, 2700);
+
+        schedule(() => {
+          setBuildStage(s => Math.max(s, 16));
+        }, 3400);
+
+        // Project 5: Movie Tickets
+        schedule(() => {
+          const box = getBox('.cv-made > li:nth-child(5)') || { x: 35, y: 1870, w: 310, h: 220 };
+          setActiveCursors([
+            {
+              id: 'elena',
+              name: 'Elena Rostova',
+              color: '#F59E0B',
+              x: box.x,
+              y: box.y,
+              tool: 'R',
+              chat: 'framing Movie card',
+              action: 'Card Frame'
+            },
+            {
+              id: 'sarah',
+              name: 'Sarah Lin',
+              color: '#0ACF83',
+              x: box.x + 120,
+              y: box.y + 60,
+              tool: '❖',
+              chat: 'stamping seat selection matrix...',
+              action: 'Stamping Card'
+            }
+          ]);
+          setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Project [5/6] • Movie Tickets' });
+        }, 3550);
+
+        schedule(() => {
+          setBuildStage(s => Math.max(s, 17));
+        }, 4250);
+
+        // Project 6: SaaS Landing
+        schedule(() => {
+          const box = getBox('.cv-made > li:nth-child(6)') || { x: 360, y: 1870, w: 310, h: 220 };
+          setActiveCursors([
+            {
+              id: 'elena',
+              name: 'Elena Rostova',
+              color: '#F59E0B',
+              x: box.x,
+              y: box.y,
+              tool: 'R',
+              chat: 'framing SaaS landing card',
+              action: 'Card Frame'
+            },
+            {
+              id: 'varun',
+              name: 'Varun Sehgal',
+              color: '#A259FF',
+              x: box.x + 120,
+              y: box.y + 60,
+              tool: 'T',
+              chat: 'stamping 10+ startups shipped...',
+              action: 'Stamping Card'
+            }
+          ]);
+          setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Project [6/6] • SaaS Landing' });
+        }, 4400);
+
+        schedule(() => {
+          setBuildStage(s => Math.max(s, 18));
+          setActiveSelection(null);
+        }, 5100);
+      }
+      else if (sectionKey === 'contact') {
+        // Section: Say hello
+        schedule(() => {
+          const box = getBox('.cv-contact') || { x: 35, y: 2120, w: 960, h: 180 };
+          setActiveCursors([
+            {
+              id: 'elena',
+              name: 'Elena Rostova',
+              color: '#F59E0B',
+              x: box.x,
+              y: box.y,
+              tool: 'R',
+              chat: 'holding contact frame',
+              action: 'Contact Frame'
+            },
+            {
+              id: 'varun',
+              name: 'Varun Sehgal',
+              color: '#A259FF',
+              x: box.x + 240,
+              y: box.y + 40,
+              tool: 'T',
+              chat: 'writing varun.sehgal02@gmail.com...',
+              action: 'Writing Email'
+            }
+          ]);
+          setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Say Hello • Contact' });
+        }, 100);
+
+        schedule(() => {
+          setBuildStage(s => Math.max(s, 19));
+        }, 850);
+
+        // Stage 20: Celebration
+        schedule(() => {
+          setBuildStage(20);
+          setActiveCursors([
+            {
+              id: 'elena',
+              name: 'Elena Rostova',
+              color: '#F59E0B',
+              x: 420,
+              y: 2280,
+              tool: '✓',
+              chat: '✨ All 18 components stamped!',
+              action: 'Ready!'
+            },
+            {
+              id: 'varun',
+              name: 'Varun Sehgal',
+              color: '#A259FF',
+              x: 560,
+              y: 2280,
+              tool: '✓',
+              chat: '🚀 Notebook live and interactive!',
+              action: 'Complete!'
+            }
+          ]);
+          setActiveSelection(null);
+        }, 1100);
+
+        // Stage 21: Done
+        schedule(() => {
+          setIsBuilding(false);
+          setBuildStage(21);
+          setActiveCursors([]);
+          setActiveSelection(null);
+          setActiveGuides([]);
+        }, 2200);
+      }
+
+      return next;
+    });
+  };
+
+  // Listen to canvas scroll or mouse wheel to trigger lower sections
+  useEffect(() => {
+    if (!isBuilding) return;
+    const effectiveScroll = Math.max(0, -(canvasPan?.y || 0));
+
+    if (effectiveScroll > 80 && !sectionsTriggered.workOn) {
+      triggerSection('workOn');
+    }
+    if (effectiveScroll > 360 && !sectionsTriggered.timeline) {
+      triggerSection('timeline');
+    }
+    if (effectiveScroll > 750 && !sectionsTriggered.projects) {
+      triggerSection('projects');
+    }
+    if (effectiveScroll > 1250 && !sectionsTriggered.contact) {
+      triggerSection('contact');
+    }
+  }, [canvasPan.y, isBuilding, sectionsTriggered]);
+
+  // Window scroll & wheel passive listener for fluid trigger
+  useEffect(() => {
+    if (!isBuilding) return;
+    const handleScrollOrWheel = () => {
+      if (!containerRef.current) return;
+      const c = containerRef.current.querySelector('.cv-container') || containerRef.current;
+      const r = c.getBoundingClientRect();
+      const scrolledDown = -r.top;
+
+      if (scrolledDown > 80 && !sectionsTriggered.workOn) {
+        triggerSection('workOn');
+      }
+      if (scrolledDown > 360 && !sectionsTriggered.timeline) {
+        triggerSection('timeline');
+      }
+      if (scrolledDown > 750 && !sectionsTriggered.projects) {
+        triggerSection('projects');
+      }
+      if (scrolledDown > 1250 && !sectionsTriggered.contact) {
+        triggerSection('contact');
+      }
+    };
+
+    window.addEventListener('wheel', handleScrollOrWheel, { passive: true });
+    window.addEventListener('scroll', handleScrollOrWheel, { passive: true });
+    return () => {
+      window.removeEventListener('wheel', handleScrollOrWheel);
+      window.removeEventListener('scroll', handleScrollOrWheel);
+    };
+  }, [isBuilding, sectionsTriggered]);
+
+  const replayBuild = () => {
+    buildTopSection();
+    if (onScrollToTop) {
+      onScrollToTop();
+    }
+    try {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch {}
   };
 
   const skipBuild = () => {
@@ -723,9 +850,13 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm, onScrollToTop, isParentLoading
     setActiveCursors([]);
     setActiveSelection(null);
     setActiveGuides([]);
+    setSectionsTriggered({
+      workOn: true,
+      timeline: true,
+      projects: true,
+      contact: true
+    });
   };
-
-  const hasTriggeredRef = useRef(false);
 
   useEffect(() => {
     if (isParentLoading) {
@@ -744,7 +875,7 @@ const KittuResumeApp = ({ onBack, onTriggerSwarm, onScrollToTop, isParentLoading
       hasTriggeredRef.current = true;
       // Slight 160ms breather after Figma loading screen fades out so blank sheet is appreciated before cursors enter
       const timer = setTimeout(() => {
-        replayBuild();
+        buildTopSection();
       }, 160);
       return () => {
         clearTimeout(timer);
