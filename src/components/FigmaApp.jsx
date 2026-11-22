@@ -153,12 +153,12 @@ const TIMELINE = [
 const CERTIFICATIONS = [
   {
     id: 'hackethor',
-    title: 'HAckeThor Winner',
+    title: 'HAckeThor 1st Runner-Up (2nd Place)',
     issuer: 'Unstop',
     date: 'Apr 2025',
     credentialId: 'd883bbf5-5d9f-43e9-a417-21a4f009f4ff',
     link: 'https://unstop.com/competitions/hackethor',
-    desc: 'Awarded 1st place in national competitive hackathon for rapid UX prototyping, interactive user testing, and AI tool integration.'
+    desc: 'Awarded 1st runner-up (2nd place) in national competitive hackathon for rapid UX prototyping, interactive user testing, and AI tool integration.'
   },
   {
     id: 'imagine',
@@ -228,12 +228,12 @@ const CERTIFICATIONS = [
 const HACKATHONS = [
   {
     id: 'hackethor-winner',
-    title: 'HAckeThor Winner',
+    title: 'HAckeThor 1st Runner-Up (2nd Place)',
     issuer: 'Unstop',
     date: 'Apr 2025',
-    award: '🏆 1st Place Winner',
+    award: '🥈 1st Runner-Up (2nd Place)',
     link: 'https://unstop.com/competitions/hackethor',
-    desc: 'Awarded 1st place in national competitive hackathon for rapid UX prototyping, interactive user testing, and AI tool integration.'
+    desc: 'Awarded 1st runner-up (2nd place) in national competitive hackathon for rapid UX prototyping, interactive user testing, and AI tool integration.'
   },
   {
     id: 'codesrijan-organizer',
@@ -285,10 +285,10 @@ const TIMELINE_ACTIVITY = [
     category: 'Hackathon Win',
     date: 'Apr 2025',
     icon: 'emoji_events',
-    highlight: 'HAckeThor Winner',
-    titleRest: 'awarded 1st Place by Unstop',
-    desc: 'Awarded 1st place in national competitive hackathon demonstrating rapid UX prototyping, interactive user testing, and AI tool integration under high pressure.',
-    award: '🏆 1st Place Winner',
+    highlight: 'HAckeThor 1st Runner-Up (2nd Place)',
+    titleRest: 'awarded 2nd Place / 1st Runner-Up by Unstop',
+    desc: 'Awarded 1st runner-up (2nd place) in national competitive hackathon demonstrating rapid UX prototyping, interactive user testing, and AI tool integration under high pressure.',
+    award: '🥈 1st Runner-Up (2nd Place)',
     credentialId: 'd883bbf5-5d9f-43e9-a417-21a4f009f4ff',
     link: 'https://unstop.com/competitions/hackethor',
     actionLabel: 'Verify Credential'
@@ -573,7 +573,7 @@ const PAGE_LAYERS_MAP = {
     { id: 'e-header', title: 'Activity_Header & Filter_Pills', type: 'component', indent: 1, visible: true, locked: false },
     { id: 'e-spine', title: 'Center_Vertical_Spine (Path)', type: 'vector', indent: 1, visible: true, locked: true },
     { id: 'e-m1', title: 'Milestone: UniEvent (UI-UX Designer - Nov 2026)', type: 'component', indent: 2, visible: true, locked: false },
-    { id: 'e-m2', title: 'Milestone: HAckeThor Winner (🏆 1st)', type: 'component', indent: 2, visible: true, locked: false },
+    { id: 'e-m2', title: 'Milestone: HAckeThor 1st Runner-Up (🥈 2nd Place)', type: 'component', indent: 2, visible: true, locked: false },
     { id: 'e-m3', title: 'Milestone: Assemble (CODM Esports Operations)', type: 'component', indent: 2, visible: true, locked: false },
     { id: 'e-m4', title: 'Milestone: Udemy Masterclass Credential', type: 'component', indent: 2, visible: true, locked: false },
     { id: 'e-m5', title: 'Milestone: CodeSrijan (Organizing Lead)', type: 'component', indent: 2, visible: true, locked: false },
@@ -1151,6 +1151,8 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
       setZoom(0.9);
     } else if (activeTab === 'about') {
       setZoom(0.85);
+    } else if (activeTab === 'resume') {
+      setPan({ x: 20, y: 20 });
     }
     const timer = setTimeout(() => {
       centerCanvasView(activeTab);

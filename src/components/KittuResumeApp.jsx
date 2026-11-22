@@ -127,21 +127,11 @@ const KittuResumeApp = ({
           tool: 'R',
           chat: 'setting up notebook sheet...',
           action: 'Measuring Grid'
-        },
-        {
-          id: 'varun',
-          name: 'Varun Sehgal',
-          color: '#A259FF',
-          x: 160,
-          y: 60,
-          tool: 'T',
-          chat: 'ready to draft header',
-          action: 'Drafting Header'
         }
       ]);
-    }, 80);
+    }, 120);
 
-    // 2. Stage 1 Step A: Elena draws Title Box
+    // 2. Stage 1 Step A: Elena draws Title Box alone
     schedule(() => {
       const box = getBox('.cv-name', { x: 28, y: 35, w: 460, h: 75 });
       setActiveCursors([
@@ -153,31 +143,38 @@ const KittuResumeApp = ({
           y: box.y,
           tool: 'R',
           chat: `drawing title frame [${box.w} × ${box.h}]`,
-          action: 'Drawing Box'
-        },
+          action: 'Framing Title'
+        }
+      ]);
+      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Title Frame • Elena [R]' });
+    }, 800);
+
+    // Stage 1 Step B: Elena steps aside, Varun enters alone to type "Varun Sehgal"
+    schedule(() => {
+      const box = getBox('.cv-name', { x: 28, y: 35, w: 460, h: 75 });
+      setActiveCursors([
         {
           id: 'varun',
           name: 'Varun Sehgal',
           color: '#A259FF',
-          x: box.x + 50,
+          x: box.x + 35,
           y: box.y + 16,
           tool: 'T',
           chat: 'typing title...',
-          action: 'Typing'
+          action: 'Typing Name'
         }
       ]);
-      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Title Frame • Elena [R]' });
-    }, 450);
+    }, 1800);
 
-    // Stage 1 Step B: Varun types "Varun Sehgal" letter-by-letter
-    typeText('Varun Sehgal', setTypedName, 550, 55);
+    // Varun types name smoothly
+    typeText('Varun Sehgal', setTypedName, 1950, 65);
 
     // Stage 1 Step C: Title complete
     schedule(() => {
       setBuildStage(1);
-    }, 1350);
+    }, 3000);
 
-    // 3. Stage 2: Elena draws Lede Box & Varun types value prop
+    // 3. Stage 2: Elena draws Lede Box alone
     schedule(() => {
       const box = getBox('.cv-lede', { x: 28, y: 125, w: 600, h: 160 });
       setActiveCursors([
@@ -189,31 +186,38 @@ const KittuResumeApp = ({
           y: box.y,
           tool: 'R',
           chat: 'drawing value prop frame',
-          action: 'Drawing Box'
-        },
+          action: 'Framing Lede'
+        }
+      ]);
+      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Value Prop Frame • Elena [R]' });
+    }, 3300);
+
+    // Varun enters alone to type value prop
+    schedule(() => {
+      const box = getBox('.cv-lede', { x: 28, y: 125, w: 600, h: 160 });
+      setActiveCursors([
         {
           id: 'varun',
           name: 'Varun Sehgal',
           color: '#A259FF',
-          x: box.x + 120,
+          x: box.x + 100,
           y: box.y + 20,
           tool: 'T',
           chat: 'typing value prop & philosophy...',
-          action: 'Typing Lede'
+          action: 'Writing Philosophy'
         }
       ]);
-      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Value Prop Frame • Elena [R]' });
-    }, 1500);
+    }, 4300);
 
-    // Varun types lede sentence
-    typeText('I study and craft friction-free product experiences: tactile, beautiful, and fast.', setTypedLede, 1600, 22);
+    // Varun types lede sentence smoothly
+    typeText('I study and craft friction-free product experiences: tactile, beautiful, and fast.', setTypedLede, 4450, 26);
 
     // Lede reveals
     schedule(() => {
       setBuildStage(2);
-    }, 3200);
+    }, 6800);
 
-    // 4. Stage 3: Sticky Note
+    // 4. Stage 3: Elena draws Sticky Note alone
     schedule(() => {
       const box = getBox('.cv-note', { x: 690, y: 60, w: 340, h: 160 });
       setActiveCursors([
@@ -226,7 +230,16 @@ const KittuResumeApp = ({
           tool: 'R',
           chat: 'drawing sticky note bounds',
           action: 'Framing Sticky'
-        },
+        }
+      ]);
+      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Sticky Note • Elena [R]' });
+      setActiveGuides([{ type: 'v', x: box.x, y1: box.y - 20, y2: box.y + 350, label: `Right Column (${box.x}px)` }]);
+    }, 7100);
+
+    // Sarah Lin enters alone to stamp sticky note
+    schedule(() => {
+      const box = getBox('.cv-note', { x: 690, y: 60, w: 340, h: 160 });
+      setActiveCursors([
         {
           id: 'sarah',
           name: 'Sarah Lin',
@@ -238,16 +251,14 @@ const KittuResumeApp = ({
           action: 'Stamping Note'
         }
       ]);
-      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Sticky Note • Elena [R]' });
-      setActiveGuides([{ type: 'v', x: box.x, y1: box.y - 20, y2: box.y + 350, label: `Right Column (${box.x}px)` }]);
-    }, 3400);
+    }, 8100);
 
     // Sticky reveals
     schedule(() => {
       setBuildStage(3);
-    }, 4200);
+    }, 9100);
 
-    // 5. Stage 4: Polaroid Photo
+    // 5. Stage 4: Elena draws Polaroid Frame alone
     schedule(() => {
       const box = getBox('.cv-polaroid', { x: 730, y: 240, w: 260, h: 260 });
       setActiveCursors([
@@ -259,8 +270,17 @@ const KittuResumeApp = ({
           y: box.y,
           tool: 'R',
           chat: 'drawing polaroid frame',
-          action: 'Holding Photo Frame'
-        },
+          action: 'Holding Frame'
+        }
+      ]);
+      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Polaroid Photo • Elena [R]' });
+      setActiveGuides([]);
+    }, 9400);
+
+    // Sarah Lin enters alone to place Varun's photo
+    schedule(() => {
+      const box = getBox('.cv-polaroid', { x: 730, y: 240, w: 260, h: 260 });
+      setActiveCursors([
         {
           id: 'sarah',
           name: 'Sarah Lin',
@@ -269,17 +289,15 @@ const KittuResumeApp = ({
           y: box.y + 80,
           tool: '❖',
           chat: 'stamping Varun Sehgal photo...',
-          action: 'Stamping Photo'
+          action: 'Placing Photo'
         }
       ]);
-      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Polaroid Photo • Sarah [❖]' });
-      setActiveGuides([]);
-    }, 4400);
+    }, 10400);
 
     // Polaroid reveals
     schedule(() => {
       setBuildStage(4);
-    }, 5200);
+    }, 11400);
 
     // 6. Stage 5: Stat 1 (6+ Projects)
     schedule(() => {
@@ -293,8 +311,15 @@ const KittuResumeApp = ({
           y: box.y,
           tool: 'R',
           chat: 'drawing stat 1 box',
-          action: 'Drawing Pill'
-        },
+          action: 'Framing Stat 1'
+        }
+      ]);
+      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Stat [1/3] • 6+ Projects' });
+    }, 11700);
+
+    schedule(() => {
+      const box = getBox('.cv-stats li:nth-child(1)', { x: 28, y: 520, w: 320, h: 85 });
+      setActiveCursors([
         {
           id: 'varun',
           name: 'Varun Sehgal',
@@ -306,12 +331,11 @@ const KittuResumeApp = ({
           action: 'Typing Stat 1'
         }
       ]);
-      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Stat [1/3] • 6+ Projects' });
-    }, 5400);
+    }, 12500);
 
     schedule(() => {
       setBuildStage(5);
-    }, 6100);
+    }, 13300);
 
     // 7. Stage 6: Stat 2 (200+ Hackers)
     schedule(() => {
@@ -325,8 +349,15 @@ const KittuResumeApp = ({
           y: box.y,
           tool: 'R',
           chat: 'drawing stat 2 box',
-          action: 'Drawing Pill'
-        },
+          action: 'Framing Stat 2'
+        }
+      ]);
+      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Stat [2/3] • 200+ Hackers' });
+    }, 13600);
+
+    schedule(() => {
+      const box = getBox('.cv-stats li:nth-child(2)', { x: 372, y: 520, w: 320, h: 85 });
+      setActiveCursors([
         {
           id: 'varun',
           name: 'Varun Sehgal',
@@ -338,14 +369,13 @@ const KittuResumeApp = ({
           action: 'Typing Stat 2'
         }
       ]);
-      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Stat [2/3] • 200+ Hackers' });
-    }, 6300);
+    }, 14400);
 
     schedule(() => {
       setBuildStage(6);
-    }, 7000);
+    }, 15200);
 
-    // 8. Stage 7/8: Stat 3 (🏆 1st Winner)
+    // 8. Stage 7/8: Stat 3 (🥈 1st Runner-Up at HACKeThor)
     schedule(() => {
       const box = getBox('.cv-stats li:nth-child(3)', { x: 716, y: 520, w: 320, h: 85 });
       setActiveCursors([
@@ -357,8 +387,15 @@ const KittuResumeApp = ({
           y: box.y,
           tool: 'R',
           chat: 'drawing stat 3 box',
-          action: 'Drawing Pill'
-        },
+          action: 'Framing Stat 3'
+        }
+      ]);
+      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Stat [3/3] • 🥈 1st Runner-Up' });
+    }, 15500);
+
+    schedule(() => {
+      const box = getBox('.cv-stats li:nth-child(3)', { x: 716, y: 520, w: 320, h: 85 });
+      setActiveCursors([
         {
           id: 'sarah',
           name: 'Sarah Lin',
@@ -366,12 +403,11 @@ const KittuResumeApp = ({
           x: box.x + 100,
           y: box.y + 20,
           tool: '❖',
-          chat: 'stamping 🏆 1st HACKeThor...',
+          chat: 'stamping 🥈 1st Runner-Up (2nd Place)...',
           action: 'Stamping Stat 3'
         }
       ]);
-      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Stat [3/3] • 🏆 1st Winner' });
-    }, 7200);
+    }, 16300);
 
     // Stat 3 reveals -> Top section complete!
     schedule(() => {
@@ -387,7 +423,7 @@ const KittuResumeApp = ({
           x: statBox.x - 20,
           y: statBox.y + statBox.h + 30,
           tool: '✓',
-          chat: '✨ Top section ready! Scroll down to build more...',
+          chat: '✨ Top section ready! Scroll down to build lower sections...',
           action: 'Ready'
         },
         {
@@ -401,7 +437,7 @@ const KittuResumeApp = ({
           action: 'Waiting for Scroll'
         }
       ]);
-    }, 7900);
+    }, 17200);
   };
 
   // Progressive section builders triggered dynamically on scroll
@@ -411,7 +447,7 @@ const KittuResumeApp = ({
     setSectionsTriggered(prev => ({ ...prev, [sectionKey]: true }));
 
     if (sectionKey === 'workOn') {
-      // Section: What I work on (Cards 1, 2, 3)
+      // Section: What I work on (Cards 1, 2, 3 - One by One)
       // Card 1: Product Design & Systems
       schedule(() => {
         const box0 = getBox('.cv-thread-0', { x: 28, y: 730, w: 320, h: 195 });
@@ -424,8 +460,16 @@ const KittuResumeApp = ({
             y: box0.y,
             tool: 'R',
             chat: 'framing sticky card 1 [320 × 195]',
-            action: 'Framing Card'
-          },
+            action: 'Framing Card 1'
+          }
+        ]);
+        setActiveSelection({ x: box0.x, y: box0.y, w: box0.w, h: box0.h, label: '❖ Thread [1/3] • Design Systems' });
+        setActiveGuides([]);
+      }, 100);
+
+      schedule(() => {
+        const box0 = getBox('.cv-thread-0', { x: 28, y: 730, w: 320, h: 195 });
+        setActiveCursors([
           {
             id: 'varun',
             name: 'Varun Sehgal',
@@ -437,15 +481,13 @@ const KittuResumeApp = ({
             action: 'Writing Thread 1'
           }
         ]);
-        setActiveSelection({ x: box0.x, y: box0.y, w: box0.w, h: box0.h, label: '❖ Thread [1/3] • Design Systems' });
-        setActiveGuides([]);
-      }, 80);
+      }, 900);
 
-      typeText('Product Design & Systems', (t) => setTypedWork(prev => ({ ...prev, 0: t })), 200, 36);
+      typeText('Product Design & Systems', (t) => setTypedWork(prev => ({ ...prev, 0: t })), 1050, 40);
 
       schedule(() => {
         setBuildStage(s => Math.max(s, 9));
-      }, 1300);
+      }, 2100);
 
       // Card 2: Tactile Hi-Fi Prototyping
       schedule(() => {
@@ -460,8 +502,16 @@ const KittuResumeApp = ({
             y: box1.y,
             tool: 'R',
             chat: 'framing sticky card 2 [320 × 195]',
-            action: 'Framing Card'
-          },
+            action: 'Framing Card 2'
+          }
+        ]);
+        setActiveSelection({ x: box1.x, y: box1.y, w: box1.w, h: box1.h, label: '❖ Thread [2/3] • Prototyping' });
+        setActiveGuides([{ type: 'h', y: box1.y + 20, x1: box0.x + box0.w, x2: box1.x, label: 'ΔX: 24px Equal Gap' }]);
+      }, 2400);
+
+      schedule(() => {
+        const box1 = getBox('.cv-thread-1', { x: 372, y: 730, w: 320, h: 195 });
+        setActiveCursors([
           {
             id: 'varun',
             name: 'Varun Sehgal',
@@ -473,15 +523,13 @@ const KittuResumeApp = ({
             action: 'Writing Thread 2'
           }
         ]);
-        setActiveSelection({ x: box1.x, y: box1.y, w: box1.w, h: box1.h, label: '❖ Thread [2/3] • Prototyping' });
-        setActiveGuides([{ type: 'h', y: box1.y + 20, x1: box0.x + box0.w, x2: box1.x, label: 'ΔX: 24px Equal Gap' }]);
-      }, 1500);
+      }, 3200);
 
-      typeText('Tactile Hi-Fi Prototyping', (t) => setTypedWork(prev => ({ ...prev, 1: t })), 1650, 36);
+      typeText('Tactile Hi-Fi Prototyping', (t) => setTypedWork(prev => ({ ...prev, 1: t })), 3350, 40);
 
       schedule(() => {
         setBuildStage(s => Math.max(s, 10));
-      }, 2800);
+      }, 4400);
 
       // Card 3: Design Engineering
       schedule(() => {
@@ -496,8 +544,16 @@ const KittuResumeApp = ({
             y: box2.y,
             tool: 'R',
             chat: 'framing sticky card 3 [320 × 195]',
-            action: 'Framing Card'
-          },
+            action: 'Framing Card 3'
+          }
+        ]);
+        setActiveSelection({ x: box2.x, y: box2.y, w: box2.w, h: box2.h, label: '❖ Thread [3/3] • Engineering' });
+        setActiveGuides([{ type: 'h', y: box2.y + 20, x1: box1.x + box1.w, x2: box2.x, label: 'ΔX: 24px Equal Gap' }]);
+      }, 4700);
+
+      schedule(() => {
+        const box2 = getBox('.cv-thread-2', { x: 716, y: 730, w: 320, h: 195 });
+        setActiveCursors([
           {
             id: 'varun',
             name: 'Varun Sehgal',
@@ -509,11 +565,9 @@ const KittuResumeApp = ({
             action: 'Writing Thread 3'
           }
         ]);
-        setActiveSelection({ x: box2.x, y: box2.y, w: box2.w, h: box2.h, label: '❖ Thread [3/3] • Engineering' });
-        setActiveGuides([{ type: 'h', y: box2.y + 20, x1: box1.x + box1.w, x2: box2.x, label: 'ΔX: 24px Equal Gap' }]);
-      }, 3000);
+      }, 5500);
 
-      typeText('Design Engineering', (t) => setTypedWork(prev => ({ ...prev, 2: t })), 3150, 36);
+      typeText('Design Engineering', (t) => setTypedWork(prev => ({ ...prev, 2: t })), 5650, 40);
 
       schedule(() => {
         setBuildStage(s => Math.max(s, 11));
@@ -542,10 +596,10 @@ const KittuResumeApp = ({
             action: 'Waiting'
           }
         ]);
-      }, 4100);
+      }, 6700);
     }
     else if (sectionKey === 'timeline') {
-      // Section: Where I've worked & Study
+      // Section: Where I've worked & Study (One by One)
       schedule(() => {
         const box = getBox('.cv-timeline-wrap', { x: 28, y: 990, w: 1032, h: 380 });
         setActiveCursors([
@@ -558,7 +612,15 @@ const KittuResumeApp = ({
             tool: 'R',
             chat: 'ruling timeline spine & education bounds',
             action: 'Ruling Spine'
-          },
+          }
+        ]);
+        setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Experience & Education' });
+        setActiveGuides([]);
+      }, 100);
+
+      schedule(() => {
+        const box = getBox('.cv-timeline-wrap', { x: 28, y: 990, w: 1032, h: 380 });
+        setActiveCursors([
           {
             id: 'varun',
             name: 'Varun Sehgal',
@@ -570,11 +632,25 @@ const KittuResumeApp = ({
             action: 'Typing Role'
           }
         ]);
-        setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Experience & Education' });
-        setActiveGuides([]);
-      }, 80);
+      }, 1100);
 
-      typeText('UI-UX Designer, UniEvent', setTypedTimeline, 200, 36);
+      typeText('UI-UX Designer, UniEvent', setTypedTimeline, 1250, 40);
+
+      schedule(() => {
+        const box = getBox('.cv-timeline-wrap', { x: 28, y: 990, w: 1032, h: 380 });
+        setActiveCursors([
+          {
+            id: 'sarah',
+            name: 'Sarah Lin',
+            color: '#0ACF83',
+            x: box.x + 400,
+            y: box.y + 120,
+            tool: '❖',
+            chat: 'stamping hackathon credentials & degree...',
+            action: 'Stamping Awards'
+          }
+        ]);
+      }, 2600);
 
       schedule(() => {
         setBuildStage(s => Math.max(s, 12));
@@ -602,10 +678,10 @@ const KittuResumeApp = ({
             action: 'Waiting'
           }
         ]);
-      }, 1400);
+      }, 3800);
     }
     else if (sectionKey === 'projects') {
-      // Section: Things I've made (6 Projects)
+      // Section: Things I've made (6 Projects - One by One)
       // Project 1: CodeSrijan (Hero)
       schedule(() => {
         const box = getBox('.cv-made > li:nth-child(1)', { x: 28, y: 1510, w: 1032, h: 230 });
@@ -619,7 +695,15 @@ const KittuResumeApp = ({
             tool: 'R',
             chat: 'framing CodeSrijan hero card [1032 × 230]',
             action: 'Hero Frame'
-          },
+          }
+        ]);
+        setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Project [1/6] • CodeSrijan Portal' });
+        setActiveGuides([]);
+      }, 100);
+
+      schedule(() => {
+        const box = getBox('.cv-made > li:nth-child(1)', { x: 28, y: 1510, w: 1032, h: 230 });
+        setActiveCursors([
           {
             id: 'varun',
             name: 'Varun Sehgal',
@@ -631,15 +715,13 @@ const KittuResumeApp = ({
             action: 'Typing Title'
           }
         ]);
-        setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Project [1/6] • CodeSrijan Portal' });
-        setActiveGuides([]);
-      }, 80);
+      }, 900);
 
-      typeText('CodeSrijan Hackathon Portal', (t) => setTypedProjects(prev => ({ ...prev, 0: t })), 250, 35);
+      typeText('CodeSrijan Hackathon Portal', (t) => setTypedProjects(prev => ({ ...prev, 0: t })), 1050, 38);
 
       schedule(() => {
         setBuildStage(s => Math.max(s, 13));
-      }, 1500);
+      }, 2000);
 
       // Project 2: EventFlow
       schedule(() => {
@@ -654,7 +736,15 @@ const KittuResumeApp = ({
             tool: 'R',
             chat: 'framing EventFlow card [320 × 240]',
             action: 'Card Frame'
-          },
+          }
+        ]);
+        setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Project [2/6] • EventFlow' });
+        setActiveGuides([]);
+      }, 2300);
+
+      schedule(() => {
+        const box = getBox('.cv-made > li:nth-child(2)', { x: 28, y: 1770, w: 320, h: 240 });
+        setActiveCursors([
           {
             id: 'varun',
             name: 'Varun Sehgal',
@@ -666,15 +756,13 @@ const KittuResumeApp = ({
             action: 'Typing Title'
           }
         ]);
-        setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Project [2/6] • EventFlow' });
-        setActiveGuides([]);
-      }, 1700);
+      }, 3100);
 
-      typeText('EventFlow Ticketing', (t) => setTypedProjects(prev => ({ ...prev, 1: t })), 1850, 35);
+      typeText('EventFlow Ticketing', (t) => setTypedProjects(prev => ({ ...prev, 1: t })), 3250, 38);
 
       schedule(() => {
         setBuildStage(s => Math.max(s, 14));
-      }, 2800);
+      }, 4200);
 
       // Project 3: AI Interview
       schedule(() => {
@@ -690,7 +778,15 @@ const KittuResumeApp = ({
             tool: 'R',
             chat: 'framing AI Interview card [320 × 240]',
             action: 'Card Frame'
-          },
+          }
+        ]);
+        setActiveSelection({ x: box3.x, y: box3.y, w: box3.w, h: box3.h, label: '❖ Project [3/6] • AI Interview' });
+        setActiveGuides([{ type: 'h', y: box3.y + 20, x1: box2.x + box2.w, x2: box3.x, label: 'ΔX: 24px Equal Gap' }]);
+      }, 4500);
+
+      schedule(() => {
+        const box3 = getBox('.cv-made > li:nth-child(3)', { x: 372, y: 1770, w: 320, h: 240 });
+        setActiveCursors([
           {
             id: 'varun',
             name: 'Varun Sehgal',
@@ -702,15 +798,13 @@ const KittuResumeApp = ({
             action: 'Typing Title'
           }
         ]);
-        setActiveSelection({ x: box3.x, y: box3.y, w: box3.w, h: box3.h, label: '❖ Project [3/6] • AI Interview' });
-        setActiveGuides([{ type: 'h', y: box3.y + 20, x1: box2.x + box2.w, x2: box3.x, label: 'ΔX: 24px Equal Gap' }]);
-      }, 3000);
+      }, 5300);
 
-      typeText('AI Interview Studio', (t) => setTypedProjects(prev => ({ ...prev, 2: t })), 3150, 35);
+      typeText('AI Interview Studio', (t) => setTypedProjects(prev => ({ ...prev, 2: t })), 5450, 38);
 
       schedule(() => {
         setBuildStage(s => Math.max(s, 15));
-      }, 4100);
+      }, 6400);
 
       // Project 4: Expensify
       schedule(() => {
@@ -726,7 +820,15 @@ const KittuResumeApp = ({
             tool: 'R',
             chat: 'framing Expensify card [320 × 240]',
             action: 'Card Frame'
-          },
+          }
+        ]);
+        setActiveSelection({ x: box4.x, y: box4.y, w: box4.w, h: box4.h, label: '❖ Project [4/6] • Expensify' });
+        setActiveGuides([{ type: 'h', y: box4.y + 20, x1: box3.x + box3.w, x2: box4.x, label: 'ΔX: 24px Equal Gap' }]);
+      }, 6700);
+
+      schedule(() => {
+        const box4 = getBox('.cv-made > li:nth-child(4)', { x: 716, y: 1770, w: 320, h: 240 });
+        setActiveCursors([
           {
             id: 'varun',
             name: 'Varun Sehgal',
@@ -738,15 +840,13 @@ const KittuResumeApp = ({
             action: 'Typing Title'
           }
         ]);
-        setActiveSelection({ x: box4.x, y: box4.y, w: box4.w, h: box4.h, label: '❖ Project [4/6] • Expensify' });
-        setActiveGuides([{ type: 'h', y: box4.y + 20, x1: box3.x + box3.w, x2: box4.x, label: 'ΔX: 24px Equal Gap' }]);
-      }, 4300);
+      }, 7500);
 
-      typeText('Expensify Budget', (t) => setTypedProjects(prev => ({ ...prev, 3: t })), 4450, 35);
+      typeText('Expensify Budget', (t) => setTypedProjects(prev => ({ ...prev, 3: t })), 7650, 38);
 
       schedule(() => {
         setBuildStage(s => Math.max(s, 16));
-      }, 5300);
+      }, 8600);
 
       // Project 5: Movie Tickets
       schedule(() => {
@@ -762,7 +862,15 @@ const KittuResumeApp = ({
             tool: 'R',
             chat: 'framing Movie card [320 × 240]',
             action: 'Card Frame'
-          },
+          }
+        ]);
+        setActiveSelection({ x: box5.x, y: box5.y, w: box5.w, h: box5.h, label: '❖ Project [5/6] • Movie Tickets' });
+        setActiveGuides([{ type: 'v', x: box5.x + 20, y1: box2.y + box2.h, y2: box5.y, label: 'ΔY: 25px Equal Gap' }]);
+      }, 8900);
+
+      schedule(() => {
+        const box5 = getBox('.cv-made > li:nth-child(5)', { x: 28, y: 2035, w: 320, h: 240 });
+        setActiveCursors([
           {
             id: 'varun',
             name: 'Varun Sehgal',
@@ -774,15 +882,13 @@ const KittuResumeApp = ({
             action: 'Typing Title'
           }
         ]);
-        setActiveSelection({ x: box5.x, y: box5.y, w: box5.w, h: box5.h, label: '❖ Project [5/6] • Movie Tickets' });
-        setActiveGuides([{ type: 'v', x: box5.x + 20, y1: box2.y + box2.h, y2: box5.y, label: 'ΔY: 25px Equal Gap' }]);
-      }, 5500);
+      }, 9700);
 
-      typeText('Movie Tickets App', (t) => setTypedProjects(prev => ({ ...prev, 4: t })), 5650, 35);
+      typeText('Movie Tickets App', (t) => setTypedProjects(prev => ({ ...prev, 4: t })), 9850, 38);
 
       schedule(() => {
         setBuildStage(s => Math.max(s, 17));
-      }, 6500);
+      }, 10800);
 
       // Project 6: SaaS Landing
       schedule(() => {
@@ -798,7 +904,15 @@ const KittuResumeApp = ({
             tool: 'R',
             chat: 'framing SaaS landing card [320 × 240]',
             action: 'Card Frame'
-          },
+          }
+        ]);
+        setActiveSelection({ x: box6.x, y: box6.y, w: box6.w, h: box6.h, label: '❖ Project [6/6] • SaaS Landing' });
+        setActiveGuides([{ type: 'h', y: box6.y + 20, x1: box5.x + box5.w, x2: box6.x, label: 'ΔX: 24px Equal Gap' }]);
+      }, 11100);
+
+      schedule(() => {
+        const box6 = getBox('.cv-made > li:nth-child(6)', { x: 372, y: 2035, w: 320, h: 240 });
+        setActiveCursors([
           {
             id: 'varun',
             name: 'Varun Sehgal',
@@ -810,11 +924,9 @@ const KittuResumeApp = ({
             action: 'Typing Title'
           }
         ]);
-        setActiveSelection({ x: box6.x, y: box6.y, w: box6.w, h: box6.h, label: '❖ Project [6/6] • SaaS Landing' });
-        setActiveGuides([{ type: 'h', y: box6.y + 20, x1: box5.x + box5.w, x2: box6.x, label: 'ΔX: 24px Equal Gap' }]);
-      }, 6700);
+      }, 11900);
 
-      typeText('SaaS Landing Pages', (t) => setTypedProjects(prev => ({ ...prev, 5: t })), 6850, 35);
+      typeText('SaaS Landing Pages', (t) => setTypedProjects(prev => ({ ...prev, 5: t })), 12050, 38);
 
       schedule(() => {
         setBuildStage(s => Math.max(s, 18));
@@ -843,10 +955,10 @@ const KittuResumeApp = ({
             action: 'Waiting'
           }
         ]);
-      }, 7800);
+      }, 13000);
     }
     else if (sectionKey === 'contact') {
-      // Section: Say hello
+      // Section: Say hello (One by One)
       schedule(() => {
         const box = getBox('.cv-contact', { x: 28, y: 2340, w: 1032, h: 180 });
         setActiveCursors([
@@ -859,7 +971,15 @@ const KittuResumeApp = ({
             tool: 'R',
             chat: 'holding contact frame',
             action: 'Contact Frame'
-          },
+          }
+        ]);
+        setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Say Hello • Contact' });
+        setActiveGuides([]);
+      }, 100);
+
+      schedule(() => {
+        const box = getBox('.cv-contact', { x: 28, y: 2340, w: 1032, h: 180 });
+        setActiveCursors([
           {
             id: 'varun',
             name: 'Varun Sehgal',
@@ -871,15 +991,29 @@ const KittuResumeApp = ({
             action: 'Writing Email'
           }
         ]);
-        setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Say Hello • Contact' });
-        setActiveGuides([]);
-      }, 80);
+      }, 1000);
 
-      typeText('varun.sehgal02@gmail.com', setTypedEmail, 250, 35);
+      typeText('varun.sehgal02@gmail.com', setTypedEmail, 1150, 40);
+
+      schedule(() => {
+        const box = getBox('.cv-contact', { x: 28, y: 2340, w: 1032, h: 180 });
+        setActiveCursors([
+          {
+            id: 'sarah',
+            name: 'Sarah Lin',
+            color: '#0ACF83',
+            x: box.x + 450,
+            y: box.y + 40,
+            tool: '❖',
+            chat: 'stamping mail button...',
+            action: 'Placing CTA'
+          }
+        ]);
+      }, 2400);
 
       schedule(() => {
         setBuildStage(s => Math.max(s, 19));
-      }, 1350);
+      }, 3200);
 
       // Stage 20: Celebration
       schedule(() => {
@@ -908,7 +1042,7 @@ const KittuResumeApp = ({
         ]);
         setActiveSelection(null);
         setActiveGuides([]);
-      }, 1600);
+      }, 3600);
 
       // Stage 21: Done
       schedule(() => {
@@ -917,28 +1051,41 @@ const KittuResumeApp = ({
         setActiveCursors([]);
         setActiveSelection(null);
         setActiveGuides([]);
-      }, 3000);
+      }, 5500);
     }
   };
 
   // Progressive scroll trigger throttled to avoid layout thrashing
   useEffect(() => {
     if (!isBuilding) return;
+    // Lower sections MUST NOT start until the top section (Stage 8) is fully finished!
+    if (buildStage < 8) return;
+
     const effectiveScroll = Math.max(0, -(canvasPan?.y || 0));
 
-    if (effectiveScroll > 220 && !sectionsTriggeredRef.current.workOn) {
+    // Check if element has actually entered the visible viewport
+    const checkInView = (selector, threshold) => {
+      if (effectiveScroll > threshold) return true;
+      if (!containerRef.current) return false;
+      const el = containerRef.current.querySelector(selector);
+      if (!el) return false;
+      const rect = el.getBoundingClientRect();
+      return rect.top < window.innerHeight - 80 && rect.bottom > 80;
+    };
+
+    if (!sectionsTriggeredRef.current.workOn && checkInView('#cv-work-on', 480)) {
       triggerSection('workOn');
     }
-    if (effectiveScroll > 600 && !sectionsTriggeredRef.current.timeline) {
+    if (!sectionsTriggeredRef.current.timeline && sectionsTriggeredRef.current.workOn && checkInView('#cv-timeline', 950)) {
       triggerSection('timeline');
     }
-    if (effectiveScroll > 1100 && !sectionsTriggeredRef.current.projects) {
+    if (!sectionsTriggeredRef.current.projects && sectionsTriggeredRef.current.timeline && checkInView('#cv-projects', 1500)) {
       triggerSection('projects');
     }
-    if (effectiveScroll > 1650 && !sectionsTriggeredRef.current.contact) {
+    if (!sectionsTriggeredRef.current.contact && sectionsTriggeredRef.current.projects && checkInView('#cv-contact', 2000)) {
       triggerSection('contact');
     }
-  }, [canvasPan?.y, isBuilding]);
+  }, [canvasPan?.y, isBuilding, buildStage]);
 
   const replayBuild = () => {
     buildTopSection();
@@ -1143,46 +1290,70 @@ const KittuResumeApp = ({
                   />
                 </svg>
 
-                {/* Name Tag */}
+                {/* Small Name & Action Tag */}
                 <span
                   style={{
                     background: c.color,
                     color: '#ffffff',
                     fontFamily: '-apple-system, BlinkMacSystemFont, "Inter", sans-serif',
-                    fontSize: '11px',
+                    fontSize: '9.5px',
                     fontWeight: '600',
-                    padding: '1.5px 6px',
-                    borderRadius: '4px',
+                    padding: '2px 6px',
+                    borderRadius: '3px',
                     marginLeft: '8px',
-                    marginTop: '-4px',
+                    marginTop: '-2px',
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '4px',
-                    boxShadow: '0 2px 6px rgba(0,0,0,0.18)',
-                    whiteSpace: 'nowrap'
+                    boxShadow: '0 2px 6px rgba(0,0,0,0.22)',
+                    whiteSpace: 'nowrap',
+                    letterSpacing: '0.2px'
                   }}
                 >
                   <span>{c.name}</span>
-                  {c.tool && <span style={{ opacity: 0.85, fontSize: '9px', background: 'rgba(0,0,0,0.25)', padding: '0 3px', borderRadius: '2px' }}>{c.tool}</span>}
+                  {c.tool && (
+                    <span style={{
+                      fontSize: '8px',
+                      fontWeight: '700',
+                      background: 'rgba(0,0,0,0.25)',
+                      padding: '1px 3px',
+                      borderRadius: '2px',
+                      lineHeight: 1
+                    }}>
+                      {c.tool}
+                    </span>
+                  )}
+                  {c.action && (
+                    <span style={{
+                      fontSize: '8.5px',
+                      opacity: 0.9,
+                      borderLeft: '1px solid rgba(255,255,255,0.35)',
+                      paddingLeft: '4px'
+                    }}>
+                      {c.action}
+                    </span>
+                  )}
                 </span>
 
-                {/* Chat Bubble */}
+                {/* Small Chat Bubble */}
                 {c.chat && (
                   <div
                     style={{
                       position: 'absolute',
-                      top: '-32px',
-                      left: '12px',
-                      background: '#ffffff',
-                      color: '#1c1917',
+                      top: '-24px',
+                      left: '10px',
+                      background: '#18181b',
+                      color: '#f4f4f5',
                       border: `1.5px solid ${c.color}`,
-                      borderRadius: '5px',
-                      padding: '2.5px 8px',
-                      fontSize: '11px',
-                      fontWeight: '600',
+                      borderRadius: '4px',
+                      padding: '2px 7px',
+                      fontSize: '9.5px',
+                      fontWeight: '500',
                       fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif',
-                      boxShadow: '0 4px 12px rgba(0,0,0,0.12)',
-                      whiteSpace: 'nowrap'
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.25)',
+                      whiteSpace: 'nowrap',
+                      pointerEvents: 'none',
+                      zIndex: 10
                     }}
                   >
                     💬 {c.chat}
@@ -1260,8 +1431,8 @@ const KittuResumeApp = ({
                 <span>hackers organized at CodeSrijan</span>
               </li>
               <li className={`cv-stat ${isBuilding && buildStage < 7 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-                <strong>🏆 1st</strong>
-                <span>Place Winner at HACKeThor (Unstop)</span>
+                <strong>🥈 1st Runner-Up</strong>
+                <span>(2nd Place) at HACKeThor (Unstop)</span>
               </li>
             </ul>
           </section>
@@ -1366,8 +1537,8 @@ const KittuResumeApp = ({
 
                 <ul className="cv-plain">
                   <li className="cv-entry">
-                    <strong>🏆 HACKeThor Winner</strong>
-                    <span>1st Place in National Level Hackathon organized by Unstop out of 500+ participants.</span>
+                    <strong>🥈 HACKeThor 1st Runner-Up (2nd Place)</strong>
+                    <span>Awarded 1st Runner-Up (2nd Place) in National Level Hackathon organized by Unstop out of 500+ participants.</span>
                   </li>
                   <li className="cv-entry">
                     <strong>CodeSrijan Organizer</strong>
