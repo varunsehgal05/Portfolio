@@ -111,7 +111,7 @@
   border-radius: 999px;
   background: linear-gradient(90deg, #F24E1E 0%, #FF7262 25%, #A259FF 50%, #1ABCFE 75%, #0ACF83 100%);
   background-size: 200% 100%;
-  animation: figmaProgressFlow 1.4s cubic-bezier(0.4, 0, 0.2, 1) forwards, figmaGradientShift 2s linear infinite;
+  animation: figmaProgressFlow 0.75s cubic-bezier(0.4, 0, 0.2, 1) forwards, figmaGradientShift 1.2s linear infinite;
   box-shadow: 0 0 10px rgba(162, 89, 255, 0.6);
 }
 

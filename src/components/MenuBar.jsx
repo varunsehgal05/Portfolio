@@ -232,13 +232,13 @@ const MenuBar = ({
     showToast("Swarm Rebuild Started", "Agents assembling workspace live", "✨");
   };
 
-  // Swarm Follow Mouse State
+  // Swarm Follow Mouse State (defaults to false until user clicks Swarm Follow)
   const [isSwarmFollow, setIsSwarmFollow] = useState(() => {
     try {
       const saved = localStorage.getItem('varunos_swarm_follow_mouse');
-      return saved === null ? true : saved === 'true';
+      return saved === 'true';
     } catch {
-      return true;
+      return false;
     }
   });
 

@@ -99,13 +99,13 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
   const wpTransitionTimerRef = useRef(null);
   const [wallpaperToast, setWallpaperToast] = useState(null);
 
-  // Live Califa Swarm Mouse Flocking State (defaults to active so users immediately experience Califa swarm)
+  // Live Califa Swarm Mouse Flocking State (defaults to false until user clicks Swarm Follow)
   const [isSwarmFollowEnabled, setIsSwarmFollowEnabled] = useState(() => {
     try {
       const saved = localStorage.getItem('varunos_swarm_follow_mouse');
-      return saved === null ? true : saved === 'true';
+      return saved === 'true';
     } catch {
-      return true;
+      return false;
     }
   });
 
@@ -278,15 +278,6 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
     // Unminimize if it was minimized
     setMinimizedWindows(prev => prev.filter(id => id !== appId));
     bringToFront(appId);
-
-    // Notify Swarm Agents to assemble this app window collaboratively
-    const appInfo = portfolioApps[appId];
-    window.dispatchEvent(new CustomEvent('varunos-app-assembling', {
-      detail: {
-        appId,
-        appName: appInfo?.name || appId
-      }
-    }));
   };
 
   const closeApp = (appId) => {
@@ -432,8 +423,8 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
         </div>
       )}
 
-      {/* Collaborative Swarm Live Mouse Flocking & App Assembly Engine (5 Elite Collaborative Agents) */}
-      <LiveMouseSwarm isEnabled={isSwarmFollowEnabled && activeWindow !== 'figma' && !isRebuilding} isRebuildActive={isRebuilding} agentCount={5} />
+      {/* Collaborative Swarm Live Mouse Flocking (5 Elite Collaborative Agents on Desktop when enabled) */}
+      <LiveMouseSwarm isEnabled={isSwarmFollowEnabled && !activeWindow && !isRebuilding} isRebuildActive={isRebuilding} agentCount={5} />
 
       {/* Top MenuBar wrapper (revealed in Stage 2) */}
       <div className={`desktop-menubar-wrap ${swarmStage < 5 ? (swarmStage >= 2 ? 'stage-revealed' : 'stage-hidden') : ''}`}>

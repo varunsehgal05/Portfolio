@@ -9,7 +9,7 @@ import './VsCodeLoadingScreen.css';
  */
 const VsCodeLoadingScreen = ({
   workspaceName = 'destop-portfolio',
-  duration = 1100,
+  duration = 750,
   onLoaded
 }) => {
   const [phase, setPhase] = useState(0);
@@ -47,17 +47,17 @@ const VsCodeLoadingScreen = ({
 
     const unmountTimer = setTimeout(() => {
       setIsUnmounted(true);
-    }, 380);
+    }, 280);
 
     return () => clearTimeout(unmountTimer);
   }, []);
 
   useEffect(() => {
     // Step transitions
-    const step1 = setTimeout(() => setPhase(1), Math.min(280, duration * 0.25));
-    const step2 = setTimeout(() => setPhase(2), Math.min(550, duration * 0.52));
-    const step3 = setTimeout(() => setPhase(3), Math.min(820, duration * 0.78));
-    const step4 = setTimeout(() => setPhase(4), Math.min(1000, duration * 0.95));
+    const step1 = setTimeout(() => setPhase(1), Math.min(180, duration * 0.25));
+    const step2 = setTimeout(() => setPhase(2), Math.min(380, duration * 0.52));
+    const step3 = setTimeout(() => setPhase(3), Math.min(560, duration * 0.78));
+    const step4 = setTimeout(() => setPhase(4), Math.min(700, duration * 0.95));
 
     // Finish fade out
     const fadeTimer = setTimeout(() => {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Image, 
-  Sparkles, 
+import {
+  Image,
+  Sparkles,
   Terminal,
   Check,
   RotateCcw,
@@ -26,13 +26,13 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
     }
   });
 
-  // Live Swarm Mouse Flocking: true | false
+  // Live Swarm Mouse Flocking: true | false (default false)
   const [swarmFollowEnabled, setSwarmFollowEnabled] = useState(() => {
     try {
       const saved = localStorage.getItem('varunos_swarm_follow_mouse');
-      return saved === null ? true : saved === 'true';
+      return saved === 'true';
     } catch {
-      return true;
+      return false;
     }
   });
 

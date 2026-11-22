@@ -124,7 +124,7 @@
   border-radius: 999px;
   background: linear-gradient(90deg, #0065A9 0%, #007ACC 30%, #38BDF8 60%, #0098FF 100%);
   background-size: 200% 100%;
-  animation: vsProgressFlow 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards, vsGradientShift 1.8s linear infinite;
+  animation: vsProgressFlow 0.75s cubic-bezier(0.4, 0, 0.2, 1) forwards, vsGradientShift 1.2s linear infinite;
   box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
 }
 

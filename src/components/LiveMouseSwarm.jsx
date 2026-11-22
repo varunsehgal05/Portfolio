@@ -55,11 +55,10 @@ const createInitialAgents = (count) => {
   return initialAgents;
 };
 
-const LiveMouseSwarm = ({ isEnabled = true, isRebuildActive = false, agentCount = 5 }) => {
+const LiveMouseSwarm = ({ isEnabled = false, isRebuildActive = false, agentCount = 5 }) => {
   const containerRef = useRef(null);
   const svgLinesRef = useRef(null);
   const animFrameRef = useRef(null);
-  const [assemblyUI, setAssemblyUI] = useState(null);
 
   const [agentList] = useState(() => createInitialAgents(agentCount));
   const agentsRef = useRef(agentList);
@@ -75,16 +74,8 @@ const LiveMouseSwarm = ({ isEnabled = true, isRebuildActive = false, agentCount 
   const actionTextNodesRef = useRef([]);
   const linesDomRef = useRef([]);
 
-  const assemblyStateRef = useRef({
-    active: false,
-    appName: '',
-    startTime: 0,
-    duration: 2800,
-    box: { x: 0, y: 0, w: 0, h: 0 }
-  });
-
   useEffect(() => {
-    if (isRebuildActive) return;
+    if (isRebuildActive || !isEnabled) return;
 
     // Global listener: Mouse movement
     const handleMouseMove = (e) => {
@@ -114,50 +105,10 @@ const LiveMouseSwarm = ({ isEnabled = true, isRebuildActive = false, agentCount 
       });
     };
 
-    // Global listener: Collaborative App Assembly Trigger
-    const handleAppAssembly = (e) => {
-      const { appId, appName } = e.detail || {};
-      const w = typeof window !== 'undefined' ? window.innerWidth : 1200;
-      const h = typeof window !== 'undefined' ? window.innerHeight : 800;
-
-      let winW = Math.min(w - 80, 920);
-      let winH = Math.min(h - 100, 560);
-      if (appId === 'trash') { winW = Math.min(w - 80, 780); winH = Math.min(h - 100, 500); }
-      else if (appId === 'terminal') { winW = Math.min(w - 80, 720); winH = Math.min(h - 100, 460); }
-      else if (appId === 'settings') { winW = Math.min(w - 80, 680); winH = Math.min(h - 100, 500); }
-      else if (appId === 'coffee') { winW = Math.min(w - 80, 460); winH = Math.min(h - 100, 520); }
-      else if (appId === 'resume') { winW = Math.min(w - 80, 880); winH = Math.min(h - 100, 620); }
-      else if (appId === 'figma' || appId === 'vscode') { winW = Math.min(w - 40, 1140); winH = Math.min(h - 80, 720); }
-
-      const winX = Math.max(20, (w - winW) / 2);
-      const winY = Math.max(36, (h - winH) / 2 - 15);
-
-      const box = { x: winX, y: winY, w: winW, h: winH };
-      assemblyStateRef.current = {
-        active: true,
-        appName: appName || 'App Window',
-        startTime: performance.now(),
-        duration: 3600,
-        box
-      };
-
-      setAssemblyUI({
-        active: true,
-        appName: appName || 'App Window',
-        box
-      });
-
-      // Clear assembly UI once completed
-      setTimeout(() => {
-        setAssemblyUI(null);
-      }, 3700);
-    };
-
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
     window.addEventListener('wheel', handleWheel, { passive: true });
     window.addEventListener('scroll', handleWheel, { passive: true });
     window.addEventListener('click', handleClick, { passive: true });
-    window.addEventListener('varunos-app-assembling', handleAppAssembly);
 
     // 60FPS Physics Loop
     let lastTime = performance.now();
@@ -168,133 +119,72 @@ const LiveMouseSwarm = ({ isEnabled = true, isRebuildActive = false, agentCount 
 
       const agents = agentsRef.current;
       const mouse = mouseRef.current;
-      const assembly = assemblyStateRef.current;
       const lineCoords = [];
 
       if (mouse.clickPulse > 0) {
         mouse.clickPulse = Math.max(0, mouse.clickPulse - dt * 2.5);
       }
 
-      // Check if Collaborative Assembly Mode is active
-      const isAssembling = assembly.active && (now - assembly.startTime < assembly.duration);
-      if (!isAssembling && assembly.active) {
-        assembly.active = false;
-      }
+      // Normal Mode: Smooth Boids Mouse Flocking (Calm, graceful, not rushing)
+      const targetX = mouse.x;
+      const targetY = mouse.y;
 
-      if (isAssembling) {
-        const elapsed = now - assembly.startTime;
-        const progress = Math.min(1, elapsed / assembly.duration);
-        const { x, y, w, h } = assembly.box;
+      for (let i = 0; i < agents.length; i++) {
+        const agent = agents[i];
+        agent.action = agent.role;
 
-        // Assembly Targets:
-        // 0: Varun -> Top-Left corner (Pivot)
-        // 1: Elena -> Top-Right corner
-        // 2: Sarah -> Bottom-Left corner
-        // 3: Alex -> Bottom-Right corner
-        // 4: Marcus -> Titlebar Center
-        const targets = [
-          { x: x + 8, y: y + 8, action: progress > 0.65 ? 'Assembled! ✓' : `Drafting ${assembly.appName}...` },
-          { x: x + w - 8, y: y + 8, action: progress > 0.65 ? 'Snapping ✓' : 'Top-Right Pivot' },
-          { x: x + 8, y: y + h - 8, action: progress > 0.65 ? 'Layout Verified' : '24px Padding' },
-          { x: x + w - 8, y: y + h - 8, action: progress > 0.65 ? '100% Mounted' : 'Mounting Frame' },
-          { x: x + w / 2, y: y + 16, action: progress > 0.65 ? 'Ready 🚀' : 'Controls & Title' }
-        ];
+        // 1. Goal Seeking: pull toward mouse with personal orbital offset (calm, slow drift)
+        const orbitalTime = now * 0.0002;
+        const currentTargetX = targetX + Math.cos(orbitalTime + agent.wobblePhase) * agent.offsetX;
+        const currentTargetY = targetY + Math.sin(orbitalTime + agent.wobblePhase) * agent.offsetY;
 
-        for (let i = 0; i < agents.length; i++) {
-          const a = agents[i];
-          const target = targets[i] || { x: x + w / 2, y: y + h / 2, action: 'Assembling' };
-          const spring = 0.022; // Silky smooth calm collaborative dash
-          const dx = target.x - a.x;
-          const dy = target.y - a.y;
+        const seekFx = (currentTargetX - agent.x) * agent.spring;
+        const seekFy = (currentTargetY - agent.y) * agent.spring;
 
-          a.vx = (a.vx + dx * spring) * 0.85;
-          a.vy = (a.vy + dy * spring) * 0.85;
-          a.x += a.vx;
-          a.y += a.vy;
-          a.action = target.action;
+        agent.vx = (agent.vx + seekFx) * agent.damping;
+        agent.vy = (agent.vy + seekFy) * agent.damping;
 
-          // Update DOM node
-          const dom = domNodesRef.current[i];
-          if (dom) {
-            dom.style.transform = `translate3d(${a.x.toFixed(1)}px, ${a.y.toFixed(1)}px, 0)`;
+        // 2. Separation: repel nearby agents gently to avoid stacking
+        for (let j = i + 1; j < agents.length; j++) {
+          const other = agents[j];
+          const dx = other.x - agent.x;
+          const dy = other.y - agent.y;
+          const dist = Math.hypot(dx, dy);
+
+          if (dist < agent.separationDist && dist > 0) {
+            const force = (agent.separationDist - dist) / agent.separationDist;
+            const pushX = (dx / dist) * force * 0.75;
+            const pushY = (dy / dist) * force * 0.75;
+
+            agent.vx -= pushX;
+            agent.vy -= pushY;
+            other.vx += pushX;
+            other.vy += pushY;
           }
-          const textDom = actionTextNodesRef.current[i];
-          if (textDom && textDom.textContent !== a.action) {
-            textDom.textContent = a.action;
+
+          // Connecting line between peers
+          if (dist < 130 && lineCoords.length < 10 && isEnabled) {
+            lineCoords.push({
+              x1: agent.x,
+              y1: agent.y,
+              x2: other.x,
+              y2: other.y,
+              opacity: ((130 - dist) / 130) * 0.45,
+              color: agent.color
+            });
           }
         }
 
-        // Draw connecting vector box lines between the 4 corners
-        if (agents.length >= 4) {
-          lineCoords.push(
-            { x1: agents[0].x, y1: agents[0].y, x2: agents[1].x, y2: agents[1].y, color: '#A259FF', opacity: 0.85 },
-            { x1: agents[1].x, y1: agents[1].y, x2: agents[3].x, y2: agents[3].y, color: '#0D99FF', opacity: 0.85 },
-            { x1: agents[3].x, y1: agents[3].y, x2: agents[2].x, y2: agents[2].y, color: '#10B981', opacity: 0.85 },
-            { x1: agents[2].x, y1: agents[2].y, x2: agents[0].x, y2: agents[0].y, color: '#EC4899', opacity: 0.85 }
-          );
+        agent.x += agent.vx;
+        agent.y += agent.vy;
+
+        const dom = domNodesRef.current[i];
+        if (dom) {
+          dom.style.transform = `translate3d(${agent.x.toFixed(1)}px, ${agent.y.toFixed(1)}px, 0)`;
         }
-      } else {
-        // Normal Mode: Smooth Boids Mouse Flocking (Calm, graceful, not rushing)
-        const targetX = mouse.x;
-        const targetY = mouse.y;
-
-        for (let i = 0; i < agents.length; i++) {
-          const agent = agents[i];
-          agent.action = agent.role;
-
-          // 1. Goal Seeking: pull toward mouse with personal orbital offset (calm, slow drift)
-          const orbitalTime = now * 0.0002;
-          const currentTargetX = targetX + Math.cos(orbitalTime + agent.wobblePhase) * agent.offsetX;
-          const currentTargetY = targetY + Math.sin(orbitalTime + agent.wobblePhase) * agent.offsetY;
-
-          const seekFx = (currentTargetX - agent.x) * agent.spring;
-          const seekFy = (currentTargetY - agent.y) * agent.spring;
-
-          agent.vx = (agent.vx + seekFx) * agent.damping;
-          agent.vy = (agent.vy + seekFy) * agent.damping;
-
-          // 2. Separation: repel nearby agents gently to avoid stacking
-          for (let j = i + 1; j < agents.length; j++) {
-            const other = agents[j];
-            const dx = other.x - agent.x;
-            const dy = other.y - agent.y;
-            const dist = Math.hypot(dx, dy);
-
-            if (dist < agent.separationDist && dist > 0) {
-              const force = (agent.separationDist - dist) / agent.separationDist;
-              const pushX = (dx / dist) * force * 0.75;
-              const pushY = (dy / dist) * force * 0.75;
-
-              agent.vx -= pushX;
-              agent.vy -= pushY;
-              other.vx += pushX;
-              other.vy += pushY;
-            }
-
-            // Connecting line between peers
-            if (dist < 130 && lineCoords.length < 10 && isEnabled) {
-              lineCoords.push({
-                x1: agent.x,
-                y1: agent.y,
-                x2: other.x,
-                y2: other.y,
-                opacity: ((130 - dist) / 130) * 0.45,
-                color: agent.color
-              });
-            }
-          }
-
-          agent.x += agent.vx;
-          agent.y += agent.vy;
-
-          const dom = domNodesRef.current[i];
-          if (dom) {
-            dom.style.transform = `translate3d(${agent.x.toFixed(1)}px, ${agent.y.toFixed(1)}px, 0)`;
-          }
-          const textDom = actionTextNodesRef.current[i];
-          if (textDom && textDom.textContent !== agent.action) {
-            textDom.textContent = agent.action;
-          }
+        const textDom = actionTextNodesRef.current[i];
+        if (textDom && textDom.textContent !== agent.action) {
+          textDom.textContent = agent.action;
         }
       }
 
@@ -325,21 +215,18 @@ const LiveMouseSwarm = ({ isEnabled = true, isRebuildActive = false, agentCount 
       window.removeEventListener('wheel', handleWheel);
       window.removeEventListener('scroll', handleWheel);
       window.removeEventListener('click', handleClick);
-      window.removeEventListener('varunos-app-assembling', handleAppAssembly);
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
     };
   }, [isEnabled, isRebuildActive, agentCount]);
 
-  if (isRebuildActive) return null;
-
-  const isVisible = isEnabled || (assemblyStateRef.current && assemblyStateRef.current.active);
+  if (isRebuildActive || !isEnabled) return null;
 
   return (
     <div 
       ref={containerRef} 
-      className={`live-mouse-swarm-overlay ${isVisible ? 'is-visible' : 'is-idle-hidden'}`} 
+      className="live-mouse-swarm-overlay is-visible" 
       style={{
-        opacity: isVisible ? 1 : 0,
+        opacity: 1,
         pointerEvents: 'none',
         transition: 'opacity 0.35s ease'
       }}
@@ -357,28 +244,6 @@ const LiveMouseSwarm = ({ isEnabled = true, isRebuildActive = false, agentCount 
           />
         ))}
       </svg>
-
-      {/* Collaborative App Assembly Bounding Box */}
-      {assemblyUI && (
-        <div 
-          className="swarm-assembly-box"
-          style={{
-            left: `${assemblyUI.box.x}px`,
-            top: `${assemblyUI.box.y}px`,
-            width: `${assemblyUI.box.w}px`,
-            height: `${assemblyUI.box.h}px`,
-          }}
-        >
-          <div className="assembly-handle top-left" />
-          <div className="assembly-handle top-right" />
-          <div className="assembly-handle bottom-left" />
-          <div className="assembly-handle bottom-right" />
-          <div className="assembly-badge">
-            <span className="assembly-pulse-icon">⚡</span>
-            <span>Assembling {assemblyUI.appName} ({Math.round(assemblyUI.box.w)} × {Math.round(assemblyUI.box.h)} px)</span>
-          </div>
-        </div>
-      )}
 
       {/* Agents Layer (5 Elite Collaborative Agents) */}
       {agentList.map((agent, idx) => (

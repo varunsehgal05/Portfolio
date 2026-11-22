@@ -9,7 +9,7 @@ import './FigmaLoadingScreen.css';
  */
 const FigmaLoadingScreen = ({
   fileName = 'Varun_Sehgal_Portfolio.fig',
-  duration = 1200,
+  duration = 750,
   onLoaded
 }) => {
   const [phase, setPhase] = useState(0);
@@ -46,16 +46,16 @@ const FigmaLoadingScreen = ({
 
     const unmountTimer = setTimeout(() => {
       setIsUnmounted(true);
-    }, 380);
+    }, 280);
 
     return () => clearTimeout(unmountTimer);
   }, []);
 
   useEffect(() => {
     // Step transitions
-    const step1 = setTimeout(() => setPhase(1), Math.min(360, duration * 0.3));
-    const step2 = setTimeout(() => setPhase(2), Math.min(720, duration * 0.65));
-    const step3 = setTimeout(() => setPhase(3), Math.min(1000, duration * 0.9));
+    const step1 = setTimeout(() => setPhase(1), Math.min(220, duration * 0.3));
+    const step2 = setTimeout(() => setPhase(2), Math.min(480, duration * 0.65));
+    const step3 = setTimeout(() => setPhase(3), Math.min(680, duration * 0.9));
 
     // Finish fade out
     const fadeTimer = setTimeout(() => {

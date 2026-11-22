@@ -662,7 +662,7 @@ export const VsCodeApp = () => {
   useEffect(() => {
     const safetyTimer = setTimeout(() => {
       setIsAppLoading(false);
-    }, 1600);
+    }, 1000);
     return () => clearTimeout(safetyTimer);
   }, []);
 
@@ -799,8 +799,8 @@ export const VsCodeApp = () => {
       const defaultCode = isJS
         ? `// ${trimmed}\nconsole.log("Running ${trimmed} in VarunOS!");\nconst sum = [10, 20, 30].reduce((a, b) => a + b, 0);\nconsole.log("Sum:", sum);\n`
         : isPy
-        ? `# ${trimmed}\nprint("Hello from Python 3.12 in VarunOS!")\nprint(f"Calculation: 2 ** 8 = {2 ** 8}")\n`
-        : `/* ${trimmed} */\nbody {\n  margin: 0;\n}\n`;
+          ? `# ${trimmed}\nprint("Hello from Python 3.12 in VarunOS!")\nprint(f"Calculation: 2 ** 8 = {2 ** 8}")\n`
+          : `/* ${trimmed} */\nbody {\n  margin: 0;\n}\n`;
 
       setProjectFiles(prev => ({
         ...prev,
@@ -843,14 +843,14 @@ export const VsCodeApp = () => {
     const defaultCode = isJS
       ? `// ${name} — Vibecoded in Antigravity IDE\nconsole.log("Executing ${name} in VarunOS!");\nconst timestamp = new Date().toLocaleTimeString();\nconsole.log("Environment ready:", timestamp);\n`
       : isPy
-      ? `# ${name}\nprint("Hello from Python in VarunOS!")\nprint("Calculation:", 42 * 2)\n`
-      : isCSS
-      ? `/* ${name} */\n.container {\n  display: flex;\n  gap: 16px;\n}\n`
-      : isMD
-      ? `# ${name}\nNotes authored in VarunOS Antigravity IDE.\n`
-      : isJSON
-      ? `{\n  "project": "${name}",\n  "status": "active"\n}\n`
-      : `// ${name}\n`;
+        ? `# ${name}\nprint("Hello from Python in VarunOS!")\nprint("Calculation:", 42 * 2)\n`
+        : isCSS
+          ? `/* ${name} */\n.container {\n  display: flex;\n  gap: 16px;\n}\n`
+          : isMD
+            ? `# ${name}\nNotes authored in VarunOS Antigravity IDE.\n`
+            : isJSON
+              ? `{\n  "project": "${name}",\n  "status": "active"\n}\n`
+              : `// ${name}\n`;
 
     setProjectFiles(prev => ({
       ...prev,
@@ -1147,7 +1147,7 @@ export const VsCodeApp = () => {
       {isAppLoading && (
         <VsCodeLoadingScreen
           workspaceName="destop-portfolio"
-          duration={1100}
+          duration={750}
           onLoaded={() => setIsAppLoading(false)}
         />
       )}
@@ -1162,7 +1162,7 @@ export const VsCodeApp = () => {
           <nav className="titlebar-menu-items">
             {/* File Menu */}
             <div className="menu-dropdown-wrapper">
-              <button 
+              <button
                 className={`menu-text-btn ${activeTopMenu === 'file' ? 'active' : ''}`}
                 onClick={() => setActiveTopMenu(activeTopMenu === 'file' ? null : 'file')}
               >
@@ -1192,7 +1192,7 @@ export const VsCodeApp = () => {
 
             {/* Edit Menu */}
             <div className="menu-dropdown-wrapper">
-              <button 
+              <button
                 className={`menu-text-btn ${activeTopMenu === 'edit' ? 'active' : ''}`}
                 onClick={() => setActiveTopMenu(activeTopMenu === 'edit' ? null : 'edit')}
               >
@@ -1216,7 +1216,7 @@ export const VsCodeApp = () => {
 
             {/* Selection Menu */}
             <div className="menu-dropdown-wrapper">
-              <button 
+              <button
                 className={`menu-text-btn ${activeTopMenu === 'selection' ? 'active' : ''}`}
                 onClick={() => setActiveTopMenu(activeTopMenu === 'selection' ? null : 'selection')}
               >
@@ -1233,7 +1233,7 @@ export const VsCodeApp = () => {
 
             {/* View Menu */}
             <div className="menu-dropdown-wrapper">
-              <button 
+              <button
                 className={`menu-text-btn ${activeTopMenu === 'view' ? 'active' : ''}`}
                 onClick={() => setActiveTopMenu(activeTopMenu === 'view' ? null : 'view')}
               >
@@ -1266,7 +1266,7 @@ export const VsCodeApp = () => {
 
             {/* Go Menu */}
             <div className="menu-dropdown-wrapper">
-              <button 
+              <button
                 className={`menu-text-btn ${activeTopMenu === 'go' ? 'active' : ''}`}
                 onClick={() => setActiveTopMenu(activeTopMenu === 'go' ? null : 'go')}
               >
@@ -1283,7 +1283,7 @@ export const VsCodeApp = () => {
 
             {/* Run Menu */}
             <div className="menu-dropdown-wrapper">
-              <button 
+              <button
                 className={`menu-text-btn ${activeTopMenu === 'run' ? 'active' : ''}`}
                 onClick={() => setActiveTopMenu(activeTopMenu === 'run' ? null : 'run')}
               >
@@ -1307,7 +1307,7 @@ export const VsCodeApp = () => {
 
             {/* Terminal Menu */}
             <div className="menu-dropdown-wrapper">
-              <button 
+              <button
                 className={`menu-text-btn ${activeTopMenu === 'terminal' ? 'active' : ''}`}
                 onClick={() => setActiveTopMenu(activeTopMenu === 'terminal' ? null : 'terminal')}
               >
@@ -1330,7 +1330,7 @@ export const VsCodeApp = () => {
 
             {/* Help Menu */}
             <div className="menu-dropdown-wrapper">
-              <button 
+              <button
                 className={`menu-text-btn ${activeTopMenu === 'help' ? 'active' : ''}`}
                 onClick={() => setActiveTopMenu(activeTopMenu === 'help' ? null : 'help')}
               >
@@ -1357,8 +1357,8 @@ export const VsCodeApp = () => {
         </div>
 
         <div className="titlebar-right-controls">
-          <button 
-            className="titlebar-tool-btn" 
+          <button
+            className="titlebar-tool-btn"
             onClick={() => setSidebarOpen(!sidebarOpen)}
             title="Toggle Primary Side Bar (Ctrl+B)"
           >
@@ -1381,7 +1381,7 @@ export const VsCodeApp = () => {
         {/* Left Activity Bar */}
         <aside className="vscode-activity-bar">
           <div className="activity-group-top">
-            <button 
+            <button
               className={`activity-btn ${activeActivity === 'explorer' && sidebarOpen ? 'active' : ''}`}
               onClick={() => {
                 if (activeActivity === 'explorer') setSidebarOpen(!sidebarOpen);
@@ -1391,7 +1391,7 @@ export const VsCodeApp = () => {
             >
               <Files size={18} />
             </button>
-            <button 
+            <button
               className={`activity-btn ${activeActivity === 'search' && sidebarOpen ? 'active' : ''}`}
               onClick={() => {
                 if (activeActivity === 'search') setSidebarOpen(!sidebarOpen);
@@ -1401,7 +1401,7 @@ export const VsCodeApp = () => {
             >
               <Search size={18} />
             </button>
-            <button 
+            <button
               className={`activity-btn ${activeActivity === 'git' && sidebarOpen ? 'active' : ''}`}
               onClick={() => {
                 if (activeActivity === 'git') setSidebarOpen(!sidebarOpen);
@@ -1412,7 +1412,7 @@ export const VsCodeApp = () => {
               <GitBranch size={18} />
               <span className="activity-dot-badge" />
             </button>
-            <button 
+            <button
               className={`activity-btn ${activeActivity === 'debug' && sidebarOpen ? 'active' : ''}`}
               onClick={() => {
                 if (activeActivity === 'debug') setSidebarOpen(!sidebarOpen);
@@ -1422,7 +1422,7 @@ export const VsCodeApp = () => {
             >
               <Play size={18} />
             </button>
-            <button 
+            <button
               className={`activity-btn ${activeActivity === 'extensions' && sidebarOpen ? 'active' : ''}`}
               onClick={() => {
                 if (activeActivity === 'extensions') setSidebarOpen(!sidebarOpen);
@@ -1432,7 +1432,7 @@ export const VsCodeApp = () => {
             >
               <Package size={18} />
             </button>
-            <button 
+            <button
               className={`activity-btn agent-btn ${activeActivity === 'agent' && sidebarOpen ? 'active' : ''}`}
               onClick={() => {
                 if (activeActivity === 'agent') setSidebarOpen(!sidebarOpen);
@@ -1445,15 +1445,15 @@ export const VsCodeApp = () => {
           </div>
 
           <div className="activity-group-bottom">
-            <button 
-              className="activity-btn" 
+            <button
+              className="activity-btn"
               title="Accounts: Varun Sehgal (GitHub @varunsehgal05)"
               onClick={() => alert('Signed in as Varun Sehgal\nGitHub: @varunsehgal05\nRole: Lead UI/UX & Product Designer')}
             >
               <User size={18} />
             </button>
-            <button 
-              className="activity-btn" 
+            <button
+              className="activity-btn"
               title="Manage Settings"
               onClick={() => { setActiveActivity('explorer'); setSidebarOpen(true); }}
             >
@@ -1471,30 +1471,30 @@ export const VsCodeApp = () => {
                 <div className="sidebar-header-row">
                   <span className="sidebar-title">EXPLORER</span>
                   <div className="sidebar-header-actions">
-                    <button 
-                      className={`sidebar-icon-btn ${isCreatingFile ? 'active' : ''}`} 
+                    <button
+                      className={`sidebar-icon-btn ${isCreatingFile ? 'active' : ''}`}
                       onClick={() => {
                         setIsCreatingFile(prev => !prev);
                         setIsCreatingFolder(false);
                         setTimeout(() => newFileInputRef.current?.focus(), 60);
-                      }} 
+                      }}
                       title="New File"
                     >
                       <FilePlus size={13} />
                     </button>
-                    <button 
-                      className={`sidebar-icon-btn ${isCreatingFolder ? 'active' : ''}`} 
+                    <button
+                      className={`sidebar-icon-btn ${isCreatingFolder ? 'active' : ''}`}
                       onClick={() => {
                         setIsCreatingFolder(prev => !prev);
                         setIsCreatingFile(false);
                         setTimeout(() => newFolderInputRef.current?.focus(), 60);
-                      }} 
+                      }}
                       title="New Folder / Scratch Script"
                     >
                       <Plus size={13} />
                     </button>
-                    <button 
-                      className={`sidebar-icon-btn ${isRefreshing ? 'is-spinning' : ''}`} 
+                    <button
+                      className={`sidebar-icon-btn ${isRefreshing ? 'is-spinning' : ''}`}
                       onClick={handleRefreshExplorer}
                       title="Refresh Explorer"
                     >
@@ -1518,7 +1518,7 @@ export const VsCodeApp = () => {
                   </div>
                   {!isVercelCollapsed && (
                     <div className="tree-branch-group mb-2">
-                      <div 
+                      <div
                         className={`tree-item-file ${activeFile === 'Live Preview: CodeSrijan' ? 'active' : ''}`}
                         onClick={() => {
                           if (!openTabs.includes('Live Preview: CodeSrijan')) setOpenTabs([...openTabs, 'Live Preview: CodeSrijan']);
@@ -1528,7 +1528,7 @@ export const VsCodeApp = () => {
                         <span className="tab-file-icon text-emerald-400">🌐</span>
                         <span className="tree-file-name text-emerald-400 font-semibold">Live Preview (Vercel)</span>
                       </div>
-                      <div 
+                      <div
                         className={`tree-item-file ${activeFile === 'codesrijan/page.tsx' ? 'active' : ''}`}
                         onClick={() => {
                           if (!openTabs.includes('codesrijan/page.tsx')) setOpenTabs([...openTabs, 'codesrijan/page.tsx']);
@@ -1663,8 +1663,8 @@ export const VsCodeApp = () => {
                 <div className="search-results-list">
                   {searchQuery.trim() ? (
                     Object.keys(projectFiles).filter(f => projectFiles[f].code.toLowerCase().includes(searchQuery.toLowerCase())).map(f => (
-                      <div 
-                        key={f} 
+                      <div
+                        key={f}
                         className="search-result-item"
                         onClick={() => {
                           if (!openTabs.includes(f)) setOpenTabs([...openTabs, f]);
@@ -1703,7 +1703,7 @@ export const VsCodeApp = () => {
                     onChange={(e) => setGitCommitMsg(e.target.value)}
                     className="git-commit-textarea"
                   />
-                  <button 
+                  <button
                     className="git-commit-btn"
                     onClick={() => {
                       if (!gitCommitMsg.trim()) return;
@@ -1755,7 +1755,7 @@ export const VsCodeApp = () => {
                   <span className="sidebar-title">RUN AND DEBUG</span>
                 </div>
                 <div className="debug-launch-box">
-                  <button 
+                  <button
                     className="debug-run-primary-btn"
                     onClick={() => executeCode()}
                   >
@@ -1763,7 +1763,7 @@ export const VsCodeApp = () => {
                     <span>Run Code ({currentFile.lang || 'JS'})</span>
                   </button>
 
-                  <button 
+                  <button
                     className="debug-run-script-btn"
                     onClick={() => {
                       if (!projectFiles['app.js']) handleCreateNewFile('app.js');
@@ -1830,7 +1830,7 @@ export const VsCodeApp = () => {
                         <p className="ext-desc">{ext.desc}</p>
                         <div className="ext-footer">
                           <span className="ext-author">{ext.author}</span>
-                          <button 
+                          <button
                             className={`ext-toggle-btn ${ext.installed ? 'installed' : ''}`}
                             onClick={() => {
                               setExtensions(prev => prev.map(item => item.id === ext.id ? { ...item, installed: !item.installed } : item));
@@ -1863,7 +1863,7 @@ export const VsCodeApp = () => {
                   ))}
                 </div>
                 <div className="agent-quick-prompts">
-                  <button 
+                  <button
                     className="agent-prompt-chip"
                     onClick={() => {
                       const snippet = `\n// AI Generated: Fibonacci Sequence\nfunction fibonacci(n) {\n  let [a, b] = [0, 1];\n  for (let i = 0; i < n; i++) [a, b] = [b, a + b];\n  return a;\n}\nconsole.log("Fib(10) =", fibonacci(10));\n`;
@@ -1876,14 +1876,14 @@ export const VsCodeApp = () => {
                   >
                     + Insert Fibonacci
                   </button>
-                  <button 
+                  <button
                     className="agent-prompt-chip"
                     onClick={() => executeCode()}
                   >
                     ▶ Run active file
                   </button>
                 </div>
-                <form 
+                <form
                   onSubmit={(e) => {
                     e.preventDefault();
                     if (!agentInput.trim()) return;
@@ -1942,7 +1942,7 @@ export const VsCodeApp = () => {
 
             {/* Top-Right Editor Tools featuring RUN CODE button */}
             <div className="tabs-right-tools">
-              <button 
+              <button
                 className={`editor-run-code-btn ${isRunning ? 'is-running' : ''} ${!hasActiveFile ? 'opacity-50 cursor-not-allowed' : ''}`}
                 onClick={() => hasActiveFile && !isRunning && executeCode()}
                 title={hasActiveFile ? (isRunning ? "Executing code..." : "Run Active File (Ctrl+Enter)") : "Open a file to run code"}
@@ -2276,8 +2276,8 @@ export const VsCodeApp = () => {
                     {/* Line Numbers Gutter */}
                     <div className="editor-gutter">
                       {codeLines.map((_, idx) => (
-                        <div 
-                          key={idx} 
+                        <div
+                          key={idx}
                           className={`gutter-line-number ${idx + 1 === cursorLine ? 'active' : ''}`}
                         >
                           {idx + 1}
@@ -2388,7 +2388,7 @@ export const VsCodeApp = () => {
               </div>
 
               <div className="empty-actions-row">
-                <button 
+                <button
                   className="empty-action-btn"
                   onClick={() => {
                     if (!openTabs.includes('portfolio.config.ts')) setOpenTabs(prev => [...prev, 'portfolio.config.ts']);
@@ -2399,7 +2399,7 @@ export const VsCodeApp = () => {
                   <span>Open portfolio.config.ts</span>
                 </button>
 
-                <button 
+                <button
                   className="empty-action-btn"
                   onClick={() => {
                     if (!openTabs.includes('FinderApp.css')) setOpenTabs(prev => [...prev, 'FinderApp.css']);
@@ -2410,7 +2410,7 @@ export const VsCodeApp = () => {
                   <span>Open FinderApp.css</span>
                 </button>
 
-                <button 
+                <button
                   className="empty-action-btn"
                   onClick={() => handleCreateNewFile('app.js')}
                 >
@@ -2427,13 +2427,13 @@ export const VsCodeApp = () => {
               {/* Terminal Header Tabs */}
               <div className="terminal-header-tabs">
                 <div className="terminal-tab-group">
-                  <button 
+                  <button
                     className={`terminal-tab-item ${terminalTab === 'problems' ? 'active' : ''}`}
                     onClick={() => setTerminalTab('problems')}
                   >
                     Problems {problems.length > 0 && <span className="tab-counter-badge">{problems.length}</span>}
                   </button>
-                  <button 
+                  <button
                     className={`terminal-tab-item ${terminalTab === 'output' ? 'active' : ''}`}
                     onClick={() => setTerminalTab('output')}
                   >
@@ -2445,25 +2445,25 @@ export const VsCodeApp = () => {
                       </span>
                     )}
                   </button>
-                  <button 
+                  <button
                     className={`terminal-tab-item ${terminalTab === 'debug' ? 'active' : ''}`}
                     onClick={() => setTerminalTab('debug')}
                   >
                     Debug Console
                   </button>
-                  <button 
+                  <button
                     className={`terminal-tab-item ${terminalTab === 'terminal' ? 'active' : ''}`}
                     onClick={() => setTerminalTab('terminal')}
                   >
                     Terminal
                   </button>
-                  <button 
+                  <button
                     className={`terminal-tab-item ${terminalTab === 'ports' ? 'active' : ''}`}
                     onClick={() => setTerminalTab('ports')}
                   >
                     Ports <span className="tab-counter-badge">2</span>
                   </button>
-                  <button 
+                  <button
                     className={`terminal-tab-item ${terminalTab === 'comments' ? 'active' : ''}`}
                     onClick={() => setTerminalTab('comments')}
                   >
@@ -2476,22 +2476,22 @@ export const VsCodeApp = () => {
                     <span className="terminal-badge-icon">&gt;</span>
                     <span>powershell</span>
                   </span>
-                  <button 
-                    className="terminal-icon-btn" 
+                  <button
+                    className="terminal-icon-btn"
                     onClick={() => setTerminalHistory(prev => [...prev, { type: 'output', text: '--- New Terminal Instance Initialized ---' }])}
                     title="New Terminal"
                   >
                     <Plus size={12} />
                   </button>
-                  <button 
-                    className="terminal-icon-btn" 
+                  <button
+                    className="terminal-icon-btn"
                     onClick={() => setTerminalHeight(terminalHeight === 180 ? 320 : 180)}
                     title={terminalHeight === 180 ? "Maximize Panel Size" : "Restore Panel Size"}
                   >
                     {terminalHeight === 180 ? <Maximize2 size={12} /> : <Minimize2 size={12} />}
                   </button>
-                  <button 
-                    className="terminal-icon-btn" 
+                  <button
+                    className="terminal-icon-btn"
                     onClick={() => setTerminalOpen(false)}
                     title="Close Panel"
                   >

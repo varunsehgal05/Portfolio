@@ -646,7 +646,7 @@ const FigmaApp = ({ isInteracting, userName, onOpenApp }) => {
   useEffect(() => {
     const safetyTimer = setTimeout(() => {
       setIsAppLoading(false);
-    }, 1600);
+    }, 1000);
     return () => clearTimeout(safetyTimer);
   }, []);
 
@@ -907,24 +907,10 @@ const FigmaApp = ({ isInteracting, userName, onOpenApp }) => {
     showToast(`${label} copied to clipboard!`);
   };
 
-  // Automatically select the active artboard when switching tabs so inspector always targets current view
+  // Reset selection on tab switch so artboards remain clean without blue bounding box overlays
   useEffect(() => {
-    const tabArtboardMap = {
-      home: { id: 'root-canvas', name: 'Varun_Sehgal_Portfolio (Home)', type: 'Frame' },
-      projects: { id: 'work-artboard', name: 'Work & Case Studies Artboard', type: 'Frame' },
-      experience: { id: 'exp-artboard', name: 'Experience & Timeline Artboard', type: 'Frame' },
-      about: { id: 'about-artboard', name: 'Bio & Blueprint Artboard', type: 'Frame' },
-      resume: { id: 'resume-artboard', name: 'Creative Tactile Resume Artboard', type: 'Frame' },
-      process: { id: 'process-artboard', name: 'FigJam Process Artboard', type: 'Frame' },
-      plugins: { id: 'plugins-artboard', name: 'Plugins & Labs Artboard', type: 'Frame' }
-    };
-    const target = tabArtboardMap[activeTab];
-    if (target) {
-      setSelectedNodeId(target.id);
-      setSelectedLayerId(target.id);
-      setSelectedNodeLabel(target.name);
-      setSelectedNodeType(target.type);
-    }
+    setSelectedNodeId(null);
+    setSelectedLayerId(null);
   }, [activeTab]);
 
   const handleSelectNode = (id, label, type) => {
@@ -1413,7 +1399,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
       {isAppLoading && (
         <FigmaLoadingScreen
           fileName="Varun_Sehgal_Portfolio.fig"
-          duration={1300}
+          duration={750}
           onLoaded={() => {
             setIsAppLoading(false);
             centerCanvasView(activeTab);
@@ -2694,111 +2680,14 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     </div>
 
                     <div className="top-status-right">
-                      <div className="figma-cursor-tag cursor-elena-viewing">
-                        <svg className="cursor-arrow-icon" width="14" height="14" viewBox="0 0 16 16" fill="none">
-                          <path d="M0 0L6 14L8.5 8.5L14 6L0 0Z" fill="#a855f7" />
-                        </svg>
-                        <span className="cursor-author-name">Elena (Product Lead) [Live Viewing]</span>
-                      </div>
                       <div className="top-zoom-badge">{Math.round(zoom * 100)}%</div>
                       <button className="top-share-btn" onClick={() => showToast('Share Link Copied!')}>Share</button>
                     </div>
                   </div>
 
-                  {/* Clean Infinite Canvas Center Blueprint */}
-                  <div className="about-clean-blueprint-canvas" style={{ padding: '24px 30px' }}>
-                    {/* Hero Bio Node */}
-                    <div className="about-hero-blueprint-card" style={{ background: '#181920', border: '1px solid #27272a', borderRadius: '16px', padding: '26px 30px', marginBottom: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '30px' }}>
-                      <div style={{ maxWidth: '780px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '3px 10px', borderRadius: '9999px', background: 'rgba(34, 197, 94, 0.12)', color: '#4ade80', fontSize: '11.5px', fontWeight: '700' }}>
-                            <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#22c55e' }} />
-                            Available for Staff &amp; Senior Product Roles
-                          </span>
-                          <span style={{ fontSize: '11px', color: '#64748b' }}>San Francisco · Remote Global</span>
-                        </div>
-                        <h1 style={{ fontSize: '26px', fontWeight: '800', color: '#ffffff', margin: '0 0 10px', letterSpacing: '-0.02em' }}>
-                          Varun Sehgal — Product Designer &amp; Design Engineer
-                        </h1>
-                        <p style={{ fontSize: '14px', lineHeight: '1.6', color: '#94a3b8', margin: '0' }}>
-                          Designing zero-to-one developer platforms, AI agent interfaces, and high-performance design systems. Bridging multiplayer Figma ergonomics with production React 19/Tailwind codebases.
-                        </p>
-                      </div>
-
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', minWidth: '180px' }}>
-                        <button
-                          type="button"
-                          className="connect-resume-primary-btn"
-                          onClick={() => setActiveTab('resume')}
-                          style={{ width: '100%', textAlign: 'center', justifyContent: 'center' }}
-                        >
-                          <span className="material-symbols-outlined text-[16px]">description</span>
-                          <span>Tactile Resume</span>
-                        </button>
-                        <button
-                          type="button"
-                          className="plugin-run-btn"
-                          onClick={() => {
-                            navigator.clipboard?.writeText('varun.sehgal02@gmail.com');
-                            showToast('Email Copied: varun.sehgal02@gmail.com');
-                          }}
-                          style={{ width: '100%', justifyContent: 'center', padding: '8px' }}
-                        >
-                          <span>Email Varun</span>
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* 3 Blueprint Architecture Pillars */}
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '18px', marginBottom: '24px' }}>
-                      {/* Pillar 1 */}
-                      <div style={{ background: '#181920', border: '1px solid #27272a', borderTop: '3px solid #38bdf8', borderRadius: '14px', padding: '20px' }}>
-                        <div style={{ fontSize: '11px', fontWeight: '700', color: '#38bdf8', textTransform: 'uppercase', marginBottom: '8px' }}>ARCHITECTURE 01</div>
-                        <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#ffffff', margin: '0 0 8px' }}>Tokens as Executable Code</h3>
-                        <p style={{ fontSize: '12.5px', color: '#94a3b8', lineHeight: '1.55', margin: 0 }}>
-                          Eliminating the Figma-to-code translation layer. Color scales, spacing curves, and components are live typed contracts.
-                        </p>
-                      </div>
-
-                      {/* Pillar 2 */}
-                      <div style={{ background: '#181920', border: '1px solid #27272a', borderTop: '3px solid #a855f7', borderRadius: '14px', padding: '20px' }}>
-                        <div style={{ fontSize: '11px', fontWeight: '700', color: '#a855f7', textTransform: 'uppercase', marginBottom: '8px' }}>ARCHITECTURE 02</div>
-                        <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#ffffff', margin: '0 0 8px' }}>Tactile Micro-interactions</h3>
-                        <p style={{ fontSize: '12.5px', color: '#94a3b8', lineHeight: '1.55', margin: 0 }}>
-                          Multiplayer cursors, physics spring bounds, fluid sound synthesizers, and live spatial tactile feedback.
-                        </p>
-                      </div>
-
-                      {/* Pillar 3 */}
-                      <div style={{ background: '#181920', border: '1px solid #27272a', borderTop: '3px solid #10b981', borderRadius: '14px', padding: '20px' }}>
-                        <div style={{ fontSize: '11px', fontWeight: '700', color: '#10b981', textTransform: 'uppercase', marginBottom: '8px' }}>ARCHITECTURE 03</div>
-                        <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#ffffff', margin: '0 0 8px' }}>Zero-to-One Velocity</h3>
-                        <p style={{ fontSize: '12.5px', color: '#94a3b8', lineHeight: '1.55', margin: 0 }}>
-                          Organized 200+ hackers at CodeSrijan, 1st place hackathon winner, and engineered full-stack SaaS from napkin sketch to deploy.
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Tooling & Live Nodes on Canvas */}
-                    <div style={{ background: '#181920', border: '1px solid #27272a', borderRadius: '14px', padding: '18px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span style={{ fontSize: '12px', fontWeight: '700', color: '#64748b', textTransform: 'uppercase' }}>Core Stack Nodes:</span>
-                        {['Figma', 'React 19', 'TailwindCSS', 'TypeScript', 'Next.js', 'Vite', 'Node.js'].map(tech => (
-                          <span key={tech} style={{ padding: '4px 10px', borderRadius: '6px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', fontSize: '12px', color: '#e2e8f0', fontWeight: '500' }}>
-                            {tech}
-                          </span>
-                        ))}
-                      </div>
-
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <button type="button" className="plugin-run-btn" onClick={() => window.open('https://github.com/varunsehgal05', '_blank')}>
-                          <span>GitHub</span>
-                        </button>
-                        <button type="button" className="plugin-run-btn" onClick={() => setActiveTab('projects')}>
-                          <span>View Projects</span>
-                        </button>
-                      </div>
-                    </div>
+                  {/* Clean Infinite Canvas Stage (Full open workspace matching user specifications) */}
+                  <div className="about-clean-blueprint-canvas" style={{ minHeight: '620px', position: 'relative' }}>
+                    {/* Open infinite canvas stage ready for design exploration */}
                   </div>
                 </div>
               </div>
@@ -2968,117 +2857,8 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     </p>
                   </div>
 
-                  {/* FigJam Interactive Whiteboard Canvas Stage (Image 2) */}
+                  {/* FigJam Interactive Whiteboard Canvas Stage (Matching Image 2 - Clean Canvas) */}
                   <div className="figjam-canvas-stage" style={{ position: 'relative', minHeight: '520px', padding: '20px 0 100px' }}>
-                    {/* SVG Spline connecting cards with directional markers */}
-                    <svg className="figjam-journey-svg" viewBox="0 0 1320 460" fill="none" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '460px', pointerEvents: 'none', zIndex: 1 }}>
-                      <defs>
-                        <linearGradient id="journeySplineGrad" x1="0%" y1="50%" x2="100%" y2="50%">
-                          <stop offset="0%" stopColor="#34d399" />
-                          <stop offset="35%" stopColor="#38bdf8" />
-                          <stop offset="65%" stopColor="#fbbf24" />
-                          <stop offset="100%" stopColor="#f472b6" />
-                        </linearGradient>
-                      </defs>
-                      <path
-                        d="M 180 320 C 260 220, 310 120, 440 120 C 560 120, 600 330, 710 330 C 820 330, 870 120, 990 120 C 1110 120, 1150 280, 1260 300"
-                        stroke="url(#journeySplineGrad)"
-                        strokeWidth="3.5"
-                        strokeDasharray="8 8"
-                        strokeLinecap="round"
-                      />
-                      <polygon points="280,185 290,177 282,193" fill="#38bdf8" />
-                      <polygon points="560,210 568,222 558,222" fill="#38bdf8" />
-                      <polygon points="850,220 860,208 850,206" fill="#fbbf24" />
-                      <polygon points="1135,210 1145,222 1133,220" fill="#f472b6" />
-                    </svg>
-
-                    {/* Collaborative Multi-Card Journey Layer */}
-                    <div className="figjam-notes-layer" style={{ position: 'relative', zIndex: 2, height: '460px' }}>
-                      {/* Card 01: PAIN POINT 01 (Yellow Sticky Note) */}
-                      <div className="figjam-note-item" style={{ left: '20px', top: '220px', width: '250px', background: '#fef08a', color: '#1c1917', transform: 'rotate(-1.5deg)' }}>
-                        <div className="figjam-tape-strip" />
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                          <span style={{ width: '22px', height: '22px', borderRadius: '50%', background: '#ca8a04', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '800' }}>01</span>
-                          <span style={{ fontSize: '11px', fontWeight: '800', letterSpacing: '0.04em', textTransform: 'uppercase', color: '#854d0e' }}>PAIN POINT 01 👾</span>
-                        </div>
-                        <p style={{ fontSize: '13px', lineHeight: '1.45', margin: '0 0 14px', fontWeight: '500' }}>
-                          "Procurement leads get locked out if tax exemption require manual approval queue."
-                        </p>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid rgba(0,0,0,0.08)', paddingTop: '8px', fontSize: '11.5px', color: '#78716c' }}>
-                          <span>@varun</span>
-                          <span style={{ background: '#fef9c3', padding: '2px 6px', borderRadius: '4px', fontWeight: '700', color: '#ea580c' }}>🔥 12</span>
-                        </div>
-                      </div>
-
-                      {/* Elena Cursor pointing along curve */}
-                      <div style={{ position: 'absolute', left: '260px', top: '190px', display: 'flex', alignItems: 'center', gap: '4px', zIndex: 5, pointerEvents: 'none' }}>
-                        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M0 0L6 14L8.5 8.5L14 6L0 0Z" fill="#a855f7" /></svg>
-                        <span style={{ background: '#a855f7', color: '#ffffff', fontSize: '11px', fontWeight: '700', padding: '2px 7px', borderRadius: '4px' }}>Elena (PM)</span>
-                      </div>
-
-                      {/* Card 03: SEAT AUDIT (Cyan Outlined Box) */}
-                      <div className="figjam-note-item" style={{ left: '330px', top: '35px', width: '240px', background: '#091528', border: '2.5px solid #0ea5e9', color: '#ffffff', borderRadius: '16px', padding: '20px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-                          <span style={{ width: '24px', height: '24px', borderRadius: '50%', background: '#0284c7', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: '800' }}>03</span>
-                          <span style={{ color: '#38bdf8', fontSize: '14px', fontWeight: '700' }}>∡Δ</span>
-                        </div>
-                        <h3 style={{ fontSize: '17px', fontWeight: '800', margin: '0 0 4px', textAlign: 'center', letterSpacing: '0.02em' }}>SEAT AUDIT</h3>
-                        <p style={{ fontSize: '12.5px', color: '#94a3b8', margin: '0 0 14px', textAlign: 'center' }}>Gatekeeper?</p>
-                        <div style={{ textAlign: 'center' }}>
-                          <span style={{ background: '#ef4444', color: '#ffffff', padding: '4px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: '700', display: 'inline-block' }}>Drop-off: 34.2%</span>
-                        </div>
-                      </div>
-
-                      {/* Card 04: CUSTOMER QUOTE (Light Yellow Note) */}
-                      <div className="figjam-note-item" style={{ left: '590px', top: '230px', width: '260px', background: '#fef9c3', color: '#1c1917', transform: 'rotate(1deg)' }}>
-                        <div className="figjam-tape-strip" />
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                          <span style={{ width: '22px', height: '22px', borderRadius: '50%', background: '#eab308', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '800' }}>04</span>
-                          <span style={{ fontSize: '11px', fontWeight: '800', letterSpacing: '0.04em', textTransform: 'uppercase', color: '#854d0e' }}>CUSTOMER QUOTE 👻</span>
-                        </div>
-                        <p style={{ fontSize: '13px', lineHeight: '1.45', margin: '0 0 14px', fontWeight: '500' }}>
-                          "Why can't I invite our legal counsel before typing my corporate credit card numbers?"
-                        </p>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid rgba(0,0,0,0.08)', paddingTop: '8px', fontSize: '11.5px', color: '#78716c' }}>
-                          <span style={{ color: '#0284c7', fontWeight: '600' }}>#soc2-blocker</span>
-                          <span style={{ background: '#fef08a', padding: '2px 6px', borderRadius: '4px', fontWeight: '700' }}>💬 8</span>
-                        </div>
-                      </div>
-
-                      {/* Card 05: OPPORTUNITY (Mint Green Sticky Note) */}
-                      <div className="figjam-note-item" style={{ left: '880px', top: '30px', width: '270px', background: '#a7f3d0', color: '#064e3b', transform: 'rotate(-0.8deg)' }}>
-                        <div className="figjam-tape-strip" />
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                          <span style={{ width: '22px', height: '22px', borderRadius: '50%', background: '#059669', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '800' }}>05</span>
-                          <span style={{ fontSize: '11px', fontWeight: '800', letterSpacing: '0.04em', textTransform: 'uppercase', color: '#047857' }}>OPPORTUNITY 💡</span>
-                        </div>
-                        <p style={{ fontSize: '13px', lineHeight: '1.45', margin: '0 0 14px', fontWeight: '500' }}>
-                          "Shadow Approval System: Allow instant trial provisioning with 14-day async invoice generation."
-                        </p>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid rgba(0,0,0,0.08)', paddingTop: '8px', fontSize: '11.5px', color: '#065f46' }}>
-                          <span>@varun</span>
-                          <span style={{ background: '#d1fae5', padding: '2px 8px', borderRadius: '4px', fontWeight: '700', color: '#059669' }}>🚀 High Impact</span>
-                        </div>
-                      </div>
-
-                      {/* Card 06: BEHAVIOR AUDIT (Pink Sticky Note) */}
-                      <div className="figjam-note-item" style={{ left: '1140px', top: '230px', width: '230px', background: '#fbcfe8', color: '#831843', transform: 'rotate(1.5deg)' }}>
-                        <div className="figjam-tape-strip" />
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                          <span style={{ width: '22px', height: '22px', borderRadius: '50%', background: '#db2777', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '800' }}>06</span>
-                          <span style={{ fontSize: '11px', fontWeight: '800', letterSpacing: '0.04em', textTransform: 'uppercase', color: '#9d174d' }}>BEHAVIOR AUDIT</span>
-                        </div>
-                        <p style={{ fontSize: '13px', lineHeight: '1.45', margin: '0 0 14px', fontWeight: '500' }}>
-                          "One-click dispatch to DocuSign workflow bypassing credit card wall for verified domains."
-                        </p>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid rgba(0,0,0,0.08)', paddingTop: '8px', fontSize: '11.5px', color: '#9d174d' }}>
-                          <span>@marcus</span>
-                          <span style={{ background: '#fce7f3', padding: '2px 6px', borderRadius: '4px', fontWeight: '700' }}>⚡ Fast-track</span>
-                        </div>
-                      </div>
-                    </div>
-
                     {/* Bottom Floating FigJam Toolbar */}
                     <div className="figjam-floating-toolbar">
                       <div className="toolbar-tools-group">
