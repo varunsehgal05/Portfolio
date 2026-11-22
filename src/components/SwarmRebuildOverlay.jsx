@@ -474,7 +474,6 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
     lastStampedDockIndexRef.current = -1;
     lastFinderStepRef.current = -1;
     lastSidebarStepRef.current = -1;
-    lastToolbarStepRef.current = -1;
     lastToolbarPayloadRef.current = '';
     lastHeroCharCountRef.current = -1;
     lastCardBuildingKeyRef.current = '';

@@ -365,7 +365,10 @@ const FinderApp = ({ onOpenApp }) => {
         {/* User Profile Card at bottom */}
         <div className={`finder-profile-card ${isSidebarItemVisible(15) ? 'finder-sidebar-item-stamped' : 'finder-sidebar-item-hidden'}`}>
           <div className="finder-avatar-circle">
-            <img src="/varun.jpg" alt="Varun Sehgal profile portrait" className="finder-avatar-img" width="34" height="34" />
+            <picture>
+              <source srcSet="/varun-avatar.webp" type="image/webp" />
+              <img src="/varun-avatar.jpg" alt="Varun Sehgal profile portrait" className="finder-avatar-img" width="34" height="34" loading="eager" decoding="async" />
+            </picture>
           </div>
           <div className="finder-profile-info">
             <span className="finder-profile-name">Varun Sehgal</span>

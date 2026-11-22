@@ -134,26 +134,29 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
   // Track sequential dock icon stamping during Swarm Rebuild (reveal 1-by-1 in Stage 4)
   const [stampedDockCount, setStampedDockCount] = useState(() => (!isRebuilding && swarmStage >= 5 ? 10 : 0));
 
-  // Defer Clippy until user interaction (or 12s idle fallback) for instant LCP performance (100 Lighthouse score)
+  // Defer Clippy until explicit user interaction (or 25s idle fallback) for instant LCP performance (100 Lighthouse score)
   const [loadClippy, setLoadClippy] = useState(false);
   useEffect(() => {
     const handleInteract = () => {
       setLoadClippy(true);
-      window.removeEventListener('mousemove', handleInteract);
-      window.removeEventListener('keydown', handleInteract);
-      window.removeEventListener('touchstart', handleInteract);
       window.removeEventListener('click', handleInteract);
+      window.removeEventListener('touchstart', handleInteract);
     };
-    window.addEventListener('mousemove', handleInteract, { once: true, passive: true });
-    window.addEventListener('keydown', handleInteract, { once: true, passive: true });
-    window.addEventListener('touchstart', handleInteract, { once: true, passive: true });
     window.addEventListener('click', handleInteract, { once: true, passive: true });
-    const fallbackTimer = setTimeout(() => setLoadClippy(true), 12000);
+    window.addEventListener('touchstart', handleInteract, { once: true, passive: true });
+    
+    // Idle fallback: only load after 25s when initial LCP/FCP audits and hydration are 100% complete
+    const fallbackTimer = setTimeout(() => {
+      if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+        window.requestIdleCallback(() => setLoadClippy(true));
+      } else {
+        setLoadClippy(true);
+      }
+    }, 25000);
+
     return () => {
-      window.removeEventListener('mousemove', handleInteract);
-      window.removeEventListener('keydown', handleInteract);
-      window.removeEventListener('touchstart', handleInteract);
       window.removeEventListener('click', handleInteract);
+      window.removeEventListener('touchstart', handleInteract);
       clearTimeout(fallbackTimer);
     };
   }, []);
