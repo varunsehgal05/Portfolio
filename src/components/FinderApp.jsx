@@ -127,6 +127,7 @@ const FinderApp = ({ onOpenApp }) => {
     return 7;
   });
   const [typedTitle, setTypedTitle] = useState(() => (window.__varunos_finder_step ?? 0) >= 2 ? FULL_HERO_TITLE : '');
+  const [cardBuildState, setCardBuildState] = useState({});
 
   useEffect(() => {
     if (rebuildStep >= 2) {
@@ -140,6 +141,37 @@ const FinderApp = ({ onOpenApp }) => {
     };
     window.addEventListener('varunos-hero-type-progress', handleProgress);
     return () => window.removeEventListener('varunos-hero-type-progress', handleProgress);
+  }, [rebuildStep]);
+
+  useEffect(() => {
+    const handleCardBuilding = (e) => {
+      const { index, phase, progress, typedText } = e.detail || {};
+      if (phase === 'reset' || index === -1) {
+        setCardBuildState({});
+        return;
+      }
+      if (typeof index !== 'number') return;
+      const fullTitle = FEATURED_PROJECTS[index]?.title || '';
+      const text = phase === 'type'
+        ? (typedText !== undefined ? typedText : fullTitle.slice(0, Math.floor((progress || 0) * fullTitle.length * 1.15)))
+        : '';
+      setCardBuildState(prev => ({
+        ...prev,
+        [index]: {
+          phase,
+          typedText: text,
+          isBuilding: phase !== 'complete'
+        }
+      }));
+    };
+    window.addEventListener('varunos-card-building', handleCardBuilding);
+    return () => window.removeEventListener('varunos-card-building', handleCardBuilding);
+  }, []);
+
+  useEffect(() => {
+    if (rebuildStep === 0) {
+      setCardBuildState({});
+    }
   }, [rebuildStep]);
 
   useEffect(() => {
@@ -186,8 +218,8 @@ const FinderApp = ({ onOpenApp }) => {
         className="finder-sidebar"
         style={{
           opacity: rebuildStep >= 1 ? 1 : 0,
-          transform: rebuildStep >= 1 ? 'none' : 'translateX(-12px)',
-          transition: 'opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)',
+          transform: 'none',
+          transition: 'opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
           pointerEvents: rebuildStep >= 1 ? 'auto' : 'none'
         }}
       >
@@ -323,8 +355,8 @@ const FinderApp = ({ onOpenApp }) => {
           className="finder-hero-card"
           style={{
             opacity: rebuildStep >= 2 ? 1 : 0,
-            transform: rebuildStep >= 2 ? 'none' : 'scale(0.96) translateY(-8px)',
-            transition: 'opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)',
+            transform: 'none',
+            transition: 'opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
             pointerEvents: rebuildStep >= 2 ? 'auto' : 'none'
           }}
         >
@@ -346,7 +378,7 @@ const FinderApp = ({ onOpenApp }) => {
             <div 
               className="finder-section-header"
               style={{
-                opacity: rebuildStep >= 3 ? 1 : 0,
+                opacity: rebuildStep >= 3 || Object.keys(cardBuildState).length > 0 ? 1 : 0,
                 transition: 'opacity 0.35s ease'
               }}
             >
@@ -357,29 +389,45 @@ const FinderApp = ({ onOpenApp }) => {
             {viewMode === 'grid' ? (
               <div className="finder-cards-grid">
                 {filteredProjects.map((proj, pIdx) => {
-                  const isCardRevealed = rebuildStep >= 3 + pIdx;
+                  const isCardCompleted = (rebuildStep >= 3 + pIdx && rebuildStep > 2) || cardBuildState[pIdx]?.phase === 'complete' || rebuildStep >= 7;
+                  const isCardBuilding = Boolean(cardBuildState[pIdx]?.isBuilding) && !isCardCompleted;
+                  const isCardVisible = isCardCompleted || isCardBuilding;
+                  const cardPhase = cardBuildState[pIdx]?.phase;
+                  const currentTypedTitle = isCardCompleted 
+                    ? proj.title 
+                    : (cardBuildState[pIdx]?.typedText ?? '');
+                  const isTyping = isCardBuilding && cardPhase === 'type';
+
                   return (
                     <div 
                       key={proj.id} 
-                      className="finder-project-card"
+                      className={`finder-project-card ${isCardBuilding ? 'is-card-building' : ''} ${isCardCompleted ? 'is-card-completed' : ''}`}
                       style={{
-                        opacity: isCardRevealed ? 1 : 0,
-                        transform: isCardRevealed ? 'none' : 'scale(0.92) translateY(12px)',
-                        transition: 'opacity 0.38s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                        pointerEvents: isCardRevealed ? 'auto' : 'none'
+                        opacity: isCardVisible ? 1 : 0,
+                        transform: 'none',
+                        transition: isCardBuilding ? 'none' : 'opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
+                        pointerEvents: isCardCompleted ? 'auto' : 'none',
+                        boxShadow: isCardBuilding ? '0 0 0 1.5px rgba(56, 189, 248, 0.35), 0 8px 24px rgba(0, 0, 0, 0.4)' : undefined
                       }}
                     >
                       <div>
                         <div className="finder-card-top">
-                          <span className="finder-card-title">{proj.title}</span>
-                          <a href={proj.link} target="_blank" rel="noreferrer" title="Open Showcase">
+                          <span className="finder-card-title">
+                            {isCardCompleted ? proj.title : (currentTypedTitle || (isCardBuilding ? <span className="typing-cursor" style={{ opacity: 0.8, color: '#38bdf8' }}>|</span> : ''))}
+                            {isTyping && currentTypedTitle && <span className="typing-cursor" style={{ opacity: 0.85, color: '#38bdf8', marginLeft: '2px' }}>|</span>}
+                          </span>
+                          <a href={proj.link} target="_blank" rel="noreferrer" title="Open Showcase" style={{ opacity: isCardCompleted ? 1 : 0, pointerEvents: isCardCompleted ? 'auto' : 'none' }}>
                             <ExternalLink size={13} className="finder-card-icon" />
                           </a>
                         </div>
-                        <span className="finder-card-cat">{proj.category}</span>
-                        <p className="finder-card-desc">{proj.desc}</p>
+                        <span className="finder-card-cat" style={{ opacity: isCardCompleted ? 1 : 0, transition: 'opacity 0.28s ease' }}>
+                          {proj.category}
+                        </span>
+                        <p className="finder-card-desc" style={{ opacity: isCardCompleted ? 1 : 0, transition: 'opacity 0.28s ease' }}>
+                          {proj.desc}
+                        </p>
                       </div>
-                      <div className="finder-card-tags">
+                      <div className="finder-card-tags" style={{ opacity: isCardCompleted ? 1 : 0, transition: 'opacity 0.28s ease' }}>
                         {proj.tags.map((tag, tIdx) => (
                           <span key={tIdx} className="finder-card-tag">{tag}</span>
                         ))}

@@ -749,15 +749,13 @@
 .cv-thread,
 .cv-made li,
 .cv-timeline-wrap {
-  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
+  transition: opacity 0.3s ease;
 }
 
 .cv-item-hidden {
   opacity: 0 !important;
-  visibility: hidden !important;
-  transform: translateY(12px) scale(0.985) !important;
   pointer-events: none !important;
+  transition: opacity 0.35s ease;
 }
 
 .cv-typing-caret {
@@ -775,9 +773,8 @@
 
 .cv-item-visible {
   opacity: 1 !important;
-  visibility: visible !important;
-  transform: translateY(0) scale(1) !important;
   pointer-events: auto !important;
+  transition: opacity 0.35s ease;
 }
 
 .cv-cursor {

@@ -621,14 +621,7 @@ const PAGE_LAYERS_MAP = {
 };
 
 const FigmaApp = ({ isInteracting, userName, onOpenApp }) => {
-  const [activeTab, setActiveTab] = useState(() => {
-    try {
-      const p = new URLSearchParams(window.location.search);
-      const t = p.get('tab');
-      if (t && ['home', 'projects', 'experience', 'about', 'resume', 'process', 'plugins'].includes(t)) return t;
-    } catch {}
-    return 'home';
-  }); // 'home' | 'projects' | 'experience' | 'about' | 'resume' | 'process' | 'plugins'
+  const [activeTab, setActiveTab] = useState('home'); // Guaranteed to open to home page first
   const [showAssets, setShowAssets] = useState(false);
   const [colorMenuOpen, setColorMenuOpen] = useState(false);
   const [currentTheme, setCurrentTheme] = useState('default');
@@ -646,6 +639,8 @@ const FigmaApp = ({ isInteracting, userName, onOpenApp }) => {
   const [isSpacePressed, setIsSpacePressed] = useState(false);
   const [isAppLoading, setIsAppLoading] = useState(true);
   const startPanRef = useRef({ x: 0, y: 0 });
+  const wheelRafRef = useRef(null);
+  const pendingPanDeltaRef = useRef({ x: 0, y: 0 });
 
   // Safety watchdog: ensure Figma loading screen NEVER hangs under any circumstance
   useEffect(() => {
@@ -1330,10 +1325,32 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
       const factor = e.deltaY < 0 ? 1.05 : 0.95;
       setZoom(z => Math.min(2.5, Math.max(0.4, Number((z * factor).toFixed(2)))));
     } else {
-      setPan(p => ({
-        x: p.x - e.deltaX,
-        y: p.y - e.deltaY
-      }));
+      e.preventDefault();
+      const dx = Number.isFinite(e.deltaX) ? e.deltaX : 0;
+      const dy = Number.isFinite(e.deltaY) ? e.deltaY : 0;
+      pendingPanDeltaRef.current.x -= dx;
+      pendingPanDeltaRef.current.y -= dy;
+
+      if (!wheelRafRef.current) {
+        wheelRafRef.current = requestAnimationFrame(() => {
+          wheelRafRef.current = null;
+          const deltaX = pendingPanDeltaRef.current.x;
+          const deltaY = pendingPanDeltaRef.current.y;
+          pendingPanDeltaRef.current = { x: 0, y: 0 };
+
+          setPan(p => {
+            let nextX = p.x + deltaX;
+            let nextY = p.y + deltaY;
+
+            // In Resume tab, constrain vertical scrolling within bounds so user never loses the notebook
+            if (activeTab === 'resume') {
+              nextY = Math.min(60, Math.max(-2300, nextY));
+            }
+
+            return { x: nextX, y: nextY };
+          });
+        });
+      }
     }
   };
 
