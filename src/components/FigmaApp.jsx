@@ -1115,45 +1115,48 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
     setFloatingShapes(prev => prev.filter(s => s.id !== id));
   };
 
-  // Centering dimensions per tab
+  // Centering dimensions per tab - aligned with exact artboard widths
   const getTabDimensions = (tab) => {
     switch (tab) {
-      case 'home': return { width: 1240, height: 880 };
-      case 'projects': return { width: 1340, height: 960 };
-      case 'experience': return { width: 1240, height: 1360 };
-      case 'about': return { width: 1380, height: 1220 };
-      case 'resume': return { width: 1080, height: 2600 };
-      case 'process': return { width: 1400, height: 960 };
-      case 'plugins': return { width: 1440, height: 1100 };
-      default: return { width: 1240, height: 880 };
+      case 'home': return { width: Number(nodeProps['root-canvas']?.w) || frameW || 1200, height: 880 };
+      case 'projects': return { width: Number(nodeProps['work-artboard']?.w) || 1380, height: 1180 };
+      case 'experience': return { width: Number(nodeProps['exp-artboard']?.w) || 1240, height: 1400 };
+      case 'about': return { width: Number(nodeProps['about-artboard']?.w) || 1280, height: 820 };
+      case 'resume': return { width: Number(nodeProps['resume-artboard']?.w) || 1080, height: 2600 };
+      case 'process': return { width: Number(nodeProps['process-artboard']?.w) || 1400, height: 960 };
+      case 'plugins': return { width: Number(nodeProps['plugins-artboard']?.w) || 1100, height: 880 };
+      default: return { width: 1200, height: 880 };
     }
   };
 
-  const centerCanvasView = (tab = activeTab) => {
+  // Auto-fit zoom calculation: fits artboard comfortably within canvas viewport with safe gutters
+  const calculateFitZoom = (tab, stageW) => {
+    const dim = getTabDimensions(tab);
+    const availableW = Math.max(320, stageW - 64);
+    const fit = Math.round((availableW / dim.width) * 100) / 100;
+    return Math.min(0.95, Math.max(0.60, fit));
+  };
+
+  // Center Canvas View: positions artboard TOP-CENTER in the viewport across ALL tabs
+  const centerCanvasView = (tab = activeTab, forcedZoom = null) => {
     if (!containerRef.current) return;
     const stageW = containerRef.current.clientWidth || 900;
-    const stageH = containerRef.current.clientHeight || 650;
     const dim = getTabDimensions(tab);
-    const activeZoom = tab === 'projects' ? 0.9 : zoom;
 
-    let targetX = Math.round((stageW - dim.width * activeZoom) / 2);
-    let targetY = Math.round((stageH - dim.height * activeZoom) / 2);
+    const activeZoom = forcedZoom !== null ? forcedZoom : calculateFitZoom(tab, stageW);
+    setZoom(activeZoom);
 
-    targetY = Math.max(20, targetY);
-    targetX = Math.max(20, targetX);
+    // Exact mathematical horizontal center
+    const targetX = Math.round((stageW - dim.width * activeZoom) / 2);
+    // Top-Center vertical position: sits at comfortable top margin (36px)
+    const targetY = 36;
 
     setPan({ x: targetX, y: targetY });
   };
 
-  // Center on tab switch & initial mount with 90% auto-zoom for Work page
+  // Center on tab switch & initial mount with top-center placement for all tabs
   useEffect(() => {
-    if (activeTab === 'projects') {
-      setZoom(0.9);
-    } else if (activeTab === 'about') {
-      setZoom(0.85);
-    } else if (activeTab === 'resume') {
-      setPan({ x: 20, y: 20 });
-    }
+    centerCanvasView(activeTab);
     const timer = setTimeout(() => {
       centerCanvasView(activeTab);
     }, 60);
@@ -1984,7 +1987,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
               </div>
 
               {/* Central Glass Artboard */}
-              <div className="view-content-wrapper home-content-wrapper" style={{ padding: '30px 40px 140px', minWidth: '1280px', display: 'flex', justifyContent: 'center' }}>
+              <div className="view-content-wrapper home-content-wrapper" style={{ padding: '30px 0 140px', width: 'max-content', display: 'flex', justifyContent: 'center' }}>
                 <div
                   className={`artboard-container figma-selectable-node ${selectedNodeId === 'root-canvas' ? 'is-selected' : ''}`}
                   data-node-id="root-canvas"
@@ -2165,7 +2168,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 transformOrigin: '0 0'
               }}
             >
-              <div className="view-content-wrapper" style={{ padding: '36px 40px 140px' }}>
+              <div className="view-content-wrapper" style={{ padding: '36px 0 140px', width: 'max-content' }}>
                 {/* Framed Artboard Box (Pixel-perfect match to user reference Image 1) */}
                 <div
                   className={`figma-artboard-box work-artboard-box figma-selectable-node ${selectedNodeId === 'work-artboard' ? 'is-selected' : ''}`}
@@ -2340,7 +2343,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 transformOrigin: '0 0'
               }}
             >
-              <div className="view-content-wrapper" style={{ padding: '36px 40px 140px' }}>
+              <div className="view-content-wrapper" style={{ padding: '36px 0 140px', width: 'max-content' }}>
                 {/* Framed Artboard Box for Experience */}
                 <div
                   className={`figma-artboard-box experience-artboard-box figma-selectable-node ${selectedNodeId === 'exp-artboard' ? 'is-selected' : ''}`}
@@ -2682,7 +2685,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 transformOrigin: '0 0'
               }}
             >
-              <div className="view-content-wrapper" style={{ padding: '36px 40px 140px' }}>
+              <div className="view-content-wrapper" style={{ padding: '36px 0 140px', width: 'max-content' }}>
                 <div
                   className={`figma-artboard-box about-blueprint-artboard figma-selectable-node ${selectedNodeId === 'about-artboard' ? 'is-selected' : ''}`}
                   style={getNodeStyle('about-artboard', 1280, 820)}
@@ -2739,7 +2742,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 transformOrigin: '0 0'
               }}
             >
-              <div className="view-content-wrapper" style={{ padding: '36px 40px 140px' }}>
+              <div className="view-content-wrapper" style={{ padding: '36px 0 140px', width: 'max-content' }}>
                 {/* Framed Artboard Box for Kittu.pro Resume */}
                 <div
                   className={`figma-artboard-box resume-artboard-box figma-selectable-node ${selectedNodeId === 'resume-artboard' ? 'is-selected' : ''}`}
@@ -2770,10 +2773,10 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     canvasZoom={zoom}
                     onBack={() => setActiveTab('home')}
                     onScrollToTop={() => {
-                      // Smoothly glide canvas pan back to top so user is dragged up to top of notebook
+                      // Smoothly glide canvas pan back to top so user is dragged up to top-center of notebook
                       const stageW = containerRef.current?.clientWidth || 900;
-                      const targetX = Math.max(20, Math.round((stageW - 1080 * zoom) / 2));
-                      const targetY = 20;
+                      const targetX = Math.round((stageW - 1080 * zoom) / 2);
+                      const targetY = 36;
                       const startX = pan.x;
                       const startY = pan.y;
                       const startTime = performance.now();
@@ -2809,7 +2812,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 transformOrigin: '0 0'
               }}
             >
-              <div className="view-content-wrapper" style={{ padding: '36px 40px 140px' }}>
+              <div className="view-content-wrapper" style={{ padding: '36px 0 140px', width: 'max-content' }}>
                 {/* FigJam Process Board Canvas matching Image 2 */}
                 <div
                   className={`figma-artboard-box figjam-process-artboard figma-selectable-node ${selectedNodeId === 'process-artboard' ? 'is-selected' : ''}`}
@@ -2979,7 +2982,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 transformOrigin: '0 0'
               }}
             >
-              <div className="view-content-wrapper" style={{ padding: '36px 40px 140px' }}>
+              <div className="view-content-wrapper" style={{ padding: '36px 0 140px', width: 'max-content' }}>
                 <div
                   className={`figma-artboard-box plugins-ecosystem-artboard figma-selectable-node ${selectedNodeId === 'plugins-artboard' ? 'is-selected' : ''}`}
                   style={getNodeStyle('plugins-artboard', 1100, 840)}

@@ -42,7 +42,6 @@ const KittuResumeApp = ({
   });
   const containerRef = useRef(null);
   const buildTimeoutRef = useRef([]);
-  const hasTriggeredRef = useRef(false);
   const sectionsTriggeredRef = useRef({
     workOn: false,
     timeline: false,
@@ -80,7 +79,7 @@ const KittuResumeApp = ({
         name: 'Varun Sehgal',
         color: '#A259FF',
         tool: 'T',
-        action: 'Typing Content',
+        role: 'Typing',
         ...varun
       },
       {
@@ -88,7 +87,7 @@ const KittuResumeApp = ({
         name: 'Elena Rostova',
         color: '#F59E0B',
         tool: 'R',
-        action: 'Framing Wireframe',
+        role: 'Framing',
         ...elena
       },
       {
@@ -96,7 +95,7 @@ const KittuResumeApp = ({
         name: 'Sarah Lin',
         color: '#0ACF83',
         tool: '❖',
-        action: 'Stamping Component',
+        role: 'Stamping',
         ...sarah
       },
       {
@@ -104,17 +103,20 @@ const KittuResumeApp = ({
         name: 'Alex Chen',
         color: '#1ABCFE',
         tool: 'V',
-        action: 'Measuring ΔY',
+        role: 'Layout',
         ...alex
       }
     ]);
   };
 
-  // Human-calibrated letter-by-letter typing helper
-  const typeText = (str, setter, startDelay, interval = 28) => {
+  // Human-calibrated letter-by-letter typing helper with cursor tracking
+  const typeText = (str, setter, startDelay, interval = 28, cursorId = 'varun', cursorBaseX = null) => {
     for (let i = 1; i <= str.length; i++) {
       schedule(() => {
         setter(str.slice(0, i));
+        if (cursorId && cursorBaseX !== null) {
+          setActiveCursors(prev => prev.map(c => c.id === cursorId ? { ...c, x: cursorBaseX + i * 14 } : c));
+        }
       }, startDelay + i * interval);
     }
   };
@@ -171,119 +173,126 @@ const KittuResumeApp = ({
       contact: false
     });
 
-    // 1. All 4 Swarm agents enter top of blank sheet together
+    // 1. All 4 Swarm agents enter top of blank sheet together (multitasking start)
     schedule(() => {
       const box = getBox('.cv-name', { x: 28, y: 35, w: 460, h: 75 });
+      const boxPol = getBox('.cv-polaroid', { x: 730, y: 240, w: 260, h: 260 });
       set4Swarm({
-        elena: { x: box.x, y: box.y, tool: 'R', action: `Framing Title [${box.w} × ${box.h}]`, chat: 'framing title box...' },
-        alex: { x: box.x + box.w + 24, y: box.y + 12, tool: 'V', action: 'Pad: 28px • Baseline Y: 35px' },
-        sarah: { x: box.x + 12, y: box.y + 44, tool: '❖', action: 'Stamping Grid Anchor' },
-        varun: { x: box.x + 35, y: box.y + 18, tool: 'T', action: 'Drafting Name' }
+        elena: { x: box.x, y: box.y, tool: 'R', role: 'Framing' },
+        alex: { x: box.x + box.w + 24, y: box.y + 12, tool: 'V', role: 'Layout' },
+        sarah: { x: boxPol.x + 30, y: boxPol.y + 30, tool: '❖', role: 'Stamping' },
+        varun: { x: box.x + 35, y: box.y + 18, tool: 'T', role: 'Typing' }
       });
       setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Title Frame • Elena [R]' });
       setActiveGuides([{ type: 'h', y: box.y + box.h, x1: box.x, x2: box.x + box.w, label: 'Title Baseline' }]);
-    }, 150);
+    }, 100);
 
-    // 2. Stage 1: Varun types "Varun Sehgal" with tracking cursor
+    // 2. Stage 1: Varun types "Varun Sehgal" with tracking cursor, Elena holds frame, Sarah pre-stages sticky, Alex measures
     schedule(() => {
       const box = getBox('.cv-name', { x: 28, y: 35, w: 460, h: 75 });
+      const boxNote = getBox('.cv-note', { x: 690, y: 60, w: 340, h: 160 });
       set4Swarm({
-        elena: { x: box.x + box.w - 10, y: box.y + box.h, tool: 'R', action: 'Holding Title Bounds' },
-        alex: { x: box.x + box.w + 24, y: box.y + 12, tool: 'V', action: 'Tracking Kerning' },
-        sarah: { x: box.x + box.w / 2, y: box.y + box.h + 20, tool: '❖', action: 'Pre-staging Lede' },
-        varun: { x: box.x + 35, y: box.y + 18, tool: 'T', action: 'Typing: Varun Sehgal' }
+        elena: { x: box.x + box.w - 10, y: box.y + box.h, tool: 'R', role: 'Framing' },
+        alex: { x: box.x + box.w + 24, y: box.y + 12, tool: 'V', role: 'Layout' },
+        sarah: { x: boxNote.x + 40, y: boxNote.y + 14, tool: '❖', role: 'Stamping' },
+        varun: { x: box.x + 35, y: box.y + 18, tool: 'T', role: 'Typing' }
       });
-      typeText('Varun Sehgal', setTypedName, 50, 42);
-    }, 450);
+      typeText('Varun Sehgal', setTypedName, 40, 32, 'varun', box.x + 35);
+    }, 320);
 
-    // 3. Stage 2: Value Prop / Lede (4 Swarm Coordinated)
+    // 3. Stage 2: Value Prop / Lede (4 Swarm Coordinated Multitasking)
     schedule(() => {
       setBuildStage(1);
       const boxLede = getBox('.cv-lede', { x: 28, y: 125, w: 600, h: 160 });
+      const boxNote = getBox('.cv-note', { x: 690, y: 60, w: 340, h: 160 });
       set4Swarm({
-        elena: { x: boxLede.x, y: boxLede.y, tool: 'R', action: `Framing Lede [${boxLede.w} × ${boxLede.h}]`, chat: 'framing value prop...' },
-        alex: { x: boxLede.x + boxLede.w + 20, y: boxLede.y + 24, tool: 'V', action: 'Token: Atkinson 1.15rem' },
-        sarah: { x: boxLede.x + 100, y: boxLede.y + 115, tool: '❖', action: 'Stamping Contact Pills' },
-        varun: { x: boxLede.x + 24, y: boxLede.y + 20, tool: 'T', action: 'Writing Philosophy' }
+        elena: { x: boxLede.x, y: boxLede.y, tool: 'R', role: 'Framing' },
+        alex: { x: boxLede.x + boxLede.w + 20, y: boxLede.y + 24, tool: 'V', role: 'Layout' },
+        sarah: { x: boxNote.x + 40, y: boxNote.y + 14, tool: '❖', role: 'Stamping' },
+        varun: { x: boxLede.x + 24, y: boxLede.y + 20, tool: 'T', role: 'Typing' }
       });
       setActiveSelection({ x: boxLede.x, y: boxLede.y, w: boxLede.w, h: boxLede.h, label: '❖ Value Prop • Elena [R]' });
       setActiveGuides([{ type: 'v', x: boxLede.x + boxLede.w, y1: boxLede.y, y2: boxLede.y + boxLede.h, label: 'W: 600px' }]);
-      typeText('I study and craft friction-free product experiences: tactile, beautiful, and fast.', setTypedLede, 120, 20);
-    }, 1100);
+      typeText('I study and craft friction-free product experiences: tactile, beautiful, and fast.', setTypedLede, 80, 16, 'varun', boxLede.x + 24);
+    }, 850);
 
     // 4. Stage 3: Sticky Note (Tactile Stamp & Live Typing)
     schedule(() => {
       setBuildStage(2);
       const boxNote = getBox('.cv-note', { x: 690, y: 60, w: 340, h: 160 });
+      const boxPol = getBox('.cv-polaroid', { x: 730, y: 240, w: 260, h: 260 });
       set4Swarm({
-        elena: { x: boxNote.x, y: boxNote.y, tool: 'R', action: 'Framing Sticky Note [340×160]', chat: 'framing sticky bounds...' },
-        alex: { x: boxNote.x + boxNote.w + 16, y: boxNote.y + 20, tool: 'V', action: 'Align: Right Col (690px)' },
-        sarah: { x: boxNote.x + 40, y: boxNote.y + 14, tool: '❖', action: 'Stamping Sticky Paper & Tape' },
-        varun: { x: boxNote.x + 20, y: boxNote.y + 26, tool: 'T', action: 'Drafting Note Headline' }
+        elena: { x: boxNote.x, y: boxNote.y, tool: 'R', role: 'Framing' },
+        alex: { x: boxNote.x + boxNote.w + 16, y: boxNote.y + 20, tool: 'V', role: 'Layout' },
+        sarah: { x: boxPol.x + 40, y: boxPol.y + 40, tool: '❖', role: 'Stamping' },
+        varun: { x: boxNote.x + 20, y: boxNote.y + 26, tool: 'T', role: 'Typing' }
       });
       setActiveSelection({ x: boxNote.x, y: boxNote.y, w: boxNote.w, h: boxNote.h, label: '❖ Sticky Note • Elena [R]' });
       setActiveGuides([{ type: 'v', x: boxNote.x, y1: boxNote.y - 20, y2: boxNote.y + 350, label: `Right Column (${boxNote.x}px)` }]);
       setBuildStage(3); // Pops with cv-stamp-pop!
-      typeText('Now: AI Interview & EventFlow', setTypedNoteHead, 80, 24);
-      typeText('Architecting multi-token design systems in Figma and translating them with sub-millisecond fidelity into Next.js & Tailwind components.', setTypedNoteBody, 650, 9);
-    }, 2800);
+      typeText('Now: AI Interview & EventFlow', setTypedNoteHead, 60, 20);
+      typeText('Architecting multi-token design systems in Figma and translating them with sub-millisecond fidelity into Next.js & Tailwind components.', setTypedNoteBody, 500, 8);
+    }, 2200);
 
     // 5. Stage 4: Polaroid Photo (Tactile Stamp & Caption Typing)
     schedule(() => {
       const boxPol = getBox('.cv-polaroid', { x: 730, y: 240, w: 260, h: 260 });
+      const box1 = getBox('.cv-stats li:nth-child(1)', { x: 28, y: 520, w: 320, h: 85 });
       set4Swarm({
-        elena: { x: boxPol.x, y: boxPol.y, tool: 'R', action: 'Framing Polaroid Frame [260×260]' },
-        alex: { x: boxPol.x + boxPol.w + 16, y: boxPol.y + 40, tool: 'V', action: 'Spacing ΔY: 20px' },
-        sarah: { x: boxPol.x + boxPol.w / 2, y: boxPol.y + 90, tool: '❖', action: 'Placing Photo Material', chat: 'stamping photo...' },
-        varun: { x: boxPol.x + 28, y: boxPol.y + boxPol.h - 18, tool: 'T', action: 'Writing Photo Caption' }
+        elena: { x: box1.x, y: box1.y, tool: 'R', role: 'Framing' },
+        alex: { x: boxPol.x + boxPol.w + 16, y: boxPol.y + 40, tool: 'V', role: 'Layout' },
+        sarah: { x: boxPol.x + boxPol.w / 2, y: boxPol.y + 90, tool: '❖', role: 'Stamping' },
+        varun: { x: boxPol.x + 28, y: boxPol.y + boxPol.h - 18, tool: 'T', role: 'Typing' }
       });
       setActiveSelection({ x: boxPol.x, y: boxPol.y, w: boxPol.w, h: boxPol.h, label: '❖ Polaroid Photo • Sarah [❖]' });
       setActiveGuides([]);
       setBuildStage(4); // Pops with cv-stamp-pop!
-      typeText('Varun Sehgal, 2026 →', setTypedPolaroidCaption, 80, 25);
-    }, 4200);
+      typeText('Varun Sehgal, 2026 →', setTypedPolaroidCaption, 60, 20);
+    }, 3500);
 
     // 6. Stage 5: Stat 1 (6+ Projects)
     schedule(() => {
       const box1 = getBox('.cv-stats li:nth-child(1)', { x: 28, y: 520, w: 320, h: 85 });
+      const box2 = getBox('.cv-stats li:nth-child(2)', { x: 372, y: 520, w: 320, h: 85 });
       set4Swarm({
-        elena: { x: box1.x, y: box1.y, tool: 'R', action: 'Framing Stat [1/3] • 6+ Projects' },
-        alex: { x: box1.x + box1.w + 12, y: box1.y + 16, tool: 'V', action: 'ΔX: 24px Gap' },
-        sarah: { x: box1.x + box1.w / 2, y: box1.y + 24, tool: '❖', action: 'Stamping Pill Container' },
-        varun: { x: box1.x + 36, y: box1.y + 22, tool: 'T', action: 'Typing: 6+' }
+        elena: { x: box2.x, y: box2.y, tool: 'R', role: 'Framing' },
+        alex: { x: box1.x + box1.w + 12, y: box1.y + 16, tool: 'V', role: 'Layout' },
+        sarah: { x: box1.x + box1.w / 2, y: box1.y + 24, tool: '❖', role: 'Stamping' },
+        varun: { x: box1.x + 36, y: box1.y + 22, tool: 'T', role: 'Typing' }
       });
       setActiveSelection({ x: box1.x, y: box1.y, w: box1.w, h: box1.h, label: '❖ Stat 1 • 6+ Projects' });
       setBuildStage(5);
-      typeText('6+', setTypedStat1, 60, 40);
-    }, 5400);
+      typeText('6+', setTypedStat1, 40, 30);
+    }, 4500);
 
     // 7. Stage 6: Stat 2 (200+ Hackers)
     schedule(() => {
       const box2 = getBox('.cv-stats li:nth-child(2)', { x: 372, y: 520, w: 320, h: 85 });
+      const box3 = getBox('.cv-stats li:nth-child(3)', { x: 716, y: 520, w: 320, h: 85 });
       set4Swarm({
-        elena: { x: box2.x, y: box2.y, tool: 'R', action: 'Framing Stat [2/3] • 200+ Hackers' },
-        alex: { x: box2.x + box2.w + 12, y: box2.y + 16, tool: 'V', action: 'Equal 24px Gap' },
-        sarah: { x: box2.x + box2.w / 2, y: box2.y + 24, tool: '❖', action: 'Stamping Pill Container' },
-        varun: { x: box2.x + 36, y: box2.y + 22, tool: 'T', action: 'Typing: 200+' }
+        elena: { x: box3.x, y: box3.y, tool: 'R', role: 'Framing' },
+        alex: { x: box2.x + box2.w + 12, y: box2.y + 16, tool: 'V', role: 'Layout' },
+        sarah: { x: box2.x + box2.w / 2, y: box2.y + 24, tool: '❖', role: 'Stamping' },
+        varun: { x: box2.x + 36, y: box2.y + 22, tool: 'T', role: 'Typing' }
       });
       setActiveSelection({ x: box2.x, y: box2.y, w: box2.w, h: box2.h, label: '❖ Stat 2 • 200+ Hackers' });
       setBuildStage(6);
-      typeText('200+', setTypedStat2, 60, 40);
-    }, 6300);
+      typeText('200+', setTypedStat2, 40, 30);
+    }, 5300);
 
     // 8. Stage 7/8: Stat 3 (🥈 1st Runner-Up at HACKeThor)
     schedule(() => {
       const box3 = getBox('.cv-stats li:nth-child(3)', { x: 716, y: 520, w: 320, h: 85 });
       set4Swarm({
-        elena: { x: box3.x, y: box3.y, tool: 'R', action: 'Framing Stat [3/3] • Hackathon Winner' },
-        alex: { x: box3.x + box3.w - 10, y: box3.y + 16, tool: 'V', action: 'Col 3 Alignment' },
-        sarah: { x: box3.x + box3.w / 2, y: box3.y + 24, tool: '❖', action: 'Stamping Trophy Medal' },
-        varun: { x: box3.x + 36, y: box3.y + 22, tool: 'T', action: 'Typing: 🥈 1st Runner-Up' }
+        elena: { x: box3.x, y: box3.y, tool: 'R', role: 'Framing' },
+        alex: { x: box3.x + box3.w - 10, y: box3.y + 16, tool: 'V', role: 'Layout' },
+        sarah: { x: box3.x + box3.w / 2, y: box3.y + 24, tool: '❖', role: 'Stamping' },
+        varun: { x: box3.x + 36, y: box3.y + 22, tool: 'T', role: 'Typing' }
       });
       setActiveSelection({ x: box3.x, y: box3.y, w: box3.w, h: box3.h, label: '❖ Stat 3 • 🥈 1st Runner-Up' });
       setBuildStage(7);
-      typeText('🥈 1st Runner-Up', setTypedStat3, 60, 35);
-    }, 7200);
+      typeText('🥈 1st Runner-Up', setTypedStat3, 40, 25);
+    }, 6100);
 
     // 9. Top section complete! All 4 Swarm members await scroll
     schedule(() => {
@@ -292,12 +301,12 @@ const KittuResumeApp = ({
       setActiveGuides([]);
       const statBox = getBox('.cv-stats li:nth-child(2)', { x: 372, y: 520, w: 320, h: 85 });
       set4Swarm({
-        elena: { x: statBox.x - 60, y: statBox.y + statBox.h + 35, tool: '✓', action: 'Top Section Ready ✓', chat: '✨ Top section ready! Scroll down for What I work on' },
-        alex: { x: statBox.x + 50, y: statBox.y + statBox.h + 35, tool: 'V', action: 'Layout 1080px Locked' },
-        sarah: { x: statBox.x + 170, y: statBox.y + statBox.h + 35, tool: '❖', action: 'Components Ready' },
-        varun: { x: statBox.x + 290, y: statBox.y + statBox.h + 35, tool: '↓', action: 'Waiting for Scroll', chat: '👇 Scroll down to craft lower sections' }
+        elena: { x: statBox.x - 60, y: statBox.y + statBox.h + 35, tool: '✓', role: 'Framing' },
+        alex: { x: statBox.x + 50, y: statBox.y + statBox.h + 35, tool: 'V', role: 'Layout' },
+        sarah: { x: statBox.x + 170, y: statBox.y + statBox.h + 35, tool: '❖', role: 'Stamping' },
+        varun: { x: statBox.x + 290, y: statBox.y + statBox.h + 35, tool: '↓', role: 'Typing' }
       });
-    }, 8100);
+    }, 6900);
   };
 
   // Progressive section builders triggered dynamically on scroll
@@ -997,21 +1006,18 @@ const KittuResumeApp = ({
       setActiveCursors([]);
       setActiveSelection(null);
       setActiveGuides([]);
-      hasTriggeredRef.current = false;
       return;
     }
 
-    if (!hasTriggeredRef.current) {
-      hasTriggeredRef.current = true;
-      // Slight 160ms breather after Figma loading screen fades out so blank sheet is appreciated before cursors enter
-      const timer = setTimeout(() => {
-        buildTopSection();
-      }, 160);
-      return () => {
-        clearTimeout(timer);
-        clearTimeouts();
-      };
-    }
+    // Always start collaborative swarm build when loaded/mounted
+    const timer = setTimeout(() => {
+      buildTopSection();
+    }, 100);
+
+    return () => {
+      clearTimeout(timer);
+      clearTimeouts();
+    };
   }, [isParentLoading]);
 
   return (
