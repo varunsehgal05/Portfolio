@@ -1,9 +1,8 @@
-import { useState, useEffect, useRef, lazy, Suspense } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Desktop from './components/Desktop';
 import ScreenSaver from './components/ScreenSaver';
+import SwarmRebuildOverlay from './components/SwarmRebuildOverlay';
 import './index.css';
-
-const SwarmRebuildOverlay = lazy(() => import('./components/SwarmRebuildOverlay'));
 
 const IDLE_TIMEOUT = 180000; // 3 minutes
 
@@ -95,14 +94,12 @@ function App() {
 
       {/* 2. Swarm Rebuild Overlay Animation (on boot & replay) */}
       {bootState === 'swarm' && (
-        <Suspense fallback={null}>
-          <SwarmRebuildOverlay 
-            key={`rebuild-${rebuildKey}`}
-            userName={userName} 
-            onStageChange={setSwarmStage}
-            onComplete={handleSwarmComplete} 
-          />
-        </Suspense>
+        <SwarmRebuildOverlay 
+          key={`rebuild-${rebuildKey}`}
+          userName={userName} 
+          onStageChange={setSwarmStage}
+          onComplete={handleSwarmComplete} 
+        />
       )}
 
       {/* 3. Idle ScreenSaver */}

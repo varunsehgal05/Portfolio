@@ -122,7 +122,8 @@ const FinderApp = ({ onOpenApp }) => {
     if (typeof window !== 'undefined') {
       const isDirect = Boolean(new URLSearchParams(window.location.search).get('app'));
       if (isDirect) return 7;
-      return window.__varunos_finder_step !== undefined ? window.__varunos_finder_step : 0;
+      // Default to 7 (fully built) unless an active rebuild explicitly set finder step to 0 or 1
+      return window.__varunos_finder_step !== undefined ? window.__varunos_finder_step : 7;
     }
     return 7;
   });
@@ -130,23 +131,25 @@ const FinderApp = ({ onOpenApp }) => {
     if (typeof window !== 'undefined') {
       const isDirect = Boolean(new URLSearchParams(window.location.search).get('app'));
       if (isDirect) return 15;
-      if ((window.__varunos_finder_step ?? 0) >= 2) return 15;
-      return window.__varunos_sidebar_step !== undefined ? window.__varunos_sidebar_step : 0;
+      if (window.__varunos_finder_step !== undefined && window.__varunos_finder_step < 2) {
+        return window.__varunos_sidebar_step !== undefined ? window.__varunos_sidebar_step : 0;
+      }
+      return 15;
     }
     return 15;
   });
-  const [typedTitle, setTypedTitle] = useState(() => (window.__varunos_finder_step ?? 0) >= 2 ? FULL_HERO_TITLE : '');
+  const [typedTitle, setTypedTitle] = useState(() => (window.__varunos_finder_step !== undefined && window.__varunos_finder_step < 2) ? '' : FULL_HERO_TITLE);
   const [toolbarStep, setToolbarStep] = useState(() => {
     if (typeof window !== 'undefined') {
       const isDirect = Boolean(new URLSearchParams(window.location.search).get('app'));
       if (isDirect) return 4;
-      return (window.__varunos_finder_step ?? 0) >= 2 ? 4 : 0;
+      return (window.__varunos_finder_step !== undefined && window.__varunos_finder_step < 2) ? 0 : 4;
     }
     return 4;
   });
-  const [typedPath, setTypedPath] = useState('');
-  const [typedSearch, setTypedSearch] = useState('');
-  const [heroBoxVisible, setHeroBoxVisible] = useState(false);
+  const [typedPath, setTypedPath] = useState(() => (window.__varunos_finder_step !== undefined && window.__varunos_finder_step < 2) ? '' : 'Macintosh HD > Users > varun > Featured Works');
+  const [typedSearch, setTypedSearch] = useState(() => (window.__varunos_finder_step !== undefined && window.__varunos_finder_step < 2) ? '' : 'Search in Finder...');
+  const [heroBoxVisible, setHeroBoxVisible] = useState(() => (window.__varunos_finder_step !== undefined && window.__varunos_finder_step < 2) ? false : true);
   const [cardBuildState, setCardBuildState] = useState({});
 
   useEffect(() => {

@@ -123,7 +123,7 @@ class SwarmSoundSynthesizer {
       }
     }
     if (this.ctx && this.ctx.state === 'suspended') {
-      this.ctx.resume().catch(() => {});
+      this.ctx.resume().catch(() => { });
     }
   }
 
@@ -150,7 +150,7 @@ class SwarmSoundSynthesizer {
       gain.connect(this.ctx.destination);
       osc.start();
       osc.stop(this.ctx.currentTime + 0.03);
-    } catch (e) {}
+    } catch (e) { }
   }
 
   playSnap(freq = 680, duration = 0.04) {
@@ -171,7 +171,7 @@ class SwarmSoundSynthesizer {
       gain.connect(this.ctx.destination);
       osc.start();
       osc.stop(this.ctx.currentTime + duration);
-    } catch (e) {}
+    } catch (e) { }
   }
 
   playDropThump(freq = 180) {
@@ -192,7 +192,7 @@ class SwarmSoundSynthesizer {
       gain.connect(this.ctx.destination);
       osc.start();
       osc.stop(this.ctx.currentTime + 0.08);
-    } catch (e) {}
+    } catch (e) { }
   }
 
   playChime() {
@@ -215,7 +215,7 @@ class SwarmSoundSynthesizer {
         osc.start(this.ctx.currentTime + i * 0.075);
         osc.stop(this.ctx.currentTime + i * 0.075 + 0.55);
       });
-    } catch (e) {}
+    } catch (e) { }
   }
 }
 
@@ -978,7 +978,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             }
           }
 
-            agentTargets = {
+          agentTargets = {
             sarah: {
               x: sarahPos.x,
               y: sarahPos.y,
@@ -2627,17 +2627,17 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
       <div className="swarm-blueprint-indicator">
         <div className="blueprint-header-row">
           <span className="blueprint-tag">⚡ SWARM REBUILD ENGINE v4.0</span>
-          <button 
-            type="button" 
-            className="swarm-blueprint-speed-btn" 
+          <button
+            type="button"
+            className="swarm-blueprint-speed-btn"
             onClick={handleToggleSpeed}
             title="Toggle playback speed (1.35x / 2.0x)"
           >
             ⚡ {speedMultiplier >= 1.8 ? '2.0x' : '1.35x'}
           </button>
-          <button 
-            type="button" 
-            className="swarm-blueprint-skip-btn" 
+          <button
+            type="button"
+            className="swarm-blueprint-skip-btn"
             onClick={finishSwarm}
             title="Skip rebuild and open VarunOS immediately (Esc)"
           >
