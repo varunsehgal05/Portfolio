@@ -4380,38 +4380,76 @@
 .selection-handle.bl { bottom: -4px; left: -4px; }
 .selection-handle.br { bottom: -4px; right: -4px; }
 
-/* Wireframe Mode */
-.wireframe-mode-stage .bento-card,
-.wireframe-mode-stage .zigzag-card,
-.wireframe-mode-stage .about-trait-card,
-.wireframe-mode-stage .figjam-phase-card,
-.wireframe-mode-stage .process-phase-box,
-.wireframe-mode-stage .plugin-creative-card {
-  background: rgba(11, 25, 44, 0.95) !important;
-  border: 1.5px dashed #38bdf8 !important;
-  box-shadow: 0 0 20px rgba(56, 189, 248, 0.15), inset 0 0 10px rgba(56, 189, 248, 0.05) !important;
+/* =========================================================================
+   AUTHENTIC FIGMA WIREFRAME / OUTLINE MODE (Shift+O)
+   Transforms the UI into an authentic low-fi architectural blueprint:
+   - Blueprint graph paper canvas background
+   - Stroke-centric frames, artboards, and containers (no glows, flat fills)
+   - Classical wireframe image placeholders with corner-to-corner 'X' crossing
+   - Outlined monochrome tags, badges, and pill chips
+   - Structural typography and outlined action buttons
+   ========================================================================= */
+
+.wireframe-mode-active .lovable-canvas-stage,
+.wireframe-mode-stage {
+  background-color: #0b0f14 !important;
+  transition: background-color 0.25s ease;
 }
 
+/* Blueprint Graph Paper Grid Background */
+.wireframe-mode-active .lovable-dot-grid,
 .wireframe-mode-stage .lovable-dot-grid {
-  background-image: radial-gradient(circle, rgba(56, 189, 248, 0.35) 1px, transparent 1px) !important;
+  background-image: 
+    linear-gradient(to right, rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+    linear-gradient(to right, rgba(148, 163, 184, 0.16) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.16) 1px, transparent 1px) !important;
+  background-size: 20px 20px, 20px 20px, 100px 100px, 100px 100px !important;
 }
 
-/* Canvas Zoom & Wireframe Toolbar Controls */
-.canvas-header-controls {
+/* Floating Wireframe Status Pill */
+.wireframe-floating-pill {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-left: 12px;
+  background: rgba(15, 23, 42, 0.94);
+  border: 1px solid #38bdf8;
+  color: #38bdf8;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  padding: 5px 14px;
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5), 0 0 12px rgba(56, 189, 248, 0.25);
+  z-index: 100;
+  pointer-events: none;
+  animation: fadeInDown 0.2s ease;
 }
 
+.wireframe-floating-pill .wireframe-pill-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #38bdf8;
+  box-shadow: 0 0 6px #38bdf8;
+}
+
+/* Canvas Toolbar Wireframe Button */
 .wireframe-toggle-btn {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.14);
   color: #e4e4e7;
-  padding: 4px 10px;
+  padding: 0 10px;
+  height: 28px;
+  box-sizing: border-box;
   border-radius: 6px;
   font-size: 11.5px;
   font-weight: 500;
@@ -4422,13 +4460,305 @@
 .wireframe-toggle-btn:hover {
   background: rgba(255, 255, 255, 0.12);
   border-color: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
 }
 
 .wireframe-toggle-btn.active {
-  background: rgba(56, 189, 248, 0.2);
-  border-color: #38bdf8;
-  color: #38bdf8;
-  box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
+  background: rgba(56, 189, 248, 0.2) !important;
+  border-color: #38bdf8 !important;
+  color: #38bdf8 !important;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.25) !important;
+}
+
+/* Frames & Artboards in Wireframe Mode */
+.wireframe-mode-active .figma-artboard-box,
+.wireframe-mode-stage .figma-artboard-box,
+.wireframe-mode-active .artboard-container,
+.wireframe-mode-stage .artboard-container {
+  background: rgba(15, 20, 26, 0.88) !important;
+  border: 1.5px dashed #64748b !important;
+  box-shadow: 0 0 0 1px rgba(100, 116, 139, 0.2) !important;
+  backdrop-filter: none !important;
+}
+
+.wireframe-mode-active .figma-artboard-header-tag,
+.wireframe-mode-stage .figma-artboard-header-tag {
+  background: #1e293b !important;
+  border: 1px solid #64748b !important;
+  color: #cbd5e1 !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace !important;
+}
+
+/* Cards & Containers */
+.wireframe-mode-active .bento-card,
+.wireframe-mode-active .zigzag-card,
+.wireframe-mode-active .about-trait-card,
+.wireframe-mode-active .about-hero-box,
+.wireframe-mode-active .about-grid-card,
+.wireframe-mode-active .figjam-phase-card,
+.wireframe-mode-active .process-phase-box,
+.wireframe-mode-active .plugin-creative-card,
+.wireframe-mode-active .plugin-card,
+.wireframe-mode-active .timeline-item-card,
+.wireframe-mode-stage .bento-card,
+.wireframe-mode-stage .zigzag-card,
+.wireframe-mode-stage .about-trait-card,
+.wireframe-mode-stage .about-hero-box,
+.wireframe-mode-stage .about-grid-card,
+.wireframe-mode-stage .figjam-phase-card,
+.wireframe-mode-stage .process-phase-box,
+.wireframe-mode-stage .plugin-creative-card,
+.wireframe-mode-stage .plugin-card,
+.wireframe-mode-stage .timeline-item-card {
+  background: rgba(17, 24, 39, 0.75) !important;
+  border: 1.5px solid #475569 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  transition: all 0.15s ease !important;
+}
+
+.wireframe-mode-active .bento-card:hover,
+.wireframe-mode-stage .bento-card:hover {
+  border-color: #94a3b8 !important;
+  background: rgba(30, 41, 59, 0.85) !important;
+}
+
+/* Authentic Wireframe Image Placeholder (Universal Corner-to-Corner 'X' Crossing) */
+.wireframe-mode-active .bento-img-wrap,
+.wireframe-mode-active .bento-preview-wrap,
+.wireframe-mode-active .project-preview-wrap,
+.wireframe-mode-active .card-media-box,
+.wireframe-mode-stage .bento-img-wrap,
+.wireframe-mode-stage .bento-preview-wrap,
+.wireframe-mode-stage .project-preview-wrap,
+.wireframe-mode-stage .card-media-box {
+  position: relative !important;
+  background: #0f172a !important;
+  border: 1px solid #475569 !important;
+  border-bottom: 1.5px dashed #475569 !important;
+  overflow: hidden !important;
+}
+
+.wireframe-mode-active .bento-img-wrap img,
+.wireframe-mode-active .bento-preview-wrap img,
+.wireframe-mode-active .project-preview-wrap img,
+.wireframe-mode-stage .bento-img-wrap img,
+.wireframe-mode-stage .bento-preview-wrap img,
+.wireframe-mode-stage .project-preview-wrap img {
+  opacity: 0.1 !important;
+  filter: grayscale(100%) contrast(150%) brightness(0.4) !important;
+}
+
+.wireframe-mode-active .bento-img-wrap::before,
+.wireframe-mode-active .bento-preview-wrap::before,
+.wireframe-mode-active .project-preview-wrap::before,
+.wireframe-mode-stage .bento-img-wrap::before,
+.wireframe-mode-stage .bento-preview-wrap::before,
+.wireframe-mode-stage .project-preview-wrap::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: 
+    linear-gradient(to top right, transparent calc(50% - 1px), rgba(148, 163, 184, 0.45) 50%, transparent calc(50% + 1px)),
+    linear-gradient(to bottom right, transparent calc(50% - 1px), rgba(148, 163, 184, 0.45) 50%, transparent calc(50% + 1px)) !important;
+  pointer-events: none !important;
+  z-index: 4 !important;
+}
+
+.wireframe-mode-active .bento-img-wrap::after,
+.wireframe-mode-active .bento-preview-wrap::after,
+.wireframe-mode-active .project-preview-wrap::after,
+.wireframe-mode-stage .bento-img-wrap::after,
+.wireframe-mode-stage .bento-preview-wrap::after,
+.wireframe-mode-stage .project-preview-wrap::after {
+  content: '⤯ WIREFRAME ASSET' !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  letter-spacing: 1px !important;
+  color: #cbd5e1 !important;
+  background: rgba(15, 23, 42, 0.9) !important;
+  border: 1px solid #64748b !important;
+  padding: 3px 8px !important;
+  border-radius: 4px !important;
+  pointer-events: none !important;
+  z-index: 5 !important;
+}
+
+/* Wireframe Badges, Tags & Pills (No colorful fills) */
+.wireframe-mode-active .bento-tag,
+.wireframe-mode-active .bento-badge,
+.wireframe-mode-active .bento-cat,
+.wireframe-mode-active .filter-pill,
+.wireframe-mode-active .project-tag-pill,
+.wireframe-mode-active .project-badge-pill,
+.wireframe-mode-active .project-cat,
+.wireframe-mode-active .timeline-tag,
+.wireframe-mode-active .timeline-badge,
+.wireframe-mode-active .activity-filter-btn,
+.wireframe-mode-active .view-switch-btn,
+.wireframe-mode-active .trait-badge,
+.wireframe-mode-active .plugin-tag,
+.wireframe-mode-active .plugin-version-pill,
+.wireframe-mode-stage .bento-tag,
+.wireframe-mode-stage .bento-badge,
+.wireframe-mode-stage .bento-cat,
+.wireframe-mode-stage .filter-pill,
+.wireframe-mode-stage .project-tag-pill,
+.wireframe-mode-stage .project-badge-pill,
+.wireframe-mode-stage .project-cat,
+.wireframe-mode-stage .timeline-tag,
+.wireframe-mode-stage .timeline-badge,
+.wireframe-mode-stage .activity-filter-btn,
+.wireframe-mode-stage .view-switch-btn,
+.wireframe-mode-stage .trait-badge,
+.wireframe-mode-stage .plugin-tag,
+.wireframe-mode-stage .plugin-version-pill {
+  background: transparent !important;
+  border: 1px solid #64748b !important;
+  color: #94a3b8 !important;
+  box-shadow: none !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace !important;
+  text-transform: uppercase !important;
+  font-size: 10px !important;
+}
+
+/* Wireframe Action Buttons & Links */
+.wireframe-mode-active .bento-btn,
+.wireframe-mode-active .bento-link-btn,
+.wireframe-mode-active .open-in-figma-link,
+.wireframe-mode-active .primary-action-btn,
+.wireframe-mode-active .plugin-run-btn,
+.wireframe-mode-active .timeline-view-btn,
+.wireframe-mode-active .download-resume-btn,
+.wireframe-mode-stage .bento-btn,
+.wireframe-mode-stage .bento-link-btn,
+.wireframe-mode-stage .open-in-figma-link,
+.wireframe-mode-stage .primary-action-btn,
+.wireframe-mode-stage .plugin-run-btn,
+.wireframe-mode-stage .timeline-view-btn,
+.wireframe-mode-stage .download-resume-btn {
+  background: transparent !important;
+  border: 1.5px solid #94a3b8 !important;
+  color: #f1f5f9 !important;
+  box-shadow: none !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace !important;
+}
+
+.wireframe-mode-active .bento-btn:hover,
+.wireframe-mode-active .bento-link-btn:hover,
+.wireframe-mode-active .primary-action-btn:hover,
+.wireframe-mode-stage .bento-btn:hover,
+.wireframe-mode-stage .bento-link-btn:hover,
+.wireframe-mode-stage .primary-action-btn:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: #cbd5e1 !important;
+}
+
+/* Wireframe Typography */
+.wireframe-mode-active .bento-title,
+.wireframe-mode-active .project-name,
+.wireframe-mode-active .timeline-title,
+.wireframe-mode-active h1,
+.wireframe-mode-active h2,
+.wireframe-mode-active h3,
+.wireframe-mode-stage .bento-title,
+.wireframe-mode-stage .project-name,
+.wireframe-mode-stage .timeline-title,
+.wireframe-mode-stage h1,
+.wireframe-mode-stage h2,
+.wireframe-mode-stage h3 {
+  color: #f1f5f9 !important;
+  text-shadow: none !important;
+}
+
+.wireframe-mode-active .bento-desc,
+.wireframe-mode-active .project-desc,
+.wireframe-mode-active .timeline-desc,
+.wireframe-mode-stage .bento-desc,
+.wireframe-mode-stage .project-desc,
+.wireframe-mode-stage .timeline-desc {
+  color: #94a3b8 !important;
+}
+
+/* Wireframe Inputs */
+.wireframe-mode-active .bento-search-input,
+.wireframe-mode-active .plugins-search-input,
+.wireframe-mode-active .search-input,
+.wireframe-mode-stage .bento-search-input,
+.wireframe-mode-stage .plugins-search-input,
+.wireframe-mode-stage .search-input {
+  background: rgba(15, 23, 42, 0.6) !important;
+  border: 1px dashed #64748b !important;
+  color: #cbd5e1 !important;
+  box-shadow: none !important;
+}
+
+/* Wireframe Timeline (Experience) */
+.wireframe-mode-active .zigzag-center-line,
+.wireframe-mode-stage .zigzag-center-line {
+  background: none !important;
+  border-left: 2px dashed #64748b !important;
+}
+
+.wireframe-mode-active .zigzag-spine-glow-beam,
+.wireframe-mode-stage .zigzag-spine-glow-beam {
+  display: none !important;
+}
+
+.wireframe-mode-active .zigzag-node-icon,
+.wireframe-mode-stage .zigzag-node-icon {
+  background: #0b0f14 !important;
+  border: 2px solid #94a3b8 !important;
+  box-shadow: none !important;
+  color: #cbd5e1 !important;
+}
+
+.wireframe-mode-active .spine-beacon-pill,
+.wireframe-mode-stage .spine-beacon-pill {
+  background: #0f172a !important;
+  border: 1px dashed #64748b !important;
+  box-shadow: none !important;
+}
+
+.wireframe-mode-active .beacon-pulse-dot,
+.wireframe-mode-stage .beacon-pulse-dot {
+  background: #94a3b8 !important;
+  box-shadow: none !important;
+  animation: none !important;
+}
+
+/* FigJam Wireframe Process Board */
+.wireframe-mode-active .figjam-board-header,
+.wireframe-mode-stage .figjam-board-header {
+  background: rgba(17, 24, 39, 0.9) !important;
+  border: 1px dashed #64748b !important;
+}
+
+.wireframe-mode-active .figjam-floating-toolbar,
+.wireframe-mode-stage .figjam-floating-toolbar {
+  background: rgba(17, 24, 39, 0.95) !important;
+  border: 1px solid #64748b !important;
+}
+
+.wireframe-mode-active .figjam-sticky-note,
+.wireframe-mode-stage .figjam-sticky-note {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1.5px dashed #94a3b8 !important;
+  box-shadow: none !important;
+  color: #e2e8f0 !important;
+}
+
+/* Plugins View Wireframe */
+.wireframe-mode-active .plugin-icon-wrap,
+.wireframe-mode-stage .plugin-icon-wrap {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px dashed #64748b !important;
+  color: #94a3b8 !important;
 }
 
 .canvas-tool-pill {

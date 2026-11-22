@@ -1174,6 +1174,15 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
         setActiveTool('select');
         showToast('Move Tool (Select active)');
       }
+      // Shift+O or Ctrl+Y for Wireframe Mode (authentic Figma outline shortcut)
+      if ((e.shiftKey && (e.key === 'o' || e.key === 'O')) || ((e.ctrlKey || e.metaKey) && (e.key === 'y' || e.key === 'Y'))) {
+        e.preventDefault();
+        setIsWireframeMode((prev) => {
+          const next = !prev;
+          showToast(next ? 'Wireframe Mode: ON (Shift+O)' : 'Wireframe Mode: OFF');
+          return next;
+        });
+      }
       if (e.shiftKey && (e.key === '1' || e.key === '!')) {
         centerCanvasView(activeTab);
         showToast('Canvas Centered (100%)');
@@ -1394,7 +1403,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
   ];
 
   return (
-    <div className={`lovable-figma-portfolio theme-${currentTheme}`}>
+    <div className={`lovable-figma-portfolio theme-${currentTheme} ${isWireframeMode ? 'wireframe-mode-active' : ''}`}>
       {/* Authentic Figma File Loading Screen */}
       {isAppLoading && (
         <FigmaLoadingScreen
@@ -1478,6 +1487,21 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
               <span className="material-symbols-outlined text-[15px]">pan_tool</span>
             </button>
           </div>
+
+          {/* Wireframe Mode Toggle (Shift+O) */}
+          <button
+            type="button"
+            className={`wireframe-toggle-btn ${isWireframeMode ? 'active' : ''}`}
+            onClick={() => {
+              const next = !isWireframeMode;
+              setIsWireframeMode(next);
+              showToast(next ? 'Wireframe Mode: ON (Shift+O)' : 'Wireframe Mode: OFF');
+            }}
+            title="Toggle Wireframe Mode (Shift+O)"
+          >
+            <span className="material-symbols-outlined text-[16px]">grid_view</span>
+            <span>Wireframe</span>
+          </button>
         </div>
 
         <div className="nav-right-section">
@@ -1902,6 +1926,14 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
               backgroundPosition: `${pan.x}px ${pan.y}px`
             }}
           ></div>
+
+          {/* Floating Wireframe Status Indicator */}
+          {isWireframeMode && (
+            <div className="wireframe-floating-pill">
+              <span className="wireframe-pill-dot" />
+              <span>WIREFRAME VIEW (SHIFT+O)</span>
+            </div>
+          )}
 
           {/* =========================================================================
               VIEW 1: HOME (Infinite Panning Canvas + Glass Artboard)
