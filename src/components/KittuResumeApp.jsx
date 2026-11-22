@@ -1180,7 +1180,7 @@ const KittuResumeApp = ({
                   />
                 </svg>
 
-                {/* Small Name & Action Tag */}
+                {/* Single Role Tag (Strictly ONE tag per swarm agent) */}
                 <span
                   style={{
                     background: c.color,
@@ -1188,67 +1188,19 @@ const KittuResumeApp = ({
                     fontFamily: '-apple-system, BlinkMacSystemFont, "Inter", sans-serif',
                     fontSize: '9.5px',
                     fontWeight: '600',
-                    padding: '2px 6px',
+                    padding: '2px 7px',
                     borderRadius: '3px',
                     marginLeft: '8px',
                     marginTop: '-2px',
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '4px',
                     boxShadow: '0 2px 6px rgba(0,0,0,0.22)',
                     whiteSpace: 'nowrap',
                     letterSpacing: '0.2px'
                   }}
                 >
-                  <span>{c.name}</span>
-                  {c.tool && (
-                    <span style={{
-                      fontSize: '8px',
-                      fontWeight: '700',
-                      background: 'rgba(0,0,0,0.25)',
-                      padding: '1px 3px',
-                      borderRadius: '2px',
-                      lineHeight: 1
-                    }}>
-                      {c.tool}
-                    </span>
-                  )}
-                  {c.action && (
-                    <span style={{
-                      fontSize: '8.5px',
-                      opacity: 0.9,
-                      borderLeft: '1px solid rgba(255,255,255,0.35)',
-                      paddingLeft: '4px'
-                    }}>
-                      {c.action}
-                    </span>
-                  )}
+                  <span>{c.role || (c.id === 'varun' ? 'Typing' : c.id === 'sarah' ? 'Stamping' : c.id === 'alex' ? 'Layout' : 'Framing')}</span>
                 </span>
-
-                {/* Small Chat Bubble */}
-                {c.chat && (
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '-24px',
-                      left: '10px',
-                      background: '#18181b',
-                      color: '#f4f4f5',
-                      border: `1.5px solid ${c.color}`,
-                      borderRadius: '4px',
-                      padding: '2px 7px',
-                      fontSize: '9.5px',
-                      fontWeight: '500',
-                      fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif',
-                      boxShadow: '0 4px 12px rgba(0,0,0,0.25)',
-                      whiteSpace: 'nowrap',
-                      pointerEvents: 'none',
-                      zIndex: 10
-                    }}
-                  >
-                    💬 {c.chat}
-                  </div>
-                )}
               </div>
             ))}
           </div>

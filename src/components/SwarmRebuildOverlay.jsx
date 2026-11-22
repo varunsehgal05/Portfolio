@@ -92,17 +92,10 @@ const SwarmCursor = React.memo(({
           </svg>
         )}
 
-        {/* Compact Figma-style role tag (Role only, zero clutter) */}
+        {/* Compact Figma-style role tag (Strictly ONE tag only per swarm agent, zero clutter) */}
         <div className="swarm-cursor-tag" style={{ backgroundColor: color }}>
           <span className="swarm-cursor-name">{displayRole}</span>
         </div>
-
-        {/* Optional Chat Bubble */}
-        {chatText && (
-          <div className="swarm-chat-bubble" style={{ '--cursor-color': color }}>
-            <span>💬 {chatText}</span>
-          </div>
-        )}
       </div>
     </>
   );
@@ -1489,15 +1482,9 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
               action: `Sidebar: ${currentItem.label}`,
               cursorMode: currentItem.isHeader ? 'text' : 'arrow',
               isClicking: subProg > 0.65 && subProg < 0.95,
-              isDrawing: true,
-              chatText: currentItem.chat,
-              boxBounds: {
-                x: sidebarBox.x + 8,
-                y: sidebarBox.y + currentItem.yRel,
-                w: sidebarBox.w - 16,
-                h: currentItem.h,
-                label: currentItem.label
-              }
+              isDrawing: false,
+              chatText: null,
+              boxBounds: null
             },
             varun: {
               x: varunPos.x,
@@ -2972,9 +2959,6 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             <div className="box-handle top-right" style={{ borderColor: cursor.color }} />
             <div className="box-handle bottom-left" style={{ borderColor: cursor.color }} />
             <div className="box-handle bottom-right" style={{ borderColor: cursor.color }} />
-            <div className="box-dimension-label" style={{ backgroundColor: cursor.color }}>
-              {b.label || `${Math.round(b.w)} × ${Math.round(b.h)}`}
-            </div>
           </div>
         );
       })}
