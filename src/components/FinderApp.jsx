@@ -190,8 +190,6 @@ const FinderApp = ({ onOpenApp }) => {
   useEffect(() => {
     if (rebuildStep >= 2) {
       setSidebarStep(15);
-    } else if (rebuildStep === 0) {
-      setSidebarStep(0);
     }
   }, [rebuildStep]);
 
@@ -293,9 +291,8 @@ const FinderApp = ({ onOpenApp }) => {
       <aside 
         className="finder-sidebar"
         style={{
-          opacity: (rebuildStep >= 1 || sidebarStep >= 1) ? 1 : 0,
+          opacity: 1,
           transform: 'none',
-          transition: 'opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
           pointerEvents: (rebuildStep >= 1 || sidebarStep >= 1) ? 'auto' : 'none'
         }}
       >

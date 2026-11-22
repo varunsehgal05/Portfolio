@@ -16,11 +16,11 @@ import './LiveMouseSwarm.css';
  */
 
 const ELITE_AGENTS = [
-  { id: 'agent-varun', name: 'Varun Sehgal', role: 'Lead Architect', color: '#A259FF', defaultAction: 'Designing' },
-  { id: 'agent-elena', name: 'Elena Rostova', role: 'UI / UX Design', color: '#0D99FF', defaultAction: 'Drafting' },
-  { id: 'agent-sarah', name: 'Sarah Lin', role: 'Design Systems', color: '#EC4899', defaultAction: 'Auto-Layout' },
-  { id: 'agent-alex', name: 'Alex Chen', role: 'Core Systems', color: '#10B981', defaultAction: 'Mounting' },
-  { id: 'agent-marcus', name: 'Marcus Vance', role: 'Motion & QA', color: '#F59E0B', defaultAction: 'Reviewing' }
+  { id: 'agent-varun', name: 'Varun Sehgal', role: 'Typing', color: '#A259FF', defaultAction: 'Designing' },
+  { id: 'agent-elena', name: 'Elena Rostova', role: 'Layout', color: '#0D99FF', defaultAction: 'Drafting' },
+  { id: 'agent-sarah', name: 'Sarah Lin', role: 'Stamping', color: '#EC4899', defaultAction: 'Auto-Layout' },
+  { id: 'agent-alex', name: 'Alex Chen', role: 'Framing', color: '#10B981', defaultAction: 'Mounting' },
+  { id: 'agent-marcus', name: 'Marcus Vance', role: 'Motion', color: '#F59E0B', defaultAction: 'Reviewing' }
 ];
 
 const createInitialAgents = (count) => {
@@ -266,15 +266,9 @@ const LiveMouseSwarm = ({ isEnabled = false, isRebuildActive = false, agentCount
             />
           </svg>
 
-          {/* User Tag with Name & Action */}
+          {/* User Tag with Role Only */}
           <div className="live-swarm-tag" style={{ backgroundColor: agent.color }}>
-            <span className="live-swarm-name">{agent.name}</span>
-            <span 
-              ref={(el) => (actionTextNodesRef.current[idx] = el)}
-              className="live-swarm-action"
-            >
-              {agent.action}
-            </span>
+            <span className="live-swarm-name">{agent.role || 'Agent'}</span>
           </div>
         </div>
       ))}

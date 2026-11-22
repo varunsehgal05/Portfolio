@@ -7,12 +7,23 @@ const SwarmCursor = React.memo(({
   y,
   color,
   label,
+  roleTag,
+  role,
   toolKey,
   cursorMode = 'arrow',
   isClicking = false,
   chatText,
   trail = []
 }) => {
+  // Pure role tag: no personal names, no tool key clutter
+  const displayRole = roleTag || role || (
+    label === 'Sarah Lin' ? 'Stamping' :
+    label === 'Varun Sehgal' ? 'Typing' :
+    label === 'Alex Chen' ? 'Framing' :
+    label === 'Elena Rostova' ? 'Layout' :
+    (label === 'You' || label === 'Guest') ? 'Recruiter' :
+    label || 'Agent'
+  );
   return (
     <>
       {/* Liquid glowing trail behind active cursor */}
@@ -81,14 +92,9 @@ const SwarmCursor = React.memo(({
           </svg>
         )}
 
-        {/* Compact Figma-style name tag with tool pill */}
+        {/* Compact Figma-style role tag (Role only, zero clutter) */}
         <div className="swarm-cursor-tag" style={{ backgroundColor: color }}>
-          <span className="swarm-cursor-name">{label}</span>
-          {toolKey && (
-            <span className="swarm-cursor-tool-tag">
-              {toolKey.includes(' ') ? toolKey.split(' ')[0] : toolKey}
-            </span>
-          )}
+          <span className="swarm-cursor-name">{displayRole}</span>
         </div>
 
         {/* Optional Chat Bubble */}
@@ -738,15 +744,14 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           }
         }
 
-        // 4 Swarm Agents actively working simultaneously on the left desktop apps!
+        // 4 Swarm Agents actively working simultaneously on the left desktop apps with zero overlapping collision!
         agentTargets = {
           sarah: {
-            x: sarahPos.x,
-            y: sarahPos.y,
+            x: sarahPos.x + 16,
+            y: sarahPos.y + 16,
             color: '#FF7262',
-            label: 'Sarah Lin',
+            roleTag: 'Stamping',
             action: `Stamping: ${iconNames[iconIndex]}`,
-            toolKey: '⌥ Stamp',
             cursorMode: subProgress < 0.65 ? 'grab' : 'arrow',
             isClicking: isSarahClicking,
             isDrawing: true,
@@ -759,22 +764,21 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             }
           },
           elena: {
-            x: iconX + iconW + 36,
-            y: sarahPos.y,
+            x: iconX + iconW + 44,
+            y: Math.max(iconYPositions[0] + 50, sarahPos.y - 44),
             color: '#0D99FF',
-            label: 'Elena Rostova',
+            roleTag: 'Layout',
             action: iconIndex > 0 ? 'Measuring ΔY: 16px Gap' : 'Aligning Left Grid',
-            toolKey: 'V Move',
             cursorMode: 'arrow'
           },
           alex: {
-            x: iconX - 6,
-            y: sarahPos.y + 12,
+            x: iconX + iconW + 26,
+            y: iconYPositions[0] - 14,
             color: '#0ACF83',
-            label: 'Alex Chen',
+            roleTag: 'Framing',
             action: 'Framing Column Layout [72×520]',
-            toolKey: 'R Frame',
             cursorMode: 'arrow',
+            chatText: iconIndex === 0 ? 'framing column grid' : null,
             boxBounds: {
               x: iconX - 8,
               y: iconYPositions[0] - 8,
@@ -784,21 +788,19 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             }
           },
           varun: {
-            x: iconX + iconW / 2,
-            y: iconYPositions[iconIndex] + iconH - 6,
+            x: iconX + iconW + 36,
+            y: Math.min(iconYPositions[5] + 32, sarahPos.y + 48),
             color: '#A259FF',
-            label: 'Varun Sehgal',
+            roleTag: 'Typing',
             action: `Labeling: ${iconNames[iconIndex]}`,
-            toolKey: 'T Type',
             cursorMode: 'arrow'
           },
           user: {
             x: w - 80,
             y: 48,
             color: '#1ABCFE',
-            label: userName || 'You',
+            roleTag: 'Recruiter',
             action: 'Observing Assembly',
-            toolKey: 'V Move',
             cursorMode: 'arrow'
           }
         };
@@ -1291,7 +1293,6 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           const currentItem = SIDEBAR_ITEMS[itemIdx];
 
           if (lastSidebarStepRef.current !== currentItem.step) {
-            lastSidebarStepRef.current = currentItem.step;
             soundSynth.playSnap(460 + itemIdx * 24, 0.035);
             triggerRipple(sidebarBox.x + 80, sidebarBox.y + currentItem.yRel + currentItem.h / 2, '#0D99FF');
             dispatchSidebarStep(currentItem.step);
@@ -1426,8 +1427,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
               x: elenaPos.x,
               y: elenaPos.y,
               color: '#0D99FF',
-              label: 'Elena Rostova',
-              toolKey: currentItem.isHeader ? 'T Text' : (itemIdx === 0 ? 'F Frame' : '⌥ Stamp'),
+              roleTag: 'Stamping',
+              action: `Sidebar: ${currentItem.label}`,
               cursorMode: currentItem.isHeader ? 'text' : 'arrow',
               isClicking: subProg > 0.65 && subProg < 0.95,
               isDrawing: true,
@@ -1444,9 +1445,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
               x: varunPos.x,
               y: varunPos.y,
               color: '#A259FF',
-              label: 'Varun Sehgal',
+              roleTag: 'Typing',
               action: varunAction,
-              toolKey: varunTool,
               cursorMode: varunCursor,
               isDrawing: true,
               chatText: varunChat
@@ -1455,9 +1455,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
               x: sarahPos.x,
               y: sarahPos.y,
               color: '#FF7262',
-              label: 'Sarah Lin',
+              roleTag: 'Framing',
               action: sarahAction,
-              toolKey: sarahTool,
               cursorMode: sarahCursor,
               isDrawing: Boolean(sarahBox),
               chatText: sarahChat,
@@ -1467,9 +1466,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
               x: alexPos.x,
               y: alexPos.y,
               color: '#0ACF83',
-              label: 'Alex Chen',
+              roleTag: 'Layout',
               action: alexAction,
-              toolKey: 'F Frame',
               cursorMode: 'arrow',
               chatText: alexChat
             },
@@ -1477,9 +1475,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
               x: curX + curW - 80,
               y: curY + curH - 24,
               color: '#1ABCFE',
-              label: userName || 'You',
+              roleTag: 'Recruiter',
               action: 'Reviewing Workspace',
-              toolKey: 'V Move',
               cursorMode: 'arrow'
             }
           };
@@ -2968,6 +2965,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             y={cursor.y}
             color={cursor.color}
             label={cursor.label}
+            roleTag={cursor.roleTag}
+            role={cursor.role}
             toolKey={cursor.toolKey}
             cursorMode={cursor.cursorMode}
             isClicking={cursor.isClicking}
