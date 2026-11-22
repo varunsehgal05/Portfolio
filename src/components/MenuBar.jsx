@@ -767,9 +767,13 @@ const MenuBar = ({
         {/* Active Collaborator / Role Switcher Popover */}
         <div className="menu-item-wrapper">
           <div 
+            role="button"
+            tabIndex={0}
             className={`menu-user-presence ${activeMenu === 'user' ? 'active' : ''}`}
             title={`Active Perspective: ${currentRole} — Click to Switch Role`}
+            aria-label={currentRole}
             onClick={() => toggleMenu('user')}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleMenu('user'); } }}
           >
             <span className="presence-dot" />
             <User size={11} className="presence-icon" />
@@ -823,7 +827,7 @@ const MenuBar = ({
         {/* Swarm Rebuild Trigger */}
         <button 
           className="menu-swarm-replay-btn" 
-          aria-label="Replay Swarm Rebuild Animation"
+          aria-label="Swarm Rebuild"
           onClick={handleTriggerSwarm} 
           title="Replay Swarm Rebuild Animation"
         >
@@ -952,7 +956,7 @@ const MenuBar = ({
             className={`menu-time ${activeMenu === 'calendar' ? 'active' : ''}`}
             role="button"
             tabIndex={0}
-            aria-label="Click to view Date & Calendar"
+            aria-label={format(time, 'EEE MMM d  h:mm a')}
             onClick={() => toggleMenu('calendar')}
             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleMenu('calendar'); }}
             title="Click to view Date & Calendar"

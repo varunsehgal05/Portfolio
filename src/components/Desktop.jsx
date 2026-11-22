@@ -134,6 +134,30 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
   // Track sequential dock icon stamping during Swarm Rebuild (reveal 1-by-1 in Stage 4)
   const [stampedDockCount, setStampedDockCount] = useState(() => (!isRebuilding && swarmStage >= 5 ? 10 : 0));
 
+  // Defer Clippy until user interaction (or 12s idle fallback) for instant LCP performance (100 Lighthouse score)
+  const [loadClippy, setLoadClippy] = useState(false);
+  useEffect(() => {
+    const handleInteract = () => {
+      setLoadClippy(true);
+      window.removeEventListener('mousemove', handleInteract);
+      window.removeEventListener('keydown', handleInteract);
+      window.removeEventListener('touchstart', handleInteract);
+      window.removeEventListener('click', handleInteract);
+    };
+    window.addEventListener('mousemove', handleInteract, { once: true, passive: true });
+    window.addEventListener('keydown', handleInteract, { once: true, passive: true });
+    window.addEventListener('touchstart', handleInteract, { once: true, passive: true });
+    window.addEventListener('click', handleInteract, { once: true, passive: true });
+    const fallbackTimer = setTimeout(() => setLoadClippy(true), 12000);
+    return () => {
+      window.removeEventListener('mousemove', handleInteract);
+      window.removeEventListener('keydown', handleInteract);
+      window.removeEventListener('touchstart', handleInteract);
+      window.removeEventListener('click', handleInteract);
+      clearTimeout(fallbackTimer);
+    };
+  }, []);
+
   useEffect(() => {
     const handleIconStamped = (e) => {
       if (typeof e.detail?.count === 'number') {
@@ -510,12 +534,14 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
           })}
         </div>
 
-        {/* PixelAssistant / Clippy bot remains untouched on the right/bottom */}
-        <div className={`desktop-bot-wrap ${swarmStage < 5 ? (swarmStage >= 5 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
-          <Suspense fallback={null}>
-            <PixelAssistant isIdle={isIdle} onOpenApp={openApp} />
-          </Suspense>
-        </div>
+        {/* PixelAssistant / Clippy bot deferred for instant LCP performance */}
+        {loadClippy && (
+          <div className={`desktop-bot-wrap ${swarmStage < 5 ? (swarmStage >= 5 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
+            <Suspense fallback={null}>
+              <PixelAssistant isIdle={isIdle} onOpenApp={openApp} />
+            </Suspense>
+          </div>
+        )}
 
         {/* Bottom macOS Dock (revealed in Stage 4: capsule first, then apps) */}
         <div className={`desktop-dock-wrap ${swarmStage < 5 ? (swarmStage >= 4 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
