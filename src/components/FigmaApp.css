@@ -1268,11 +1268,14 @@
 
 .bento-grid-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  width: 100%;
 }
 
 .bento-card {
+  width: 100%;
+  box-sizing: border-box;
   background: #2c2c2c;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 10px;
@@ -4867,9 +4870,9 @@
 }
 
 .work-artboard-box {
-  width: 1340px;
-  padding: 36px 40px;
-  min-height: 960px;
+  width: 1380px;
+  padding: 36px 40px 48px;
+  min-height: 1180px;
 }
 
 .experience-artboard-box {

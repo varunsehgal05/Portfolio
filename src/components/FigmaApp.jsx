@@ -784,16 +784,16 @@ const FigmaApp = ({ isInteracting, userName, onOpenApp }) => {
   const [selectedNodeType, setSelectedNodeType] = useState('Frame');
   const [nodeProps, setNodeProps] = useState({
     'root-canvas': { x: 0, y: 0, w: 1200, h: 850, radius: 16, fill: '#1e1e1e', fillOpacity: 100, stroke: '#383838', strokeWidth: 1, opacity: 100 },
-    'work-artboard': { x: 0, y: 0, w: 1340, h: 960, radius: 16, fill: '#1e1e1e', stroke: '#383838', strokeWidth: 1, opacity: 100 },
-    'exp-artboard': { x: 0, y: 0, w: 1200, h: 800, radius: 16, fill: '#1e1e1e', stroke: '#383838', strokeWidth: 1, opacity: 100 },
-    'about-artboard': { x: 0, y: 0, w: 1280, h: 920, radius: 16, fill: '#1e1e1e', stroke: '#383838', strokeWidth: 1, opacity: 100 },
+    'work-artboard': { x: 0, y: 0, w: 1380, h: 1180, radius: 16, fill: '#1e1e1e', stroke: '#383838', strokeWidth: 1, opacity: 100 },
+    'exp-artboard': { x: 0, y: 0, w: 1240, h: 1400, radius: 16, fill: '#1e1e1e', stroke: '#383838', strokeWidth: 1, opacity: 100 },
+    'about-artboard': { x: 0, y: 0, w: 1280, h: 820, radius: 16, fill: '#1e1e1e', stroke: '#383838', strokeWidth: 1, opacity: 100 },
     'resume-artboard': { x: 0, y: 0, w: 1080, h: 2600, radius: 16, fill: 'transparent', stroke: 'transparent', strokeWidth: 0, opacity: 100 },
-    'process-artboard': { x: 0, y: 0, w: 1400, h: 960, radius: 16, fill: '#141416', stroke: 'rgba(255, 255, 255, 0.12)', strokeWidth: 1, opacity: 100 },
-    'plugins-artboard': { x: 0, y: 0, w: 1440, h: 1100, radius: 16, fill: '#141416', stroke: 'rgba(255, 255, 255, 0.12)', strokeWidth: 1, opacity: 100 },
-    'work-codesrijan': { x: 0, y: 0, w: 360, h: 440, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
-    'work-eventflow': { x: 0, y: 0, w: 360, h: 440, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
-    'work-landing': { x: 0, y: 0, w: 360, h: 440, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
-    'work-saas': { x: 0, y: 0, w: 360, h: 440, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
+    'process-artboard': { x: 0, y: 0, w: 1400, h: 840, radius: 16, fill: '#141416', stroke: 'rgba(255, 255, 255, 0.12)', strokeWidth: 1, opacity: 100 },
+    'plugins-artboard': { x: 0, y: 0, w: 1200, h: 860, radius: 16, fill: '#141416', stroke: 'rgba(255, 255, 255, 0.12)', strokeWidth: 1, opacity: 100 },
+    'work-codesrijan': { x: 0, y: 0, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
+    'work-eventflow': { x: 0, y: 0, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
+    'work-landing': { x: 0, y: 0, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
+    'work-saas': { x: 0, y: 0, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
     'exp-imagine': { x: 0, y: 0, w: 420, h: 220, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
     'exp-knaptix': { x: 0, y: 0, w: 420, h: 220, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
     'exp-udemy': { x: 0, y: 0, w: 420, h: 220, radius: 16, fill: '#2c2c2c', stroke: '#0d99ff', strokeWidth: 1, opacity: 100 },
@@ -2135,7 +2135,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 {/* Framed Artboard Box (Pixel-perfect match to user reference Image 1) */}
                 <div
                   className={`figma-artboard-box work-artboard-box figma-selectable-node ${selectedNodeId === 'work-artboard' ? 'is-selected' : ''}`}
-                  style={getNodeStyle('work-artboard', 1340, 960)}
+                  style={getNodeStyle('work-artboard', 1380, 1180)}
                   onClick={(e) => {
                     e.stopPropagation();
                     handleSelectNode('work-artboard', 'Work & Case Studies Artboard', 'Frame');
@@ -2144,12 +2144,12 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   <div className="figma-artboard-header-tag">
                     <span className="artboard-hash">#</span>
                     <span className="artboard-name">Work & Case Studies</span>
-                    <span className="artboard-dims">[{nodeProps['work-artboard']?.w || 1340} × {nodeProps['work-artboard']?.h || 960}]</span>
+                    <span className="artboard-dims">[{nodeProps['work-artboard']?.w || 1380} × {nodeProps['work-artboard']?.h || 1180}]</span>
                   </div>
 
                   {selectedNodeId === 'work-artboard' && (
                     <div className="figma-selection-overlay">
-                      <div className="selection-tag">❖ Work & Case Studies [1340×960]</div>
+                      <div className="selection-tag">❖ Work & Case Studies [{nodeProps['work-artboard']?.w || 1380}×{nodeProps['work-artboard']?.h || 1180}]</div>
                       <div className="selection-handle tl" /><div className="selection-handle tr" />
                       <div className="selection-handle bl" /><div className="selection-handle br" />
                     </div>
@@ -2310,7 +2310,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 {/* Framed Artboard Box for Experience */}
                 <div
                   className={`figma-artboard-box experience-artboard-box figma-selectable-node ${selectedNodeId === 'exp-artboard' ? 'is-selected' : ''}`}
-                  style={getNodeStyle('exp-artboard', 1240, 1360)}
+                  style={getNodeStyle('exp-artboard', 1240, 1400)}
                   onClick={(e) => {
                     e.stopPropagation();
                     handleSelectNode('exp-artboard', 'Recent Activity & Timeline Frame', 'Frame');
@@ -2319,12 +2319,12 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   <div className="figma-artboard-header-tag">
                     <span className="artboard-hash">#</span>
                     <span className="artboard-name">Recent Activity &amp; Career Timeline</span>
-                    <span className="artboard-dims">[{nodeProps['exp-artboard']?.w || 1240} × {nodeProps['exp-artboard']?.h || 1360}]</span>
+                    <span className="artboard-dims">[{nodeProps['exp-artboard']?.w || 1240} × {nodeProps['exp-artboard']?.h || 1400}]</span>
                   </div>
 
                   {selectedNodeId === 'exp-artboard' && (
                     <div className="figma-selection-overlay">
-                      <div className="selection-tag">❖ Recent Activity &amp; Career Timeline [1240×1360]</div>
+                      <div className="selection-tag">❖ Recent Activity &amp; Career Timeline [{nodeProps['exp-artboard']?.w || 1240}×{nodeProps['exp-artboard']?.h || 1400}]</div>
                       <div className="selection-handle tl" /><div className="selection-handle tr" />
                       <div className="selection-handle bl" /><div className="selection-handle br" />
                     </div>
