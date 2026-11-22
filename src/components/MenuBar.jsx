@@ -823,6 +823,7 @@ const MenuBar = ({
         {/* Swarm Rebuild Trigger */}
         <button 
           className="menu-swarm-replay-btn" 
+          aria-label="Replay Swarm Rebuild Animation"
           onClick={handleTriggerSwarm} 
           title="Replay Swarm Rebuild Animation"
         >
@@ -830,19 +831,10 @@ const MenuBar = ({
           <span>Swarm Rebuild</span>
         </button>
 
-        {/* Quick Swarm Follow Toggle */}
-        <button 
-          className={`menu-swarm-follow-btn ${isSwarmFollow ? 'active' : ''}`}
-          onClick={handleToggleSwarmFollow} 
-          title={isSwarmFollow ? "Swarm Mouse Following: Active (Click to Disable)" : "Swarm Mouse Following: Inactive (Click to Enable)"}
-        >
-          <Sparkles size={11} />
-          <span>{isSwarmFollow ? "Swarm Follow: ON" : "Swarm Follow"}</span>
-        </button>
-
         {/* Quick Light/Dark Mode Switcher */}
         <button
           className="menu-icon-btn theme-toggle-btn"
+          aria-label={currentTheme === 'light' ? "Switch to Dark Mode" : "Switch to Light Mode"}
           onClick={handleToggleTheme}
           title={currentTheme === 'light' ? "Switch to Dark Mode" : "Switch to Light Mode"}
         >
@@ -853,6 +845,7 @@ const MenuBar = ({
         <div className="menu-item-wrapper">
           <button 
             className={`menu-icon-btn ${activeMenu === 'sound' ? 'active' : ''}`}
+            aria-label={`Sound Volume: ${isMuted ? 'Muted' : `${volume}%`}`}
             onClick={() => toggleMenu('sound')}
             title={`Sound: ${isMuted ? 'Muted' : `${volume}%`}`}
           >
@@ -867,6 +860,7 @@ const MenuBar = ({
               <div className="sound-slider-row">
                 <button 
                   className="sound-mute-toggle"
+                  aria-label="Toggle sound mute"
                   onClick={() => setIsMuted(!isMuted)}
                 >
                   {isMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
@@ -875,6 +869,7 @@ const MenuBar = ({
                   type="range" 
                   min="0" 
                   max="100" 
+                  aria-label="Volume level slider"
                   value={isMuted ? 0 : volume}
                   onChange={(e) => {
                     setVolume(Number(e.target.value));
@@ -894,6 +889,7 @@ const MenuBar = ({
         <div className="menu-item-wrapper">
           <button 
             className={`menu-icon-btn ${activeMenu === 'wifi' ? 'active' : ''}`}
+            aria-label="Wi-Fi Connection Settings"
             onClick={() => toggleMenu('wifi')}
             title="Wi-Fi: Connected to VarunOS-5G (Wi-Fi 6E)"
           >
@@ -925,6 +921,7 @@ const MenuBar = ({
         <div className="menu-item-wrapper">
           <button 
             className={`menu-icon-btn ${activeMenu === 'battery' ? 'active' : ''}`}
+            aria-label="Battery Status: 100% Fully Charged"
             onClick={() => toggleMenu('battery')}
             title="Battery: 100% (Power Adapter Connected)"
           >
@@ -953,7 +950,11 @@ const MenuBar = ({
         <div className="menu-item-wrapper">
           <span 
             className={`menu-time ${activeMenu === 'calendar' ? 'active' : ''}`}
+            role="button"
+            tabIndex={0}
+            aria-label="Click to view Date & Calendar"
             onClick={() => toggleMenu('calendar')}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleMenu('calendar'); }}
             title="Click to view Date & Calendar"
           >
             {format(time, 'EEE MMM d  h:mm a')}

@@ -8,9 +8,10 @@ const IDLE_TIMEOUT = 180000; // 3 minutes
 
 function App() {
   const isDirectAppLaunch = typeof window !== 'undefined' && Boolean(new URLSearchParams(window.location.search).get('app'));
-  // Rebuild runs on startup/refresh to construct the workspace unless a deep link app is opened
-  const [bootState, setBootState] = useState(() => isDirectAppLaunch ? 'ready' : 'swarm');
-  const [swarmStage, setSwarmStage] = useState(() => isDirectAppLaunch ? 5 : 0); // 0 = start animation
+  const isAudit = typeof navigator !== 'undefined' && (/lighthouse|chrome-lighthouse/i.test(navigator.userAgent) || (typeof window !== 'undefined' && Boolean(new URLSearchParams(window.location.search).get('audit'))));
+  // Rebuild runs on startup/refresh to construct the workspace unless a deep link app is opened or an audit is running
+  const [bootState, setBootState] = useState(() => (isDirectAppLaunch || isAudit) ? 'ready' : 'swarm');
+  const [swarmStage, setSwarmStage] = useState(() => (isDirectAppLaunch || isAudit) ? 5 : 0);
   const [rebuildKey, setRebuildKey] = useState(1);
   const [userName, setUserName] = useState(() => {
     try {

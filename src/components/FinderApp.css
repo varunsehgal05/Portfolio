@@ -191,6 +191,33 @@
   flex-shrink: 0;
 }
 
+/* Toolbar Items Stamped / Hidden during Swarm Rebuild */
+.finder-toolbar-item-hidden {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transform: translateY(-4px) scale(0.96) !important;
+  transition: none !important;
+}
+
+.finder-toolbar-item-stamped {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  animation: finderToolbarItemPop 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes finderToolbarItemPop {
+  0% {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 .finder-toolbar-history {
   display: flex;
   gap: 4px;

@@ -1,13 +1,14 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Suspense, lazy } from 'react';
 import MenuBar from './MenuBar';
 import DesktopIcon from './DesktopIcon';
 import Window from './Window';
 import Dock from './Dock';
-import PixelAssistant from './PixelAssistant';
 import { portfolioApps, desktopIconIds } from '../config/apps';
 import { desktopWallpapers } from '../config/wallpapers';
 import LiveMouseSwarm from './LiveMouseSwarm';
 import './Desktop.css';
+
+const PixelAssistant = lazy(() => import('./PixelAssistant'));
 
 const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, isRebuilding = false }) => {
   const [openWindows, setOpenWindows] = useState(() => {
@@ -129,9 +130,9 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
   }, []);
 
   // Track sequential desktop icon stamping during Swarm Rebuild (reveal 1-by-1 in Stage 3)
-  const [stampedIconCount, setStampedIconCount] = useState(() => (swarmStage >= 5 ? 6 : 0));
+  const [stampedIconCount, setStampedIconCount] = useState(() => (!isRebuilding && swarmStage >= 5 ? 6 : 0));
   // Track sequential dock icon stamping during Swarm Rebuild (reveal 1-by-1 in Stage 4)
-  const [stampedDockCount, setStampedDockCount] = useState(() => (swarmStage >= 5 ? 10 : 0));
+  const [stampedDockCount, setStampedDockCount] = useState(() => (!isRebuilding && swarmStage >= 5 ? 10 : 0));
 
   useEffect(() => {
     const handleIconStamped = (e) => {
@@ -153,14 +154,17 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
   }, []);
 
   useEffect(() => {
-    if (swarmStage >= 5) {
+    if (isRebuilding) {
+      setStampedIconCount(0);
+      setStampedDockCount(0);
+    } else if (swarmStage >= 5) {
       setStampedIconCount(6);
       setStampedDockCount(10);
     } else if (swarmStage === 0) {
       setStampedIconCount(0);
       setStampedDockCount(0);
     }
-  }, [swarmStage]);
+  }, [isRebuilding, swarmStage]);
 
   const applyDesktopWallpaper = (id, showToast = false) => {
     const found = desktopWallpapers.find(w => w.id === id) || desktopWallpapers[0];
@@ -453,11 +457,11 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
 
       <div className="desktop-content">
         {/* Left Column Desktop Icons (Revealed 1-by-1 in Stage 3 as Sarah stamps them) */}
-        <div className={`desktop-icons ${swarmStage < 5 ? (swarmStage >= 3 || stampedIconCount > 0 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
+        <div className={`desktop-icons ${isRebuilding ? (swarmStage >= 3 || stampedIconCount > 0 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
           {displayedIcons.map((id, index) => {
             const app = portfolioApps[id];
             if (!app) return null;
-            const isRevealed = swarmStage >= 5 || index < stampedIconCount;
+            const isRevealed = !isRebuilding ? true : (swarmStage >= 5 ? true : index < stampedIconCount);
             return (
               <DesktopIcon
                 key={app.id}
@@ -508,7 +512,9 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
 
         {/* PixelAssistant / Clippy bot remains untouched on the right/bottom */}
         <div className={`desktop-bot-wrap ${swarmStage < 5 ? (swarmStage >= 5 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
-          <PixelAssistant isIdle={isIdle} onOpenApp={openApp} />
+          <Suspense fallback={null}>
+            <PixelAssistant isIdle={isIdle} onOpenApp={openApp} />
+          </Suspense>
         </div>
 
         {/* Bottom macOS Dock (revealed in Stage 4: capsule first, then apps) */}

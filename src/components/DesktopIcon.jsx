@@ -68,12 +68,24 @@ const IconMap = {
 const DesktopIcon = ({ app, onDoubleClick, onClick, className = '', style }) => {
   const IconComponent = IconMap[app.icon] || IconMap.figma;
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      if (onClick) onClick();
+      else if (onDoubleClick) onDoubleClick();
+    }
+  };
+
   return (
     <div 
       className={`desktop-icon-container ${className}`} 
       style={style}
+      role="button"
+      tabIndex={0}
+      aria-label={`Open ${app.name}`}
       onClick={onClick || onDoubleClick}
       onDoubleClick={onDoubleClick}
+      onKeyDown={handleKeyDown}
     >
       <div className="desktop-icon-image">
         <IconComponent />

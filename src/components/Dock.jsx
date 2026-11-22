@@ -302,7 +302,16 @@ const Dock = ({
                   key={item.id}
                   data-app-id={item.id}
                   className={`dock-item ${isMin ? 'minimized-app' : ''} ${isBouncing ? 'dock-bouncing' : ''}`}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Open ${item.name}`}
                   onClick={() => handleClick(item.id)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      handleClick(item.id);
+                    }
+                  }}
                   style={{
                     transform: isRevealed
                       ? `translate3d(0, ${translateY}px, 0) scale(${scale})`

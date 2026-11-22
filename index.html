@@ -7,9 +7,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Varun Sehgal — UI/UX Designer & Product Designer</title>
   <meta name="description" content="VarunOS — macOS web desktop portfolio of Varun Sehgal, UI/UX & Product Designer." />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0c0c10" />
+  <link rel="canonical" href="http://localhost:5173/" />
   <meta property="og:title" content="Varun Sehgal — Portfolio" />
   <meta property="og:description"
     content="Explore Varun Sehgal's design systems, SaaS prototypes, and engineering projects in an interactive macOS desktop." />
+  <meta property="og:image" content="/varun.jpg" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="http://localhost:5173/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Varun Sehgal — UI/UX Designer & Product Designer" />
+  <meta name="twitter:description" content="VarunOS — macOS web desktop portfolio of Varun Sehgal, UI/UX & Product Designer." />
+  <meta name="twitter:image" content="/varun.jpg" />
   <style>
     html, body {
       background-color: #0c0c10 !important;
@@ -29,14 +39,18 @@
   <link
     rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Patrick+Hand&family=Fredoka:wght@300..700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Geist:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
+    media="print"
+    onload="this.media='all'"
   />
-  <link
-    rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-  />
-  <script src="https://cdn.tailwindcss.com"></script>
+  <noscript>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Patrick+Hand&family=Fredoka:wght@300..700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Geist:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
+    />
+  </noscript>
   <script>
-    tailwind.config = {
+    window.tailwind = {
+      config: {
       darkMode: 'class',
       corePlugins: { preflight: false },
       theme: {
@@ -102,6 +116,7 @@
       }
     };
   </script>
+  <script src="https://cdn.tailwindcss.com" defer></script>
 </head>
 
 <body>

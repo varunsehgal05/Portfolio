@@ -136,7 +136,43 @@ const FinderApp = ({ onOpenApp }) => {
     return 15;
   });
   const [typedTitle, setTypedTitle] = useState(() => (window.__varunos_finder_step ?? 0) >= 2 ? FULL_HERO_TITLE : '');
+  const [toolbarStep, setToolbarStep] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const isDirect = Boolean(new URLSearchParams(window.location.search).get('app'));
+      if (isDirect) return 4;
+      return (window.__varunos_finder_step ?? 0) >= 2 ? 4 : 0;
+    }
+    return 4;
+  });
+  const [typedPath, setTypedPath] = useState('');
+  const [typedSearch, setTypedSearch] = useState('');
+  const [heroBoxVisible, setHeroBoxVisible] = useState(false);
   const [cardBuildState, setCardBuildState] = useState({});
+
+  useEffect(() => {
+    const handleToolbar = (e) => {
+      const { step, typedPath: tp, typedSearch: ts } = e.detail || {};
+      if (typeof step === 'number') setToolbarStep(step);
+      if (tp !== undefined) setTypedPath(tp);
+      if (ts !== undefined) setTypedSearch(ts);
+    };
+    const handleHeroBox = (e) => {
+      if (typeof e.detail?.visible === 'boolean') {
+        setHeroBoxVisible(e.detail.visible);
+      }
+    };
+    window.addEventListener('varunos-toolbar-step', handleToolbar);
+    window.addEventListener('varunos-hero-box-visible', handleHeroBox);
+    return () => {
+      window.removeEventListener('varunos-toolbar-step', handleToolbar);
+      window.removeEventListener('varunos-hero-box-visible', handleHeroBox);
+    };
+  }, []);
+
+  const isToolbarItemVisible = (targetStep) => {
+    if (rebuildStep >= 2) return true;
+    return toolbarStep >= targetStep;
+  };
 
   useEffect(() => {
     const handleSidebarStep = (e) => {
@@ -206,6 +242,11 @@ const FinderApp = ({ onOpenApp }) => {
   useEffect(() => {
     if (rebuildStep === 0) {
       setCardBuildState({});
+      setToolbarStep(0);
+      setTypedPath('');
+      setTypedSearch('');
+      setHeroBoxVisible(false);
+      setTypedTitle('');
     }
   }, [rebuildStep]);
 
@@ -324,7 +365,7 @@ const FinderApp = ({ onOpenApp }) => {
         {/* User Profile Card at bottom */}
         <div className={`finder-profile-card ${isSidebarItemVisible(15) ? 'finder-sidebar-item-stamped' : 'finder-sidebar-item-hidden'}`}>
           <div className="finder-avatar-circle">
-            <img src="/varun.jpg" alt="Varun" className="finder-avatar-img" />
+            <img src="/varun.jpg" alt="Varun Sehgal profile portrait" className="finder-avatar-img" width="34" height="34" />
           </div>
           <div className="finder-profile-info">
             <span className="finder-profile-name">Varun Sehgal</span>
@@ -335,29 +376,39 @@ const FinderApp = ({ onOpenApp }) => {
 
       {/* 2. Main Content & Toolbar */}
       <main className="finder-main">
-        {/* Finder Toolbar */}
+        {/* Finder Toolbar (assembled and typed by Swarm) */}
         <div className="finder-toolbar">
-          <div className="finder-toolbar-history">
-            <button className="finder-tb-btn" disabled><ArrowLeft size={13} /></button>
-            <button className="finder-tb-btn" disabled><ArrowRight size={13} /></button>
+          <div className={`finder-toolbar-history ${isToolbarItemVisible(1) ? 'finder-toolbar-item-stamped' : 'finder-toolbar-item-hidden'}`}>
+            <button className="finder-tb-btn" aria-label="Previous history folder" disabled><ArrowLeft size={13} /></button>
+            <button className="finder-tb-btn" aria-label="Next history folder" disabled><ArrowRight size={13} /></button>
           </div>
 
-          {/* Breadcrumbs */}
-          <div className="finder-path-pill">
+          {/* Breadcrumbs (Typed by Varun Sehgal) */}
+          <div className={`finder-path-pill ${isToolbarItemVisible(2) ? 'finder-toolbar-item-stamped' : 'finder-toolbar-item-hidden'}`}>
             <HardDrive size={12} className="finder-hd-icon" />
-            <span>Macintosh HD</span>
-            <ChevronRight size={10} className="path-arrow" />
-            <span>Users</span>
-            <ChevronRight size={10} className="path-arrow" />
-            <span>varun</span>
-            <ChevronRight size={10} className="path-arrow" />
-            <span className="current-path">{activeTab === 'featured' ? 'Featured Works' : activeTab === 'tech' ? 'Tech Stack' : 'Experience'}</span>
+            {rebuildStep >= 2 ? (
+              <>
+                <span>Macintosh HD</span>
+                <ChevronRight size={10} className="path-arrow" />
+                <span>Users</span>
+                <ChevronRight size={10} className="path-arrow" />
+                <span>varun</span>
+                <ChevronRight size={10} className="path-arrow" />
+                <span className="current-path">{activeTab === 'featured' ? 'Featured Works' : activeTab === 'tech' ? 'Tech Stack' : 'Experience'}</span>
+              </>
+            ) : (
+              <span>
+                {typedPath || 'Macintosh HD'}
+                <span className="typing-cursor" style={{ opacity: 0.85, color: '#38bdf8', marginLeft: '2px' }}>|</span>
+              </span>
+            )}
           </div>
 
-          {/* View Mode Toggle Buttons */}
-          <div className="finder-view-modes">
+          {/* View Mode Toggle Buttons (Stamped by Sarah Lin) */}
+          <div className={`finder-view-modes ${isToolbarItemVisible(3) ? 'finder-toolbar-item-stamped' : 'finder-toolbar-item-hidden'}`}>
             <button 
               className={`finder-view-btn ${viewMode === 'grid' ? 'active' : ''}`}
+              aria-label="Icons grid view"
               onClick={() => setViewMode('grid')}
               title="Icons Grid View"
             >
@@ -365,6 +416,7 @@ const FinderApp = ({ onOpenApp }) => {
             </button>
             <button 
               className={`finder-view-btn ${viewMode === 'list' ? 'active' : ''}`}
+              aria-label="Columns list view"
               onClick={() => setViewMode('list')}
               title="Columns List View"
             >
@@ -372,26 +424,30 @@ const FinderApp = ({ onOpenApp }) => {
             </button>
           </div>
 
-          {/* Live Search Filter */}
-          <div className="finder-search-box">
+          {/* Live Search Filter (Typed by Varun Sehgal) */}
+          <div className={`finder-search-box ${isToolbarItemVisible(4) ? 'finder-toolbar-item-stamped' : 'finder-toolbar-item-hidden'}`} style={{ position: 'relative' }}>
             <Search size={12} className="finder-search-icon" />
             <input
               type="text"
-              placeholder="Search in Finder..."
+              aria-label="Search in Finder"
+              placeholder={rebuildStep >= 2 ? "Search in Finder..." : (typedSearch || "Search in Finder...")}
               value={searchFilter}
               onChange={(e) => setSearchFilter(e.target.value)}
               className="finder-search-input"
             />
+            {rebuildStep < 2 && isToolbarItemVisible(4) && !searchFilter && (
+              <span className="typing-cursor" style={{ opacity: 0.8, color: '#38bdf8', position: 'absolute', right: '10px', top: '7px' }}>|</span>
+            )}
           </div>
         </div>
 
-        {/* Hero Card */}
+        {/* Hero Card (Framed by Sarah Lin, Typed by Varun Sehgal) */}
         <div 
           className="finder-hero-card"
           style={{
-            opacity: rebuildStep >= 2 ? 1 : 0,
+            opacity: (rebuildStep >= 2 || heroBoxVisible) ? 1 : 0,
             transform: 'none',
-            transition: 'opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+            transition: 'opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
             pointerEvents: rebuildStep >= 2 ? 'auto' : 'none'
           }}
         >
@@ -400,7 +456,14 @@ const FinderApp = ({ onOpenApp }) => {
             <span>Available for New Product Roles & Projects</span>
           </div>
           <h1 className="finder-hero-title">
-            {rebuildStep >= 2 ? FULL_HERO_TITLE : (typedTitle || <span className="typing-cursor" style={{ opacity: 0.7, color: '#38bdf8' }}>|</span>)}
+            {rebuildStep >= 2 ? (
+              FULL_HERO_TITLE
+            ) : (
+              <>
+                {typedTitle || '\u00A0'}
+                {heroBoxVisible && <span className="typing-cursor" style={{ opacity: 0.85, color: '#A259FF', marginLeft: '2px' }}>|</span>}
+              </>
+            )}
           </h1>
           <p className="finder-hero-desc">
             UI/UX & Product Designer with 3+ years delivering high-impact SaaS and AI product experiences. Skilled in user research, wireframing, rapid prototyping, and design systems.

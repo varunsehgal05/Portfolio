@@ -301,6 +301,23 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
     }
   };
 
+  const lastToolbarStepRef = useRef(-1);
+  const dispatchToolbarStep = (detail) => {
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('varunos-toolbar-step', { detail }));
+    }
+  };
+
+  const heroBoxVisibleRef = useRef(false);
+  const dispatchHeroBoxVisible = (visible) => {
+    if (heroBoxVisibleRef.current !== visible) {
+      heroBoxVisibleRef.current = visible;
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('varunos-hero-box-visible', { detail: { visible } }));
+      }
+    }
+  };
+
   // Screen dimensions
   const [dims, setDims] = useState({
     w: typeof window !== 'undefined' ? window.innerWidth : 1440,
@@ -338,6 +355,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
     setCompleteBanner(true);
     setStatusMessage('✓ VarunOS Workspace Assembled & Ready!');
     dispatchSidebarStep(15);
+    dispatchToolbarStep({ step: 4, typedPath: 'Macintosh HD > Users > varun > Featured Works', typedSearch: 'Search in Finder...' });
+    dispatchHeroBoxVisible(true);
     dispatchFinderStep(7);
     if (onStageChange) onStageChange(5);
 
@@ -417,8 +436,12 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
     lastStampedDockIndexRef.current = -1;
     lastFinderStepRef.current = -1;
     lastSidebarStepRef.current = -1;
+    lastToolbarStepRef.current = -1;
+    heroBoxVisibleRef.current = false;
     dispatchFinderStep(0);
     dispatchSidebarStep(0);
+    dispatchToolbarStep({ step: 0, typedPath: '', typedSearch: '' });
+    dispatchHeroBoxVisible(false);
 
     // Reset desktop icon & dock reveal counts to 0 at start of rebuild
     if (typeof window !== 'undefined') {
@@ -1252,15 +1275,20 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             }
           ]);
         }
-        // 5.2: Elena Rostova Stamps Sidebar Navigation 1-by-1 (14.4s - 16.6s) -> Step 1
-        else if (pWin < 3.6) {
-          const t2 = Math.min(1, Math.max(0, (pWin - 1.4) / 2.2));
-          const stepFloat = t2 * 15;
+        // 5.2: True Concurrent Multitasking Assembly (14.2s - 18.2s, 4.0s) -> Step 1 & 2
+        // Concurrently:
+        // • Elena Rostova stamps 15 Sidebar items 1-by-1 from top to bottom with snap sounds & blue ripples
+        // • Varun Sehgal types toolbar breadcrumbs, then search bar, then Hero Headline with caret
+        // • Sarah Lin stamps toolbar navigation & view mode buttons, then frames Hero Bento Box & stamps badge
+        // • Alex Chen holds auto-layout guide lines, baseline markers, and measures 200px / 704px geometry
+        else if (pWin < 5.2) {
+          const tMulti = Math.min(1, Math.max(0, (pWin - 1.2) / 4.0));
+
+          // 1. Elena Rostova: 15 Sidebar Items 1-by-1
+          const stepFloat = tMulti * 15;
           const itemIdx = Math.min(14, Math.floor(stepFloat));
           const subProg = stepFloat - itemIdx;
           const currentItem = SIDEBAR_ITEMS[itemIdx];
-
-          setStatusMessage(`[5/5] Elena Rostova: [⌥ Stamp] Placing ${currentItem.label} (${itemIdx + 1}/15)...`);
 
           if (lastSidebarStepRef.current !== currentItem.step) {
             lastSidebarStepRef.current = currentItem.step;
@@ -1269,7 +1297,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             dispatchSidebarStep(currentItem.step);
           }
 
-          if (t2 >= 0.95) {
+          if (tMulti >= 0.95) {
             dispatchFinderStep(1);
           }
 
@@ -1283,6 +1311,115 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             -12,
             0.04
           );
+
+          // 2. Varun Sehgal: Concurrently typing Toolbar Path -> Toolbar Search -> Hero Headline
+          let varunPos = { x: curX + sidebarW + 100, y: curY + headerH + 20 };
+          let varunAction = 'Typing Toolbar Breadcrumbs';
+          let varunChat = 'typing path breadcrumb';
+          let varunTool = 'T Text';
+          let varunCursor = 'text';
+
+          if (tMulti < 0.28) {
+            // Varun types Toolbar Breadcrumbs path
+            const subT = tMulti / 0.28;
+            const fullBreadcrumb = "Macintosh HD > Users > varun > Featured Works";
+            const typedCount = Math.min(fullBreadcrumb.length, Math.floor(subT * fullBreadcrumb.length * 1.2));
+            const typedP = fullBreadcrumb.slice(0, typedCount);
+            dispatchToolbarStep({ step: 2, typedPath: typedP });
+            varunPos = { x: curX + sidebarW + 70 + typedCount * 5.2, y: curY + headerH + 21 };
+            varunAction = `Typing Path: "${typedP.slice(-14)}"`;
+            varunChat = `typing path: "${typedP.slice(-12)}"`;
+          } else if (tMulti < 0.52) {
+            // Varun types Search Input
+            const subT = (tMulti - 0.28) / 0.24;
+            const fullSearch = "Search in Finder...";
+            const typedCount = Math.min(fullSearch.length, Math.floor(subT * fullSearch.length * 1.2));
+            const typedS = fullSearch.slice(0, typedCount);
+            dispatchToolbarStep({ step: 4, typedSearch: typedS });
+            varunPos = { x: curX + curW - 140 + typedCount * 4.5, y: curY + headerH + 21 };
+            varunAction = `Typing Search: "${typedS}"`;
+            varunChat = `typing search: "${typedS}"`;
+          } else {
+            // Varun types Hero Headline
+            const subT = (tMulti - 0.52) / 0.48;
+            window.dispatchEvent(new CustomEvent('varunos-hero-type-progress', { detail: { progress: subT } }));
+            if (subT >= 0.85) {
+              dispatchFinderStep(2);
+            }
+            const heroText = "Designing intuitive web apps & modern interfaces";
+            const charCount = Math.min(heroText.length, Math.floor(subT * heroText.length * 1.15));
+            const currentTypingSlice = heroText.slice(0, charCount);
+            const typeX = heroBox.x + 24 + Math.min(heroBox.w - 60, charCount * 8.2);
+            varunPos = { x: typeX, y: heroBox.y + 54 };
+            varunAction = `Typing Headline: "${currentTypingSlice.slice(-18)}"`;
+            varunChat = subT < 0.95 ? `typing: "${currentTypingSlice.slice(-16)}"` : 'headline styled ✓';
+          }
+
+          // 3. Sarah Lin: Concurrently stamping Toolbar History < > -> View Modes -> Hero Box -> Status Badge
+          let sarahPos = { x: curX + sidebarW + 28, y: curY + headerH + 21 };
+          let sarahAction = 'Stamping History < >';
+          let sarahChat = 'stamping history buttons';
+          let sarahTool = '⌥ Stamp';
+          let sarahCursor = 'arrow';
+          let sarahBox = null;
+
+          if (tMulti < 0.20) {
+            // Stamping History < >
+            dispatchToolbarStep({ step: 1 });
+            sarahPos = { x: curX + sidebarW + 28, y: curY + headerH + 21 };
+            sarahAction = 'Stamping: History Buttons < >';
+            sarahChat = 'stamping < > history';
+          } else if (tMulti < 0.38) {
+            // Stamping View Mode Buttons [Grid] [List]
+            dispatchToolbarStep({ step: 3 });
+            sarahPos = { x: curX + curW - 180, y: curY + headerH + 21 };
+            sarahAction = 'Stamping: Grid/List View Modes';
+            sarahChat = 'stamping [Grid] [List]';
+          } else if (tMulti < 0.75) {
+            // Framing Hero Bento Box
+            const subT = (tMulti - 0.38) / 0.37;
+            const drawnHeroW = lerp(80, heroBox.w, easeInOutCubic(subT));
+            sarahPos = { x: heroBox.x + drawnHeroW, y: heroBox.y + heroBox.h };
+            sarahAction = `Framing: Hero Bento Box [${Math.round(drawnHeroW)}×${heroBox.h}]`;
+            sarahChat = 'framing hero bento box';
+            sarahTool = 'R Frame';
+            sarahCursor = 'cross';
+            sarahBox = {
+              x: heroBox.x,
+              y: heroBox.y,
+              w: drawnHeroW,
+              h: heroBox.h,
+              label: `Hero Bento Box • ${Math.round(drawnHeroW)} × ${heroBox.h}px`
+            };
+            if (subT >= 0.50) {
+              dispatchHeroBoxVisible(true);
+            }
+          } else {
+            // Stamping Status Badge on Hero Banner
+            dispatchHeroBoxVisible(true);
+            sarahPos = { x: heroBox.x + 90, y: heroBox.y + 24 };
+            sarahAction = 'Stamping: Available Status Badge';
+            sarahChat = 'stamping status badge';
+            sarahTool = '⌥ Stamp';
+            sarahCursor = 'arrow';
+          }
+
+          // 4. Alex Chen: Concurrently holding auto-layout guides and measuring geometry
+          let alexPos = { x: sidebarBox.x + sidebarBox.w, y: sidebarBox.y + 60 };
+          let alexAction = 'Auto-Layout: 200px Sidebar';
+          let alexChat = 'locking sidebar 200px';
+
+          if (tMulti < 0.50) {
+            alexPos = { x: sidebarBox.x + sidebarBox.w, y: sidebarBox.y + 60 + tMulti * 180 };
+            alexAction = 'Auto-Layout: Sidebar Anchor';
+            alexChat = 'sidebar auto-layout: 200px';
+          } else {
+            alexPos = { x: heroBox.x + heroBox.w - 12, y: heroBox.y + heroBox.h / 2 };
+            alexAction = `Auto-Layout: Hero Width [${Math.round(heroBox.w)}px]`;
+            alexChat = `measuring hero: ${Math.round(heroBox.w)}px`;
+          }
+
+          setStatusMessage(`[5/5] Multitasking Swarm: Elena (Sidebar ${itemIdx + 1}/15) • Varun (${varunAction}) • Sarah (${sarahAction})`);
 
           agentTargets = {
             elena: {
@@ -1304,40 +1441,44 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
               }
             },
             varun: {
-              x: heroBox.x + 60,
-              y: heroBox.y + 45,
+              x: varunPos.x,
+              y: varunPos.y,
               color: '#A259FF',
               label: 'Varun Sehgal',
-              action: 'Staging Hero Typography',
-              toolKey: 'T Text',
-              cursorMode: 'arrow',
-              chatText: 'staging hero typography'
-            },
-            alex: {
-              x: curX + curW - 50,
-              y: curY + 28,
-              color: '#0ACF83',
-              label: 'Alex Chen',
-              action: 'Holding Window Anchor',
-              toolKey: 'F Frame',
-              cursorMode: 'arrow',
-              chatText: 'frame locked'
+              action: varunAction,
+              toolKey: varunTool,
+              cursorMode: varunCursor,
+              isDrawing: true,
+              chatText: varunChat
             },
             sarah: {
-              x: c1Box.x + 40,
-              y: c1Box.y + 20,
+              x: sarahPos.x,
+              y: sarahPos.y,
               color: '#FF7262',
               label: 'Sarah Lin',
-              action: 'Aligning 2×2 Grid',
-              toolKey: '⌥ Layout',
-              cursorMode: 'arrow'
+              action: sarahAction,
+              toolKey: sarahTool,
+              cursorMode: sarahCursor,
+              isDrawing: Boolean(sarahBox),
+              chatText: sarahChat,
+              boxBounds: sarahBox
+            },
+            alex: {
+              x: alexPos.x,
+              y: alexPos.y,
+              color: '#0ACF83',
+              label: 'Alex Chen',
+              action: alexAction,
+              toolKey: 'F Frame',
+              cursorMode: 'arrow',
+              chatText: alexChat
             },
             user: {
               x: curX + curW - 80,
               y: curY + curH - 24,
               color: '#1ABCFE',
               label: userName || 'You',
-              action: 'Reviewing Navigation',
+              action: 'Reviewing Workspace',
               toolKey: 'V Move',
               cursorMode: 'arrow'
             }
@@ -1358,105 +1499,19 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
               pillText: `Sidebar: 200px (${itemIdx + 1}/15 items)`,
               pillX: sidebarBox.x + sidebarBox.w,
               pillY: sidebarBox.y + currentItem.yRel + currentItem.h / 2
-            }
-          ]);
-        }
-        // 5.3: Varun Sehgal Styles Hero Bento Banner & Types Headline (16.6s - 18.2s) -> Step 2
-        else if (pWin < 5.2) {
-          const t3 = Math.min(1, (pWin - 3.6) / 1.6);
-          window.dispatchEvent(new CustomEvent('varunos-hero-type-progress', { detail: { progress: t3 } }));
-          if (t3 >= 0.85) {
-            dispatchFinderStep(2);
-          }
-          const heroText = "Designing intuitive web apps & modern interfaces";
-          const charCount = Math.min(heroText.length, Math.floor(t3 * heroText.length * 1.15));
-          const currentTypingSlice = heroText.slice(0, charCount);
-
-          setStatusMessage(`[5/5] Varun Sehgal: [T] Typing: "${currentTypingSlice.slice(-22)}"...`);
-          const drawnHeroW = lerp(60, heroBox.w, easeInOutCubic(t3));
-          const typeX = heroBox.x + 24 + Math.min(heroBox.w - 60, charCount * 8.2);
-          const varunArc = { x: typeX, y: heroBox.y + 54 };
-
-          if (t3 > 0.85 && !heroBoxPlacedRef.current) {
-            heroBoxPlacedRef.current = true;
-            soundSynth.playDropThump(220);
-            triggerRipple(heroBox.x + heroBox.w / 2, heroBox.y + heroBox.h / 2, '#A259FF');
-          }
-
-          agentTargets = {
-            varun: {
-              x: varunArc.x,
-              y: varunArc.y,
-              color: '#A259FF',
-              label: 'Varun Sehgal',
-              action: 'Typing Headline',
-              toolKey: 'T Text',
-              cursorMode: 'text',
-              isDrawing: true,
-              chatText: t3 < 0.95 ? `typing: "${currentTypingSlice.slice(-16)}"` : 'headline styled ✓',
-              boxBounds: {
-                x: heroBox.x,
-                y: heroBox.y,
-                w: drawnHeroW,
-                h: heroBox.h,
-                label: `Hero Bento Box • ${Math.round(drawnHeroW)} × ${heroBox.h}px`
-              }
             },
-            elena: {
-              x: sidebarBox.x + sidebarBox.w - 14,
-              y: sidebarBox.y + 36,
-              color: '#0D99FF',
-              label: 'Elena Rostova',
-              action: 'Sidebar Assembled ✓',
-              toolKey: 'V Move',
-              cursorMode: 'arrow',
-              chatText: 'sidebar assembled ✓'
-            },
-            alex: {
-              x: heroBox.x + heroBox.w - 14,
-              y: heroBox.y + heroBox.h / 2,
-              color: '#0ACF83',
-              label: 'Alex Chen',
-              action: 'Hero Width Anchor',
-              toolKey: 'F Frame',
-              cursorMode: 'arrow'
-            },
-            sarah: {
-              x: c1Box.x + 30,
-              y: c1Box.y + 20,
-              color: '#FF7262',
-              label: 'Sarah Lin',
-              action: 'Preparing Card 01',
-              toolKey: 'R Rectangle',
-              cursorMode: 'cross',
-              chatText: 'preparing Card 01'
-            },
-            user: {
-              x: curX + curW - 80,
-              y: curY + curH - 24,
-              color: '#1ABCFE',
-              label: userName || 'You',
-              action: 'Reviewing Headline',
-              toolKey: 'V Move',
-              cursorMode: 'arrow'
-            }
-          };
-
-          setWireframeData(null);
-
-          setActiveGuides([
             {
               type: 'h',
-              x1: heroBox.x,
-              y1: heroBox.y + heroBox.h,
-              x2: heroBox.x + heroBox.w,
-              y2: heroBox.y + heroBox.h,
+              x1: curX + sidebarW,
+              y1: curY + headerH + toolbarH,
+              x2: curX + curW,
+              y2: curY + headerH + toolbarH,
               color: '#ec4899',
               dashed: true,
-              label: 'Hero Bento Baseline',
-              pillText: 'Hero: 110px',
-              pillX: heroBox.x + heroBox.w / 2,
-              pillY: heroBox.y + heroBox.h - 12
+              label: 'Toolbar 42px',
+              pillText: 'Toolbar: 42px Auto-Layout',
+              pillX: curX + sidebarW + 160,
+              pillY: curY + headerH + toolbarH
             }
           ]);
         }

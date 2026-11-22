@@ -1,17 +1,19 @@
 import { Rnd } from 'react-rnd';
 import { Folder } from 'lucide-react';
 import './Window.css';
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Suspense, lazy } from 'react';
 import { createPortal } from 'react-dom';
 import ResumeApp from './ResumeApp';
-import ContactApp from './ContactApp';
-import FigmaApp from './FigmaApp';
 import FinderApp from './FinderApp';
-import TerminalApp from './TerminalApp';
-import SettingsApp from './SettingsApp';
-import VsCodeApp from './VsCodeApp';
-import TrashApp from './TrashApp';
-import CoffeeApp from './CoffeeApp';
+
+// Code split secondary apps to keep main chunk ultra-lean
+const FigmaApp = lazy(() => import('./FigmaApp'));
+const VsCodeApp = lazy(() => import('./VsCodeApp'));
+const ContactApp = lazy(() => import('./ContactApp'));
+const TerminalApp = lazy(() => import('./TerminalApp'));
+const SettingsApp = lazy(() => import('./SettingsApp'));
+const TrashApp = lazy(() => import('./TrashApp'));
+const CoffeeApp = lazy(() => import('./CoffeeApp'));
 
 const Window = ({
   app,
@@ -343,21 +345,21 @@ const Window = ({
       case 'finder':
         return <FinderApp onOpenApp={onOpenApp} />;
       case 'figma':
-        return <FigmaApp isInteracting={isInteracting} userName={userName} onOpenApp={onOpenApp} />;
+        return <Suspense fallback={<div className="window-app-loading" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>Loading Figma Workspace...</div>}><FigmaApp isInteracting={isInteracting} userName={userName} onOpenApp={onOpenApp} /></Suspense>;
       case 'terminal':
-        return <TerminalApp userName={userName} onOpenApp={onOpenApp} />;
+        return <Suspense fallback={<div className="window-app-loading" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>Loading Terminal...</div>}><TerminalApp userName={userName} onOpenApp={onOpenApp} /></Suspense>;
       case 'settings':
-        return <SettingsApp userName={userName} onReplaySwarm={onReplaySwarm} />;
+        return <Suspense fallback={<div className="window-app-loading" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>Loading Settings...</div>}><SettingsApp userName={userName} onReplaySwarm={onReplaySwarm} /></Suspense>;
       case 'vscode':
-        return <VsCodeApp />;
+        return <Suspense fallback={<div className="window-app-loading" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>Loading VS Code...</div>}><VsCodeApp /></Suspense>;
       case 'resume':
         return <ResumeApp />;
       case 'contact':
-        return <ContactApp />;
+        return <Suspense fallback={<div className="window-app-loading" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>Loading Contact...</div>}><ContactApp /></Suspense>;
       case 'coffee':
-        return <CoffeeApp onClose={handleClose} />;
+        return <Suspense fallback={<div className="window-app-loading" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>Loading...</div>}><CoffeeApp onClose={handleClose} /></Suspense>;
       case 'trash':
-        return <TrashApp onClose={handleClose} onOpenApp={onOpenApp} />;
+        return <Suspense fallback={<div className="window-app-loading" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>Loading Trash...</div>}><TrashApp onClose={handleClose} onOpenApp={onOpenApp} /></Suspense>;
       default:
         return <div className="window-content-inner"><p>Loading...</p></div>;
     }
@@ -436,6 +438,7 @@ const Window = ({
             <div className="mac-traffic-lights">
               <button
                 className="mac-btn close"
+                aria-label="Close window"
                 onMouseDown={(e) => e.stopPropagation()}
                 onTouchStart={(e) => e.stopPropagation()}
                 onClick={handleClose}
@@ -445,6 +448,7 @@ const Window = ({
               </button>
               <button
                 className="mac-btn minimize"
+                aria-label="Minimize window"
                 onMouseDown={(e) => e.stopPropagation()}
                 onTouchStart={(e) => e.stopPropagation()}
                 onClick={handleMinimizeClick}
@@ -454,6 +458,7 @@ const Window = ({
               </button>
               <button
                 className="mac-btn maximize"
+                aria-label={isMaximized ? "Exit full screen" : "Full screen"}
                 onMouseDown={(e) => e.stopPropagation()}
                 onTouchStart={(e) => e.stopPropagation()}
                 onClick={handleMaximize}
