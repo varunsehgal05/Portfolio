@@ -47,6 +47,7 @@ const KittuResumeApp = ({
   });
   const containerRef = useRef(null);
   const buildTimeoutRef = useRef([]);
+  const isReplayingRef = useRef(false);
   const sectionsTriggeredRef = useRef({
     workOn: false,
     timeline: false,
@@ -757,7 +758,7 @@ const KittuResumeApp = ({
   // Progressive scroll trigger strictly tied to notebook paper coordinates
   // Prevents contact section from ever triggering prematurely!
   useEffect(() => {
-    if (!isBuilding) return;
+    if (!isBuilding || isReplayingRef.current) return;
 
     const notebookScroll = Math.max(0, (36 - (canvasPan?.y || 0)) / (canvasZoom || 1));
 
@@ -779,10 +780,14 @@ const KittuResumeApp = ({
   }, [canvasPan?.y, canvasZoom, isBuilding]);
 
   const replayBuild = () => {
+    isReplayingRef.current = true;
     buildTopSection();
     if (onScrollToTop) {
       onScrollToTop();
     }
+    setTimeout(() => {
+      isReplayingRef.current = false;
+    }, 750);
   };
 
   const skipBuild = () => {

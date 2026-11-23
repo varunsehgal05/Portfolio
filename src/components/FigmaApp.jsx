@@ -656,6 +656,9 @@ const FigmaApp = ({ isInteracting, userName, onOpenApp }) => {
   const [isSpacePressed, setIsSpacePressed] = useState(false);
   const [isAppLoading, setIsAppLoading] = useState(true);
   const startPanRef = useRef({ x: 0, y: 0 });
+  const panRef = useRef({ x: 0, y: 0 });
+  panRef.current = pan;
+  const panRafRef = useRef(null);
   const wheelRafRef = useRef(null);
   const pendingPanDeltaRef = useRef({ x: 0, y: 0 });
 
@@ -1092,7 +1095,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
   };
 
   const resetWorkspace = () => {
-    setPan({ x: 0, y: 0 });
+    centerCanvasView(activeTab);
     setFloatingShapes(INITIAL_SHAPES);
     setCurrentTheme('default');
     setColorMenuOpen(false);
@@ -1146,18 +1149,19 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
     }
   };
 
-  // Auto-fit zoom calculation: fits artboard comfortably within canvas viewport with safe gutters
+  // Auto-fit zoom calculation: fits artboard comfortably within canvas viewport with generous gutters
   const calculateFitZoom = (tab, stageW) => {
     const dim = getTabDimensions(tab);
-    const availableW = Math.max(320, stageW - 64);
+    // Provide generous gutters (at least 140px total, 70px on each side) so artboard is clearly centered in viewport
+    const availableW = Math.max(320, stageW - 140);
     const fit = Math.round((availableW / dim.width) * 100) / 100;
     if (tab === 'resume') {
-      return Math.min(0.95, Math.max(0.40, fit));
+      return Math.min(0.85, Math.max(0.38, fit));
     }
-    return Math.min(0.95, Math.max(0.55, fit));
+    return Math.min(0.88, Math.max(0.45, fit));
   };
 
-  // Center Canvas View: positions artboard TOP-CENTER in the viewport across ALL tabs
+  // Center Canvas View: positions artboard TOP-MID (mathematically centered horizontally, sitting at comfortable top margin)
   const centerCanvasView = (tab = activeTab, forcedZoom = null) => {
     if (!containerRef.current) return;
     const stageW = containerRef.current.clientWidth || 900;
@@ -1166,12 +1170,21 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
     const activeZoom = forcedZoom !== null ? forcedZoom : calculateFitZoom(tab, stageW);
     setZoom(activeZoom);
 
-    // Exact mathematical horizontal center
-    const targetX = Math.max(24, Math.round((stageW - dim.width * activeZoom) / 2));
+    // Exact mathematical horizontal center (Top-Mid)
+    const targetX = Math.round((stageW - dim.width * activeZoom) / 2);
     // Top-Center vertical position: sits at comfortable top margin (36px)
     const targetY = 36;
 
     setPan({ x: targetX, y: targetY });
+    panRef.current = { x: targetX, y: targetY };
+  };
+
+  const handleTabClick = (tab) => {
+    if (activeTab === tab) {
+      centerCanvasView(tab);
+    } else {
+      setActiveTab(tab);
+    }
   };
 
   // Center on tab switch & initial mount with top-center placement for all tabs
@@ -1293,10 +1306,10 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
 
       if (rafId) return;
       rafId = requestAnimationFrame(() => {
-        setPan({
-          x: Math.round(dragStartRef.current.panX + dx),
-          y: Math.round(dragStartRef.current.panY + dy)
-        });
+        const nextX = Math.round(dragStartRef.current.panX + dx);
+        const nextY = Math.round(dragStartRef.current.panY + dy);
+        setPan({ x: nextX, y: nextY });
+        panRef.current = { x: nextX, y: nextY };
         rafId = null;
       });
     };
@@ -1371,6 +1384,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
               nextX = targetCenterX;
             }
 
+            panRef.current = { x: nextX, y: nextY };
             return { x: nextX, y: nextY };
           });
         });
@@ -2797,52 +2811,58 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     canvasZoom={zoom}
                     onBack={() => setActiveTab('home')}
                     onSwarmProgress={(targetY) => {
-                      // Smoothly glide canvas pan vertically to follow the typing cursors
+                      if (panRafRef.current) cancelAnimationFrame(panRafRef.current);
+                      // Smoothly glide canvas pan vertically to follow typing cursors while keeping horizontal Top-Mid
                       const stageW = containerRef.current?.clientWidth || 900;
                       const fitZoom = calculateFitZoom('resume', stageW);
-                      const targetX = Math.max(24, Math.round((stageW - 1080 * fitZoom) / 2));
-                      const startX = pan.x;
-                      const startY = pan.y;
+                      const targetX = Math.round((stageW - 1080 * fitZoom) / 2);
+                      const startX = panRef.current.x;
+                      const startY = panRef.current.y;
                       const startTime = performance.now();
                       const duration = 500;
                       const animatePan = (now) => {
                         const elapsed = now - startTime;
                         const progress = Math.min(1, elapsed / duration);
                         const eased = 1 - Math.pow(1 - progress, 3);
-                        setPan({
-                          x: Math.round(startX + (targetX - startX) * eased),
-                          y: Math.round(startY + (targetY - startY) * eased)
-                        });
+                        const curX = Math.round(startX + (targetX - startX) * eased);
+                        const curY = Math.round(startY + (targetY - startY) * eased);
+                        setPan({ x: curX, y: curY });
+                        panRef.current = { x: curX, y: curY };
                         if (progress < 1) {
-                          requestAnimationFrame(animatePan);
+                          panRafRef.current = requestAnimationFrame(animatePan);
+                        } else {
+                          panRafRef.current = null;
                         }
                       };
-                      requestAnimationFrame(animatePan);
+                      panRafRef.current = requestAnimationFrame(animatePan);
                     }}
                     onScrollToTop={() => {
-                      // Smoothly glide canvas pan back to top so user is dragged up to top-center of notebook
+                      if (panRafRef.current) cancelAnimationFrame(panRafRef.current);
+                      // Smoothly glide canvas pan back to top so user is dragged up to TOP-MID of notebook
                       const stageW = containerRef.current?.clientWidth || 900;
                       const fitZoom = calculateFitZoom('resume', stageW);
                       setZoom(fitZoom);
-                      const targetX = Math.max(24, Math.round((stageW - 1080 * fitZoom) / 2));
+                      const targetX = Math.round((stageW - 1080 * fitZoom) / 2);
                       const targetY = 36;
-                      const startX = pan.x;
-                      const startY = pan.y;
+                      const startX = panRef.current.x;
+                      const startY = panRef.current.y;
                       const startTime = performance.now();
                       const duration = 650;
                       const animateScroll = (now) => {
                         const elapsed = now - startTime;
                         const progress = Math.min(1, elapsed / duration);
                         const eased = 1 - Math.pow(1 - progress, 3);
-                        setPan({
-                          x: Math.round(startX + (targetX - startX) * eased),
-                          y: Math.round(startY + (targetY - startY) * eased)
-                        });
+                        const curX = Math.round(startX + (targetX - startX) * eased);
+                        const curY = Math.round(startY + (targetY - startY) * eased);
+                        setPan({ x: curX, y: curY });
+                        panRef.current = { x: curX, y: curY };
                         if (progress < 1) {
-                          requestAnimationFrame(animateScroll);
+                          panRafRef.current = requestAnimationFrame(animateScroll);
+                        } else {
+                          panRafRef.current = null;
                         }
                       };
-                      requestAnimationFrame(animateScroll);
+                      panRafRef.current = requestAnimationFrame(animateScroll);
                     }}
                   />
                 </div>
@@ -3891,7 +3911,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
         <div className="nav-primary-group">
           <button
             className={`bottom-nav-item ${activeTab === 'home' ? 'active' : ''}`}
-            onClick={() => setActiveTab('home')}
+            onClick={() => handleTabClick('home')}
           >
             <Home size={18} className="bottom-nav-icon-svg" />
             <span>Home</span>
@@ -3899,7 +3919,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
 
           <button
             className={`bottom-nav-item ${activeTab === 'projects' ? 'active' : ''}`}
-            onClick={() => setActiveTab('projects')}
+            onClick={() => handleTabClick('projects')}
           >
             <LayoutDashboard size={18} className="bottom-nav-icon-svg" />
             <span>Work</span>
@@ -3907,7 +3927,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
 
           <button
             className={`bottom-nav-item ${activeTab === 'experience' ? 'active' : ''}`}
-            onClick={() => setActiveTab('experience')}
+            onClick={() => handleTabClick('experience')}
           >
             <Briefcase size={18} className="bottom-nav-icon-svg" />
             <span>Experience</span>
@@ -3915,7 +3935,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
 
           <button
             className={`bottom-nav-item ${activeTab === 'about' ? 'active' : ''}`}
-            onClick={() => setActiveTab('about')}
+            onClick={() => handleTabClick('about')}
           >
             <User size={18} className="bottom-nav-icon-svg" />
             <span>About</span>
@@ -3923,7 +3943,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
 
           <button
             className={`bottom-nav-item ${activeTab === 'resume' ? 'active' : ''}`}
-            onClick={() => setActiveTab('resume')}
+            onClick={() => handleTabClick('resume')}
           >
             <FileText size={18} className="bottom-nav-icon-svg" />
             <span>Resume</span>
@@ -3935,7 +3955,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
         <div className="nav-secondary-group">
           <button
             className={`bottom-nav-item secondary ${activeTab === 'process' ? 'active' : ''}`}
-            onClick={() => setActiveTab('process')}
+            onClick={() => handleTabClick('process')}
           >
             <GitFork size={16} className="bottom-nav-icon-svg" />
             <span>Process</span>
@@ -3943,7 +3963,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
 
           <button
             className={`bottom-nav-item secondary ${activeTab === 'plugins' ? 'active' : ''}`}
-            onClick={() => setActiveTab('plugins')}
+            onClick={() => handleTabClick('plugins')}
           >
             <Boxes size={16} className="bottom-nav-icon-svg" />
             <span>Plugins</span>
