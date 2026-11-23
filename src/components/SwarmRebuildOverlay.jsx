@@ -16,20 +16,23 @@ const SwarmCursor = React.memo(({
   trail = []
 }) => {
   // Pure role tag: strictly ONE single role tag, no personal names, no tool key clutter
-  const raw = String(roleTag || role || label || '');
-  const cleaned = raw.replace(/\[.*?\]/g, '').replace(/❖/g, '').trim();
-  let displayRole = 'Agent';
-  if (/elena/i.test(cleaned)) displayRole = 'Layout';
-  else if (/sarah/i.test(cleaned)) displayRole = 'Stamping';
-  else if (/alex/i.test(cleaned)) displayRole = 'Framing';
-  else if (/varun/i.test(cleaned)) displayRole = 'Typing';
-  else if (/marcus/i.test(cleaned)) displayRole = 'Motion';
-  else if (/you|guest|recruiter/i.test(cleaned)) displayRole = 'Recruiter';
-  else if (/stamping/i.test(cleaned)) displayRole = 'Stamping';
-  else if (/framing/i.test(cleaned)) displayRole = 'Framing';
-  else if (/typing/i.test(cleaned)) displayRole = 'Typing';
-  else if (/layout/i.test(cleaned)) displayRole = 'Layout';
-  else if (cleaned) displayRole = cleaned;
+  let displayRole = roleTag;
+  if (!displayRole) {
+    const raw = String(role || label || '');
+    const cleaned = raw.replace(/\[.*?\]/g, '').replace(/❖/g, '').trim();
+    displayRole = 'Agent';
+    if (/elena/i.test(cleaned)) displayRole = 'Layout';
+    else if (/sarah/i.test(cleaned)) displayRole = 'Stamping';
+    else if (/alex/i.test(cleaned)) displayRole = 'Framing';
+    else if (/varun/i.test(cleaned)) displayRole = 'Typing';
+    else if (/marcus/i.test(cleaned)) displayRole = 'Motion';
+    else if (/you|guest|recruiter/i.test(cleaned)) displayRole = 'Recruiter';
+    else if (/stamping/i.test(cleaned)) displayRole = 'Stamping';
+    else if (/framing/i.test(cleaned)) displayRole = 'Framing';
+    else if (/typing/i.test(cleaned)) displayRole = 'Typing';
+    else if (/layout/i.test(cleaned)) displayRole = 'Layout';
+    else if (cleaned) displayRole = cleaned;
+  }
   return (
     <>
       {/* Liquid glowing trail behind active cursor */}
@@ -356,6 +359,40 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
     }
   };
 
+  const lastWireframeHashRef = useRef('');
+  const updateWireframeData = (data) => {
+    if (!data) {
+      if (lastWireframeHashRef.current !== 'null') {
+        lastWireframeHashRef.current = 'null';
+        setWireframeData(null);
+      }
+      return;
+    }
+    const hash = `${data.type}_${data.heroBoxVisible}_${data.heroTypedText}_${data.card1BoxVisible}_${data.card1TypedTitle}_${Math.round(data.w || 0)}_${Math.round(data.h || 0)}`;
+    if (lastWireframeHashRef.current !== hash) {
+      lastWireframeHashRef.current = hash;
+      setWireframeData(data);
+    }
+  };
+
+  const lastGuidesHashRef = useRef('');
+  const updateActiveGuides = (guides) => {
+    if (!guides || guides.length === 0) {
+      if (lastGuidesHashRef.current !== 'empty') {
+        lastGuidesHashRef.current = 'empty';
+        setActiveGuides([]);
+      }
+      return;
+    }
+    const hash = guides.map(g => `${g.type}_${g.label || ''}_${Math.round(g.x1 || 0)}_${Math.round(g.y1 || 0)}_${Math.round(g.x2 || 0)}_${Math.round(g.y2 || 0)}`).join('|');
+    if (lastGuidesHashRef.current !== hash) {
+      lastGuidesHashRef.current = hash;
+      setActiveGuides(guides);
+    }
+  };
+
+  const netFrameRef = useRef(0);
+
   // High-performance DOM measuring refs: caches geometry to prevent layout thrashing
   const domBoxCacheRef = useRef(null);
   const lastDomMeasureRef = useRef(0);
@@ -516,13 +553,14 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         return;
       }
 
-      const now = Date.now();
-      const dt = Math.min(0.04, Math.max(0.005, (now - lastTimeRef.current) / 1000));
-      lastTimeRef.current = now;
+      try {
+        const now = Date.now();
+        const dt = Math.min(0.04, Math.max(0.005, (now - lastTimeRef.current) / 1000));
+        lastTimeRef.current = now;
 
-      const rawElapsed = (now - startTimeRef.current) / 1000;
-      const elapsed = rawElapsed * (speedMultiplierRef.current || 1);
-      const { w, h } = dimsRef.current || dims;
+        const rawElapsed = (now - startTimeRef.current) / 1000;
+        const elapsed = rawElapsed * (speedMultiplierRef.current || 1);
+        const { w, h } = dimsRef.current || dims;
 
       // Initialize persistent physics if needed
       if (!physicsRef.current) {
@@ -555,7 +593,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
       // Phase 1: Wallpaper Stamping & Backdrop Extrusion (0.0s - 2.0s) — Elena & Varun
       // =====================================================================
       if (elapsed < 2.0) {
-        setStatusMessage('[1/5] Elena & Varun: Stamping Wallpaper Backdrop (100vw × 100vh)...');
+        updateStatusMessage('[1/5] Elena & Varun: Stamping Wallpaper Backdrop (100vw × 100vh)...');
         const t = Math.min(1, Math.max(0, elapsed / 2.0));
 
         if (t >= 0.85) {
@@ -633,9 +671,9 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           }
         };
 
-        setWireframeData(null);
+        updateWireframeData(null);
 
-        setActiveGuides([
+        updateActiveGuides([
           {
             type: 'h',
             x1: 0,
@@ -655,7 +693,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
       // Phase 2: Top MenuBar Extrusion & Apple Tray (2.0s - 4.2s) — Alex & Elena
       // =====================================================================
       else if (elapsed < 4.2) {
-        setStatusMessage('[2/5] Alex & Elena: Extruding MenuBar Frame & Status Bar...');
+        updateStatusMessage('[2/5] Alex & Elena: Extruding MenuBar Frame & Status Bar...');
         const t = Math.min(1, Math.max(0, (elapsed - 2.0) / 2.2));
 
         if (t >= 0.85) {
@@ -731,9 +769,9 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           }
         };
 
-        setWireframeData(null);
+        updateWireframeData(null);
 
-        setActiveGuides([
+        updateActiveGuides([
           {
             type: 'h',
             x1: 0,
@@ -783,6 +821,10 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         const iconFloat = t * totalIcons;
         const iconIndex = Math.min(6, Math.floor(iconFloat));
         const subProgress = iconFloat - iconIndex;
+
+        const prevIconY = iconIndex > 0 ? iconYPositions[iconIndex - 1] : iconYPositions[0];
+        const currentIconY = iconYPositions[iconIndex];
+        const gapMidY = (prevIconY + currentIconY) / 2 + 35;
 
         const prevY = iconIndex === 0 ? iconYPositions[0] : iconYPositions[iconIndex - 1];
         const nextY = iconYPositions[iconIndex];
@@ -854,13 +896,9 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           }
         };
 
-        setWireframeData(null);
+        updateWireframeData(null);
 
-        const prevIconY = iconIndex > 0 ? iconYPositions[iconIndex - 1] : iconYPositions[0];
-        const currentIconY = iconYPositions[iconIndex];
-        const gapMidY = (prevIconY + currentIconY) / 2 + 35;
-
-        setActiveGuides([
+        updateActiveGuides([
           { type: 'v', x1: iconX, y1: iconYPositions[0] - 6, x2: iconX, y2: iconYPositions[6] + iconH + 6, color: '#ec4899', dashed: true, label: `X: ${iconX}px` },
           { type: 'v', x1: iconX + iconW, y1: iconYPositions[0] - 6, x2: iconX + iconW, y2: iconYPositions[6] + iconH + 6, color: '#ec4899', dashed: true, label: `W: ${iconW}px` },
           ...(iconIndex > 0 && iconIndex < 6 ? [{
@@ -888,7 +926,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
 
         // Sub-phase 4A: The Bar of the Bottom (8.2s - 10.0s)
         if (pDock < 1.8) {
-          setStatusMessage('[4/5] Alex & Varun: [R] Framing Glass Dock Capsule...');
+          updateStatusMessage('[4/5] Alex & Varun: [R] Framing Glass Dock Capsule...');
           const tA = Math.min(1, Math.max(0, pDock / 1.8));
           const easedMove = easeInOutCubic(tA);
 
@@ -970,9 +1008,9 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             }
           };
 
-          setWireframeData(null);
+          updateWireframeData(null);
 
-          setActiveGuides([
+          updateActiveGuides([
             {
               type: 'h',
               x1: curLeft - 30,
@@ -990,7 +1028,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         }
         // Sub-phase 4B: The Apps of the Bottom (10.0s - 13.0s) — Sarah Lin (3.0s for 9 apps)
         else {
-          setStatusMessage('[4/5] Sarah Lin: Stamping Dock App Icons (1-by-1)...');
+          updateStatusMessage('[4/5] Sarah Lin: Stamping Dock App Icons (1-by-1)...');
           const tB = Math.min(1, Math.max(0, (pDock - 1.8) / 3.0));
 
           const dockAppNames = ['Finder', 'VS Code', 'Figma', 'Terminal', 'Resume', 'Contact', 'Settings', 'Buy Me a Coffee', 'Trash'];
@@ -1084,9 +1122,9 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             }
           };
 
-          setWireframeData(null);
+          updateWireframeData(null);
 
-          setActiveGuides([
+          updateActiveGuides([
             {
               type: 'h',
               x1: curDockLeft,
@@ -1248,7 +1286,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
 
         // 5.1: Alex Chen Extrudes Outer Window Frame Box (13.0s - 14.4s) -> Step 0
         if (pWin < 1.4) {
-          setStatusMessage('[5/5] Alex Chen: [F] Extruding Window Frame Box (920 × 560px)...');
+          updateStatusMessage('[5/5] Alex Chen: [F] Extruding Window Frame Box (920 × 560px)...');
           const t1 = Math.min(1, pWin / 1.4);
           if (t1 >= 0.85) {
             updateStage(5, 780); // Reveal real Window container only when Alex completes extruding!
@@ -1315,9 +1353,9 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             }
           };
 
-          setWireframeData(null);
+          updateWireframeData(null);
 
-          setActiveGuides([
+          updateActiveGuides([
             {
               type: 'v',
               x1: curX + drawnW / 2,
@@ -1476,7 +1514,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             alexChat = `measuring hero: ${Math.round(heroBox.w)}px`;
           }
 
-          setStatusMessage(`[5/5] Multitasking Swarm: Elena (Sidebar ${itemIdx + 1}/15) • Varun (${varunAction}) • Sarah (${sarahAction})`);
+          updateStatusMessage(`[5/5] Multitasking Swarm: Elena (Sidebar ${itemIdx + 1}/15) • Varun (${varunAction}) • Sarah (${sarahAction})`);
 
           agentTargets = {
             elena: {
@@ -1531,9 +1569,9 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             }
           };
 
-          setWireframeData(null);
+          updateWireframeData(null);
 
-          setActiveGuides([
+          updateActiveGuides([
             {
               type: 'v',
               x1: sidebarBox.x + sidebarBox.w,
@@ -1769,9 +1807,9 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             };
           }
 
-          setWireframeData(null);
+          updateWireframeData(null);
 
-          setActiveGuides([
+          updateActiveGuides([
             {
               type: 'h',
               x1: c1Box.x,
@@ -1993,10 +2031,10 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             };
           }
 
-          setWireframeData(null);
+          updateWireframeData(null);
 
           const gapX = Math.round((c1Box.x + c1Box.w + c2Box.x) / 2);
-          setActiveGuides([
+          updateActiveGuides([
             {
               type: 'v',
               x1: gapX,
@@ -2219,11 +2257,11 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             };
           }
 
-          setWireframeData(null);
+          updateWireframeData(null);
 
           // Equal Y gap strictly in the empty gap between Card 1 and Card 3
           const gapY = Math.round((c1Box.y + c1Box.h + c3Box.y) / 2);
-          setActiveGuides([
+          updateActiveGuides([
             {
               type: 'h',
               x1: c1Box.x,
@@ -2447,10 +2485,10 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             };
           }
 
-          setWireframeData(null);
+          updateWireframeData(null);
 
           const gapX = Math.round((c3Box.x + c3Box.w + c4Box.x) / 2);
-          setActiveGuides([
+          updateActiveGuides([
             {
               type: 'v',
               x1: gapX,
@@ -2469,7 +2507,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         // 5.8: Auto-Layout Verification & Celebration (23.4s - 24.5s) -> Step 7
         else {
           dispatchFinderStep(7);
-          setStatusMessage('[5/5] Auto-Layout Verified ✓ 2×2 Project Grid Complete!');
+          updateStatusMessage('[5/5] Auto-Layout Verified ✓ 2×2 Project Grid Complete!');
 
           const gapX = Math.round((c1Box.x + c1Box.w + c2Box.x) / 2);
           const gapY = Math.round((c1Box.y + c1Box.h + c3Box.y) / 2);
@@ -2526,9 +2564,9 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             }
           };
 
-          setWireframeData(null);
+          updateWireframeData(null);
 
-          setActiveGuides([
+          updateActiveGuides([
             {
               type: 'v',
               x1: gapX,
@@ -2626,10 +2664,16 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
       }
 
       setCursors(updatedCursors);
-      setNetworkPaths(netPaths);
+      netFrameRef.current++;
+      if (netFrameRef.current % 2 === 0) {
+        setNetworkPaths(netPaths);
+      }
+    } catch (err) {
+      console.error('Swarm rebuild loop error:', err);
+    }
 
-      animFrameRef.current = requestAnimationFrame(loop);
-    };
+    animFrameRef.current = requestAnimationFrame(loop);
+  };
 
     animFrameRef.current = requestAnimationFrame(loop);
     return () => {
