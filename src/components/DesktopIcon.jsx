@@ -1,4 +1,4 @@
-import { Trash2, Mail, Coffee } from 'lucide-react';
+import { Trash2, Mail, Coffee, Star } from 'lucide-react';
 import './DesktopIcon.css';
 
 const FigmaIcon = () => (
@@ -52,6 +52,12 @@ const CoffeeIcon = () => (
   </div>
 );
 
+const ReviewsIcon = () => (
+  <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <Star size={23} color="#f59e0b" fill="#f59e0b" style={{ filter: 'drop-shadow(0 2px 8px rgba(245, 158, 11, 0.45))' }} />
+  </div>
+);
+
 const TrashIcon = () => (
   <Trash2 size={21} color="#9ca3af" />
 );
@@ -61,6 +67,7 @@ const IconMap = {
   vscode: VsCodeIcon,
   resume: PdfIcon,
   contact: ContactIcon,
+  reviews: ReviewsIcon,
   coffee: CoffeeIcon,
   trash: TrashIcon,
 };

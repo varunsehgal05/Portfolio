@@ -539,6 +539,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
                 onFocus={() => focusApp(appId)}
                 onOpenApp={openApp}
                 onReplaySwarm={handleInternalReplaySwarm}
+                isRebuilding={isRebuilding}
               />
             );
           })}

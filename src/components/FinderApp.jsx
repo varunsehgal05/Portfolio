@@ -111,46 +111,35 @@ const TECH_STACK = [
   { category: 'Frontend Prototyping', skills: ['React.js', 'Next.js', 'TypeScript', 'Tailwind CSS', 'HTML5/CSS3', 'Git'], icon: '💻' }
 ];
 
-const FinderApp = ({ onOpenApp }) => {
+const FinderApp = ({ onOpenApp, isRebuilding = false }) => {
   const [activeTab, setActiveTab] = useState('featured');
   const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'list'
   const [searchFilter, setSearchFilter] = useState('');
 
   // Staged reveal synchronized with Swarm Rebuild Phase 5
   const FULL_HERO_TITLE = "Designing intuitive web apps & modern interfaces";
-  const isRebuildActive = typeof window !== 'undefined' && Boolean(window.__varunos_rebuild_active);
-  const [rebuildStep, setRebuildStep] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const isDirect = Boolean(new URLSearchParams(window.location.search).get('app'));
-      if (isDirect || !window.__varunos_rebuild_active) return 7;
-      return window.__varunos_finder_step !== undefined ? window.__varunos_finder_step : 7;
-    }
-    return 7;
-  });
-  const [sidebarStep, setSidebarStep] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const isDirect = Boolean(new URLSearchParams(window.location.search).get('app'));
-      if (isDirect || !window.__varunos_rebuild_active) return 15;
-      if (window.__varunos_finder_step !== undefined && window.__varunos_finder_step < 2) {
-        return window.__varunos_sidebar_step !== undefined ? window.__varunos_sidebar_step : 0;
-      }
-      return 15;
-    }
-    return 15;
-  });
-  const [typedTitle, setTypedTitle] = useState(() => (isRebuildActive && window.__varunos_finder_step !== undefined && window.__varunos_finder_step < 2) ? '' : FULL_HERO_TITLE);
-  const [toolbarStep, setToolbarStep] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const isDirect = Boolean(new URLSearchParams(window.location.search).get('app'));
-      if (isDirect || !window.__varunos_rebuild_active) return 4;
-      return (window.__varunos_finder_step !== undefined && window.__varunos_finder_step < 2) ? 0 : 4;
-    }
-    return 4;
-  });
-  const [typedPath, setTypedPath] = useState(() => (isRebuildActive && window.__varunos_finder_step !== undefined && window.__varunos_finder_step < 2) ? '' : 'Macintosh HD > Users > varun > Featured Works');
-  const [typedSearch, setTypedSearch] = useState(() => (isRebuildActive && window.__varunos_finder_step !== undefined && window.__varunos_finder_step < 2) ? '' : 'Search in Finder...');
-  const [heroBoxVisible, setHeroBoxVisible] = useState(() => (isRebuildActive && window.__varunos_finder_step !== undefined && window.__varunos_finder_step < 2) ? false : true);
+  const effectiveRebuilding = Boolean(isRebuilding && typeof window !== 'undefined' && window.__varunos_rebuild_active);
+  const [rebuildStep, setRebuildStep] = useState(() => effectiveRebuilding ? (window.__varunos_finder_step ?? 0) : 7);
+  const [sidebarStep, setSidebarStep] = useState(() => effectiveRebuilding ? (window.__varunos_sidebar_step ?? 0) : 15);
+  const [typedTitle, setTypedTitle] = useState(() => effectiveRebuilding ? '' : FULL_HERO_TITLE);
+  const [toolbarStep, setToolbarStep] = useState(() => effectiveRebuilding ? 0 : 4);
+  const [typedPath, setTypedPath] = useState(() => effectiveRebuilding ? '' : 'Macintosh HD > Users > varun > Featured Works');
+  const [typedSearch, setTypedSearch] = useState(() => effectiveRebuilding ? '' : 'Search in Finder...');
+  const [heroBoxVisible, setHeroBoxVisible] = useState(() => !effectiveRebuilding);
   const [cardBuildState, setCardBuildState] = useState({});
+
+  useEffect(() => {
+    if (!isRebuilding) {
+      setRebuildStep(7);
+      setSidebarStep(15);
+      setToolbarStep(4);
+      setTypedTitle(FULL_HERO_TITLE);
+      setTypedPath('Macintosh HD > Users > varun > Featured Works');
+      setTypedSearch('Search in Finder...');
+      setHeroBoxVisible(true);
+      setCardBuildState({});
+    }
+  }, [isRebuilding]);
 
   useEffect(() => {
     const handleToolbar = (e) => {

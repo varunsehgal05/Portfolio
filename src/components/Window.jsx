@@ -14,6 +14,7 @@ const TerminalApp = lazy(() => import('./TerminalApp'));
 const SettingsApp = lazy(() => import('./SettingsApp'));
 const TrashApp = lazy(() => import('./TrashApp'));
 const CoffeeApp = lazy(() => import('./CoffeeApp'));
+const ReviewsApp = lazy(() => import('./ReviewsApp'));
 
 const Window = ({
   app,
@@ -28,6 +29,7 @@ const Window = ({
   onFocus,
   onOpenApp,
   onReplaySwarm,
+  isRebuilding = false,
   defaultMaximized = false
 }) => {
   const DOCK_CLEARANCE = 86;
@@ -63,6 +65,7 @@ const Window = ({
     if (app.id === 'figma') return { width: Math.min(availableWidth - 60, 1100), height: Math.min(availableHeight, 680) };
     if (app.id === 'vscode') return { width: Math.min(availableWidth - 80, 1000), height: Math.min(availableHeight, 620) };
     if (app.id === 'contact') return { width: Math.min(availableWidth - 80, 840), height: Math.min(availableHeight - 20, 560) };
+    if (app.id === 'reviews') return { width: Math.min(availableWidth - 80, 820), height: Math.min(availableHeight - 20, 580) };
     if (app.id === 'coffee') return { width: Math.min(availableWidth - 80, 680), height: Math.min(availableHeight - 20, 540) };
     return { width: Math.min(availableWidth - 80, 800), height: Math.min(availableHeight, 500) };
   };
@@ -343,7 +346,7 @@ const Window = ({
   const renderContent = () => {
     switch (app.id) {
       case 'finder':
-        return <FinderApp onOpenApp={onOpenApp} />;
+        return <FinderApp onOpenApp={onOpenApp} isRebuilding={isRebuilding} />;
       case 'figma':
         return <Suspense fallback={<div className="window-app-loading" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>Loading Figma Workspace...</div>}><FigmaApp isInteracting={isInteracting} userName={userName} onOpenApp={onOpenApp} /></Suspense>;
       case 'terminal':
@@ -356,6 +359,8 @@ const Window = ({
         return <ResumeApp />;
       case 'contact':
         return <Suspense fallback={<div className="window-app-loading" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>Loading Contact...</div>}><ContactApp /></Suspense>;
+      case 'reviews':
+        return <Suspense fallback={<div className="window-app-loading" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>Loading Reviews...</div>}><ReviewsApp onClose={handleClose} /></Suspense>;
       case 'coffee':
         return <Suspense fallback={<div className="window-app-loading" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>Loading...</div>}><CoffeeApp onClose={handleClose} /></Suspense>;
       case 'trash':

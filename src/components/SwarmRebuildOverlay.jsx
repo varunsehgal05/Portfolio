@@ -754,15 +754,15 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           updateStage(3, 740); // Reveal Desktop Icons container in Desktop.jsx
         }
 
-        const iconNames = ['Figma', 'VS Code', 'Resume.pdf', 'Contact', 'Buy Me a Coffee', 'Trash'];
+        const iconNames = ['Figma', 'VS Code', 'Resume.pdf', 'Contact', 'Reviews', 'Buy Me a Coffee', 'Trash'];
         if (!iconCacheRef.current || (now - lastIconMeasureRef.current > 500)) {
           lastIconMeasureRef.current = now;
           const domIcons = typeof document !== 'undefined' ? document.querySelectorAll('.desktop-icon-container') : null;
-          let iconYPositions = [46, 138, 230, 322, 414, 506];
+          let iconYPositions = [46, 138, 230, 322, 414, 506, 598];
           let iconX = 20;
           let iconW = 72;
           let iconH = 76;
-          if (domIcons && domIcons.length >= 6) {
+          if (domIcons && domIcons.length >= 7) {
             iconYPositions = Array.from(domIcons).map(el => Math.round(el.getBoundingClientRect().top));
             const r0 = domIcons[0].getBoundingClientRect();
             iconX = Math.round(r0.left) || 20;
@@ -773,9 +773,9 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         }
         const { iconYPositions, iconX, iconW, iconH } = iconCacheRef.current;
 
-        const totalIcons = 6;
+        const totalIcons = 7;
         const iconFloat = t * totalIcons;
-        const iconIndex = Math.min(5, Math.floor(iconFloat));
+        const iconIndex = Math.min(6, Math.floor(iconFloat));
         const subProgress = iconFloat - iconIndex;
 
         const prevY = iconIndex === 0 ? iconYPositions[0] : iconYPositions[iconIndex - 1];
@@ -794,11 +794,11 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           }
         }
 
-        // 4 Swarm Agents actively working simultaneously on the left desktop apps with zero overlapping collision!
+        // 4 Swarm Agents actively working simultaneously on the left desktop apps with generous non-overlapping spacing!
         agentTargets = {
           sarah: {
-            x: sarahPos.x + 16,
-            y: sarahPos.y + 16,
+            x: iconX + iconW / 2,
+            y: iconYPositions[iconIndex] + 24,
             color: '#FF7262',
             roleTag: 'Stamping',
             action: `Stamping: ${iconNames[iconIndex]}`,
@@ -814,32 +814,25 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             }
           },
           elena: {
-            x: iconX + iconW + 44,
-            y: Math.max(iconYPositions[0] + 50, sarahPos.y - 44),
+            x: iconX + iconW + 120,
+            y: gapMidY,
             color: '#0D99FF',
             roleTag: 'Layout',
             action: iconIndex > 0 ? 'Measuring ΔY: 16px Gap' : 'Aligning Left Grid',
             cursorMode: 'arrow'
           },
           alex: {
-            x: iconX + iconW + 26,
-            y: iconYPositions[0] - 14,
+            x: iconX + iconW / 2,
+            y: Math.max(38, iconYPositions[0] - 28),
             color: '#0ACF83',
             roleTag: 'Framing',
             action: 'Framing Column Layout [72×520]',
             cursorMode: 'arrow',
-            chatText: iconIndex === 0 ? 'framing column grid' : null,
-            boxBounds: {
-              x: iconX - 8,
-              y: iconYPositions[0] - 8,
-              w: iconW + 16,
-              h: (iconYPositions[5] - iconYPositions[0]) + iconH + 16,
-              label: 'Auto-Layout Col • 72px'
-            }
+            chatText: iconIndex === 0 ? 'framing column grid' : null
           },
           varun: {
-            x: iconX + iconW + 36,
-            y: Math.min(iconYPositions[5] + 32, sarahPos.y + 48),
+            x: iconX + iconW / 2,
+            y: iconYPositions[iconIndex] + iconH + 24,
             color: '#A259FF',
             roleTag: 'Typing',
             action: `Labeling: ${iconNames[iconIndex]}`,
@@ -862,9 +855,9 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         const gapMidY = (prevIconY + currentIconY) / 2 + 35;
 
         setActiveGuides([
-          { type: 'v', x1: iconX, y1: iconYPositions[0] - 6, x2: iconX, y2: iconYPositions[5] + iconH + 6, color: '#ec4899', dashed: true, label: `X: ${iconX}px` },
-          { type: 'v', x1: iconX + iconW, y1: iconYPositions[0] - 6, x2: iconX + iconW, y2: iconYPositions[5] + iconH + 6, color: '#ec4899', dashed: true, label: `W: ${iconW}px` },
-          ...(iconIndex > 0 ? [{
+          { type: 'v', x1: iconX, y1: iconYPositions[0] - 6, x2: iconX, y2: iconYPositions[6] + iconH + 6, color: '#ec4899', dashed: true, label: `X: ${iconX}px` },
+          { type: 'v', x1: iconX + iconW, y1: iconYPositions[0] - 6, x2: iconX + iconW, y2: iconYPositions[6] + iconH + 6, color: '#ec4899', dashed: true, label: `W: ${iconW}px` },
+          ...(iconIndex > 0 && iconIndex < 6 ? [{
             type: 'v',
             x1: iconX + iconW + 40,
             y1: prevIconY + iconH,

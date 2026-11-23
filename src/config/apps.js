@@ -45,6 +45,12 @@ export const portfolioApps = {
     title: 'System Settings — VarunOS',
     icon: 'settings'
   },
+  reviews: {
+    id: 'reviews',
+    name: 'Reviews',
+    title: 'Reviews & Recommendations — Varun Sehgal',
+    icon: 'reviews'
+  },
   coffee: {
     id: 'coffee',
     name: 'Buy Me a Coffee',
@@ -60,4 +66,4 @@ export const portfolioApps = {
   }
 };
 
-export const desktopIconIds = ['figma', 'vscode', 'resume', 'contact', 'coffee', 'trash'];
+export const desktopIconIds = ['figma', 'vscode', 'resume', 'contact', 'reviews', 'coffee', 'trash'];

@@ -1134,7 +1134,10 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
     const dim = getTabDimensions(tab);
     const availableW = Math.max(320, stageW - 64);
     const fit = Math.round((availableW / dim.width) * 100) / 100;
-    return Math.min(0.95, Math.max(0.60, fit));
+    if (tab === 'resume') {
+      return Math.min(0.95, Math.max(0.40, fit));
+    }
+    return Math.min(0.95, Math.max(0.55, fit));
   };
 
   // Center Canvas View: positions artboard TOP-CENTER in the viewport across ALL tabs
@@ -1147,7 +1150,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
     setZoom(activeZoom);
 
     // Exact mathematical horizontal center
-    const targetX = Math.round((stageW - dim.width * activeZoom) / 2);
+    const targetX = Math.max(24, Math.round((stageW - dim.width * activeZoom) / 2));
     // Top-Center vertical position: sits at comfortable top margin (36px)
     const targetY = 36;
 
@@ -2781,7 +2784,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                       const stageW = containerRef.current?.clientWidth || 900;
                       const fitZoom = calculateFitZoom('resume', stageW);
                       setZoom(fitZoom);
-                      const targetX = Math.round((stageW - 1080 * fitZoom) / 2);
+                      const targetX = Math.max(24, Math.round((stageW - 1080 * fitZoom) / 2));
                       const targetY = 36;
                       const startX = pan.x;
                       const startY = pan.y;

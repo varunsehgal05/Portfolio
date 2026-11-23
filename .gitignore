@@ -27,4 +27,5 @@ dist-ssr
 
 .vercel
 .output
+lighthouse-report.json
 
