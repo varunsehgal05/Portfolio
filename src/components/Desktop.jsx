@@ -411,14 +411,16 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
 
   // Ensure Finder is cleanly prepared when entering rebuild mode, and fully restored when ready
   useEffect(() => {
-    if (swarmStage < 5) {
-      if (typeof window !== 'undefined' && swarmStage === 0) {
+    if (isRebuilding) {
+      if (typeof window !== 'undefined') {
         window.__varunos_rebuild_active = true;
-        window.__varunos_finder_step = 0;
-        window.__varunos_sidebar_step = 0;
-        window.dispatchEvent(new CustomEvent('varunos-swarm-finder-step', { detail: { step: 0 } }));
-        window.dispatchEvent(new CustomEvent('varunos-sidebar-step', { detail: { step: 0 } }));
-        window.dispatchEvent(new CustomEvent('varunos-card-building', { detail: { index: -1, phase: 'reset' } }));
+        if (swarmStage === 0) {
+          window.__varunos_finder_step = 0;
+          window.__varunos_sidebar_step = 0;
+          window.dispatchEvent(new CustomEvent('varunos-swarm-finder-step', { detail: { step: 0 } }));
+          window.dispatchEvent(new CustomEvent('varunos-sidebar-step', { detail: { step: 0 } }));
+          window.dispatchEvent(new CustomEvent('varunos-card-building', { detail: { index: -1, phase: 'reset' } }));
+        }
       }
       setOpenWindows(['finder']);
       setMinimizedWindows([]);
@@ -429,10 +431,12 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
       if (typeof window !== 'undefined') {
         window.__varunos_rebuild_active = false;
         window.__varunos_finder_step = 7;
+        window.__varunos_sidebar_step = 15;
         window.dispatchEvent(new CustomEvent('varunos-swarm-finder-step', { detail: { step: 7 } }));
+        window.dispatchEvent(new CustomEvent('varunos-sidebar-step', { detail: { step: 15 } }));
       }
     }
-  }, [swarmStage]);
+  }, [isRebuilding, swarmStage]);
 
   const displayedIcons = desktopIconIds || ['figma', 'vscode', 'resume', 'contact', 'coffee', 'trash'];
   const activeWallpaper = desktopWallpapers.find(w => w.id === activeWallpaperId) || desktopWallpapers[0];

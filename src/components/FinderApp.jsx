@@ -118,18 +118,27 @@ const FinderApp = ({ onOpenApp, isRebuilding = false }) => {
 
   // Staged reveal synchronized with Swarm Rebuild Phase 5
   const FULL_HERO_TITLE = "Designing intuitive web apps & modern interfaces";
-  const effectiveRebuilding = Boolean(isRebuilding && typeof window !== 'undefined' && window.__varunos_rebuild_active);
-  const [rebuildStep, setRebuildStep] = useState(() => effectiveRebuilding ? (window.__varunos_finder_step ?? 0) : 7);
-  const [sidebarStep, setSidebarStep] = useState(() => effectiveRebuilding ? (window.__varunos_sidebar_step ?? 0) : 15);
-  const [typedTitle, setTypedTitle] = useState(() => effectiveRebuilding ? '' : FULL_HERO_TITLE);
-  const [toolbarStep, setToolbarStep] = useState(() => effectiveRebuilding ? 0 : 4);
-  const [typedPath, setTypedPath] = useState(() => effectiveRebuilding ? '' : 'Macintosh HD > Users > varun > Featured Works');
-  const [typedSearch, setTypedSearch] = useState(() => effectiveRebuilding ? '' : 'Search in Finder...');
-  const [heroBoxVisible, setHeroBoxVisible] = useState(() => !effectiveRebuilding);
+  const effectiveRebuilding = Boolean(isRebuilding);
+  const [rebuildStep, setRebuildStep] = useState(() => isRebuilding ? (typeof window !== 'undefined' && window.__varunos_rebuild_active && typeof window.__varunos_finder_step === 'number' && window.__varunos_finder_step < 7 ? window.__varunos_finder_step : 0) : 7);
+  const [sidebarStep, setSidebarStep] = useState(() => isRebuilding ? (typeof window !== 'undefined' && window.__varunos_rebuild_active && typeof window.__varunos_sidebar_step === 'number' && window.__varunos_sidebar_step < 15 ? window.__varunos_sidebar_step : 0) : 15);
+  const [typedTitle, setTypedTitle] = useState(() => isRebuilding ? '' : FULL_HERO_TITLE);
+  const [toolbarStep, setToolbarStep] = useState(() => isRebuilding ? 0 : 4);
+  const [typedPath, setTypedPath] = useState(() => isRebuilding ? '' : 'Macintosh HD > Users > varun > Featured Works');
+  const [typedSearch, setTypedSearch] = useState(() => isRebuilding ? '' : 'Search in Finder...');
+  const [heroBoxVisible, setHeroBoxVisible] = useState(() => !isRebuilding);
   const [cardBuildState, setCardBuildState] = useState({});
 
   useEffect(() => {
-    if (!isRebuilding) {
+    if (isRebuilding) {
+      setRebuildStep(typeof window !== 'undefined' && window.__varunos_rebuild_active && typeof window.__varunos_finder_step === 'number' && window.__varunos_finder_step < 7 ? window.__varunos_finder_step : 0);
+      setSidebarStep(typeof window !== 'undefined' && window.__varunos_rebuild_active && typeof window.__varunos_sidebar_step === 'number' && window.__varunos_sidebar_step < 15 ? window.__varunos_sidebar_step : 0);
+      setToolbarStep(0);
+      setTypedTitle('');
+      setTypedPath('');
+      setTypedSearch('');
+      setHeroBoxVisible(false);
+      setCardBuildState({});
+    } else {
       setRebuildStep(7);
       setSidebarStep(15);
       setToolbarStep(4);
@@ -490,7 +499,7 @@ const FinderApp = ({ onOpenApp, isRebuilding = false }) => {
             {viewMode === 'grid' ? (
               <div className="finder-cards-grid">
                 {filteredProjects.map((proj, pIdx) => {
-                  const isCardCompleted = (rebuildStep >= 3 + pIdx && rebuildStep > 2) || cardBuildState[pIdx]?.phase === 'complete' || rebuildStep >= 7;
+                  const isCardCompleted = !isRebuilding || (rebuildStep >= 3 + pIdx && rebuildStep > 2) || cardBuildState[pIdx]?.phase === 'complete' || rebuildStep >= 7;
                   const isCardBuilding = Boolean(cardBuildState[pIdx]?.isBuilding) && !isCardCompleted;
                   const isCardVisible = isCardCompleted || isCardBuilding;
                   const cardPhase = cardBuildState[pIdx]?.phase;

@@ -225,6 +225,7 @@ const soundSynth = new SwarmSoundSynthesizer();
 
 // Kittu Pro Human Motion Easing and Arc Interpolation (from module 56877)
 const easeInOutCubic = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+const easeOutQuad = (t) => 1 - Math.pow(1 - t, 2.2);
 const lerp = (a, b, t) => a + (b - a) * t;
 
 // Human Arc Path Generator (matching Kittu Pro's tr function)
@@ -590,14 +591,14 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
       let agentTargets = {};
 
       // =====================================================================
-      // Phase 1: Wallpaper Stamping & Backdrop Extrusion (0.0s - 2.0s) — Elena & Varun
+      // Phase 1: Wallpaper Stamping & Backdrop Extrusion (0.0s - 1.6s) — Elena & Varun
       // =====================================================================
-      if (elapsed < 2.0) {
+      if (elapsed < 1.6) {
         updateStatusMessage('[1/5] Elena & Varun: Stamping Wallpaper Backdrop (100vw × 100vh)...');
-        const t = Math.min(1, Math.max(0, elapsed / 2.0));
+        const t = Math.min(1, Math.max(0, elapsed / 1.6));
 
-        if (t >= 0.85) {
-          updateStage(1, 580); // Reveal real wallpaper only when swarm finishes stamping!
+        if (t >= 0.70) {
+          updateStage(1, 580); // Reveal real wallpaper smoothly as swarm stamps!
         }
 
         if (t > 0.60 && !wallpaperSnappedRef.current) {
@@ -652,13 +653,14 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             cursorMode: 'arrow'
           },
           alex: {
-            x: drawnW - 36,
-            y: drawnH - 24,
-            color: '#0ACF83',
+            x: 40,
+            y: 14,
+            color: '#10B981',
             label: 'Alex Chen',
-            action: 'Bottom-Right Canvas Anchor',
-            toolKey: 'V Move',
-            cursorMode: 'arrow'
+            action: 'Staging Top MenuBar Anchor',
+            toolKey: 'F Frame',
+            cursorMode: 'cross',
+            chatText: t > 0.5 ? 'staging top bar' : null
           },
           user: {
             x: drawnW - 40,
@@ -690,11 +692,11 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         ]);
       }
       // =====================================================================
-      // Phase 2: Top MenuBar Extrusion & Apple Tray (2.0s - 4.2s) — Alex & Elena
+      // Phase 2: Top MenuBar Extrusion & Apple Tray (1.6s - 3.8s) — Alex & Elena
       // =====================================================================
-      else if (elapsed < 4.2) {
+      else if (elapsed < 3.8) {
         updateStatusMessage('[2/5] Alex & Elena: Extruding MenuBar Frame & Status Bar...');
-        const t = Math.min(1, Math.max(0, (elapsed - 2.0) / 2.2));
+        const t = Math.min(1, Math.max(0, (elapsed - 1.6) / 2.2));
 
         if (t >= 0.85) {
           updateStage(2, 680); // Reveal MenuBar only when swarm finishes extruding!
@@ -707,7 +709,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           triggerRipple(w - 120, 14, '#0D99FF');
         }
 
-        const menuDrawnW = lerp(60, w, easeInOutCubic(t));
+        const menuDrawnW = lerp(60, w, easeOutQuad(t));
         const alexArc = interpolateArc(40, 14, menuDrawnW - 20, 14, t, 12, 0.03);
         const elenaArc = interpolateArc(w - 40, 20, w - 180, 14, Math.min(1, Math.max(0, (t - 0.2) / 0.8)), -10, 0.03);
 
@@ -788,11 +790,11 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         ]);
       }
       // =====================================================================
-      // Phase 3: Desktop App Icons Stamping (4.2s - 8.2s) — 4 Swarm Collaborative
+      // Phase 3: Desktop App Icons Stamping (3.8s - 8.0s) — 4 Swarm Collaborative
       // =====================================================================
-      else if (elapsed < 8.2) {
+      else if (elapsed < 8.0) {
         updateStatusMessage('[3/5] Swarm Team: Stamping Left Desktop Apps (1-by-1)...');
-        const t = Math.min(1, Math.max(0, (elapsed - 4.2) / 4.0));
+        const t = Math.min(1, Math.max(0, (elapsed - 3.8) / 4.2));
 
         if (t > 0.05) {
           updateStage(3, 740); // Reveal Desktop Icons container in Desktop.jsx
@@ -917,14 +919,14 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         ]);
       }
       // =====================================================================
-      // Phase 4: Bottom Bar (Dock) & Dock Apps (8.2s - 13.0s)
-      // 4A: Frame Glass Dock Capsule (8.2s - 10.0s) — Alex & Varun
-      // 4B: Stamp Dock Apps 1-by-1 (10.0s - 13.0s) — Sarah Lin
+      // Phase 4: Bottom Bar (Dock) & Dock Apps (8.0s - 13.0s)
+      // 4A: Frame Glass Dock Capsule (8.0s - 9.8s) — Alex & Varun
+      // 4B: Stamp Dock Apps 1-by-1 (9.8s - 13.0s) — Sarah Lin
       // =====================================================================
       else if (elapsed < 13.0) {
-        const pDock = elapsed - 8.2;
+        const pDock = elapsed - 8.0;
 
-        // Sub-phase 4A: The Bar of the Bottom (8.2s - 10.0s)
+        // Sub-phase 4A: The Bar of the Bottom (8.0s - 9.8s)
         if (pDock < 1.8) {
           updateStatusMessage('[4/5] Alex & Varun: [R] Framing Glass Dock Capsule...');
           const tA = Math.min(1, Math.max(0, pDock / 1.8));
@@ -1026,10 +1028,10 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             }
           ]);
         }
-        // Sub-phase 4B: The Apps of the Bottom (10.0s - 13.0s) — Sarah Lin (3.0s for 9 apps)
+        // Sub-phase 4B: The Apps of the Bottom (9.8s - 13.0s) — Sarah Lin (3.2s for 9 apps)
         else {
           updateStatusMessage('[4/5] Sarah Lin: Stamping Dock App Icons (1-by-1)...');
-          const tB = Math.min(1, Math.max(0, (pDock - 1.8) / 3.0));
+          const tB = Math.min(1, Math.max(0, (pDock - 1.8) / 3.2));
 
           const dockAppNames = ['Finder', 'VS Code', 'Figma', 'Terminal', 'Resume', 'Contact', 'Settings', 'Buy Me a Coffee', 'Trash'];
           const totalDockApps = 9;
