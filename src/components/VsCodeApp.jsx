@@ -2002,120 +2002,168 @@ export const VsCodeApp = () => {
             currentFile.isWebview ? (
               <div className="vscode-webview-container">
                 <div className="webview-address-bar">
-                  <span className="webview-lock-icon">🔒</span>
-                  <span className="webview-url-text">http://codesrijan-nine.vercel.app/</span>
-                  <span className="webview-badge-tag">VERCEL PRODUCTION</span>
-                  <a
-                    href="http://codesrijan-nine.vercel.app/"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="webview-external-btn"
-                  >
-                    <span>Open in Chrome ↗</span>
-                  </a>
+                  <div className="webview-browser-controls">
+                    <span className="browser-dot dot-close" />
+                    <span className="browser-dot dot-minimize" />
+                    <span className="browser-dot dot-expand" />
+                  </div>
+                  <div className="webview-nav-arrows">
+                    <button type="button" className="nav-arrow-btn" title="Back">‹</button>
+                    <button type="button" className="nav-arrow-btn" title="Forward">›</button>
+                    <button type="button" className="nav-arrow-btn" title="Reload">↻</button>
+                  </div>
+                  <div className="webview-omnibox">
+                    <span className="omnibox-lock">🔒</span>
+                    <span className="omnibox-proto">https://</span>
+                    <span className="omnibox-domain">codesrijan-nine.vercel.app</span>
+                    <span className="omnibox-status">
+                      <span className="live-pulse-dot" />
+                      <span>Live Production</span>
+                    </span>
+                  </div>
+                  <div className="webview-actions">
+                    <a
+                      href="http://codesrijan-nine.vercel.app/"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="webview-external-btn"
+                    >
+                      <span>Visit Live Site</span>
+                      <span className="external-arrow">↗</span>
+                    </a>
+                  </div>
                 </div>
                 <div className="webview-frame-body">
                   <div className="webview-interactive-card">
                     <div className="interactive-card-hero">
-                      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 text-xs font-mono mb-4">
-                        <span>⚡ National Level Hackathon Ecosystem · 72-Hour Sprint</span>
+                      <div className="hero-top-badge">
+                        <span className="badge-pulse">●</span>
+                        <span>NATIONAL HACKATHON PLATFORM · 72H SPRINT</span>
+                        <span className="badge-sep">/</span>
+                        <span className="badge-highlight">JUET GUNA</span>
                       </div>
                       <h2 className="interactive-title">Srijaning the Future: Code, Innovate, Conquer</h2>
                       <p className="interactive-desc">
-                        Live hackathon platform designed and architected by <strong>Varun Sehgal</strong> for Jaypee University of Engineering & Technology (JUET). Powering registration, real-time rubric evaluation, and team matching for 200+ hackathon participants across 50+ universities.
+                        Production hackathon platform designed and architected by <strong>Varun Sehgal</strong> for Jaypee University of Engineering &amp; Technology (JUET). Powering algorithmic team matchmaking, live multi-judge rubric scoring, and registration workflows for 200+ hackers across 50+ universities.
                       </p>
-                      <div className="interactive-stats-row">
-                        <div className="stat-box">
-                          <div className="stat-val">200+</div>
-                          <div className="stat-lbl">Hackers Registered</div>
+                      <div className="hero-metrics-strip">
+                        <div className="metric-strip-item">
+                          <div className="metric-strip-val">200<span className="metric-unit">+</span></div>
+                          <div className="metric-strip-lbl">Hackers Registered</div>
                         </div>
-                        <div className="stat-box">
-                          <div className="stat-val">50+</div>
-                          <div className="stat-lbl">Universities Across India</div>
+                        <div className="metric-strip-divider" />
+                        <div className="metric-strip-item">
+                          <div className="metric-strip-val">50<span className="metric-unit">+</span></div>
+                          <div className="metric-strip-lbl">Universities Across India</div>
                         </div>
-                        <div className="stat-box">
-                          <div className="stat-val">72h</div>
-                          <div className="stat-lbl">Live Sprint</div>
+                        <div className="metric-strip-divider" />
+                        <div className="metric-strip-item">
+                          <div className="metric-strip-val">72<span className="metric-unit">h</span></div>
+                          <div className="metric-strip-lbl">Live Hack Sprint</div>
                         </div>
-                        <div className="stat-box">
-                          <div className="stat-val">$5,000+</div>
-                          <div className="stat-lbl">Prize Matrix</div>
+                        <div className="metric-strip-divider" />
+                        <div className="metric-strip-item">
+                          <div className="metric-strip-val">$5,000<span className="metric-unit">+</span></div>
+                          <div className="metric-strip-lbl">Prize Matrix</div>
                         </div>
                       </div>
                     </div>
 
                     {/* Section 1: The Vibecoded Story — Problems Faced & Solutions */}
                     <div className="webview-section-title">
-                      <span>⚡ The Vibecoded Case Study: Problems Faced &amp; How I Solved Them</span>
-                      <span className="section-badge">Case Study</span>
+                      <div className="section-title-left">
+                        <span className="section-title-icon">⚡</span>
+                        <span>Engineering Case Study: Bottlenecks &amp; Architectural Fixes</span>
+                      </div>
+                      <span className="section-badge">Linear Architecture</span>
                     </div>
 
                     <div className="webview-challenges-grid">
                       {/* Challenge 1 */}
                       <div className="webview-challenge-card">
                         <div className="challenge-card-header">
-                          <span className="challenge-icon">🤝</span>
-                          <span className="challenge-title">1. High-Concurrency Solo Matchmaking</span>
+                          <div className="challenge-index-tag">01 · MATCHMAKING</div>
+                          <span className="challenge-title">High-Concurrency Solo Matchmaking</span>
                         </div>
-                        <div className="challenge-problem">
-                          <strong>Problem:</strong> Over 40% of the 200+ attendees registered without a squad. Traditional spreadsheets caused delays and unfair team skill distributions.
-                        </div>
-                        <div className="challenge-solution">
-                          <strong>Solution:</strong> Engineered an algorithmic matchmaking matrix pairing complementary skill tags (Frontend, Backend, AI/ML, UI/UX) with instant invite codes.
+                        <div className="challenge-blocks">
+                          <div className="challenge-block block-friction">
+                            <div className="block-tag tag-friction">THE BOTTLENECK</div>
+                            <p className="block-text">Over 40% of the 200+ attendees registered without a squad. Manual spreadsheets caused unfair team skill distributions and registration delays.</p>
+                          </div>
+                          <div className="challenge-block block-resolution">
+                            <div className="block-tag tag-resolution">ENGINEERED FIX</div>
+                            <p className="block-text">Designed an automated matchmaking matrix matching complementary skill vectors (Frontend, Backend, AI/ML, UI/UX) with one-click invite tokens.</p>
+                          </div>
                         </div>
                         <div className="challenge-metric-pill">
-                          <span>✓ 45 balanced squads assembled in &lt; 2 hours</span>
+                          <span className="pill-check">✓</span>
+                          <span>45 balanced squads assembled in &lt; 2 hours</span>
                         </div>
                       </div>
 
                       {/* Challenge 2 */}
                       <div className="webview-challenge-card">
                         <div className="challenge-card-header">
-                          <span className="challenge-icon">⚖️</span>
-                          <span className="challenge-title">2. Real-Time Multi-Judge Rubric Evaluation</span>
+                          <div className="challenge-index-tag">02 · EVALUATION ENGINE</div>
+                          <span className="challenge-title">Real-Time Multi-Judge Rubric Evaluation</span>
                         </div>
-                        <div className="challenge-problem">
-                          <strong>Problem:</strong> 10+ industry judges evaluating live pitches simultaneously. Standard form submissions caused lockouts, race conditions, and scoring calculation latency.
-                        </div>
-                        <div className="challenge-solution">
-                          <strong>Solution:</strong> Implemented an optimistic UI state machine with multi-criteria rubric sliders (Innovation, UX, Feasibility, Tech Depth) updating leaderboards in sub-100ms.
+                        <div className="challenge-blocks">
+                          <div className="challenge-block block-friction">
+                            <div className="block-tag tag-friction">THE BOTTLENECK</div>
+                            <p className="block-text">10+ industry judges evaluating live pitches simultaneously. Traditional forms caused database lockouts, scoring race conditions, and leaderboards lag.</p>
+                          </div>
+                          <div className="challenge-block block-resolution">
+                            <div className="block-tag tag-resolution">ENGINEERED FIX</div>
+                            <p className="block-text">Architected an optimistic UI state machine with weighted multi-criteria rubric sliders, broadcasting score calculations in sub-100ms.</p>
+                          </div>
                         </div>
                         <div className="challenge-metric-pill">
-                          <span>✓ Sub-100ms live scoring with 0 race conditions</span>
+                          <span className="pill-check">✓</span>
+                          <span>Sub-100ms live scoring with 0 race conditions</span>
                         </div>
                       </div>
 
                       {/* Challenge 3 */}
                       <div className="webview-challenge-card">
                         <div className="challenge-card-header">
-                          <span className="challenge-icon">⚡</span>
-                          <span className="challenge-title">3. Extreme 3-Week Hard Deadline (Vibecoding)</span>
+                          <div className="challenge-index-tag">03 · VIBECODING WORKFLOW</div>
+                          <span className="challenge-title">Extreme 3-Week Hard Deadline</span>
                         </div>
-                        <div className="challenge-problem">
-                          <strong>Problem:</strong> Traditional 8-week design-to-code cycles could not meet the firm university hackathon launch date.
-                        </div>
-                        <div className="challenge-solution">
-                          <strong>Solution:</strong> The Vibecoding Workflow: drafted atomic design tokens in Figma (OKLCH, auto-layout variants), then used agentic AI for rapid Next.js scaffolding while enforcing strict TypeScript safety.
+                        <div className="challenge-blocks">
+                          <div className="challenge-block block-friction">
+                            <div className="block-tag tag-friction">THE BOTTLENECK</div>
+                            <p className="block-text">Standard 8-week design-to-code cycles could not meet the immovable university hackathon opening ceremony date.</p>
+                          </div>
+                          <div className="challenge-block block-resolution">
+                            <div className="block-tag tag-resolution">ENGINEERED FIX</div>
+                            <p className="block-text">The Vibecoding Paradigm: defined atomic design tokens in Figma (OKLCH, auto-layout variants), then leveraged agentic workflows for rapid Next.js scaffolding with strict TypeScript typing.</p>
+                          </div>
                         </div>
                         <div className="challenge-metric-pill">
-                          <span>✓ Shipped 15+ views in 18 days with 99.9% uptime</span>
+                          <span className="pill-check">✓</span>
+                          <span>Shipped 15+ views in 18 days with 99.9% uptime</span>
                         </div>
                       </div>
 
                       {/* Challenge 4 */}
                       <div className="webview-challenge-card">
                         <div className="challenge-card-header">
-                          <span className="challenge-icon">🎯</span>
-                          <span className="challenge-title">4. Zero Drop-Off &amp; Hackathon Fatigue</span>
+                          <div className="challenge-index-tag">04 · RETENTION ARCHITECTURE</div>
+                          <span className="challenge-title">Zero Drop-Off &amp; Hackathon Fatigue</span>
                         </div>
-                        <div className="challenge-problem">
-                          <strong>Problem:</strong> Complex multi-step forms typically suffer 40%+ drop-off. Hackers get disoriented by buried announcement feeds during 72-hour coding sprints.
-                        </div>
-                        <div className="challenge-solution">
-                          <strong>Solution:</strong> Crafted a high-contrast dark theme with OKLCH cyan/purple accents, live milestone progress bars, and instant notifications.
+                        <div className="challenge-blocks">
+                          <div className="challenge-block block-friction">
+                            <div className="block-tag tag-friction">THE BOTTLENECK</div>
+                            <p className="block-text">Complex multi-step hackathon forms typically suffer 40%+ drop-off, with participants missing critical round deadlines.</p>
+                          </div>
+                          <div className="challenge-block block-resolution">
+                            <div className="block-tag tag-resolution">ENGINEERED FIX</div>
+                            <p className="block-text">Built a high-contrast dark theme with OKLCH cyan/purple accents, live milestone progress bars, and instant push-toast alerts.</p>
+                          </div>
                         </div>
                         <div className="challenge-metric-pill">
-                          <span>✓ 96% registration completion rate</span>
+                          <span className="pill-check">✓</span>
+                          <span>96% registration completion rate</span>
                         </div>
                       </div>
                     </div>
