@@ -191,10 +191,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
   }, []);
 
   useEffect(() => {
-    if (isRebuilding) {
-      setStampedIconCount(0);
-      setStampedDockCount(0);
-    } else if (swarmStage >= 5) {
+    if (!isRebuilding || swarmStage >= 5) {
       setStampedIconCount(6);
       setStampedDockCount(10);
     } else if (swarmStage === 0) {
@@ -509,7 +506,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
           {displayedIcons.map((id, index) => {
             const app = portfolioApps[id];
             if (!app) return null;
-            const isRevealed = !isRebuilding ? true : (swarmStage >= 5 ? true : index < stampedIconCount);
+            const isRevealed = !isRebuilding ? true : (swarmStage >= 4 ? true : index < stampedIconCount);
             return (
               <DesktopIcon
                 key={app.id}

@@ -924,6 +924,12 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
       // 4B: Stamp Dock Apps 1-by-1 (9.8s - 13.0s) — Sarah Lin
       // =====================================================================
       else if (elapsed < 13.0) {
+        // Ensure all left desktop apps remain 100% stamped and visible during dock build
+        if (typeof window !== 'undefined' && lastStampedIndexRef.current < 6) {
+          lastStampedIndexRef.current = 6;
+          window.dispatchEvent(new CustomEvent('varunos-swarm-icon-stamped', { detail: { count: 6 } }));
+        }
+
         const pDock = elapsed - 8.0;
 
         // Sub-phase 4A: The Bar of the Bottom (8.0s - 9.8s)
