@@ -753,10 +753,10 @@
 }
 
 .cv-item-hidden {
-  opacity: 0 !important;
-  transform: translateY(8px) scale(0.985);
+  opacity: 0.12 !important;
+  transform: translateY(6px) scale(0.99);
   pointer-events: none !important;
-  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 .cv-typing-caret {

@@ -15,15 +15,21 @@ const SwarmCursor = React.memo(({
   chatText,
   trail = []
 }) => {
-  // Pure role tag: no personal names, no tool key clutter
-  const displayRole = roleTag || role || (
-    label === 'Sarah Lin' ? 'Stamping' :
-      label === 'Varun Sehgal' ? 'Typing' :
-        label === 'Alex Chen' ? 'Framing' :
-          label === 'Elena Rostova' ? 'Layout' :
-            (label === 'You' || label === 'Guest') ? 'Recruiter' :
-              label || 'Agent'
-  );
+  // Pure role tag: strictly ONE single role tag, no personal names, no tool key clutter
+  const raw = String(roleTag || role || label || '');
+  const cleaned = raw.replace(/\[.*?\]/g, '').replace(/❖/g, '').trim();
+  let displayRole = 'Agent';
+  if (/elena/i.test(cleaned)) displayRole = 'Layout';
+  else if (/sarah/i.test(cleaned)) displayRole = 'Stamping';
+  else if (/alex/i.test(cleaned)) displayRole = 'Framing';
+  else if (/varun/i.test(cleaned)) displayRole = 'Typing';
+  else if (/marcus/i.test(cleaned)) displayRole = 'Motion';
+  else if (/you|guest|recruiter/i.test(cleaned)) displayRole = 'Recruiter';
+  else if (/stamping/i.test(cleaned)) displayRole = 'Stamping';
+  else if (/framing/i.test(cleaned)) displayRole = 'Framing';
+  else if (/typing/i.test(cleaned)) displayRole = 'Typing';
+  else if (/layout/i.test(cleaned)) displayRole = 'Layout';
+  else if (cleaned) displayRole = cleaned;
   return (
     <>
       {/* Liquid glowing trail behind active cursor */}
@@ -2731,22 +2737,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         ))}
       </svg>
 
-      {/* Smart Guide Distance Measurement Pills (Figma / Swarm Style) */}
-      {activeGuides.map((g, idx) => (
-        g.pillText ? (
-          <div
-            key={`guide-pill-${idx}`}
-            className="swarm-smart-guide-pill"
-            style={{
-              left: `${g.pillX !== undefined ? g.pillX : (g.x1 + g.x2) / 2}px`,
-              top: `${g.pillY !== undefined ? g.pillY : (g.y1 + g.y2) / 2}px`,
-              backgroundColor: g.pillColor || '#ec4899'
-            }}
-          >
-            {g.pillText}
-          </div>
-        ) : null
-      ))}
+      {/* Smart Guide Clean Measurement Lines (Strictly one tag per cursor, zero extra pills) */}
+      {/* activeGuides render cleanly inside SVG layer above without floating text clutter */}
 
       {/* Click Ripples */}
       {ripples.map((r) => (

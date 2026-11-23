@@ -1,5 +1,5 @@
 .material-symbols-outlined {
-  font-family: 'Material Symbols Outlined' !important;
+  font-family: 'Material Symbols Outlined', sans-serif !important;
   font-weight: normal;
   font-style: normal;
   font-size: 18px;
@@ -11,7 +11,12 @@
   word-wrap: normal;
   direction: ltr;
   -webkit-font-feature-settings: 'liga';
+  font-feature-settings: 'liga';
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-display: swap;
+  overflow: hidden;
+  vertical-align: middle;
 }
 
 :root {

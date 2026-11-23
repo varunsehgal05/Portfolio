@@ -448,10 +448,10 @@ const FinderApp = ({ onOpenApp, isRebuilding = false }) => {
         <div 
           className="finder-hero-card"
           style={{
-            opacity: (rebuildStep >= 2 || heroBoxVisible) ? 1 : 0,
+            opacity: (!effectiveRebuilding || rebuildStep >= 2 || heroBoxVisible) ? 1 : (rebuildStep >= 1 ? 0.4 : 0),
             transform: 'none',
             transition: 'opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
-            pointerEvents: rebuildStep >= 2 ? 'auto' : 'none'
+            pointerEvents: (!effectiveRebuilding || rebuildStep >= 2) ? 'auto' : 'none'
           }}
         >
           <div className="finder-status-badge">
@@ -463,7 +463,7 @@ const FinderApp = ({ onOpenApp, isRebuilding = false }) => {
               FULL_HERO_TITLE
             ) : (
               <>
-                {typedTitle || '\u00A0'}
+                {typedTitle || (!effectiveRebuilding ? FULL_HERO_TITLE : '\u00A0')}
                 {heroBoxVisible && <span className="typing-cursor" style={{ opacity: 0.85, color: '#A259FF', marginLeft: '2px' }}>|</span>}
               </>
             )}
@@ -479,7 +479,7 @@ const FinderApp = ({ onOpenApp, isRebuilding = false }) => {
             <div 
               className="finder-section-header"
               style={{
-                opacity: rebuildStep >= 3 || Object.keys(cardBuildState).length > 0 ? 1 : 0,
+                opacity: (!effectiveRebuilding || rebuildStep >= 3 || Object.keys(cardBuildState).length > 0) ? 1 : 0.4,
                 transition: 'opacity 0.35s ease'
               }}
             >

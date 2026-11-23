@@ -516,9 +516,11 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
         </div>
 
         {/* Windows Layer (revealed in Stage 5 as real window is assembled & finalized) */}
-        <div className={`desktop-windows-layer ${swarmStage < 5 ? (swarmStage >= 5 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
+        <div className={`desktop-windows-layer ${isRebuilding ? (swarmStage >= 5 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
           {openWindows.map((appId) => {
             const app = portfolioApps[appId] || { id: appId, name: appId };
+            // During desktop swarm rebuild (stages 0-4), do not mount window so there is never a black screen
+            if (isRebuilding && swarmStage < 5) return null;
             const stackRank = windowOrder.indexOf(appId);
             const zIndex = activeWindow === appId 
               ? 300 + (stackRank >= 0 ? stackRank : 0)

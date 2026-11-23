@@ -12,6 +12,7 @@ const KittuResumeApp = ({
   onBack,
   onTriggerSwarm,
   onScrollToTop,
+  onSwarmProgress,
   isParentLoading = false,
   canvasPan = { x: 0, y: 0 },
   canvasZoom = 1
@@ -212,8 +213,8 @@ const KittuResumeApp = ({
         sarah: { x: boxPol.x + 30, y: boxPol.y + 30, tool: '❖', role: 'Stamping' },
         varun: { x: box.x + 35, y: box.y + 18, tool: 'T', role: 'Typing' }
       });
-      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Title Frame • Elena [R]' });
-      setActiveGuides([{ type: 'h', y: box.y + box.h, x1: box.x, x2: box.x + box.w, label: 'Title Baseline' }]);
+      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h });
+      setActiveGuides([{ type: 'h', y: box.y + box.h, x1: box.x, x2: box.x + box.w }]);
     }, 100);
 
     // 2. Stage 1: Varun types "Varun Sehgal" with tracking cursor, Elena holds frame, Sarah pre-stages sticky, Alex measures
@@ -240,8 +241,8 @@ const KittuResumeApp = ({
         sarah: { x: boxNote.x + 40, y: boxNote.y + 14, tool: '❖', role: 'Stamping' },
         varun: { x: boxLede.x + 24, y: boxLede.y + 20, tool: 'T', role: 'Typing' }
       });
-      setActiveSelection({ x: boxLede.x, y: boxLede.y, w: boxLede.w, h: boxLede.h, label: '❖ Value Prop • Elena [R]' });
-      setActiveGuides([{ type: 'v', x: boxLede.x + boxLede.w, y1: boxLede.y, y2: boxLede.y + boxLede.h, label: 'W: 600px' }]);
+      setActiveSelection({ x: boxLede.x, y: boxLede.y, w: boxLede.w, h: boxLede.h });
+      setActiveGuides([{ type: 'v', x: boxLede.x + boxLede.w, y1: boxLede.y, y2: boxLede.y + boxLede.h }]);
       typeText('I study and craft friction-free product experiences: tactile, beautiful, and fast.', setTypedLede, 80, 16, 'varun', boxLede.x + 24);
     }, 850);
 
@@ -256,8 +257,8 @@ const KittuResumeApp = ({
         sarah: { x: boxPol.x + 40, y: boxPol.y + 40, tool: '❖', role: 'Stamping' },
         varun: { x: boxNote.x + 20, y: boxNote.y + 26, tool: 'T', role: 'Typing' }
       });
-      setActiveSelection({ x: boxNote.x, y: boxNote.y, w: boxNote.w, h: boxNote.h, label: '❖ Sticky Note • Elena [R]' });
-      setActiveGuides([{ type: 'v', x: boxNote.x, y1: boxNote.y - 20, y2: boxNote.y + 350, label: `Right Column (${boxNote.x}px)` }]);
+      setActiveSelection({ x: boxNote.x, y: boxNote.y, w: boxNote.w, h: boxNote.h });
+      setActiveGuides([{ type: 'v', x: boxNote.x, y1: boxNote.y - 20, y2: boxNote.y + 350 }]);
       setBuildStage(3); // Pops with cv-stamp-pop!
       typeText('Now: AI Interview & EventFlow', setTypedNoteHead, 60, 20);
       typeText('Architecting multi-token design systems in Figma and translating them with sub-millisecond fidelity into Next.js & Tailwind components.', setTypedNoteBody, 500, 8);
@@ -273,7 +274,7 @@ const KittuResumeApp = ({
         sarah: { x: boxPol.x + boxPol.w / 2, y: boxPol.y + 90, tool: '❖', role: 'Stamping' },
         varun: { x: boxPol.x + 28, y: boxPol.y + boxPol.h - 18, tool: 'T', role: 'Typing' }
       });
-      setActiveSelection({ x: boxPol.x, y: boxPol.y, w: boxPol.w, h: boxPol.h, label: '❖ Polaroid Photo • Sarah [❖]' });
+      setActiveSelection({ x: boxPol.x, y: boxPol.y, w: boxPol.w, h: boxPol.h });
       setActiveGuides([]);
       setBuildStage(4); // Pops with cv-stamp-pop!
       typeText('Varun Sehgal, 2026 →', setTypedPolaroidCaption, 60, 20);
@@ -350,6 +351,7 @@ const KittuResumeApp = ({
     setSectionsTriggered(prev => ({ ...prev, [sectionKey]: true }));
 
     if (sectionKey === 'workOn') {
+      if (onSwarmProgress) onSwarmProgress(-180);
       // Section: What I work on (Cards 1, 2, 3 - 2 Swarm Collaborative Framing & Live Typing)
       // Card 1: Product Design & Systems
       schedule(() => {
@@ -414,6 +416,7 @@ const KittuResumeApp = ({
       }, 3400);
     }
     else if (sectionKey === 'timeline') {
+      if (onSwarmProgress) onSwarmProgress(-460);
       // Section: Where I've worked & Study (2 Swarms working at once: Elena frames & stamps, Varun types title AND bullets!)
       // Job 1: UniEvent (Stage 12)
       schedule(() => {
@@ -554,6 +557,7 @@ const KittuResumeApp = ({
       }, 7500);
     }
     else if (sectionKey === 'projects') {
+      if (onSwarmProgress) onSwarmProgress(-980);
       // Section: Things I've made (6 Projects - 2 Swarms framing boxes and typing titles & descriptions!)
       // Project 1: CodeSrijan (Hero Card)
       schedule(() => {
@@ -562,8 +566,8 @@ const KittuResumeApp = ({
           elena: { x: box.x, y: box.y, tool: 'R', role: 'Framing' },
           varun: { x: box.x + 360, y: box.y + 36, tool: 'T', role: 'Typing' }
         });
-        setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Project [1/6] • Elena [Framing]' });
-        setActiveGuides([{ type: 'h', y: box.y, x1: box.x, x2: box.x + box.w, label: '1032 × 230' }]);
+        setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h });
+        setActiveGuides([{ type: 'h', y: box.y, x1: box.x, x2: box.x + box.w }]);
       }, 100);
 
       typeText('CodeSrijan Hackathon Portal', (t) => {
@@ -585,8 +589,8 @@ const KittuResumeApp = ({
           elena: { x: box.x, y: box.y, tool: 'R', role: 'Framing' },
           varun: { x: box.x + 28, y: box.y + 24, tool: 'T', role: 'Typing' }
         });
-        setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Project [2/6] • Elena [Framing]' });
-        setActiveGuides([{ type: 'h', y: box.y, x1: box.x, x2: box.x + box.w, label: '320 × 240' }]);
+        setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h });
+        setActiveGuides([{ type: 'h', y: box.y, x1: box.x, x2: box.x + box.w }]);
       }, 1750);
 
       typeText('EventFlow Ticketing', (t) => {
@@ -608,8 +612,8 @@ const KittuResumeApp = ({
           elena: { x: box.x, y: box.y, tool: 'R', role: 'Framing' },
           varun: { x: box.x + 28, y: box.y + 24, tool: 'T', role: 'Typing' }
         });
-        setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Project [3/6] • Elena [Framing]' });
-        setActiveGuides([{ type: 'h', y: box.y, x1: box.x, x2: box.x + box.w, label: '320 × 240' }]);
+        setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h });
+        setActiveGuides([{ type: 'h', y: box.y, x1: box.x, x2: box.x + box.w }]);
       }, 3150);
 
       typeText('AI Interview Studio', (t) => {
@@ -631,8 +635,8 @@ const KittuResumeApp = ({
           elena: { x: box.x, y: box.y, tool: 'R', role: 'Framing' },
           varun: { x: box.x + 28, y: box.y + 24, tool: 'T', role: 'Typing' }
         });
-        setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Project [4/6] • Elena [Framing]' });
-        setActiveGuides([{ type: 'h', y: box.y, x1: box.x, x2: box.x + box.w, label: '320 × 240' }]);
+        setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h });
+        setActiveGuides([{ type: 'h', y: box.y, x1: box.x, x2: box.x + box.w }]);
       }, 4550);
 
       typeText('Expensify Budget', (t) => {
@@ -654,8 +658,8 @@ const KittuResumeApp = ({
           elena: { x: box.x, y: box.y, tool: 'R', role: 'Framing' },
           varun: { x: box.x + 28, y: box.y + 24, tool: 'T', role: 'Typing' }
         });
-        setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Project [5/6] • Elena [Framing]' });
-        setActiveGuides([{ type: 'h', y: box.y, x1: box.x, x2: box.x + box.w, label: '320 × 240' }]);
+        setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h });
+        setActiveGuides([{ type: 'h', y: box.y, x1: box.x, x2: box.x + box.w }]);
       }, 5950);
 
       typeText('Movie Tickets App', (t) => {
@@ -677,8 +681,8 @@ const KittuResumeApp = ({
           elena: { x: box.x, y: box.y, tool: 'R', role: 'Framing' },
           varun: { x: box.x + 28, y: box.y + 24, tool: 'T', role: 'Typing' }
         });
-        setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Project [6/6] • Elena [Framing]' });
-        setActiveGuides([{ type: 'h', y: box.y, x1: box.x, x2: box.x + box.w, label: '320 × 240' }]);
+        setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h });
+        setActiveGuides([{ type: 'h', y: box.y, x1: box.x, x2: box.x + box.w }]);
       }, 7350);
 
       typeText('SaaS Landing Pages', (t) => {
@@ -698,10 +702,17 @@ const KittuResumeApp = ({
           elena: { x: box.x + 40, y: box.y + box.h + 24, role: 'Framing' },
           varun: { x: box.x + 200, y: box.y + box.h + 24, role: 'Typing' }
         });
+        // Auto-progress to contact
+        schedule(() => {
+          if (!sectionsTriggeredRef.current.contact) {
+            triggerSection('contact');
+          }
+        }, 400);
       }, 8600);
     }
     else if (sectionKey === 'contact') {
-      // Section: Say hello (ONLY triggered when user genuinely scrolls to bottom)
+      if (onSwarmProgress) onSwarmProgress(-1450);
+      // Section: Say hello (2 Swarm live typing and framing)
       schedule(() => {
         const box = getBox('.cv-contact', { x: 28, y: 2340, w: 1032, h: 180 });
         set2Swarm({
@@ -729,13 +740,16 @@ const KittuResumeApp = ({
         setActiveGuides([]);
       }, 1600);
 
-      // Done
+      // Done: smooth glide back to top-center
       schedule(() => {
         setIsBuilding(false);
         setBuildStage(24);
         setActiveCursors([]);
         setActiveSelection(null);
         setActiveGuides([]);
+        if (onScrollToTop) {
+          onScrollToTop();
+        }
       }, 2800);
     }
   };

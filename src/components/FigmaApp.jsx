@@ -1,4 +1,21 @@
 import { useState, useRef, useEffect } from 'react';
+import { 
+  Home, 
+  LayoutDashboard, 
+  Briefcase, 
+  User, 
+  FileText, 
+  GitFork, 
+  Boxes, 
+  Minus, 
+  Plus, 
+  Crosshair, 
+  ChevronDown, 
+  Mail, 
+  Share2, 
+  Grid3X3, 
+  Sidebar 
+} from 'lucide-react';
 import FirebaseImage from './FirebaseImage';
 import FigmaLoadingScreen from './FigmaLoadingScreen';
 import KittuResumeApp from './KittuResumeApp';
@@ -1511,7 +1528,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
             }}
             title="Toggle Wireframe Mode (Shift+O)"
           >
-            <span className="material-symbols-outlined text-[16px]">grid_view</span>
+            <Grid3X3 size={15} style={{ marginRight: '5px' }} />
             <span>Wireframe</span>
           </button>
         </div>
@@ -1525,7 +1542,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
               onClick={handleZoomOut}
               title="Zoom out (Ctrl -)"
             >
-              −
+              <Minus size={13} />
             </button>
             <button
               type="button"
@@ -1534,7 +1551,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
               title="Zoom Options & Presets"
             >
               <span>{Math.round(zoom * 100)}%</span>
-              <span className="material-symbols-outlined text-[14px]">arrow_drop_down</span>
+              <ChevronDown size={14} style={{ marginLeft: '2px' }} />
             </button>
             <button
               type="button"
@@ -1542,7 +1559,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
               onClick={handleZoomIn}
               title="Zoom in (Ctrl +)"
             >
-              +
+              <Plus size={13} />
             </button>
             <button
               type="button"
@@ -1550,7 +1567,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
               onClick={() => { centerCanvasView(activeTab); showToast('Canvas Centered (Shift+1)'); }}
               title="Center View (Shift+1)"
             >
-              <span className="material-symbols-outlined text-[14px]">center_focus_strong</span>
+              <Crosshair size={14} />
             </button>
 
             {/* Dropdown Menu for Zoom presets */}
@@ -1633,7 +1650,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
             }}
             title="Open Contact Form"
           >
-            <span className="material-symbols-outlined text-[16px]">mail</span>
+            <Mail size={15} style={{ marginRight: '6px' }} />
             <span>Email Me</span>
           </button>
 
@@ -1642,7 +1659,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
             onClick={() => handleCopyLink(window.location.origin, 'Portfolio link')}
             title="Share portfolio link"
           >
-            <span className="material-symbols-outlined text-[18px]">share</span>
+            <Share2 size={16} />
           </button>
 
           <button
@@ -1650,7 +1667,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
             onClick={() => setRightSidebarOpen(!rightSidebarOpen)}
             title={rightSidebarOpen ? "Hide Properties Panel" : "Show Properties Panel"}
           >
-            <span className="material-symbols-outlined text-[18px]">view_sidebar</span>
+            <Sidebar size={16} />
           </button>
 
           <a
@@ -2779,6 +2796,29 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     canvasPan={pan}
                     canvasZoom={zoom}
                     onBack={() => setActiveTab('home')}
+                    onSwarmProgress={(targetY) => {
+                      // Smoothly glide canvas pan vertically to follow the typing cursors
+                      const stageW = containerRef.current?.clientWidth || 900;
+                      const fitZoom = calculateFitZoom('resume', stageW);
+                      const targetX = Math.max(24, Math.round((stageW - 1080 * fitZoom) / 2));
+                      const startX = pan.x;
+                      const startY = pan.y;
+                      const startTime = performance.now();
+                      const duration = 500;
+                      const animatePan = (now) => {
+                        const elapsed = now - startTime;
+                        const progress = Math.min(1, elapsed / duration);
+                        const eased = 1 - Math.pow(1 - progress, 3);
+                        setPan({
+                          x: Math.round(startX + (targetX - startX) * eased),
+                          y: Math.round(startY + (targetY - startY) * eased)
+                        });
+                        if (progress < 1) {
+                          requestAnimationFrame(animatePan);
+                        }
+                      };
+                      requestAnimationFrame(animatePan);
+                    }}
                     onScrollToTop={() => {
                       // Smoothly glide canvas pan back to top so user is dragged up to top-center of notebook
                       const stageW = containerRef.current?.clientWidth || 900;
@@ -3176,7 +3216,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
               onClick={handleZoomOut}
               title="Zoom Out (Ctrl -)"
             >
-              <span className="material-symbols-outlined text-[15px]">remove</span>
+              <Minus size={15} />
             </button>
             <button
               type="button"
@@ -3192,7 +3232,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
               onClick={handleZoomIn}
               title="Zoom In (Ctrl +)"
             >
-              <span className="material-symbols-outlined text-[15px]">add</span>
+              <Plus size={15} />
             </button>
             <div className="hud-divider" />
             <button
@@ -3201,7 +3241,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
               onClick={() => { centerCanvasView(activeTab); showToast('Canvas Centered (Shift+1)'); }}
               title="Zoom to Fit / Center View (Shift+1)"
             >
-              <span className="material-symbols-outlined text-[15px]">center_focus_strong</span>
+              <Crosshair size={15} />
             </button>
           </div>
         </main>
@@ -3853,7 +3893,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
             className={`bottom-nav-item ${activeTab === 'home' ? 'active' : ''}`}
             onClick={() => setActiveTab('home')}
           >
-            <span className="material-symbols-outlined text-[18px]">home</span>
+            <Home size={18} className="bottom-nav-icon-svg" />
             <span>Home</span>
           </button>
 
@@ -3861,7 +3901,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
             className={`bottom-nav-item ${activeTab === 'projects' ? 'active' : ''}`}
             onClick={() => setActiveTab('projects')}
           >
-            <span className="material-symbols-outlined text-[18px]">dashboard</span>
+            <LayoutDashboard size={18} className="bottom-nav-icon-svg" />
             <span>Work</span>
           </button>
 
@@ -3869,7 +3909,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
             className={`bottom-nav-item ${activeTab === 'experience' ? 'active' : ''}`}
             onClick={() => setActiveTab('experience')}
           >
-            <span className="material-symbols-outlined text-[18px]">work</span>
+            <Briefcase size={18} className="bottom-nav-icon-svg" />
             <span>Experience</span>
           </button>
 
@@ -3877,7 +3917,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
             className={`bottom-nav-item ${activeTab === 'about' ? 'active' : ''}`}
             onClick={() => setActiveTab('about')}
           >
-            <span className="material-symbols-outlined text-[18px]">person</span>
+            <User size={18} className="bottom-nav-icon-svg" />
             <span>About</span>
           </button>
 
@@ -3885,7 +3925,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
             className={`bottom-nav-item ${activeTab === 'resume' ? 'active' : ''}`}
             onClick={() => setActiveTab('resume')}
           >
-            <span className="material-symbols-outlined text-[18px]">description</span>
+            <FileText size={18} className="bottom-nav-icon-svg" />
             <span>Resume</span>
           </button>
         </div>
@@ -3897,7 +3937,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
             className={`bottom-nav-item secondary ${activeTab === 'process' ? 'active' : ''}`}
             onClick={() => setActiveTab('process')}
           >
-            <span className="material-symbols-outlined text-[16px]">account_tree</span>
+            <GitFork size={16} className="bottom-nav-icon-svg" />
             <span>Process</span>
           </button>
 
@@ -3905,7 +3945,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
             className={`bottom-nav-item secondary ${activeTab === 'plugins' ? 'active' : ''}`}
             onClick={() => setActiveTab('plugins')}
           >
-            <span className="material-symbols-outlined text-[16px]">extension</span>
+            <Boxes size={16} className="bottom-nav-icon-svg" />
             <span>Plugins</span>
           </button>
         </div>
