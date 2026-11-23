@@ -252,7 +252,7 @@ const TrashApp = ({ onClose, onOpenApp }) => {
   const [bannerNotice, setBannerNotice] = useState(null);
 
   // Clippy Assistant & Auto-Close States
-  const [aiCountdown, setAiCountdown] = useState(null);
+  const [aiCountdown, setAiCountdown] = useState(6);
   const [isAICountdownCancelled, setIsAICountdownCancelled] = useState(false);
 
   // Virtual Clippy Mouse Controller state
@@ -268,6 +268,34 @@ const TrashApp = ({ onClose, onOpenApp }) => {
   const countdownTimerRef = useRef(null);
   const isClosingProcessRef = useRef(false);
 
+  // Auto-close countdown effect: ticks down from 6s to 0s, then triggers virtual mouse auto-close
+  useEffect(() => {
+    if (!activePreviewItem || isAICountdownCancelled) {
+      if (countdownTimerRef.current) clearTimeout(countdownTimerRef.current);
+      return;
+    }
+
+    if (aiCountdown === null || aiCountdown === undefined) {
+      setAiCountdown(6);
+      return;
+    }
+
+    if (aiCountdown <= 0) {
+      // Countdown expired! Clippy closes preview and trash window
+      if (countdownTimerRef.current) clearTimeout(countdownTimerRef.current);
+      startClippyCloseSequence();
+      return;
+    }
+
+    countdownTimerRef.current = setTimeout(() => {
+      setAiCountdown(prev => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+
+    return () => {
+      if (countdownTimerRef.current) clearTimeout(countdownTimerRef.current);
+    };
+  }, [activePreviewItem, aiCountdown, isAICountdownCancelled]);
+
   // 1. Initial Mount: Clippy on desktop welcomes user & offers portfolio
   useEffect(() => {
     playAIChime();
@@ -277,7 +305,7 @@ const TrashApp = ({ onClose, onOpenApp }) => {
       detail: {
         text: msg,
         animation: "GetAttention",
-        highlightDuration: 3000,
+        highlightDuration: 4000,
         hold: false,
         actions: [
           { label: "View Portfolio", primary: true, appId: "figma" },
@@ -286,7 +314,7 @@ const TrashApp = ({ onClose, onOpenApp }) => {
       }
     }));
     return () => {
-      if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
+      if (countdownTimerRef.current) clearTimeout(countdownTimerRef.current);
       window.dispatchEvent(new CustomEvent('varunos-clippy-hide'));
     };
   }, []);
@@ -361,16 +389,78 @@ const TrashApp = ({ onClose, onOpenApp }) => {
   // Opening File: View Item Modal
   const handleItemDoubleClick = (item) => {
     setActivePreviewItem(item);
-    setIsAICountdownCancelled(true);
-    setAiCountdown(null);
+    setIsAICountdownCancelled(false);
+    setAiCountdown(6);
     playAIChime();
+
+    // Desktop Clippy speaks the phrase and shows quick action buttons
+    window.dispatchEvent(new CustomEvent('varunos-clippy-speak', {
+      detail: {
+        text: "It looks like you're inspecting discarded drafts! 📎 You're here to explore my portfolio and hire me!",
+        animation: "GetAttention",
+        highlightDuration: 7000,
+        hold: false,
+        actions: [
+          { label: "Open Portfolio (Figma) →", primary: true, appId: "figma" },
+          { label: "Open Resume", appId: "resume" },
+          { label: "Hire Varun", appId: "contact" }
+        ]
+      }
+    }));
+  };
+
+  const glideToWindowCloseButton = () => {
+    // Find Red close button on active window
+    const redCloseBtn = document.querySelector('.app-window.active .mac-btn.close') || document.querySelector('.mac-btn.close');
+    let winCloseX = 80;
+    let winCloseY = 60;
+
+    if (redCloseBtn) {
+      const rRect = redCloseBtn.getBoundingClientRect();
+      winCloseX = rRect.left + rRect.width / 2;
+      winCloseY = rRect.top + rRect.height / 2;
+    }
+
+    setAiMouse(prev => ({
+      ...prev,
+      x: winCloseX,
+      y: winCloseY,
+      label: '📎 Clippy: "Closing Trash! Let\'s see the real portfolio!"'
+    }));
+
+    // After gliding to Red Close Button (700ms) -> Click and Close Window!
+    setTimeout(() => {
+      playMechanicalClick();
+      setAiMouse(prev => ({
+        ...prev,
+        isClicking: true,
+        ripple: { x: winCloseX, y: winCloseY }
+      }));
+
+      // Close Trash Window
+      setTimeout(() => {
+        if (onClose) {
+          onClose();
+        }
+        // Fade out mouse
+        setAiMouse(prev => ({ ...prev, active: false }));
+        isClosingProcessRef.current = false;
+
+        // Bonus: Promptly redirect user to the real work in Figma!
+        setTimeout(() => {
+          if (onOpenApp) {
+            onOpenApp('figma');
+          }
+        }, 350);
+      }, 300);
+    }, 700);
   };
 
   // EXECUTE CLIPPY VIRTUAL MOUSE CLOSE SEQUENCE
   const startClippyCloseSequence = () => {
     if (isClosingProcessRef.current) return;
     isClosingProcessRef.current = true;
-    if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
+    if (countdownTimerRef.current) clearTimeout(countdownTimerRef.current);
 
     window.dispatchEvent(new CustomEvent('varunos-clippy-speak', {
       detail: {
@@ -385,111 +475,82 @@ const TrashApp = ({ onClose, onOpenApp }) => {
     const startX = window.innerWidth / 2;
     const startY = window.innerHeight / 2 + 60;
 
-    setAiMouse({
-      active: true,
-      x: startX,
-      y: startY,
-      label: '📎 Clippy: "Closing file preview..."',
-      isClicking: false,
-      ripple: null
-    });
+    const modalCloseBtn = document.querySelector('.trash-modal-close') || document.querySelector('.modal-done-btn');
 
-    // Step 1: Target Modal Close Button
-    setTimeout(() => {
-      const modalCloseBtn = document.querySelector('.trash-modal-close') || document.querySelector('.modal-done-btn');
-      let targetX = startX + 160;
-      let targetY = startY - 140;
+    if (modalCloseBtn && activePreviewItem) {
+      // Modal is open: Step 1: Target Modal Close Button
+      setAiMouse({
+        active: true,
+        x: startX,
+        y: startY,
+        label: '📎 Clippy: "Closing file preview..."',
+        isClicking: false,
+        ripple: null
+      });
 
-      if (modalCloseBtn) {
-        const rect = modalCloseBtn.getBoundingClientRect();
-        targetX = rect.left + rect.width / 2;
-        targetY = rect.top + rect.height / 2;
-      }
-
-      setAiMouse(prev => ({
-        ...prev,
-        x: targetX,
-        y: targetY,
-        label: '📎 Clippy: "Closing preview..."'
-      }));
-
-      // After gliding to modal close button (650ms) -> Click!
       setTimeout(() => {
-        playMechanicalClick();
+        const rect = modalCloseBtn.getBoundingClientRect();
+        const targetX = rect.left + rect.width / 2;
+        const targetY = rect.top + rect.height / 2;
+
         setAiMouse(prev => ({
           ...prev,
-          isClicking: true,
-          ripple: { x: targetX, y: targetY }
+          x: targetX,
+          y: targetY,
+          label: '📎 Clippy: "Closing preview..."'
         }));
 
-        // Dismiss preview modal
-        setActivePreviewItem(null);
-
-        // Step 2: Glide to window traffic light Red Close Button
+        // After gliding to modal close button (650ms) -> Click!
         setTimeout(() => {
+          playMechanicalClick();
           setAiMouse(prev => ({
             ...prev,
-            isClicking: false,
-            ripple: null,
-            label: '📎 Clippy: "Now closing Trash window! 👋"'
+            isClicking: true,
+            ripple: { x: targetX, y: targetY }
           }));
 
-          // Find Red close button on active window
-          const redCloseBtn = document.querySelector('.app-window.active .mac-btn.close') || document.querySelector('.mac-btn.close');
-          let winCloseX = 80;
-          let winCloseY = 60;
+          // Dismiss preview modal
+          setActivePreviewItem(null);
 
-          if (redCloseBtn) {
-            const rRect = redCloseBtn.getBoundingClientRect();
-            winCloseX = rRect.left + rRect.width / 2;
-            winCloseY = rRect.top + rRect.height / 2;
-          }
-
-          setAiMouse(prev => ({
-            ...prev,
-            x: winCloseX,
-            y: winCloseY,
-            label: '📎 Clippy: "Closing Trash! Let\'s see the real portfolio!"'
-          }));
-
-          // After gliding to Red Close Button (700ms) -> Click and Close Window!
+          // Step 2: Glide to window traffic light Red Close Button
           setTimeout(() => {
-            playMechanicalClick();
             setAiMouse(prev => ({
               ...prev,
-              isClicking: true,
-              ripple: { x: winCloseX, y: winCloseY }
+              isClicking: false,
+              ripple: null,
+              label: '📎 Clippy: "Now closing Trash window! 👋"'
             }));
+            glideToWindowCloseButton();
+          }, 300);
 
-            // Close Trash Window
-            setTimeout(() => {
-              if (onClose) {
-                onClose();
-              }
-              // Fade out mouse
-              setAiMouse(prev => ({ ...prev, active: false }));
-              isClosingProcessRef.current = false;
+        }, 650);
 
-              // Bonus: Promptly redirect user to the real work in Figma!
-              setTimeout(() => {
-                if (onOpenApp) {
-                  onOpenApp('figma');
-                }
-              }, 400);
-            }, 300);
-          }, 700);
+      }, 100);
+    } else {
+      // No modal open: glide directly to window close button
+      setAiMouse({
+        active: true,
+        x: startX,
+        y: startY,
+        label: '📎 Clippy: "Now closing Trash window! 👋"',
+        isClicking: false,
+        ripple: null
+      });
 
-        }, 300);
-
-      }, 650);
-
-    }, 100);
+      setTimeout(() => {
+        glideToWindowCloseButton();
+      }, 100);
+    }
   };
 
   const cancelAICountdown = () => {
-    if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
+    if (countdownTimerRef.current) clearTimeout(countdownTimerRef.current);
     setIsAICountdownCancelled(true);
-    setAiCountdown(null);
+  };
+
+  const resumeAICountdown = () => {
+    setIsAICountdownCancelled(false);
+    setAiCountdown(prev => (prev && prev > 0 ? prev : 5));
   };
 
   const renderItemIcon = (type, color) => {
@@ -752,96 +813,12 @@ const TrashApp = ({ onClose, onOpenApp }) => {
 
       {/* QUICK LOOK MODAL WITH CLIPPY GUIDANCE & REDIRECT */}
       {activePreviewItem && (
-        <div className="trash-modal-backdrop" onClick={() => setActivePreviewItem(null)}>
+        <div className="trash-modal-backdrop" onClick={() => {
+          cancelAICountdown();
+          setActivePreviewItem(null);
+        }}>
           <div className="trash-modal-card" onClick={(e) => e.stopPropagation()}>
             
-            {/* Clippy Office Recommendation Banner */}
-            <div className="trash-clippy-tip-card">
-              <div className="clippy-tip-header-row">
-                <span className="clippy-tip-badge">
-                  <Paperclip size={12} className="text-amber-400" />
-                  Clippy Office Assistant
-                </span>
-                <span className="clippy-tip-tag">Recommendation</span>
-              </div>
-              <h3 className="clippy-tip-headline">
-                "It looks like you're inspecting discarded drafts! 📎 You're here to explore my portfolio and hire me!"
-              </h3>
-              <p className="clippy-tip-sub">
-                Why dig into old drafts like <code>{activePreviewItem.name}</code>? Varun's production SaaS apps, Figma design systems, and frontend code are waiting for you!
-              </p>
-
-              {/* Action Buttons: Redirect to Portfolio / Hire */}
-              <div className="clippy-tip-actions-row">
-                <button
-                  type="button"
-                  className="clippy-tip-btn figma-action"
-                  onClick={() => {
-                    setActivePreviewItem(null);
-                    onOpenApp?.('figma');
-                  }}
-                >
-                  <Briefcase size={13} />
-                  <span>Open Portfolio (Figma)</span>
-                  <ArrowRight size={12} />
-                </button>
-                <button
-                  type="button"
-                  className="clippy-tip-btn resume-action"
-                  onClick={() => {
-                    setActivePreviewItem(null);
-                    onOpenApp?.('resume');
-                  }}
-                >
-                  <FileCheck size={13} className="text-purple-400" />
-                  <span>Open Resume</span>
-                </button>
-                <button
-                  type="button"
-                  className="clippy-tip-btn hire-action"
-                  onClick={() => {
-                    setActivePreviewItem(null);
-                    onOpenApp?.('contact');
-                  }}
-                >
-                  <Send size={13} className="text-emerald-400" />
-                  <span>Hire Varun</span>
-                </button>
-              </div>
-
-              {/* Countdown Bar */}
-              <div className="clippy-takeover-bar">
-                <div className="clippy-takeover-info">
-                  <Paperclip size={13} className="text-amber-400 animate-bounce" />
-                  {!isAICountdownCancelled ? (
-                    <span>
-                      Clippy closing this trash window in <strong>{aiCountdown ?? 3}s</strong>...
-                    </span>
-                  ) : (
-                    <span className="text-zinc-400">Auto-close paused. Take your time!</span>
-                  )}
-                </div>
-                <div className="clippy-takeover-btns">
-                  <button
-                    type="button"
-                    className="clippy-close-now-btn"
-                    onClick={startClippyCloseSequence}
-                  >
-                    📎 Close Now with Clippy
-                  </button>
-                  {!isAICountdownCancelled && (
-                    <button
-                      type="button"
-                      className="clippy-pause-btn"
-                      onClick={cancelAICountdown}
-                    >
-                      Keep Browsing
-                    </button>
-                  )}
-                </div>
-              </div>
-            </div>
-
             {/* Standard Modal File Header */}
             <div className="trash-modal-header">
               <div className="modal-title-left">
@@ -854,7 +831,10 @@ const TrashApp = ({ onClose, onOpenApp }) => {
               <button 
                 type="button" 
                 className="trash-modal-close"
-                onClick={() => setActivePreviewItem(null)}
+                onClick={() => {
+                  cancelAICountdown();
+                  setActivePreviewItem(null);
+                }}
                 title="Close Preview"
               >
                 <X size={14} />
@@ -877,16 +857,64 @@ const TrashApp = ({ onClose, onOpenApp }) => {
             </div>
 
             <div className="trash-modal-footer">
-              <span className="modal-tag-pill" style={{ borderColor: activePreviewItem.tagColor, color: activePreviewItem.tagColor }}>
-                {activePreviewItem.tag}
-              </span>
-              <button 
-                type="button" 
-                className="modal-done-btn"
-                onClick={() => setActivePreviewItem(null)}
-              >
-                Close Preview
-              </button>
+              <div className="modal-footer-left">
+                <span className="modal-tag-pill" style={{ borderColor: activePreviewItem.tagColor, color: activePreviewItem.tagColor }}>
+                  {activePreviewItem.tag}
+                </span>
+
+                {/* Sleek Auto-Close Countdown Pill */}
+                <div className="modal-autoclose-pill">
+                  <Paperclip size={12} className={!isAICountdownCancelled ? "text-amber-400 animate-bounce" : "text-zinc-500"} />
+                  {!isAICountdownCancelled ? (
+                    <span className="autoclose-text">
+                      Auto-closing in <strong>{aiCountdown ?? 6}s</strong>
+                    </span>
+                  ) : (
+                    <span className="autoclose-text paused">Auto-close paused</span>
+                  )}
+                  {!isAICountdownCancelled ? (
+                    <button
+                      type="button"
+                      className="modal-autoclose-toggle"
+                      onClick={cancelAICountdown}
+                      title="Pause auto-close countdown"
+                    >
+                      Keep Open
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="modal-autoclose-toggle resume"
+                      onClick={resumeAICountdown}
+                      title="Resume auto-close countdown"
+                    >
+                      Resume
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              <div className="modal-footer-right">
+                <button
+                  type="button"
+                  className="modal-clippy-now-btn"
+                  onClick={startClippyCloseSequence}
+                  title="Close Trash with Clippy virtual mouse"
+                >
+                  <Paperclip size={12} />
+                  <span>Close Now</span>
+                </button>
+                <button 
+                  type="button" 
+                  className="modal-done-btn"
+                  onClick={() => {
+                    cancelAICountdown();
+                    setActivePreviewItem(null);
+                  }}
+                >
+                  Done
+                </button>
+              </div>
             </div>
           </div>
         </div>

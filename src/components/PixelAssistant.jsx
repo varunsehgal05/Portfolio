@@ -354,7 +354,8 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
 
       if (actions && actions.length > 0) {
         setClippyActions(actions);
-        // Clippy's recommendation is shown for 2-3 seconds only, then automatically dismissed
+        // Clippy's recommendation is shown with sufficient duration for the user to read and act
+        const duration = Math.max(highlightDuration || 6000, 5000);
         actionsTimerRef.current = setTimeout(() => {
           setClippyActions(null);
           if (agentRef.current?._balloon) {
@@ -364,7 +365,7 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
             agentRef.current._el.classList.remove('clippy-highlighted');
           }
           setIsHighlighted(false);
-        }, 3000);
+        }, duration);
       } else {
         setClippyActions(null);
       }
