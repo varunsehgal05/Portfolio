@@ -779,7 +779,7 @@ const FigmaApp = ({ isInteracting, userName, onOpenApp }) => {
 
   const handleResetZoom = () => {
     setZoom(1);
-    centerCanvasView(activeTab);
+    centerCanvasView(activeTab, 1);
     showToast('Zoom: 100% (Centered)');
   };
 
@@ -1149,25 +1149,18 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
     }
   };
 
-  // Auto-fit zoom calculation: fits artboard comfortably within canvas viewport with generous gutters
-  const calculateFitZoom = (tab, stageW) => {
-    const dim = getTabDimensions(tab);
-    // Provide generous gutters (at least 140px total, 70px on each side) so artboard is clearly centered in viewport
-    const availableW = Math.max(320, stageW - 140);
-    const fit = Math.round((availableW / dim.width) * 100) / 100;
-    if (tab === 'resume') {
-      return Math.min(0.85, Math.max(0.38, fit));
-    }
-    return Math.min(0.88, Math.max(0.45, fit));
+  // Canvas zoom: strictly 100% (1.0) by default for crystal-clear 1:1 pixel rendering
+  const calculateFitZoom = (_tab, _stageW) => {
+    return 1;
   };
 
-  // Center Canvas View: positions artboard TOP-MID (mathematically centered horizontally, sitting at comfortable top margin)
+  // Center Canvas View: positions artboard TOP-MID at 100% zoom (mathematically centered horizontally, sitting at comfortable top margin)
   const centerCanvasView = (tab = activeTab, forcedZoom = null) => {
     if (!containerRef.current) return;
     const stageW = containerRef.current.clientWidth || 900;
     const dim = getTabDimensions(tab);
 
-    const activeZoom = forcedZoom !== null ? forcedZoom : calculateFitZoom(tab, stageW);
+    const activeZoom = forcedZoom !== null ? forcedZoom : 1;
     setZoom(activeZoom);
 
     // Exact mathematical horizontal center (Top-Mid)
@@ -1181,17 +1174,17 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
 
   const handleTabClick = (tab) => {
     if (activeTab === tab) {
-      centerCanvasView(tab);
+      centerCanvasView(tab, 1);
     } else {
       setActiveTab(tab);
     }
   };
 
-  // Center on tab switch & initial mount with top-center placement for all tabs
+  // Center on tab switch & initial mount with top-center placement for all tabs at 100% zoom
   useEffect(() => {
-    centerCanvasView(activeTab);
+    centerCanvasView(activeTab, 1);
     const timer = setTimeout(() => {
-      centerCanvasView(activeTab);
+      centerCanvasView(activeTab, 1);
     }, 60);
     return () => clearTimeout(timer);
   }, [activeTab]);
@@ -2045,11 +2038,13 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     backgroundColor: fillVisible ? (nodeProps['root-canvas']?.fill || fillColor) : 'transparent',
                     opacity: isFrameVisible ? (Number(nodeProps['root-canvas']?.opacity ?? layerOpacity) / 100) : 0.08,
                     border: strokeVisible ? `${nodeProps['root-canvas']?.strokeWidth ?? strokeWidth}px solid ${nodeProps['root-canvas']?.stroke || strokeColor}` : 'none',
-                    backdropFilter: blurVisible ? `blur(${blurAmount}px)` : 'none',
-                    WebkitBackdropFilter: blurVisible ? `blur(${blurAmount}px)` : 'none',
+                    backdropFilter: (blurVisible && !fillVisible) ? `blur(${blurAmount}px)` : undefined,
+                    WebkitBackdropFilter: (blurVisible && !fillVisible) ? `blur(${blurAmount}px)` : undefined,
                     boxShadow: shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none',
                     overflow: clipContent ? 'hidden' : 'visible',
-                    transform: (nodeProps['root-canvas']?.x || nodeProps['root-canvas']?.y) ? `translate(${nodeProps['root-canvas'].x || 0}px, ${nodeProps['root-canvas'].y || 0}px) rotate(${frameAngle}deg)` : `rotate(${frameAngle}deg)`,
+                    transform: (nodeProps['root-canvas']?.x || nodeProps['root-canvas']?.y || frameAngle !== 0)
+                      ? `translate(${nodeProps['root-canvas']?.x || 0}px, ${nodeProps['root-canvas']?.y || 0}px)${frameAngle !== 0 ? ` rotate(${frameAngle}deg)` : ''}`
+                      : undefined,
                     transition: 'all 0.15s ease'
                   }}
                 >
@@ -3232,8 +3227,8 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
             <button
               type="button"
               className="hud-zoom-btn"
-              onClick={() => { centerCanvasView(activeTab); showToast('Canvas Centered (Shift+1)'); }}
-              title="Zoom to Fit / Center View (Shift+1)"
+              onClick={() => { centerCanvasView(activeTab, 1); showToast('Canvas Centered (100%)'); }}
+              title="Zoom to 100% / Center View (Shift+1)"
             >
               <Crosshair size={15} />
             </button>
