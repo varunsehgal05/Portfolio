@@ -24,7 +24,8 @@ const LinkedInIcon = ({ size = 13, color = '#0a66c2' }) => (
 );
 
 import { 
-  checkContentSafety, 
+  checkContentSafety,
+  checkContentSafetyWithGemini,
   banClient,
   recordStrike, 
   isClientBanned, 
@@ -52,9 +53,12 @@ const ReviewsApp = ({ onClose }) => {
   const [formSuccess, setFormSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Load reviews on mount
+  // Load reviews on mount and when updated from Admin Portal
   useEffect(() => {
-    setReviews(getStoredReviews());
+    const refreshReviews = () => setReviews(getStoredReviews());
+    refreshReviews();
+    window.addEventListener('varunos-reviews-updated', refreshReviews);
+    return () => window.removeEventListener('varunos-reviews-updated', refreshReviews);
   }, []);
 
   const handleRatingClick = (val) => {
@@ -65,7 +69,7 @@ const ReviewsApp = ({ onClose }) => {
     setHoverRating(val);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setFormError('');
 
@@ -95,12 +99,12 @@ const ReviewsApp = ({ onClose }) => {
 
     setIsSubmitting(true);
 
-    // AI & Multi-Language 18+ Content Moderation Bot Check
-    const safetyCheck = checkContentSafety(text, name, email, linkedIn);
+    // AI & Multi-Language Content Moderation Check powered by Gemini 2.5 Flash
+    const safetyCheck = await checkContentSafetyWithGemini(text, name, email, linkedIn);
 
     if (!safetyCheck.isSafe) {
       // Violates 18+ / profanity policy -> Silently ban client IP & device; tell user message failed to send
-      banClient();
+      banClient(null, `AI Moderation violation: ${safetyCheck.flaggedTerm || safetyCheck.reason}`);
 
       setTimeout(() => {
         setIsSubmitting(false);

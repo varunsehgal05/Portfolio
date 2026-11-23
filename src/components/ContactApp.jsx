@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import FirebaseImage from './FirebaseImage';
+import { getCMSData } from '../utils/portfolioCMS';
 import { 
   Send, 
   Check, 
@@ -48,6 +49,21 @@ const TOPICS = [
 const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzSj15uB3DNaGQURwTzhYLfD78iT744Hz3Zi_9oo3J_jdSVZcM_ERRLJU-q9IbNCMI/exec';
 
 const ContactApp = () => {
+  const [cmsData, setCmsData] = useState(getCMSData);
+
+  useEffect(() => {
+    const handleCmsUpdate = (e) => {
+      setCmsData(e.detail || getCMSData());
+    };
+    window.addEventListener('varunos-cms-updated', handleCmsUpdate);
+    return () => window.removeEventListener('varunos-cms-updated', handleCmsUpdate);
+  }, []);
+
+  const profile = cmsData?.profile || {};
+  const currentEmail = profile.email || 'varun.sehgal02@gmail.com';
+  const currentPhone = profile.phone || '+91 9399361193';
+  const currentLocation = profile.location || 'Gwalior, IN (Remote)';
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -59,7 +75,7 @@ const ContactApp = () => {
   const [copiedEmail, setCopiedEmail] = useState(false);
 
   const handleCopyEmail = () => {
-    navigator.clipboard?.writeText('varun.sehgal02@gmail.com');
+    navigator.clipboard?.writeText(currentEmail);
     setCopiedEmail(true);
     setTimeout(() => setCopiedEmail(false), 2000);
   };
@@ -179,7 +195,7 @@ const ContactApp = () => {
           <div className="quick-item">
             <MapPin size={14} className="quick-icon" />
             <span className="quick-label">Location</span>
-            <span className="quick-val">Bengaluru, IN (Remote)</span>
+            <span className="quick-val">{currentLocation}</span>
           </div>
           <div className="quick-item">
             <Clock size={14} className="quick-icon" />
@@ -190,14 +206,14 @@ const ContactApp = () => {
             <Mail size={14} className="quick-icon" />
             <span className="quick-label">Email</span>
             <span className="quick-val copyable">
-              varun.sehgal02@gmail.com
+              {currentEmail}
               {copiedEmail ? <Check size={12} className="copy-icon green" /> : <Copy size={12} className="copy-icon" />}
             </span>
           </div>
           <div className="quick-item">
             <Phone size={14} className="quick-icon" />
             <span className="quick-label">Phone</span>
-            <a href="tel:+919399361193" className="quick-val link">+91 9399361193</a>
+            <a href={`tel:${currentPhone.replace(/\s+/g, '')}`} className="quick-val link">{currentPhone}</a>
           </div>
         </div>
 

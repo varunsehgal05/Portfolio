@@ -20,6 +20,7 @@ import {
   ArrowLeft,
   ArrowRight
 } from 'lucide-react';
+import { getCMSData } from '../utils/portfolioCMS';
 import './FinderApp.css';
 
 const FEATURED_PROJECTS = [
@@ -115,6 +116,17 @@ const FinderApp = ({ onOpenApp, isRebuilding = false }) => {
   const [activeTab, setActiveTab] = useState('featured');
   const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'list'
   const [searchFilter, setSearchFilter] = useState('');
+
+  // Live CMS Integration: Synchronized with Admin Portal edits
+  const [cmsData, setCmsData] = useState(getCMSData);
+
+  useEffect(() => {
+    const handleCmsUpdate = (e) => {
+      setCmsData(e.detail || getCMSData());
+    };
+    window.addEventListener('varunos-cms-updated', handleCmsUpdate);
+    return () => window.removeEventListener('varunos-cms-updated', handleCmsUpdate);
+  }, []);
 
   // Staged reveal synchronized with Swarm Rebuild Phase 5
   const FULL_HERO_TITLE = "Designing intuitive web apps & modern interfaces";
@@ -287,15 +299,18 @@ const FinderApp = ({ onOpenApp, isRebuilding = false }) => {
     setActiveTab(tabId);
   };
 
+  const activeProjects = cmsData?.projects && cmsData.projects.length > 0 ? cmsData.projects : FEATURED_PROJECTS;
+  const activeExperiences = cmsData?.experiences && cmsData.experiences.length > 0 ? cmsData.experiences : EXPERIENCE_ITEMS;
+
   const filteredProjects = useMemo(() => {
-    if (!searchFilter.trim()) return FEATURED_PROJECTS;
+    if (!searchFilter.trim()) return activeProjects;
     const q = searchFilter.toLowerCase();
-    return FEATURED_PROJECTS.filter(p => 
+    return activeProjects.filter(p => 
       p.title.toLowerCase().includes(q) ||
       p.desc.toLowerCase().includes(q) ||
-      p.tags.some(t => t.toLowerCase().includes(q))
+      (Array.isArray(p.tags) && p.tags.some(t => t.toLowerCase().includes(q)))
     );
-  }, [searchFilter]);
+  }, [searchFilter, activeProjects]);
 
   return (
     <div className="finder-container">
@@ -580,10 +595,10 @@ const FinderApp = ({ onOpenApp, isRebuilding = false }) => {
           <div className="finder-body-wrap">
             <div className="finder-section-header">
               <span className="finder-content-heading">Professional Experience</span>
-              <span className="finder-item-count">{EXPERIENCE_ITEMS.length} positions</span>
+              <span className="finder-item-count">{activeExperiences.length} positions</span>
             </div>
             <div className="finder-cards-grid" style={{ gridTemplateColumns: '1fr' }}>
-              {EXPERIENCE_ITEMS.map((exp) => (
+              {activeExperiences.map((exp) => (
                 <div key={exp.id} className="finder-project-card" style={{ cursor: 'default' }}>
                   <div className="finder-card-top">
                     <span className="finder-card-title">{exp.title} • {exp.company}</span>
@@ -591,7 +606,7 @@ const FinderApp = ({ onOpenApp, isRebuilding = false }) => {
                   </div>
                   <p className="finder-card-desc">{exp.desc}</p>
                   <div className="finder-card-tags">
-                    {exp.tags.map((t, tIdx) => (
+                    {Array.isArray(exp.tags) && exp.tags.map((t, tIdx) => (
                       <span key={tIdx} className="finder-card-tag">{t}</span>
                     ))}
                   </div>
