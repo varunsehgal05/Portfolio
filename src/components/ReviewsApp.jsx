@@ -25,7 +25,7 @@ const LinkedInIcon = ({ size = 13, color = '#0a66c2' }) => (
 
 import { 
   checkContentSafety, 
-  getStrikeStatus, 
+  banClient,
   recordStrike, 
   isClientBanned, 
   getStoredReviews, 
@@ -51,12 +51,10 @@ const ReviewsApp = ({ onClose }) => {
   const [formError, setFormError] = useState('');
   const [formSuccess, setFormSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [strikeInfo, setStrikeInfo] = useState({ strikes: 0, isBanned: false });
 
-  // Load reviews and strike status on mount
+  // Load reviews on mount
   useEffect(() => {
     setReviews(getStoredReviews());
-    setStrikeInfo(getStrikeStatus());
   }, []);
 
   const handleRatingClick = (val) => {
@@ -72,8 +70,12 @@ const ReviewsApp = ({ onClose }) => {
     setFormError('');
 
     // Check if client is already banned
-    if (strikeInfo.isBanned || isClientBanned()) {
-      setFormError('Submission restricted. Network security policy enforced.');
+    if (isClientBanned()) {
+      setIsSubmitting(true);
+      setTimeout(() => {
+        setIsSubmitting(false);
+        setFormError('Message failed to send. Please check your connection and try again.');
+      }, 700);
       return;
     }
 
@@ -97,16 +99,13 @@ const ReviewsApp = ({ onClose }) => {
     const safetyCheck = checkContentSafety(text, name, email, linkedIn);
 
     if (!safetyCheck.isSafe) {
-      setIsSubmitting(false);
-      // Violates 18+ / profanity policy -> DO NOT UPLOAD! Record strike.
-      const newStrikeResult = recordStrike();
-      setStrikeInfo(newStrikeResult);
+      // Violates 18+ / profanity policy -> Silently ban client IP & device; tell user message failed to send
+      banClient();
 
-      if (newStrikeResult.isBanned) {
-        setFormError('Action blocked. Multiple violations detected. Connection restricted.');
-      } else {
-        setFormError(`⚠️ AutoMod Warning: 18+ or offensive language detected. Submission rejected. Strike ${newStrikeResult.strikes}/3 recorded.`);
-      }
+      setTimeout(() => {
+        setIsSubmitting(false);
+        setFormError('Message failed to send. Please check your connection and try again.');
+      }, 750);
       return;
     }
 
@@ -330,19 +329,13 @@ const ReviewsApp = ({ onClose }) => {
                 <p>Share your authentic experience collaborating on UI/UX product design, interactive prototypes, or design systems.</p>
               </div>
 
-              {strikeInfo.isBanned ? (
-                <div className="banned-lockout-notice">
-                  <ShieldAlert size={36} color="#ef4444" />
-                  <h4>Submission Restricted</h4>
-                  <p>Reviews submission is restricted by VarunOS network safety policies.</p>
-                </div>
-              ) : formSuccess ? (
+              {formSuccess ? (
                 <div className="form-success-message">
                   <div className="success-icon-wrap">
                     <CheckCircle2 size={36} color="#10b981" />
                   </div>
                   <h4>Thank You for Your Endorsement!</h4>
-                  <p>Your review has passed AutoMod verification and is now live on VarunOS.</p>
+                  <p>Your review has passed verification and is now live on VarunOS.</p>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="review-input-form">
@@ -350,12 +343,6 @@ const ReviewsApp = ({ onClose }) => {
                     <div className="form-error-alert">
                       <ShieldAlert size={15} color="#ef4444" />
                       <span>{formError}</span>
-                    </div>
-                  )}
-
-                  {strikeInfo.strikes > 0 && !strikeInfo.isBanned && (
-                    <div className="strike-warning-banner">
-                      <span>⚠️ Notice: {strikeInfo.strikes} of 3 community guideline warning(s) on record for this device.</span>
                     </div>
                   )}
 
@@ -464,11 +451,11 @@ const ReviewsApp = ({ onClose }) => {
                     />
                   </div>
 
-                  {/* AutoMod Policy Badge */}
+                  {/* Community Verification Badge */}
                   <div className="automod-security-badge">
                     <ShieldCheck size={15} color="#10b981" />
                     <span>
-                      <strong>AI AutoMod Protection:</strong> Content is verified for multi-language 18+ content and profanity. 3-strike device policy applies.
+                      <strong>Verified Community:</strong> Submissions are checked for authenticity and quality guidelines.
                     </span>
                   </div>
 
@@ -487,7 +474,7 @@ const ReviewsApp = ({ onClose }) => {
                       className="submit-review-btn"
                       disabled={isSubmitting}
                     >
-                      {isSubmitting ? 'Verifying with AutoMod...' : 'Submit Review ⭐'}
+                      {isSubmitting ? 'Sending...' : 'Submit Review ⭐'}
                     </button>
                   </div>
                 </form>

@@ -13,12 +13,28 @@
   transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, visibility 0.25s ease;
 }
 
+/* Hide Clippy speech balloon and floating action recommendations when any window is open */
+body.has-open-window .clippy-balloon,
+body.has-open-window div[style*="background: #ffc"],
+body.has-open-window div[style*="background: rgb(255, 255, 204)"],
+body.has-open-window .clippy-floating-actions-bar,
+body.has-open-window .clippy-highlight-ring {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+
 /* Hide the assistant bot and its balloons when an app is in full screen */
 body.has-fullscreen-window .clippy,
 body.has-fullscreen-window .pixel-clippy,
 body.has-fullscreen-window .clippy-balloon,
+body.has-fullscreen-window div[style*="background: #ffc"],
+body.has-fullscreen-window div[style*="background: rgb(255, 255, 204)"],
 body.has-fullscreen-window .clippy-dialog-container,
-body.has-fullscreen-window .clippy-quick-sound-pill {
+body.has-fullscreen-window .clippy-quick-sound-pill,
+body.has-fullscreen-window .clippy-floating-actions-bar,
+body.has-fullscreen-window .clippy-highlight-ring {
   display: none !important;
   opacity: 0 !important;
   pointer-events: none !important;
@@ -79,7 +95,9 @@ body.has-fullscreen-window .clippy-quick-sound-pill {
   }
 }
 
-.clippy-balloon {
+.clippy-balloon,
+div[style*="background: #ffc"],
+div[style*="background: rgb(255, 255, 204)"] {
   position: fixed !important;
   right: 120px !important;
   bottom: 35px !important;
@@ -93,7 +111,9 @@ body.has-fullscreen-window .clippy-quick-sound-pill {
   pointer-events: auto !important;
 }
 
-.clippy-balloon .clippy-tip {
+.clippy-balloon .clippy-tip,
+div[style*="background: #ffc"] > div:first-child,
+div[style*="background: rgb(255, 255, 204)"] > div:first-child {
   bottom: 15px !important;
   right: -10px !important;
   top: auto !important;

@@ -79,6 +79,16 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
     };
   }, [isFullScreenActive]);
 
+  // Open window detection: when any window is open and not minimized
+  const hasOpenWindows = openWindows.filter(id => !minimizedWindows.includes(id)).length > 0;
+
+  useEffect(() => {
+    document.body.classList.toggle('has-open-window', hasOpenWindows);
+    return () => {
+      document.body.classList.remove('has-open-window');
+    };
+  }, [hasOpenWindows]);
+
   // Apps that should open in full screen by default
   const FULLSCREEN_APPS = ['figma', 'vscode'];
   const [bouncingApp, setBouncingApp] = useState(null);
@@ -555,7 +565,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
         {loadClippy && (
           <div className={`desktop-bot-wrap ${swarmStage < 5 ? (swarmStage >= 5 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
             <Suspense fallback={null}>
-              <PixelAssistant isIdle={isIdle} onOpenApp={openApp} />
+              <PixelAssistant isIdle={isIdle} onOpenApp={openApp} hasOpenWindows={hasOpenWindows} />
             </Suspense>
           </div>
         )}

@@ -251,10 +251,6 @@ const TrashApp = ({ onClose, onOpenApp }) => {
   const [isShredding, setIsShredding] = useState(false);
   const [bannerNotice, setBannerNotice] = useState(null);
 
-  // Clippy Assistant & Auto-Close States
-  const [aiCountdown, setAiCountdown] = useState(6);
-  const [isAICountdownCancelled, setIsAICountdownCancelled] = useState(false);
-
   // Virtual Clippy Mouse Controller state
   const [aiMouse, setAiMouse] = useState({
     active: false,
@@ -268,51 +264,8 @@ const TrashApp = ({ onClose, onOpenApp }) => {
   const countdownTimerRef = useRef(null);
   const isClosingProcessRef = useRef(false);
 
-  // Auto-close countdown effect: ticks down from 6s to 0s, then triggers virtual mouse auto-close
+  // 1. Initial Mount: clean up any active timers or balloons
   useEffect(() => {
-    if (!activePreviewItem || isAICountdownCancelled) {
-      if (countdownTimerRef.current) clearTimeout(countdownTimerRef.current);
-      return;
-    }
-
-    if (aiCountdown === null || aiCountdown === undefined) {
-      setAiCountdown(6);
-      return;
-    }
-
-    if (aiCountdown <= 0) {
-      // Countdown expired! Clippy closes preview and trash window
-      if (countdownTimerRef.current) clearTimeout(countdownTimerRef.current);
-      startClippyCloseSequence();
-      return;
-    }
-
-    countdownTimerRef.current = setTimeout(() => {
-      setAiCountdown(prev => (prev > 0 ? prev - 1 : 0));
-    }, 1000);
-
-    return () => {
-      if (countdownTimerRef.current) clearTimeout(countdownTimerRef.current);
-    };
-  }, [activePreviewItem, aiCountdown, isAICountdownCancelled]);
-
-  // 1. Initial Mount: Clippy on desktop welcomes user & offers portfolio
-  useEffect(() => {
-    playAIChime();
-    const msg = "It looks like you opened the Trash! 📎 You are not here to see my trash! 👀 You're here to explore my portfolio and hire me!";
-    // Clippy says the words in his classic balloon and highlights
-    window.dispatchEvent(new CustomEvent('varunos-clippy-speak', {
-      detail: {
-        text: msg,
-        animation: "GetAttention",
-        highlightDuration: 4000,
-        hold: false,
-        actions: [
-          { label: "View Portfolio", primary: true, appId: "figma" },
-          { label: "View Resume", appId: "resume" }
-        ]
-      }
-    }));
     return () => {
       if (countdownTimerRef.current) clearTimeout(countdownTimerRef.current);
       window.dispatchEvent(new CustomEvent('varunos-clippy-hide'));
@@ -389,24 +342,7 @@ const TrashApp = ({ onClose, onOpenApp }) => {
   // Opening File: View Item Modal
   const handleItemDoubleClick = (item) => {
     setActivePreviewItem(item);
-    setIsAICountdownCancelled(false);
-    setAiCountdown(6);
     playAIChime();
-
-    // Desktop Clippy speaks the phrase and shows quick action buttons
-    window.dispatchEvent(new CustomEvent('varunos-clippy-speak', {
-      detail: {
-        text: "It looks like you're inspecting discarded drafts! 📎 You're here to explore my portfolio and hire me!",
-        animation: "GetAttention",
-        highlightDuration: 7000,
-        hold: false,
-        actions: [
-          { label: "Open Portfolio (Figma) →", primary: true, appId: "figma" },
-          { label: "Open Resume", appId: "resume" },
-          { label: "Hire Varun", appId: "contact" }
-        ]
-      }
-    }));
   };
 
   const glideToWindowCloseButton = () => {
@@ -541,16 +477,6 @@ const TrashApp = ({ onClose, onOpenApp }) => {
         glideToWindowCloseButton();
       }, 100);
     }
-  };
-
-  const cancelAICountdown = () => {
-    if (countdownTimerRef.current) clearTimeout(countdownTimerRef.current);
-    setIsAICountdownCancelled(true);
-  };
-
-  const resumeAICountdown = () => {
-    setIsAICountdownCancelled(false);
-    setAiCountdown(prev => (prev && prev > 0 ? prev : 5));
   };
 
   const renderItemIcon = (type, color) => {
@@ -803,7 +729,7 @@ const TrashApp = ({ onClose, onOpenApp }) => {
 
       {/* Bottom Statusbar */}
       <footer className="trash-statusbar">
-        <span className="status-hint">💡 Double-click any file to inspect details (Clippy will guide you!)</span>
+        <span className="status-hint">💡 Double-click any file to inspect details</span>
         {selectedItem && (
           <span className="status-selected">
             Selected: <strong>{selectedItem.name}</strong> ({selectedItem.size})
@@ -811,12 +737,9 @@ const TrashApp = ({ onClose, onOpenApp }) => {
         )}
       </footer>
 
-      {/* QUICK LOOK MODAL WITH CLIPPY GUIDANCE & REDIRECT */}
+      {/* QUICK LOOK MODAL */}
       {activePreviewItem && (
-        <div className="trash-modal-backdrop" onClick={() => {
-          cancelAICountdown();
-          setActivePreviewItem(null);
-        }}>
+        <div className="trash-modal-backdrop" onClick={() => setActivePreviewItem(null)}>
           <div className="trash-modal-card" onClick={(e) => e.stopPropagation()}>
             
             {/* Standard Modal File Header */}
@@ -831,10 +754,7 @@ const TrashApp = ({ onClose, onOpenApp }) => {
               <button 
                 type="button" 
                 className="trash-modal-close"
-                onClick={() => {
-                  cancelAICountdown();
-                  setActivePreviewItem(null);
-                }}
+                onClick={() => setActivePreviewItem(null)}
                 title="Close Preview"
               >
                 <X size={14} />
@@ -861,56 +781,13 @@ const TrashApp = ({ onClose, onOpenApp }) => {
                 <span className="modal-tag-pill" style={{ borderColor: activePreviewItem.tagColor, color: activePreviewItem.tagColor }}>
                   {activePreviewItem.tag}
                 </span>
-
-                {/* Sleek Auto-Close Countdown Pill */}
-                <div className="modal-autoclose-pill">
-                  <Paperclip size={12} className={!isAICountdownCancelled ? "text-amber-400 animate-bounce" : "text-zinc-500"} />
-                  {!isAICountdownCancelled ? (
-                    <span className="autoclose-text">
-                      Auto-closing in <strong>{aiCountdown ?? 6}s</strong>
-                    </span>
-                  ) : (
-                    <span className="autoclose-text paused">Auto-close paused</span>
-                  )}
-                  {!isAICountdownCancelled ? (
-                    <button
-                      type="button"
-                      className="modal-autoclose-toggle"
-                      onClick={cancelAICountdown}
-                      title="Pause auto-close countdown"
-                    >
-                      Keep Open
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      className="modal-autoclose-toggle resume"
-                      onClick={resumeAICountdown}
-                      title="Resume auto-close countdown"
-                    >
-                      Resume
-                    </button>
-                  )}
-                </div>
               </div>
 
               <div className="modal-footer-right">
-                <button
-                  type="button"
-                  className="modal-clippy-now-btn"
-                  onClick={startClippyCloseSequence}
-                  title="Close Trash with Clippy virtual mouse"
-                >
-                  <Paperclip size={12} />
-                  <span>Close Now</span>
-                </button>
                 <button 
                   type="button" 
                   className="modal-done-btn"
-                  onClick={() => {
-                    cancelAICountdown();
-                    setActivePreviewItem(null);
-                  }}
+                  onClick={() => setActivePreviewItem(null)}
                 >
                   Done
                 </button>

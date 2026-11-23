@@ -317,7 +317,7 @@ const fetchGeminiAssistantResponse = async (userPrompt, chatHistory = []) => {
   }
 };
 
-const PixelAssistant = ({ isIdle, onOpenApp }) => {
+const PixelAssistant = ({ isIdle, onOpenApp, hasOpenWindows }) => {
   const agentRef = useRef(null);
   const isFirstMount = useRef(true);
   const bodyRef = useRef(null);
@@ -338,9 +338,29 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
   const highlightTimerRef = useRef(null);
   const actionsTimerRef = useRef(null);
 
+  // When an app opens or is open, immediately hide any active recommendations, highlights, and speech balloons
+  useEffect(() => {
+    if (hasOpenWindows) {
+      if (actionsTimerRef.current) clearTimeout(actionsTimerRef.current);
+      setClippyActions(null);
+      setIsHighlighted(false);
+      if (agentRef.current?._balloon) {
+        agentRef.current._balloon.hide(true);
+      }
+      if (agentRef.current?._el) {
+        agentRef.current._el.classList.remove('clippy-highlighted');
+      }
+    }
+  }, [hasOpenWindows]);
+
   // Listen for speech requests from TrashApp or other system events
   useEffect(() => {
     const handleClippySpeak = (e) => {
+      // Do not show speech balloons or action bars if an app is open or fullscreen
+      if (document.body.classList.contains('has-open-window') || document.body.classList.contains('has-fullscreen-window')) {
+        return;
+      }
+
       const { text, animation = "GetAttention", highlightDuration = 3000, hold = false, actions = null } = e.detail || {};
       if (!text) return;
 
@@ -587,18 +607,46 @@ const PixelAssistant = ({ isIdle, onOpenApp }) => {
 
         agent.show(true);
 
-        setTimeout(() => {
-          if (agent._balloon) agent._balloon.reposition();
-        }, 400);
+        // Enforce bottom-right anchoring for speech balloon so it never jumps to top-left
+        if (agent._balloon && agent._balloon._balloon) {
+          const enforcePosition = () => {
+            if (agentRef.current?._balloon?._balloon) {
+              const b = agentRef.current._balloon._balloon;
+              b.classList.add('clippy-balloon');
+              b.style.position = 'fixed';
+              b.style.right = '120px';
+              b.style.bottom = '35px';
+              b.style.left = 'auto';
+              b.style.top = 'auto';
+            }
+            if (agentRef.current?._balloon?._tip) {
+              const t = agentRef.current._balloon._tip;
+              t.style.bottom = '15px';
+              t.style.right = '-10px';
+              t.style.top = 'auto';
+              t.style.left = 'auto';
+            }
+          };
+
+          agent._balloon.reposition = enforcePosition;
+          agent._balloon._position = enforcePosition;
+          enforcePosition();
+        }
 
         setTimeout(() => {
           if (!isMounted) return;
+          if (document.body.classList.contains('has-open-window') || document.body.classList.contains('has-fullscreen-window')) return;
           agent.play("Greeting");
           agent.speak("Click me to ask anything about Varun! 💬");
         }, 1200);
 
         hintInterval = setInterval(() => {
-          if (document.body.classList.contains('is-idle') || isChatOpenRef.current) return;
+          if (
+            document.body.classList.contains('is-idle') || 
+            document.body.classList.contains('has-open-window') || 
+            document.body.classList.contains('has-fullscreen-window') || 
+            isChatOpenRef.current
+          ) return;
           if (Math.random() > 0.5) {
             agent.animate();
           } else {

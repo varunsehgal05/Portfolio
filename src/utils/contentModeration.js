@@ -103,6 +103,30 @@ const BANNED_IP_KEY = 'varunos_banned_client_ip';
 const REVIEWS_STORAGE_KEY = 'varunos_user_reviews';
 
 /**
+ * Permanently ban the client IP / device and drop all future messages
+ */
+export const banClient = (clientIp) => {
+  try {
+    const assignedIp = clientIp || (typeof window !== 'undefined' && window.__mockClientIp) || `192.168.1.${Math.floor(Math.random() * 200 + 20)}`;
+    const userAgent = typeof navigator !== 'undefined' ? navigator.userAgent : 'Unknown';
+    const banRecord = {
+      banned: true,
+      ip: assignedIp,
+      userAgent,
+      bannedAt: new Date().toISOString()
+    };
+    localStorage.setItem(BANNED_KEY, 'true');
+    localStorage.setItem(BANNED_TIME_KEY, banRecord.bannedAt);
+    localStorage.setItem(BANNED_IP_KEY, assignedIp);
+    localStorage.setItem(STRIKES_KEY, '3');
+    localStorage.setItem('varunos_banned_client_meta', JSON.stringify(banRecord));
+    return { isBanned: true, ...banRecord };
+  } catch {
+    return { isBanned: true };
+  }
+};
+
+/**
  * Get current strike & ban status for this visitor
  */
 export const getStrikeStatus = () => {
@@ -111,7 +135,7 @@ export const getStrikeStatus = () => {
     const strikes = parseInt(localStorage.getItem(STRIKES_KEY) || '0', 10);
     const bannedAt = localStorage.getItem(BANNED_TIME_KEY);
     return {
-      strikes: Math.min(3, Math.max(0, strikes)),
+      strikes: isBanned ? 3 : Math.min(3, Math.max(0, strikes)),
       isBanned,
       bannedAt
     };
@@ -121,25 +145,10 @@ export const getStrikeStatus = () => {
 };
 
 /**
- * Record a violation strike. If strikes reach 3, silently ban the client!
+ * Record a violation - immediately bans client IP/device silently
  */
-export const recordStrike = (clientIp = '127.0.0.1') => {
-  try {
-    let strikes = parseInt(localStorage.getItem(STRIKES_KEY) || '0', 10) + 1;
-    localStorage.setItem(STRIKES_KEY, strikes.toString());
-
-    if (strikes >= 3) {
-      // Permanent silent IP/device ban
-      localStorage.setItem(BANNED_KEY, 'true');
-      localStorage.setItem(BANNED_TIME_KEY, new Date().toISOString());
-      localStorage.setItem(BANNED_IP_KEY, clientIp);
-      return { strikes: 3, isBanned: true, newlyBanned: true };
-    }
-
-    return { strikes, isBanned: false, newlyBanned: false };
-  } catch {
-    return { strikes: 1, isBanned: false, newlyBanned: false };
-  }
+export const recordStrike = (clientIp) => {
+  return banClient(clientIp);
 };
 
 /**
