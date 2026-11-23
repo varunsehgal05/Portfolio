@@ -36,7 +36,10 @@ import {
   Info,
   AlertCircle,
   Filter,
-  Layers
+  Layers,
+  Eye,
+  BookOpen,
+  Compass
 } from 'lucide-react';
 import './VsCodeApp.css';
 import VsCodeLoadingScreen from './VsCodeLoadingScreen';
@@ -714,8 +717,56 @@ export function useSwarm() {
 console.log("useSwarm hook initialized with 3 active concurrent agents.");
 `;
 
+// README.md — Interactive Portfolio & Workspace Guide
+const README_MD_CODE = `# ⚡ Welcome to Varun Sehgal's Codebase & Workspace
+
+> **UI/UX Designer & Design Engineer** · Jaypee University of Engineering & Technology (JUET)  
+> Specializing in high-velocity design systems, tactile micro-interactions in Figma, and sub-millisecond Next.js & Tailwind CSS engineering.
+
+---
+
+## 🧭 What to See Here (Interactive Quick Navigation)
+
+Explore Varun's real-world projects, architecture models, and live execution engines:
+
+### 1. 🌐 Live Production Case Study: CodeSrijan
+- **File:** \`Live Preview: CodeSrijan\`
+- **What it is:** National hackathon platform built for 200+ hackers across 50+ universities.
+- **Key Engineering:** Solved solo hacker matchmaking, sub-100ms multi-judge rubric scoring, and zero drop-off forms.
+
+### 2. 👤 Developer Profile & Design Engineering Stack
+- **File:** \`src/components/AboutMe.tsx\`
+- **What it is:** Varun's career trajectory, atomic design token hierarchy (OKLCH, auto-layout variants), and UI/UX leadership at UniEvent and Assemble Esports.
+
+### 3. ⚡ The Vibecoding Philosophy
+- **File:** \`docs/vibecoding-manifesto.md\`
+- **What it is:** Why design engineering with agentic AI yields 10x faster shipping speed without sacrificing pixel precision or TypeScript type-safety.
+
+### 4. 🎨 VarunOS Architecture & State Machine
+- **File:** \`src/components/varunos-portfolio.tsx\`
+- **What it is:** The complete component tree and Web Audio model powering this web operating system.
+
+### 5. ▶ Interactive Code Runner & Execution Sandbox
+- **File:** \`src/test.js\` & \`src/app.js\`
+- **What it is:** Runnable JavaScript scripts. Click **"▶ Run Code"** in the top-right toolbar or press **Ctrl+Enter** to execute real JavaScript in the terminal below!
+
+---
+
+## 🚀 Quick Actions
+- Click **"Visual Preview"** above to toggle between raw code and rendered view.
+- Click any file in the Explorer on the left to inspect its source code.
+- Click **"Run Code"** (or press Ctrl+Enter) to execute the active file.
+`;
+
 // Initial files dictionary
 const INITIAL_PROJECT_FILES = {
+  'README.md': {
+    name: 'README.md',
+    path: 'root > ⭐ README.md',
+    icon: 'md',
+    lang: 'Markdown',
+    code: README_MD_CODE
+  },
   'Live Preview: CodeSrijan': {
     name: 'Live Preview: CodeSrijan',
     path: 'codesrijan > 🌐 http://codesrijan-nine.vercel.app/',
@@ -868,17 +919,61 @@ export const VsCodeApp = () => {
 
   // File System State
   const [projectFiles, setProjectFiles] = useState(INITIAL_PROJECT_FILES);
-  const [activeFile, setActiveFile] = useState('test.js');
+  const [activeFile, setActiveFile] = useState('README.md');
   const [openTabs, setOpenTabs] = useState([
+    'README.md',
     'Live Preview: CodeSrijan',
-    'varunos-portfolio.tsx',
     'AboutMe.tsx',
-    'tools-and-stack.ts',
+    'varunos-portfolio.tsx',
     'vibecoding-manifesto.md',
-    'test.js',
-    'codesrijan/page.tsx',
-    'portfolio.config.ts'
+    'test.js'
   ]);
+  const [editorViewMode, setEditorViewMode] = useState('preview'); // 'preview' | 'code'
+  const [copiedToast, setCopiedToast] = useState(false);
+
+  const handleCopyCurrentCode = () => {
+    if (!currentCode) return;
+    navigator.clipboard?.writeText(currentCode);
+    setCopiedToast(true);
+    setTimeout(() => setCopiedToast(false), 2000);
+  };
+
+  const getFileBadge = (fileName) => {
+    if (fileName === 'README.md') return '⭐ START HERE · WORKSPACE GUIDE';
+    if (fileName === 'AboutMe.tsx') return '👤 DEVELOPER & DESIGNER PROFILE';
+    if (fileName === 'varunos-portfolio.tsx') return '🎨 SYSTEM ARCHITECTURE · VARUNOS';
+    if (fileName === 'vibecoding-manifesto.md') return '⚡ DESIGN ENGINEERING MANIFESTO';
+    if (fileName === 'tools-and-stack.ts') return '🛠️ TECH STACK & TOKENS';
+    if (fileName === 'portfolio.config.ts') return '⚙️ PORTFOLIO METADATA CONFIG';
+    if (fileName === 'TerminalApp.jsx') return '💻 CLI EMULATOR COMPONENT';
+    if (fileName === 'FinderApp.css') return '🎨 MACOS GLASS DESIGN TOKENS';
+    if (fileName === 'test.js') return '▶ INTERACTIVE JAVASCRIPT SANDBOX';
+    if (fileName === 'app.js') return '▶ SCRATCH SCRIPT RUNNER';
+    if (fileName === 'Varun_Sehgal_Resume_Updated.tex') return '📄 ATS RESUME LATEX SOURCE';
+    if (fileName === 'package.json') return '📦 DEPENDENCIES & BUILD CONFIG';
+    if (fileName === 'Live Preview: CodeSrijan') return '🌐 VERCEL PRODUCTION DEPLOYMENT';
+    if (fileName === 'codesrijan/page.tsx') return '⚛ CODESRIJAN APP ROUTER SOURCE';
+    return '📄 SOURCE CODE FILE';
+  };
+
+  const getFilePurpose = (fileName) => {
+    if (fileName === 'README.md') return 'Interactive portfolio overview. Use this guide to discover Varun\'s projects, design philosophy, and runnable code.';
+    if (fileName === 'AboutMe.tsx') return 'Varun Sehgal\'s profile component defining design token hierarchies, university credentials, and UI/UX experience.';
+    if (fileName === 'varunos-portfolio.tsx') return 'Core state machine and architecture powering the VarunOS web operating system.';
+    if (fileName === 'vibecoding-manifesto.md') return 'Core design philosophy on blending Figma atomic design tokens with agentic AI development.';
+    if (fileName === 'test.js') return 'Live runnable JavaScript script. Click "Run Code" or press Ctrl+Enter to execute in the terminal below.';
+    if (fileName === 'app.js') return 'Runnable scratchpad script for testing algorithms and data processing in VarunOS.';
+    if (fileName === 'tools-and-stack.ts') return 'Full inventory of frontend libraries, Figma plugins, design tokens, and developer tooling.';
+    if (fileName === 'portfolio.config.ts') return 'Global configuration for metadata, OpenGraph tags, and portfolio navigation.';
+    if (fileName === 'package.json') return 'Vite build setup with Tailwind, Framer Motion, Lucide icons, and modern React 18 dependencies.';
+    if (fileName === 'Varun_Sehgal_Resume_Updated.tex') return 'Single-page LaTeX resume source formatted for 98+ ATS readability and clean typography.';
+    if (fileName === 'FinderApp.css') return 'macOS Sequoia design tokens, glassmorphism filters, and responsive layout styling.';
+    return 'Inspect and edit the source code. Click "Run Code" above to execute.';
+  };
+
+  const canTogglePreview = (fileName) => {
+    return ['README.md', 'AboutMe.tsx', 'vibecoding-manifesto.md'].includes(fileName);
+  };
 
   // Explorer Inline Creation & Refresh Actions (Image 2 actions)
   const [isCreatingFile, setIsCreatingFile] = useState(false);
@@ -1397,11 +1492,17 @@ export const VsCodeApp = () => {
         key={fileName}
         className={`tree-item-file ${isActive ? 'active' : ''}`}
         style={{ paddingLeft }}
-        onClick={() => handleOpenFile(fileName)}
+        onClick={() => {
+          handleOpenFile(fileName);
+          if (canTogglePreview(fileName)) setEditorViewMode('preview');
+        }}
         title={f.path || fileName}
       >
         {renderTabIcon(f.icon)}
         <span className="tree-file-name">{fileName}</span>
+        {fileName === 'README.md' && <span className="tree-guide-pill guide-start">⭐ START</span>}
+        {fileName === 'AboutMe.tsx' && <span className="tree-guide-pill guide-profile">Profile</span>}
+        {fileName === 'test.js' && <span className="tree-guide-pill guide-run">▶ Run</span>}
       </div>
     );
   };
@@ -1860,6 +1961,9 @@ export const VsCodeApp = () => {
                           </button>
                         </div>
                       )}
+
+                      {/* Project Guide: README.md */}
+                      {renderTreeItem('README.md', '16px')}
 
                       {/* Folder 1: src */}
                       <div
@@ -2666,66 +2770,334 @@ export const VsCodeApp = () => {
                   </div>
                 )}
 
-                {/* Interactive Code Editor with synchronized Line Gutter */}
-                <div className="code-editor-scrollable">
-                  <div className="code-editor-container">
-                    {/* Line Numbers Gutter */}
-                    <div className="editor-gutter">
-                      {codeLines.map((_, idx) => (
+                {/* File Context & Explanation Banner — Solves UX confusion */}
+                <div className="file-context-banner">
+                  <div className="file-context-left">
+                    <span className="file-badge-chip">{getFileBadge(currentFile.name)}</span>
+                    <span className="file-purpose-text">{getFilePurpose(currentFile.name)}</span>
+                  </div>
+                  <div className="file-context-actions">
+                    {canTogglePreview(currentFile.name) && (
+                      <div className="preview-toggle-pills">
+                        <button
+                          type="button"
+                          className={`toggle-pill-btn ${editorViewMode === 'code' ? 'active' : ''}`}
+                          onClick={() => setEditorViewMode('code')}
+                        >
+                          <Code size={11} />
+                          <span>Code</span>
+                        </button>
+                        <button
+                          type="button"
+                          className={`toggle-pill-btn ${editorViewMode === 'preview' ? 'active' : ''}`}
+                          onClick={() => setEditorViewMode('preview')}
+                        >
+                          <Eye size={11} />
+                          <span>Visual Preview</span>
+                        </button>
+                      </div>
+                    )}
+                    <button
+                      type="button"
+                      className="context-quick-run-btn"
+                      onClick={() => executeCode()}
+                      title="Run active file (Ctrl+Enter)"
+                    >
+                      <Play size={10} fill="#38bdf8" color="#38bdf8" />
+                      <span>Run</span>
+                    </button>
+                    <button
+                      type="button"
+                      className="context-copy-btn"
+                      onClick={handleCopyCurrentCode}
+                      title="Copy file code"
+                    >
+                      {copiedToast ? <Check size={11} className="text-emerald-400" /> : <Copy size={11} />}
+                      <span>{copiedToast ? 'Copied!' : 'Copy'}</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Visual Preview Mode for README, AboutMe, or Manifesto */}
+                {editorViewMode === 'preview' && canTogglePreview(currentFile.name) ? (
+                  <div className="editor-visual-preview-container">
+                    {currentFile.name === 'README.md' && (
+                      <div className="readme-preview-content">
+                        <div className="readme-hero-box">
+                          <div className="readme-hero-tag">
+                            <Sparkles size={12} className="text-amber-400" />
+                            <span>PORTFOLIO WORKSPACE GUIDE · START HERE</span>
+                          </div>
+                          <h1 className="readme-hero-title">Varun Sehgal — UI/UX Designer &amp; Design Engineer</h1>
+                          <p className="readme-hero-subtitle">
+                            Specialized in crafting friction-free product experiences: tactile micro-interactions in Figma and executable Next.js, React &amp; Tailwind CSS code.
+                          </p>
+                          <div className="readme-quick-stats">
+                            <div className="readme-stat-pill">
+                              <span className="stat-num">3+</span>
+                              <span className="stat-text">Years Experience</span>
+                            </div>
+                            <div className="readme-stat-pill">
+                              <span className="stat-num">200+</span>
+                              <span className="stat-text">Hackers Hosted</span>
+                            </div>
+                            <div className="readme-stat-pill">
+                              <span className="stat-num">10x</span>
+                              <span className="stat-text">Shipping Velocity</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="readme-cards-heading">
+                          <Compass size={14} className="text-sky-400" />
+                          <span>Interactive Project Guide — What to See in This Workspace</span>
+                        </div>
+
+                        <div className="readme-grid">
+                          <div
+                            className="readme-nav-card"
+                            onClick={() => handleOpenFile('Live Preview: CodeSrijan')}
+                          >
+                            <div className="nav-card-header">
+                              <span className="nav-card-icon text-emerald-400">🌐</span>
+                              <span className="nav-card-status">LIVE APP</span>
+                            </div>
+                            <h3 className="nav-card-title">CodeSrijan Hackathon Portal</h3>
+                            <p className="nav-card-desc">
+                              Production national hackathon platform with real-time multi-judge rubric scoring and solo hacker matchmaking.
+                            </p>
+                            <div className="nav-card-footer">
+                              <span>Open Live Webview →</span>
+                            </div>
+                          </div>
+
+                          <div
+                            className="readme-nav-card"
+                            onClick={() => {
+                              handleOpenFile('AboutMe.tsx');
+                              setEditorViewMode('preview');
+                            }}
+                          >
+                            <div className="nav-card-header">
+                              <span className="nav-card-icon text-sky-400">👤</span>
+                              <span className="nav-card-status text-sky-400">PROFILE</span>
+                            </div>
+                            <h3 className="nav-card-title">Developer &amp; Designer Bio</h3>
+                            <p className="nav-card-desc">
+                              Explore Varun's UI/UX leadership at UniEvent &amp; Assemble Esports, education at JUET, and core design tokens.
+                            </p>
+                            <div className="nav-card-footer">
+                              <span>View Profile Card →</span>
+                            </div>
+                          </div>
+
+                          <div
+                            className="readme-nav-card"
+                            onClick={() => {
+                              handleOpenFile('vibecoding-manifesto.md');
+                              setEditorViewMode('preview');
+                            }}
+                          >
+                            <div className="nav-card-header">
+                              <span className="nav-card-icon text-amber-400">⚡</span>
+                              <span className="nav-card-status text-amber-400">PHILOSOPHY</span>
+                            </div>
+                            <h3 className="nav-card-title">The Vibecoding Manifesto</h3>
+                            <p className="nav-card-desc">
+                              How atomic Figma design tokens combined with agentic AI enable rapid 3-week production cycles with 0 technical debt.
+                            </p>
+                            <div className="nav-card-footer">
+                              <span>Read Manifesto →</span>
+                            </div>
+                          </div>
+
+                          <div
+                            className="readme-nav-card"
+                            onClick={() => {
+                              handleOpenFile('test.js');
+                              setEditorViewMode('code');
+                            }}
+                          >
+                            <div className="nav-card-header">
+                              <span className="nav-card-icon text-purple-400">▶</span>
+                              <span className="nav-card-status text-purple-400">RUNNABLE</span>
+                            </div>
+                            <h3 className="nav-card-title">Interactive JS Sandbox</h3>
+                            <p className="nav-card-desc">
+                              Live sandbox script. Click to open and press "Run Code" above to execute real JavaScript directly in the browser!
+                            </p>
+                            <div className="nav-card-footer">
+                              <span>Launch Sandbox →</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {currentFile.name === 'AboutMe.tsx' && (
+                      <div className="profile-preview-card">
+                        <div className="profile-preview-header">
+                          <div className="profile-avatar-circle">VS</div>
+                          <div className="profile-identity">
+                            <h2 className="profile-name">Varun Sehgal</h2>
+                            <span className="profile-title">UI/UX Designer &amp; Design Engineer</span>
+                            <div className="profile-tags-row">
+                              <span className="profile-tag-pill green">● Available for Roles</span>
+                              <span className="profile-tag-pill blue">JUET Guna</span>
+                              <span className="profile-tag-pill purple">Figma &amp; React</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <p className="profile-bio-text">
+                          I study and craft friction-free product experiences: tactile, beautiful, and fast. Specialized in bridging the gap between Figma design systems and production React &amp; Next.js code with sub-millisecond execution.
+                        </p>
+
+                        <div className="profile-sections-grid">
+                          <div className="profile-section-box">
+                            <h4 className="section-box-title">💼 Experience Highlights</h4>
+                            <ul className="section-box-list">
+                              <li><strong>UniEvent:</strong> UI/UX Designer architecting ticketing flows and 50+ component design systems.</li>
+                              <li><strong>Assemble:</strong> Assistant Head of CODM Esports Operations &amp; tournament UX broadcast.</li>
+                              <li><strong>CodeSrijan:</strong> Lead Convenor &amp; Platform Architect for 200+ participants across 50+ universities.</li>
+                            </ul>
+                          </div>
+
+                          <div className="profile-section-box">
+                            <h4 className="section-box-title">🛠️ Core Engineering Skills</h4>
+                            <div className="skills-badge-wrap">
+                              <span className="skill-chip">Figma Variables</span>
+                              <span className="skill-chip">Auto-Layout</span>
+                              <span className="skill-chip">OKLCH Colors</span>
+                              <span className="skill-chip">React 18</span>
+                              <span className="skill-chip">Next.js 14</span>
+                              <span className="skill-chip">TypeScript</span>
+                              <span className="skill-chip">Tailwind CSS</span>
+                              <span className="skill-chip">Framer Motion</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="profile-preview-footer">
+                          <button
+                            type="button"
+                            className="toggle-to-code-btn"
+                            onClick={() => setEditorViewMode('code')}
+                          >
+                            <Code size={12} />
+                            <span>Inspect Underlying TypeScript Code (AboutMe.tsx)</span>
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    {currentFile.name === 'vibecoding-manifesto.md' && (
+                      <div className="manifesto-preview-card">
+                        <div className="manifesto-header">
+                          <span className="manifesto-pill">⚡ THE VIBECODING MANIFESTO</span>
+                          <h2 className="manifesto-title">From Figma Tokens to Production Next.js</h2>
+                          <p className="manifesto-subtitle">Architecting high-velocity digital experiences with agentic AI and strict TypeScript safety.</p>
+                        </div>
+                        <div className="manifesto-pillars">
+                          <div className="pillar-item">
+                            <div className="pillar-num">01</div>
+                            <div>
+                              <h4 className="pillar-title">Design Tokens First</h4>
+                              <p className="pillar-text">Define spacing, OKLCH colors, typography, and component variants in Figma before touching code.</p>
+                            </div>
+                          </div>
+                          <div className="pillar-item">
+                            <div className="pillar-num">02</div>
+                            <div>
+                              <h4 className="pillar-title">Agentic Scaffolding</h4>
+                              <p className="pillar-text">Use agentic AI for rapid JSX boilerplates, while human engineers maintain strict architecture and TypeScript contracts.</p>
+                            </div>
+                          </div>
+                          <div className="pillar-item">
+                            <div className="pillar-num">03</div>
+                            <div>
+                              <h4 className="pillar-title">60fps Tactile Feedback</h4>
+                              <p className="pillar-text">Every interaction must provide instant visual feedback with physics-based springs and sub-100ms response times.</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="manifesto-footer">
+                          <button
+                            type="button"
+                            className="toggle-to-code-btn"
+                            onClick={() => setEditorViewMode('code')}
+                          >
+                            <Code size={12} />
+                            <span>Inspect Markdown Source</span>
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  /* Interactive Code Editor with synchronized Line Gutter */
+                  <div className="code-editor-scrollable">
+                    <div className="code-editor-container">
+                      {/* Line Numbers Gutter */}
+                      <div className="editor-gutter">
+                        {codeLines.map((_, idx) => (
+                          <div
+                            key={idx}
+                            className={`gutter-line-number ${idx + 1 === cursorLine ? 'active' : ''}`}
+                          >
+                            {idx + 1}
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Fully Editable Code Textarea */}
+                      <div className="editor-textarea-wrap">
+                        <textarea
+                          ref={editorTextareaRef}
+                          value={currentCode}
+                          onChange={handleCodeChange}
+                          onClick={(e) => {
+                            const target = e.target;
+                            const textBefore = target.value.substring(0, target.selectionStart);
+                            const linesBefore = textBefore.split('\n');
+                            setCursorLine(linesBefore.length);
+                            setCursorCol(linesBefore[linesBefore.length - 1].length + 1);
+                          }}
+                          onKeyUp={(e) => {
+                            const target = e.target;
+                            const textBefore = target.value.substring(0, target.selectionStart);
+                            const linesBefore = textBefore.split('\n');
+                            setCursorLine(linesBefore.length);
+                            setCursorCol(linesBefore[linesBefore.length - 1].length + 1);
+                          }}
+                          className="editor-code-textarea"
+                          spellCheck={false}
+                          autoCapitalize="off"
+                          autoCorrect="off"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Code Minimap (Right side) - Only in Code mode */}
+                {editorViewMode === 'code' && (
+                  <div className="vscode-minimap-pane">
+                    <div className="minimap-viewport-slider" />
+                    <div className="minimap-content">
+                      {codeLines.slice(0, 80).map((l, idx) => (
                         <div
                           key={idx}
-                          className={`gutter-line-number ${idx + 1 === cursorLine ? 'active' : ''}`}
-                        >
-                          {idx + 1}
-                        </div>
+                          className="minimap-bar-line"
+                          style={{
+                            width: `${Math.min(95, Math.max(10, l.length * 1.4))}%`,
+                            backgroundColor: l.includes('function') || l.includes('const') ? '#38bdf8' : l.includes('console') ? '#facc15' : 'rgba(255,255,255,0.18)'
+                          }}
+                        />
                       ))}
                     </div>
-
-                    {/* Fully Editable Code Textarea */}
-                    <div className="editor-textarea-wrap">
-                      <textarea
-                        ref={editorTextareaRef}
-                        value={currentCode}
-                        onChange={handleCodeChange}
-                        onClick={(e) => {
-                          const target = e.target;
-                          const textBefore = target.value.substring(0, target.selectionStart);
-                          const linesBefore = textBefore.split('\n');
-                          setCursorLine(linesBefore.length);
-                          setCursorCol(linesBefore[linesBefore.length - 1].length + 1);
-                        }}
-                        onKeyUp={(e) => {
-                          const target = e.target;
-                          const textBefore = target.value.substring(0, target.selectionStart);
-                          const linesBefore = textBefore.split('\n');
-                          setCursorLine(linesBefore.length);
-                          setCursorCol(linesBefore[linesBefore.length - 1].length + 1);
-                        }}
-                        className="editor-code-textarea"
-                        spellCheck={false}
-                        autoCapitalize="off"
-                        autoCorrect="off"
-                      />
-                    </div>
                   </div>
-                </div>
-
-                {/* Code Minimap (Right side) */}
-                <div className="vscode-minimap-pane">
-                  <div className="minimap-viewport-slider" />
-                  <div className="minimap-content">
-                    {codeLines.slice(0, 80).map((l, idx) => (
-                      <div
-                        key={idx}
-                        className="minimap-bar-line"
-                        style={{
-                          width: `${Math.min(95, Math.max(10, l.length * 1.4))}%`,
-                          backgroundColor: l.includes('function') || l.includes('const') ? '#38bdf8' : l.includes('console') ? '#facc15' : 'rgba(255,255,255,0.18)'
-                        }}
-                      />
-                    ))}
-                  </div>
-                </div>
+                )}
               </div>
             )
           ) : (
