@@ -754,8 +754,9 @@
 
 .cv-item-hidden {
   opacity: 0 !important;
+  transform: translateY(8px) scale(0.985);
   pointer-events: none !important;
-  transition: opacity 0.35s ease;
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 .cv-typing-caret {
@@ -773,8 +774,9 @@
 
 .cv-item-visible {
   opacity: 1 !important;
+  transform: translateY(0) scale(1) !important;
   pointer-events: auto !important;
-  transition: opacity 0.35s ease;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 .cv-stamp-pop {

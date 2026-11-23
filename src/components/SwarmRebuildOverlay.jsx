@@ -392,6 +392,10 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
     soundSynth.playChime();
     setCompleteBanner(true);
     setStatusMessage('✓ VarunOS Workspace Assembled & Ready!');
+    if (typeof window !== 'undefined') {
+      window.__varunos_rebuild_active = false;
+      window.__varunos_finder_step = 7;
+    }
     dispatchSidebarStep(15);
     dispatchToolbarStep({ step: 4, typedPath: 'Macintosh HD > Users > varun > Featured Works', typedSearch: 'Search in Finder...' });
     dispatchHeroBoxVisible(true);
@@ -454,6 +458,9 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
   useEffect(() => {
     isFinishedRef.current = false;
     startTimeRef.current = Date.now();
+    if (typeof window !== 'undefined') {
+      window.__varunos_rebuild_active = true;
+    }
     soundSynth.init();
     updateStage(0);
     wallpaperSnappedRef.current = false;
@@ -2628,6 +2635,10 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
     animFrameRef.current = requestAnimationFrame(loop);
     return () => {
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+      if (typeof window !== 'undefined') {
+        window.__varunos_rebuild_active = false;
+        window.__varunos_finder_step = 7;
+      }
     };
   }, []);
 

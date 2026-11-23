@@ -409,10 +409,11 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
     if (onReplaySwarm) onReplaySwarm();
   };
 
-  // Ensure Finder is cleanly prepared when entering rebuild mode
+  // Ensure Finder is cleanly prepared when entering rebuild mode, and fully restored when ready
   useEffect(() => {
     if (swarmStage < 5) {
       if (typeof window !== 'undefined' && swarmStage === 0) {
+        window.__varunos_rebuild_active = true;
         window.__varunos_finder_step = 0;
         window.__varunos_sidebar_step = 0;
         window.dispatchEvent(new CustomEvent('varunos-swarm-finder-step', { detail: { step: 0 } }));
@@ -424,6 +425,12 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
       setMaximizedWindows([]);
       setActiveWindow('finder');
       setWindowOrder(['finder']);
+    } else {
+      if (typeof window !== 'undefined') {
+        window.__varunos_rebuild_active = false;
+        window.__varunos_finder_step = 7;
+        window.dispatchEvent(new CustomEvent('varunos-swarm-finder-step', { detail: { step: 7 } }));
+      }
     }
   }, [swarmStage]);
 

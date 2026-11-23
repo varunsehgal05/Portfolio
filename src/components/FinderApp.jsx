@@ -118,11 +118,11 @@ const FinderApp = ({ onOpenApp }) => {
 
   // Staged reveal synchronized with Swarm Rebuild Phase 5
   const FULL_HERO_TITLE = "Designing intuitive web apps & modern interfaces";
+  const isRebuildActive = typeof window !== 'undefined' && Boolean(window.__varunos_rebuild_active);
   const [rebuildStep, setRebuildStep] = useState(() => {
     if (typeof window !== 'undefined') {
       const isDirect = Boolean(new URLSearchParams(window.location.search).get('app'));
-      if (isDirect) return 7;
-      // Default to 7 (fully built) unless an active rebuild explicitly set finder step to 0 or 1
+      if (isDirect || !window.__varunos_rebuild_active) return 7;
       return window.__varunos_finder_step !== undefined ? window.__varunos_finder_step : 7;
     }
     return 7;
@@ -130,7 +130,7 @@ const FinderApp = ({ onOpenApp }) => {
   const [sidebarStep, setSidebarStep] = useState(() => {
     if (typeof window !== 'undefined') {
       const isDirect = Boolean(new URLSearchParams(window.location.search).get('app'));
-      if (isDirect) return 15;
+      if (isDirect || !window.__varunos_rebuild_active) return 15;
       if (window.__varunos_finder_step !== undefined && window.__varunos_finder_step < 2) {
         return window.__varunos_sidebar_step !== undefined ? window.__varunos_sidebar_step : 0;
       }
@@ -138,18 +138,18 @@ const FinderApp = ({ onOpenApp }) => {
     }
     return 15;
   });
-  const [typedTitle, setTypedTitle] = useState(() => (window.__varunos_finder_step !== undefined && window.__varunos_finder_step < 2) ? '' : FULL_HERO_TITLE);
+  const [typedTitle, setTypedTitle] = useState(() => (isRebuildActive && window.__varunos_finder_step !== undefined && window.__varunos_finder_step < 2) ? '' : FULL_HERO_TITLE);
   const [toolbarStep, setToolbarStep] = useState(() => {
     if (typeof window !== 'undefined') {
       const isDirect = Boolean(new URLSearchParams(window.location.search).get('app'));
-      if (isDirect) return 4;
+      if (isDirect || !window.__varunos_rebuild_active) return 4;
       return (window.__varunos_finder_step !== undefined && window.__varunos_finder_step < 2) ? 0 : 4;
     }
     return 4;
   });
-  const [typedPath, setTypedPath] = useState(() => (window.__varunos_finder_step !== undefined && window.__varunos_finder_step < 2) ? '' : 'Macintosh HD > Users > varun > Featured Works');
-  const [typedSearch, setTypedSearch] = useState(() => (window.__varunos_finder_step !== undefined && window.__varunos_finder_step < 2) ? '' : 'Search in Finder...');
-  const [heroBoxVisible, setHeroBoxVisible] = useState(() => (window.__varunos_finder_step !== undefined && window.__varunos_finder_step < 2) ? false : true);
+  const [typedPath, setTypedPath] = useState(() => (isRebuildActive && window.__varunos_finder_step !== undefined && window.__varunos_finder_step < 2) ? '' : 'Macintosh HD > Users > varun > Featured Works');
+  const [typedSearch, setTypedSearch] = useState(() => (isRebuildActive && window.__varunos_finder_step !== undefined && window.__varunos_finder_step < 2) ? '' : 'Search in Finder...');
+  const [heroBoxVisible, setHeroBoxVisible] = useState(() => (isRebuildActive && window.__varunos_finder_step !== undefined && window.__varunos_finder_step < 2) ? false : true);
   const [cardBuildState, setCardBuildState] = useState({});
 
   useEffect(() => {
@@ -256,10 +256,21 @@ const FinderApp = ({ onOpenApp }) => {
       if (typeof e.detail?.step === 'number') {
         window.__varunos_finder_step = e.detail.step;
         setRebuildStep(e.detail.step);
+        if (e.detail.step >= 7) {
+          setSidebarStep(15);
+          setToolbarStep(4);
+          setTypedPath('Macintosh HD > Users > varun > Featured Works');
+          setTypedSearch('Search in Finder...');
+          setHeroBoxVisible(true);
+          setTypedTitle(FULL_HERO_TITLE);
+        }
       }
     };
     window.addEventListener('varunos-swarm-finder-step', handleStep);
-    return () => window.removeEventListener('varunos-swarm-finder-step', handleStep);
+    return () => {
+      window.removeEventListener('varunos-swarm-finder-step', handleStep);
+      window.__varunos_finder_step = 7;
+    };
   }, []);
 
   const handleNavClick = (tabId) => {

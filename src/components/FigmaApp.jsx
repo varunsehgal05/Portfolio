@@ -1342,9 +1342,13 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
             let nextX = p.x + deltaX;
             let nextY = p.y + deltaY;
 
-            // In Resume tab, constrain vertical scrolling within bounds so user never loses the notebook
+            // In Resume tab, allow full deep scrolling down through all project cards & contact footer (down to -5000px)
             if (activeTab === 'resume') {
-              nextY = Math.min(60, Math.max(-2300, nextY));
+              nextY = Math.min(80, Math.max(-5000, nextY));
+              // Keep horizontal position centered (Top-Mid) so notebook doesn't wander off-screen during vertical scroll
+              const stageW = containerRef.current?.clientWidth || 900;
+              const targetCenterX = Math.round((stageW - 1080 * zoom) / 2);
+              nextX = targetCenterX;
             }
 
             return { x: nextX, y: nextY };
@@ -2775,7 +2779,9 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     onScrollToTop={() => {
                       // Smoothly glide canvas pan back to top so user is dragged up to top-center of notebook
                       const stageW = containerRef.current?.clientWidth || 900;
-                      const targetX = Math.round((stageW - 1080 * zoom) / 2);
+                      const fitZoom = calculateFitZoom('resume', stageW);
+                      setZoom(fitZoom);
+                      const targetX = Math.round((stageW - 1080 * fitZoom) / 2);
                       const targetY = 36;
                       const startX = pan.x;
                       const startY = pan.y;
@@ -2786,8 +2792,8 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                         const progress = Math.min(1, elapsed / duration);
                         const eased = 1 - Math.pow(1 - progress, 3);
                         setPan({
-                          x: startX + (targetX - startX) * eased,
-                          y: startY + (targetY - startY) * eased
+                          x: Math.round(startX + (targetX - startX) * eased),
+                          y: Math.round(startY + (targetY - startY) * eased)
                         });
                         if (progress < 1) {
                           requestAnimationFrame(animateScroll);
@@ -3318,7 +3324,10 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                       className={`prop-align-btn ${selectedAlign === 'hcenter' ? 'active' : ''}`}
                       onClick={() => {
                         setSelectedAlign('hcenter');
-                        setPan(prev => ({ ...prev, x: 0 }));
+                        const stageW = containerRef.current?.clientWidth || 900;
+                        const dim = getTabDimensions(activeTab);
+                        const targetX = Math.round((stageW - dim.width * zoom) / 2);
+                        setPan(prev => ({ ...prev, x: targetX }));
                         showToast('Aligned Horizontal Center');
                       }}
                       title="Align Horizontal Center"

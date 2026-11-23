@@ -29,6 +29,8 @@ const KittuResumeApp = ({
   const [typedStat3, setTypedStat3] = useState('');
   const [typedWork, setTypedWork] = useState({});
   const [typedTimeline, setTypedTimeline] = useState('');
+  const [typedJobs, setTypedJobs] = useState({});
+  const [typedStudy, setTypedStudy] = useState({});
   const [typedProjects, setTypedProjects] = useState({});
   const [typedEmail, setTypedEmail] = useState('');
   const [activeCursors, setActiveCursors] = useState([]);
@@ -468,86 +470,299 @@ const KittuResumeApp = ({
       }, 6700);
     }
     else if (sectionKey === 'timeline') {
-      // Section: Where I've worked & Study (One by One)
+      // Section: Where I've worked & Study (Job by Job, Section by Section)
+      // Job 1: UniEvent (Stage 12)
       schedule(() => {
-        const box = getBox('.cv-timeline-wrap', { x: 28, y: 990, w: 1032, h: 380 });
+        const box0 = getBox('.cv-job:nth-child(1)', { x: 28, y: 990, w: 1032, h: 100 });
         setActiveCursors([
           {
             id: 'elena',
             name: 'Elena Rostova',
             color: '#F59E0B',
-            x: box.x,
-            y: box.y,
+            x: box0.x,
+            y: box0.y,
             tool: 'R',
-            chat: 'ruling timeline spine & education bounds',
+            chat: 'framing UniEvent timeline node',
+            action: 'Framing Job 1'
+          },
+          {
+            id: 'alex',
+            name: 'Alex Chen',
+            color: '#1ABCFE',
+            x: box0.x + box0.w + 16,
+            y: box0.y + 12,
+            tool: 'V',
+            chat: 'measuring spine baseline',
             action: 'Ruling Spine'
           }
         ]);
-        setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h, label: '❖ Experience & Education' });
-        setActiveGuides([]);
+        setActiveSelection({ x: box0.x, y: box0.y, w: box0.w, h: box0.h, label: '❖ Job [1/3] • UniEvent' });
+        setActiveGuides([{ type: 'v', x: box0.x + 12, y1: box0.y - 10, y2: box0.y + 360, label: 'Spine Baseline' }]);
       }, 100);
 
       schedule(() => {
-        const box = getBox('.cv-timeline-wrap', { x: 28, y: 990, w: 1032, h: 380 });
+        const box0 = getBox('.cv-job:nth-child(1)', { x: 28, y: 990, w: 1032, h: 100 });
         setActiveCursors([
           {
             id: 'varun',
             name: 'Varun Sehgal',
             color: '#A259FF',
-            x: box.x + 180,
-            y: box.y + 60,
+            x: box0.x + 180,
+            y: box0.y + 24,
             tool: 'T',
-            chat: 'typing UniEvent UI-UX role...',
-            action: 'Typing Role'
-          }
-        ]);
-      }, 1100);
-
-      typeText('UI-UX Designer, UniEvent', setTypedTimeline, 1250, 40);
-
-      schedule(() => {
-        const box = getBox('.cv-timeline-wrap', { x: 28, y: 990, w: 1032, h: 380 });
-        setActiveCursors([
+            chat: 'typing UI-UX Designer, UniEvent...',
+            action: 'Writing Job 1'
+          },
           {
             id: 'sarah',
             name: 'Sarah Lin',
             color: '#0ACF83',
-            x: box.x + 400,
-            y: box.y + 120,
+            x: box0.x + 440,
+            y: box0.y + 24,
             tool: '❖',
-            chat: 'stamping hackathon credentials & degree...',
-            action: 'Stamping Awards'
+            chat: 'stamping date tag: Jul 2026 — Nov 2026',
+            action: 'Stamping Date'
           }
         ]);
-      }, 2600);
+      }, 900);
+
+      typeText('UI-UX Designer, UniEvent', (t) => {
+        setTypedJobs(prev => ({ ...prev, 0: t }));
+        setTypedTimeline(t);
+      }, 1050, 36);
 
       schedule(() => {
         setBuildStage(s => Math.max(s, 12));
-        setActiveSelection(null);
-        const box = getBox('.cv-timeline-wrap', { x: 28, y: 990, w: 1032, h: 380 });
+      }, 2000);
+
+      // Job 2: Assemble (Stage 13)
+      schedule(() => {
+        const box1 = getBox('.cv-job:nth-child(2)', { x: 28, y: 1110, w: 1032, h: 100 });
         setActiveCursors([
           {
             id: 'elena',
             name: 'Elena Rostova',
             color: '#F59E0B',
-            x: box.x + 300,
-            y: box.y + box.h + 30,
+            x: box1.x,
+            y: box1.y,
+            tool: 'R',
+            chat: 'framing Assemble Esports node',
+            action: 'Framing Job 2'
+          },
+          {
+            id: 'sarah',
+            name: 'Sarah Lin',
+            color: '#0ACF83',
+            x: box1.x + 520,
+            y: box1.y + 24,
+            tool: '❖',
+            chat: 'stamping CODM Operations badge',
+            action: 'Stamping Badge'
+          }
+        ]);
+        setActiveSelection({ x: box1.x, y: box1.y, w: box1.w, h: box1.h, label: '❖ Job [2/3] • Assemble Esports' });
+        setActiveGuides([{ type: 'h', y: box1.y - 12, x1: box1.x, x2: box1.x + box1.w, label: 'ΔY: 20px Equal Gap' }]);
+      }, 2300);
+
+      schedule(() => {
+        const box1 = getBox('.cv-job:nth-child(2)', { x: 28, y: 1110, w: 1032, h: 100 });
+        setActiveCursors([
+          {
+            id: 'varun',
+            name: 'Varun Sehgal',
+            color: '#A259FF',
+            x: box1.x + 180,
+            y: box1.y + 24,
+            tool: 'T',
+            chat: 'typing Assistant Head of CODM Esports Operations...',
+            action: 'Writing Job 2'
+          }
+        ]);
+      }, 3100);
+
+      typeText('Assistant Head of CODM Esports Operations', (t) => setTypedJobs(prev => ({ ...prev, 1: t })), 3250, 32);
+
+      schedule(() => {
+        setBuildStage(s => Math.max(s, 13));
+      }, 4300);
+
+      // Job 3: Knaptix (Stage 14)
+      schedule(() => {
+        const box2 = getBox('.cv-job:nth-child(3)', { x: 28, y: 1230, w: 1032, h: 100 });
+        setActiveCursors([
+          {
+            id: 'elena',
+            name: 'Elena Rostova',
+            color: '#F59E0B',
+            x: box2.x,
+            y: box2.y,
+            tool: 'R',
+            chat: 'framing Knaptix Ventures node',
+            action: 'Framing Job 3'
+          },
+          {
+            id: 'sarah',
+            name: 'Sarah Lin',
+            color: '#0ACF83',
+            x: box2.x + 480,
+            y: box2.y + 24,
+            tool: '❖',
+            chat: 'stamping 10+ startups client badge',
+            action: 'Stamping Badge'
+          }
+        ]);
+        setActiveSelection({ x: box2.x, y: box2.y, w: box2.w, h: box2.h, label: '❖ Job [3/3] • Knaptix Ventures' });
+        setActiveGuides([{ type: 'h', y: box2.y - 12, x1: box2.x, x2: box2.x + box2.w, label: 'ΔY: 20px Equal Gap' }]);
+      }, 4600);
+
+      schedule(() => {
+        const box2 = getBox('.cv-job:nth-child(3)', { x: 28, y: 1230, w: 1032, h: 100 });
+        setActiveCursors([
+          {
+            id: 'varun',
+            name: 'Varun Sehgal',
+            color: '#A259FF',
+            x: box2.x + 180,
+            y: box2.y + 24,
+            tool: 'T',
+            chat: 'typing Operation internship...',
+            action: 'Writing Job 3'
+          }
+        ]);
+      }, 5300);
+
+      typeText('Operation internship', (t) => setTypedJobs(prev => ({ ...prev, 2: t })), 5450, 36);
+
+      schedule(() => {
+        setBuildStage(s => Math.max(s, 14));
+      }, 6400);
+
+      // Study Col 1: Education (Stage 15)
+      schedule(() => {
+        const boxCol1 = getBox('.cv-two > ul:nth-child(1)', { x: 28, y: 1380, w: 490, h: 150 });
+        setActiveCursors([
+          {
+            id: 'elena',
+            name: 'Elena Rostova',
+            color: '#F59E0B',
+            x: boxCol1.x,
+            y: boxCol1.y,
+            tool: 'R',
+            chat: 'framing Education column [490 × 150]',
+            action: 'Framing Education'
+          },
+          {
+            id: 'alex',
+            name: 'Alex Chen',
+            color: '#1ABCFE',
+            x: boxCol1.x + boxCol1.w + 12,
+            y: boxCol1.y + 20,
+            tool: 'V',
+            chat: 'holding 2-column grid guide',
+            action: 'Column Grid'
+          }
+        ]);
+        setActiveSelection({ x: boxCol1.x, y: boxCol1.y, w: boxCol1.w, h: boxCol1.h, label: '❖ Study • JUET B.Tech Degree' });
+        setActiveGuides([]);
+      }, 6700);
+
+      schedule(() => {
+        const boxCol1 = getBox('.cv-two > ul:nth-child(1)', { x: 28, y: 1380, w: 490, h: 150 });
+        setActiveCursors([
+          {
+            id: 'varun',
+            name: 'Varun Sehgal',
+            color: '#A259FF',
+            x: boxCol1.x + 24,
+            y: boxCol1.y + 20,
+            tool: 'T',
+            chat: 'typing B.Tech Computer Science...',
+            action: 'Writing Degree'
+          }
+        ]);
+      }, 7400);
+
+      typeText('B.Tech in Computer Science & Engineering', (t) => setTypedStudy(prev => ({ ...prev, 0: t })), 7550, 34);
+
+      schedule(() => {
+        setBuildStage(s => Math.max(s, 15));
+      }, 8700);
+
+      // Study Col 2: Honors & Toolkit (Stage 16)
+      schedule(() => {
+        const boxCol2 = getBox('.cv-two > ul:nth-child(2)', { x: 546, y: 1380, w: 490, h: 150 });
+        setActiveCursors([
+          {
+            id: 'sarah',
+            name: 'Sarah Lin',
+            color: '#0ACF83',
+            x: boxCol2.x + 20,
+            y: boxCol2.y + 16,
+            tool: '❖',
+            chat: 'stamping 🥈 HACKeThor 2nd Place medal & toolkit pills',
+            action: 'Stamping Medal'
+          },
+          {
+            id: 'elena',
+            name: 'Elena Rostova',
+            color: '#F59E0B',
+            x: boxCol2.x + boxCol2.w,
+            y: boxCol2.y,
+            tool: 'R',
+            chat: 'framing honors column bounds',
+            action: 'Framing Honors'
+          }
+        ]);
+        setActiveSelection({ x: boxCol2.x, y: boxCol2.y, w: boxCol2.w, h: boxCol2.h, label: '❖ Honors • National Hackathon' });
+        setActiveGuides([{ type: 'h', y: boxCol2.y + boxCol2.h, x1: 28, x2: 1060, label: 'Section Bottom' }]);
+      }, 9000);
+
+      schedule(() => {
+        const boxCol2 = getBox('.cv-two > ul:nth-child(2)', { x: 546, y: 1380, w: 490, h: 150 });
+        setActiveCursors([
+          {
+            id: 'varun',
+            name: 'Varun Sehgal',
+            color: '#A259FF',
+            x: boxCol2.x + 30,
+            y: boxCol2.y + 20,
+            tool: 'T',
+            chat: 'typing 🥈 HACKeThor 1st Runner-Up (2nd Place)...',
+            action: 'Writing Award'
+          }
+        ]);
+      }, 9700);
+
+      typeText('🥈 HACKeThor 1st Runner-Up (2nd Place)', (t) => setTypedStudy(prev => ({ ...prev, 1: t })), 9850, 34);
+
+      schedule(() => {
+        setBuildStage(s => Math.max(s, 16));
+        setActiveSelection(null);
+        setActiveGuides([]);
+        const boxWrap = getBox('.cv-timeline-wrap', { x: 28, y: 990, w: 1032, h: 540 });
+        setActiveCursors([
+          {
+            id: 'elena',
+            name: 'Elena Rostova',
+            color: '#F59E0B',
+            x: boxWrap.x + 250,
+            y: boxWrap.y + boxWrap.h + 30,
             tool: '✓',
-            chat: 'Experience ready! Scroll to Things I\'ve made',
+            chat: 'Experience & Study ready! Scroll down to Things I\'ve made',
             action: 'Ready'
           },
           {
             id: 'varun',
             name: 'Varun Sehgal',
             color: '#A259FF',
-            x: box.x + 500,
-            y: box.y + box.h + 30,
+            x: boxWrap.x + 500,
+            y: boxWrap.y + boxWrap.h + 30,
             tool: '↓',
             chat: '👇 Keep scrolling for Projects',
             action: 'Waiting'
           }
         ]);
-      }, 3800);
+      }, 11000);
     }
     else if (sectionKey === 'projects') {
       // Section: Things I've made (6 Projects - One by One)
@@ -589,7 +804,7 @@ const KittuResumeApp = ({
       typeText('CodeSrijan Hackathon Portal', (t) => setTypedProjects(prev => ({ ...prev, 0: t })), 1050, 38);
 
       schedule(() => {
-        setBuildStage(s => Math.max(s, 13));
+        setBuildStage(s => Math.max(s, 17));
       }, 2000);
 
       // Project 2: EventFlow
@@ -630,7 +845,7 @@ const KittuResumeApp = ({
       typeText('EventFlow Ticketing', (t) => setTypedProjects(prev => ({ ...prev, 1: t })), 3250, 38);
 
       schedule(() => {
-        setBuildStage(s => Math.max(s, 14));
+        setBuildStage(s => Math.max(s, 18));
       }, 4200);
 
       // Project 3: AI Interview
@@ -672,7 +887,7 @@ const KittuResumeApp = ({
       typeText('AI Interview Studio', (t) => setTypedProjects(prev => ({ ...prev, 2: t })), 5450, 38);
 
       schedule(() => {
-        setBuildStage(s => Math.max(s, 15));
+        setBuildStage(s => Math.max(s, 19));
       }, 6400);
 
       // Project 4: Expensify
@@ -714,7 +929,7 @@ const KittuResumeApp = ({
       typeText('Expensify Budget', (t) => setTypedProjects(prev => ({ ...prev, 3: t })), 7650, 38);
 
       schedule(() => {
-        setBuildStage(s => Math.max(s, 16));
+        setBuildStage(s => Math.max(s, 20));
       }, 8600);
 
       // Project 5: Movie Tickets
@@ -756,7 +971,7 @@ const KittuResumeApp = ({
       typeText('Movie Tickets App', (t) => setTypedProjects(prev => ({ ...prev, 4: t })), 9850, 38);
 
       schedule(() => {
-        setBuildStage(s => Math.max(s, 17));
+        setBuildStage(s => Math.max(s, 21));
       }, 10800);
 
       // Project 6: SaaS Landing
@@ -798,7 +1013,7 @@ const KittuResumeApp = ({
       typeText('SaaS Landing Pages', (t) => setTypedProjects(prev => ({ ...prev, 5: t })), 12050, 38);
 
       schedule(() => {
-        setBuildStage(s => Math.max(s, 18));
+        setBuildStage(s => Math.max(s, 22));
         setActiveSelection(null);
         setActiveGuides([]);
         const box6 = getBox('.cv-made > li:nth-child(6)', { x: 372, y: 2035, w: 320, h: 240 });
@@ -881,12 +1096,12 @@ const KittuResumeApp = ({
       }, 2400);
 
       schedule(() => {
-        setBuildStage(s => Math.max(s, 19));
+        setBuildStage(s => Math.max(s, 23));
       }, 3200);
 
-      // Stage 20: Celebration
+      // Stage 24: Celebration & Complete
       schedule(() => {
-        setBuildStage(20);
+        setBuildStage(24);
         setActiveCursors([
           {
             id: 'elena',
@@ -913,10 +1128,10 @@ const KittuResumeApp = ({
         setActiveGuides([]);
       }, 3600);
 
-      // Stage 21: Done
+      // Stage 24: Done
       schedule(() => {
         setIsBuilding(false);
-        setBuildStage(21);
+        setBuildStage(24);
         setActiveCursors([]);
         setActiveSelection(null);
         setActiveGuides([]);
@@ -924,34 +1139,35 @@ const KittuResumeApp = ({
     }
   };
 
-  // Progressive scroll trigger throttled to avoid layout thrashing
+  // Progressive scroll trigger with seamless cascade (never blocks or stalls scrolling)
   useEffect(() => {
     if (!isBuilding) return;
-    // Lower sections MUST NOT start until the top section (Stage 8) is fully finished!
-    if (buildStage < 8) return;
 
     const effectiveScroll = Math.max(0, -(canvasPan?.y || 0));
 
-    // Check if element has actually entered the visible viewport
+    // Check if element has entered the visible viewport or scrolled past threshold
     const checkInView = (selector, threshold) => {
       if (effectiveScroll > threshold) return true;
       if (!containerRef.current) return false;
       const el = containerRef.current.querySelector(selector);
       if (!el) return false;
       const rect = el.getBoundingClientRect();
-      return rect.top < window.innerHeight - 80 && rect.bottom > 80;
+      return rect.top < window.innerHeight - 60 && rect.bottom > 60;
     };
 
-    if (!sectionsTriggeredRef.current.workOn && checkInView('#cv-work-on', 480)) {
+    if (!sectionsTriggeredRef.current.workOn && checkInView('#cv-work-on, [aria-labelledby="cv-work-on"]', 240)) {
       triggerSection('workOn');
     }
-    if (!sectionsTriggeredRef.current.timeline && sectionsTriggeredRef.current.workOn && checkInView('#cv-timeline', 950)) {
+    if (!sectionsTriggeredRef.current.timeline && checkInView('.cv-timeline, #cv-work', 580)) {
+      if (!sectionsTriggeredRef.current.workOn) triggerSection('workOn');
       triggerSection('timeline');
     }
-    if (!sectionsTriggeredRef.current.projects && sectionsTriggeredRef.current.timeline && checkInView('#cv-projects', 1500)) {
+    if (!sectionsTriggeredRef.current.projects && checkInView('.cv-made, #cv-made', 1050)) {
+      if (!sectionsTriggeredRef.current.timeline) triggerSection('timeline');
       triggerSection('projects');
     }
-    if (!sectionsTriggeredRef.current.contact && sectionsTriggeredRef.current.projects && checkInView('#cv-contact', 2000)) {
+    if (!sectionsTriggeredRef.current.contact && checkInView('.cv-contact, #cv-contact', 1600)) {
+      if (!sectionsTriggeredRef.current.projects) triggerSection('projects');
       triggerSection('contact');
     }
   }, [canvasPan?.y, isBuilding, buildStage]);
@@ -966,11 +1182,20 @@ const KittuResumeApp = ({
   const skipBuild = () => {
     clearTimeouts();
     setIsBuilding(false);
-    setBuildStage(21);
+    setBuildStage(24);
     setTypedName('Varun Sehgal');
     setTypedLede('I study and craft friction-free product experiences: tactile, beautiful, and fast.');
     setTypedWork({ 0: 'Product Design & Systems', 1: 'Tactile Hi-Fi Prototyping', 2: 'Design Engineering' });
     setTypedTimeline('UI-UX Designer, UniEvent');
+    setTypedJobs({
+      0: 'UI-UX Designer, UniEvent',
+      1: 'Assistant Head of CODM Esports Operations',
+      2: 'Operation internship'
+    });
+    setTypedStudy({
+      0: 'B.Tech in Computer Science & Engineering',
+      1: '🥈 HACKeThor 1st Runner-Up (2nd Place)'
+    });
     setTypedProjects({
       0: 'CodeSrijan Hackathon Portal',
       1: 'EventFlow Ticketing',
@@ -1061,7 +1286,7 @@ const KittuResumeApp = ({
         {/* Collaborative Cursors Overlay when build is running */}
         {isBuilding && (
           <div className="cv-cursors" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 100 }}>
-            {/* Active Selection Box */}
+            {/* Active Selection Box (Clean Figma vector frame, zero duplicate tags) */}
             {activeSelection && (
               <div
                 className="cv-sel"
@@ -1078,23 +1303,6 @@ const KittuResumeApp = ({
                   pointerEvents: 'none'
                 }}
               >
-                <span
-                  style={{
-                    position: 'absolute',
-                    top: '-22px',
-                    left: 0,
-                    background: '#1ABCFE',
-                    color: '#ffffff',
-                    fontSize: '10px',
-                    fontWeight: '700',
-                    padding: '2px 6px',
-                    borderRadius: '3px',
-                    fontFamily: 'ui-monospace, monospace',
-                    whiteSpace: 'nowrap'
-                  }}
-                >
-                  {activeSelection.label}
-                </span>
                 <span style={{ position: 'absolute', top: '-4px', left: '-4px', width: '8px', height: '8px', background: '#ffffff', border: '1.5px solid #1ABCFE' }} />
                 <span style={{ position: 'absolute', top: '-4px', right: '-4px', width: '8px', height: '8px', background: '#ffffff', border: '1.5px solid #1ABCFE' }} />
                 <span style={{ position: 'absolute', bottom: '-4px', left: '-4px', width: '8px', height: '8px', background: '#ffffff', border: '1.5px solid #1ABCFE' }} />
@@ -1327,20 +1535,16 @@ const KittuResumeApp = ({
             </div>
           </section>
 
-          {/* SECTION 3: WHERE I'VE WORKED & SECTION 4: STUDY (Stage 12) */}
-          <div className={`cv-timeline-wrap ${isBuilding && !typedTimeline && buildStage < 12 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+          {/* SECTION 3: WHERE I'VE WORKED & SECTION 4: STUDY (Stages 12, 13, 14, 15, 16) */}
+          <div className="cv-timeline-wrap">
             <section className="cv-section" aria-labelledby="cv-work">
-              <h2 id="cv-work" className="cv-section-title">Where I've worked</h2>
+              <h2 id="cv-work" className={`cv-section-title ${isBuilding && !typedJobs[0] && buildStage < 12 ? 'cv-item-hidden' : 'cv-item-visible'}`}>Where I've worked</h2>
               <ol className="cv-timeline">
-                <li className="cv-job">
+                <li className={`cv-job ${isBuilding && !typedJobs[0] && buildStage < 12 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                   <p className="cv-job-head">
                     <strong>
-                      {typedTimeline ? (
-                        <>
-                          {typedTimeline}
-                          {isBuilding && buildStage < 12 && <span className="cv-typing-caret">|</span>}
-                        </>
-                      ) : (!isBuilding ? 'UI-UX Designer, UniEvent' : '\u00A0')}
+                      {typedJobs[0] || typedTimeline || (!isBuilding ? 'UI-UX Designer, UniEvent' : '\u00A0')}
+                      {isBuilding && buildStage < 12 && (typedJobs[0] || typedTimeline) && <span className="cv-typing-caret">|</span>}
                     </strong>
                   </p>
                   <p className="cv-job-meta">Jul 2026 — Nov 2026 • 5 Mos, Punjab, India (Remote)</p>
@@ -1350,23 +1554,31 @@ const KittuResumeApp = ({
                   </ul>
                 </li>
 
-                <li className="cv-job">
+                <li className={`cv-job ${isBuilding && !typedJobs[1] && buildStage < 13 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                   <p className="cv-job-head">
-                    <strong>Assistant Head of CODM Esports Operations</strong>, Assemble
+                    <strong>
+                      {typedJobs[1] || (!isBuilding ? 'Assistant Head of CODM Esports Operations' : '\u00A0')}
+                      {isBuilding && buildStage < 13 && typedJobs[1] && <span className="cv-typing-caret">|</span>}
+                    </strong>
+                    {!isBuilding || buildStage >= 13 ? ', Assemble' : ''}
                   </p>
                   <p className="cv-job-meta">Aug 2025 — Jan 2026 • 6 Mos, Bharatpur, Rajasthan, India (Remote)</p>
-                  <ul>
+                  <ul className={`${isBuilding && buildStage < 13 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                     <li>Assisted in the planning and smooth execution of CODM tournaments and esports events.</li>
                     <li>Designed collaborative creator workspace tools and interaction prototypes in Figma.</li>
                   </ul>
                 </li>
 
-                <li className="cv-job">
+                <li className={`cv-job ${isBuilding && !typedJobs[2] && buildStage < 14 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                   <p className="cv-job-head">
-                    <strong>Operation internship</strong>, Knaptix Ventures Private Limited
+                    <strong>
+                      {typedJobs[2] || (!isBuilding ? 'Operation internship' : '\u00A0')}
+                      {isBuilding && buildStage < 14 && typedJobs[2] && <span className="cv-typing-caret">|</span>}
+                    </strong>
+                    {!isBuilding || buildStage >= 14 ? ', Knaptix Ventures Private Limited' : ''}
                   </p>
                   <p className="cv-job-meta">Jun 2025 — Aug 2025 • 3 Mos, Pune District, Maharashtra, India (Remote)</p>
-                  <ul>
+                  <ul className={`${isBuilding && buildStage < 14 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                     <li>Operations support, brand identities, and conversion-focused SaaS landing pages for 10+ tech startups with a 95% client retention rate.</li>
                   </ul>
                 </li>
@@ -1374,11 +1586,14 @@ const KittuResumeApp = ({
             </section>
 
             <section className="cv-section" aria-labelledby="cv-study">
-              <h2 id="cv-study" className="cv-section-title">Study, and the rest</h2>
+              <h2 id="cv-study" className={`cv-section-title ${isBuilding && !typedStudy[0] && buildStage < 15 ? 'cv-item-hidden' : 'cv-item-visible'}`}>Study, and the rest</h2>
               <div className="cv-two">
-                <ul className="cv-plain">
+                <ul className={`cv-plain ${isBuilding && !typedStudy[0] && buildStage < 15 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                   <li className="cv-entry">
-                    <strong>B.Tech in Computer Science &amp; Engineering</strong>
+                    <strong>
+                      {typedStudy[0] || (!isBuilding ? 'B.Tech in Computer Science & Engineering' : '\u00A0')}
+                      {isBuilding && buildStage < 15 && typedStudy[0] && <span className="cv-typing-caret">|</span>}
+                    </strong>
                     <span>Jaypee University of Engineering &amp; Technology (JUET), Guna</span>
                     <span className="cv-soft">2023 — 2027</span>
                   </li>
@@ -1389,9 +1604,12 @@ const KittuResumeApp = ({
                   </li>
                 </ul>
 
-                <ul className="cv-plain">
+                <ul className={`cv-plain ${isBuilding && !typedStudy[1] && buildStage < 16 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                   <li className="cv-entry">
-                    <strong>🥈 HACKeThor 1st Runner-Up (2nd Place)</strong>
+                    <strong>
+                      {typedStudy[1] || (!isBuilding ? '🥈 HACKeThor 1st Runner-Up (2nd Place)' : '\u00A0')}
+                      {isBuilding && buildStage < 16 && typedStudy[1] && <span className="cv-typing-caret">|</span>}
+                    </strong>
                     <span>Awarded 1st Runner-Up (2nd Place) in National Level Hackathon organized by Unstop out of 500+ participants.</span>
                   </li>
                   <li className="cv-entry">
@@ -1407,14 +1625,14 @@ const KittuResumeApp = ({
             </section>
           </div>
 
-          {/* SECTION 5: THINGS I'VE MADE - Sequentially stamped one by one (Stages 13, 14, 15, 16, 17, 18) */}
+          {/* SECTION 5: THINGS I'VE MADE - Sequentially stamped one by one (Stages 17, 18, 19, 20, 21, 22) */}
           <section className="cv-section" aria-labelledby="cv-made">
-            <h2 id="cv-made" className={`cv-section-title ${isBuilding && !typedProjects[0] && buildStage < 13 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+            <h2 id="cv-made" className={`cv-section-title ${isBuilding && !typedProjects[0] && buildStage < 17 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
               Things I've made
             </h2>
             <ul className="cv-made">
-              {/* Big Featured Card: CodeSrijan (Stage 13) */}
-              <li className={`cv-made-big ${isBuilding && !typedProjects[0] && buildStage < 13 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+              {/* Big Featured Card: CodeSrijan (Stage 17) */}
+              <li className={`cv-made-big ${isBuilding && !typedProjects[0] && buildStage < 17 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                 <div className="cv-made-card">
                   <a
                     href="https://www.figma.com/design/hCaNWKm2qTY2kQ0KOZRywa/M-1?node-id=40-2&t=vfPIBYY278lzphVq-1"
@@ -1439,13 +1657,13 @@ const KittuResumeApp = ({
                     >
                       <strong>
                         {typedProjects[0] || (!isBuilding ? 'CodeSrijan Hackathon Portal' : '\u00A0')}
-                        {isBuilding && buildStage < 13 && typedProjects[0] && <span className="cv-typing-caret">|</span>}
+                        {isBuilding && buildStage < 17 && typedProjects[0] && <span className="cv-typing-caret">|</span>}
                       </strong>
                     </a>
-                    <span className={`${isBuilding && buildStage < 13 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                    <span className={`${isBuilding && buildStage < 17 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                       Full-stack live hackathon platform designed for Jaypee University. Features team matchmaking, rubric evaluation, and real-time announcements.
                     </span>
-                    <div className={`cv-card-actions ${isBuilding && buildStage < 13 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                    <div className={`cv-card-actions ${isBuilding && buildStage < 17 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                       <a
                         href="https://www.figma.com/design/hCaNWKm2qTY2kQ0KOZRywa/M-1?node-id=40-2&t=vfPIBYY278lzphVq-1"
                         target="_blank"
@@ -1471,7 +1689,7 @@ const KittuResumeApp = ({
                         <span>Live Site ↗</span>
                       </a>
                     </div>
-                    <div className={`cv-project-tags ${isBuilding && buildStage < 13 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                    <div className={`cv-project-tags ${isBuilding && buildStage < 17 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                       <span className="cv-tag next">Next.js</span>
                       <span className="cv-tag live">Vercel Live</span>
                     </div>
@@ -1479,8 +1697,8 @@ const KittuResumeApp = ({
                 </div>
               </li>
 
-              {/* Card 2: EventFlow (Stage 14) */}
-              <li className={`${isBuilding && !typedProjects[1] && buildStage < 14 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+              {/* Card 2: EventFlow (Stage 18) */}
+              <li className={`${isBuilding && !typedProjects[1] && buildStage < 18 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                 <div className="cv-made-card">
                   <a
                     href="https://www.figma.com/design/29nTBBWxZfoOKdFnOaQWbq/EventFlow?node-id=2-2&p=f&t=ucsh4jF84sBl50UA-0"
@@ -1503,13 +1721,13 @@ const KittuResumeApp = ({
                   >
                     <strong>
                       {typedProjects[1] || (!isBuilding ? 'EventFlow Ticketing' : '\u00A0')}
-                      {isBuilding && buildStage < 14 && typedProjects[1] && <span className="cv-typing-caret">|</span>}
+                      {isBuilding && buildStage < 18 && typedProjects[1] && <span className="cv-typing-caret">|</span>}
                     </strong>
                   </a>
-                  <span className={`${isBuilding && buildStage < 14 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                  <span className={`${isBuilding && buildStage < 18 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                     Campus event discovery &amp; instant booking platform with 30% reduced drop-off.
                   </span>
-                  <div className={`cv-card-actions ${isBuilding && buildStage < 14 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                  <div className={`cv-card-actions ${isBuilding && buildStage < 18 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                     <a
                       href="https://www.figma.com/design/29nTBBWxZfoOKdFnOaQWbq/EventFlow?node-id=2-2&p=f&t=ucsh4jF84sBl50UA-0"
                       target="_blank"
@@ -1526,15 +1744,15 @@ const KittuResumeApp = ({
                       <span>Figma Design ↗</span>
                     </a>
                   </div>
-                  <div className={`cv-project-tags ${isBuilding && buildStage < 14 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                  <div className={`cv-project-tags ${isBuilding && buildStage < 18 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                     <span className="cv-tag saas">Design System</span>
                     <span className="cv-tag">SaaS Checkout</span>
                   </div>
                 </div>
               </li>
 
-              {/* Card 3: AI Interview (Stage 15) */}
-              <li className={`${isBuilding && !typedProjects[2] && buildStage < 15 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+              {/* Card 3: AI Interview (Stage 19) */}
+              <li className={`${isBuilding && !typedProjects[2] && buildStage < 19 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                 <div className="cv-made-card">
                   <a
                     href="https://www.figma.com/design/ezDh2NmBto6iv7xaQNs3Ha/AI-Interview?node-id=11-1842&t=siyh0b32g2XWrRNe-1"
@@ -1557,13 +1775,13 @@ const KittuResumeApp = ({
                   >
                     <strong>
                       {typedProjects[2] || (!isBuilding ? 'AI Interview Studio' : '\u00A0')}
-                      {isBuilding && buildStage < 15 && typedProjects[2] && <span className="cv-typing-caret">|</span>}
+                      {isBuilding && buildStage < 19 && typedProjects[2] && <span className="cv-typing-caret">|</span>}
                     </strong>
                   </a>
-                  <span className={`${isBuilding && buildStage < 15 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                  <span className={`${isBuilding && buildStage < 19 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                     Interactive question generator and audio mock-interview coach UI in Figma.
                   </span>
-                  <div className={`cv-card-actions ${isBuilding && buildStage < 15 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                  <div className={`cv-card-actions ${isBuilding && buildStage < 19 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                     <a
                       href="https://www.figma.com/design/ezDh2NmBto6iv7xaQNs3Ha/AI-Interview?node-id=11-1842&t=siyh0b32g2XWrRNe-1"
                       target="_blank"
@@ -1580,14 +1798,14 @@ const KittuResumeApp = ({
                       <span>Figma Design ↗</span>
                     </a>
                   </div>
-                  <div className={`cv-project-tags ${isBuilding && buildStage < 15 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                  <div className={`cv-project-tags ${isBuilding && buildStage < 19 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                     <span className="cv-tag ai">AI UX</span>
                   </div>
                 </div>
               </li>
 
-              {/* Card 4: Expensify (Stage 16) */}
-              <li className={`${isBuilding && !typedProjects[3] && buildStage < 16 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+              {/* Card 4: Expensify (Stage 20) */}
+              <li className={`${isBuilding && !typedProjects[3] && buildStage < 20 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                 <div className="cv-made-card">
                   <a
                     href="https://www.figma.com/design/3mw8XBHEZ3b8HKNNqcs6U2/Expensify---Budget-Tracker-App?node-id=135-318&t=gUJEMUlyDc8ERNeR-1"
@@ -1610,13 +1828,13 @@ const KittuResumeApp = ({
                   >
                     <strong>
                       {typedProjects[3] || (!isBuilding ? 'Expensify Budget' : '\u00A0')}
-                      {isBuilding && buildStage < 16 && typedProjects[3] && <span className="cv-typing-caret">|</span>}
+                      {isBuilding && buildStage < 20 && typedProjects[3] && <span className="cv-typing-caret">|</span>}
                     </strong>
                   </a>
-                  <span className={`${isBuilding && buildStage < 16 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                  <span className={`${isBuilding && buildStage < 20 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                     Mobile personal finance app prototype with gesture-driven expense tagging.
                   </span>
-                  <div className={`cv-card-actions ${isBuilding && buildStage < 16 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                  <div className={`cv-card-actions ${isBuilding && buildStage < 20 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                     <a
                       href="https://www.figma.com/design/3mw8XBHEZ3b8HKNNqcs6U2/Expensify---Budget-Tracker-App?node-id=135-318&t=gUJEMUlyDc8ERNeR-1"
                       target="_blank"
@@ -1633,15 +1851,15 @@ const KittuResumeApp = ({
                       <span>Figma Design ↗</span>
                     </a>
                   </div>
-                  <div className={`cv-project-tags ${isBuilding && buildStage < 16 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                  <div className={`cv-project-tags ${isBuilding && buildStage < 20 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                     <span className="cv-tag fintech">Fintech</span>
                     <span className="cv-tag">Mobile UX</span>
                   </div>
                 </div>
               </li>
 
-              {/* Card 5: Movie Tickets (Stage 17) */}
-              <li className={`${isBuilding && !typedProjects[4] && buildStage < 17 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+              {/* Card 5: Movie Tickets (Stage 21) */}
+              <li className={`${isBuilding && !typedProjects[4] && buildStage < 21 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                 <div className="cv-made-card">
                   <a
                     href="https://www.figma.com/design/0cJQWX8qYssPfK4hmPtdVj/Movie-Ticket-Booking-App-Design?node-id=31-86&t=Jd933TVzkrlBb4MQ-1"
@@ -1664,13 +1882,13 @@ const KittuResumeApp = ({
                   >
                     <strong>
                       {typedProjects[4] || (!isBuilding ? 'Movie Tickets App' : '\u00A0')}
-                      {isBuilding && buildStage < 17 && typedProjects[4] && <span className="cv-typing-caret">|</span>}
+                      {isBuilding && buildStage < 21 && typedProjects[4] && <span className="cv-typing-caret">|</span>}
                     </strong>
                   </a>
-                  <span className={`${isBuilding && buildStage < 17 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                  <span className={`${isBuilding && buildStage < 21 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                     Dynamic seat-selection matrix and trailer preview interaction flow.
                   </span>
-                  <div className={`cv-card-actions ${isBuilding && buildStage < 17 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                  <div className={`cv-card-actions ${isBuilding && buildStage < 21 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                     <a
                       href="https://www.figma.com/design/0cJQWX8qYssPfK4hmPtdVj/Movie-Ticket-Booking-App-Design?node-id=31-86&t=Jd933TVzkrlBb4MQ-1"
                       target="_blank"
@@ -1687,14 +1905,14 @@ const KittuResumeApp = ({
                       <span>Figma Design ↗</span>
                     </a>
                   </div>
-                  <div className={`cv-project-tags ${isBuilding && buildStage < 17 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                  <div className={`cv-project-tags ${isBuilding && buildStage < 21 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                     <span className="cv-tag">Interactive Proto</span>
                   </div>
                 </div>
               </li>
 
-              {/* Card 6: SaaS Landing (Stage 18) */}
-              <li className={`${isBuilding && !typedProjects[5] && buildStage < 18 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+              {/* Card 6: SaaS Landing (Stage 22) */}
+              <li className={`${isBuilding && !typedProjects[5] && buildStage < 22 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                 <div className="cv-made-card">
                   <a
                     href="https://www.figma.com/design/WfUzGPYsE7UFYS9YaQp5v6/home-page?node-id=0-1&p=f&t=cA3tERTu8AuInovg-0"
@@ -1717,13 +1935,13 @@ const KittuResumeApp = ({
                   >
                     <strong>
                       {typedProjects[5] || (!isBuilding ? 'SaaS Landing Pages' : '\u00A0')}
-                      {isBuilding && buildStage < 18 && typedProjects[5] && <span className="cv-typing-caret">|</span>}
+                      {isBuilding && buildStage < 22 && typedProjects[5] && <span className="cv-typing-caret">|</span>}
                     </strong>
                   </a>
-                  <span className={`${isBuilding && buildStage < 18 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                  <span className={`${isBuilding && buildStage < 22 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                     High-converting responsive landing pages built for 10+ international tech startups.
                   </span>
-                  <div className={`cv-card-actions ${isBuilding && buildStage < 18 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                  <div className={`cv-card-actions ${isBuilding && buildStage < 22 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                     <a
                       href="https://www.figma.com/design/WfUzGPYsE7UFYS9YaQp5v6/home-page?node-id=0-1&p=f&t=cA3tERTu8AuInovg-0"
                       target="_blank"
@@ -1740,7 +1958,7 @@ const KittuResumeApp = ({
                       <span>Figma Design ↗</span>
                     </a>
                   </div>
-                  <div className={`cv-project-tags ${isBuilding && buildStage < 18 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                  <div className={`cv-project-tags ${isBuilding && buildStage < 22 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                     <span className="cv-tag saas">Conversion</span>
                   </div>
                 </div>
@@ -1748,14 +1966,14 @@ const KittuResumeApp = ({
             </ul>
           </section>
 
-          {/* SECTION 6: SAY HELLO (Stage 19) */}
-          <section className={`cv-section cv-contact ${isBuilding && !typedEmail && buildStage < 19 ? 'cv-item-hidden' : 'cv-item-visible'}`} aria-labelledby="cv-contact">
+          {/* SECTION 6: SAY HELLO (Stage 23) */}
+          <section className={`cv-section cv-contact ${isBuilding && !typedEmail && buildStage < 23 ? 'cv-item-hidden' : 'cv-item-visible'}`} aria-labelledby="cv-contact">
             <h2 id="cv-contact" className="cv-section-title">Say hello</h2>
             <p>For product design roles, design systems, or collaboration, write to me:</p>
             <p className="cv-email-line">
               <a className="cv-email" href="mailto:varun.sehgal02@gmail.com">
                 {typedEmail || (!isBuilding ? 'varun.sehgal02@gmail.com' : '\u00A0')}
-                {isBuilding && buildStage < 19 && typedEmail && <span className="cv-typing-caret">|</span>}
+                {isBuilding && buildStage < 23 && typedEmail && <span className="cv-typing-caret">|</span>}
               </a>
               <button type="button" className="cv-copy-btn" onClick={copyEmail}>
                 {copied ? '✓ Copied!' : 'Copy'}
@@ -1769,8 +1987,8 @@ const KittuResumeApp = ({
           </section>
         </main>
 
-        {/* FOOTER (Stage 20) */}
-        <footer className={`cv-footer ${isBuilding && buildStage < 20 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+        {/* FOOTER (Stage 24) */}
+        <footer className={`cv-footer ${isBuilding && buildStage < 24 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
           <p>© 2026 Varun Sehgal. Built live, by a crowd of cursors.</p>
           <button type="button" className="cv-replay-btn cv-remake-btn" onClick={replayBuild} title="Remake the notebook from scratch">
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
