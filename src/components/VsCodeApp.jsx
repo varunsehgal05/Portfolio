@@ -556,6 +556,164 @@ const vibecodingSpeedup = 10; // 10x engineering velocity
 console.log(\`⚡ Vibecoding Factor: \${vibecodingSpeedup}x faster than traditional hand-coding!\`);
 `;
 
+// package.json configuration
+const PACKAGE_JSON_CODE = `{
+  "name": "destop-portflio",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "author": "Varun Sehgal <varunsehgal@gmail.com>",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.4.7",
+    "lucide-react": "^0.475.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwind-merge": "^3.0.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.3",
+    "vite": "^8.3.2"
+  }
+}
+`;
+
+// src/utils/animations.ts
+const ANIMATIONS_TS_CODE = `// src/utils/animations.ts — Micro-interaction & Motion Presets
+// VarunOS Physics-based Spring Configurations
+
+export const springSmooth = {
+  type: "spring",
+  stiffness: 380,
+  damping: 30,
+  mass: 0.8
+};
+
+export const springBouncy = {
+  type: "spring",
+  stiffness: 500,
+  damping: 25,
+  mass: 0.5
+};
+
+export const fadeInUp = {
+  initial: { opacity: 0, y: 16 },
+  animate: { opacity: 1, y: 0, transition: springSmooth },
+  exit: { opacity: 0, y: -12, transition: { duration: 0.15 } }
+};
+
+export const staggerContainer = (staggerChildren = 0.06, delayChildren = 0) => ({
+  initial: {},
+  animate: {
+    transition: {
+      staggerChildren,
+      delayChildren
+    }
+  }
+});
+
+console.log("Animation physics tokens loaded: springSmooth, springBouncy, fadeInUp, staggerContainer.");
+`;
+
+// src/utils/formatters.ts
+const FORMATTERS_TS_CODE = `// src/utils/formatters.ts — String & Numerical Utility Functions
+// Crafted for VarunOS telemetry and metric calculations
+
+export function formatBytes(bytes, decimals = 1) {
+  if (bytes === 0) return '0 B';
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return \`\${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} \${sizes[i]}\`;
+}
+
+export function formatCurrency(amount) {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: 0
+  }).format(amount);
+}
+
+export function formatDate(date = new Date()) {
+  return new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  }).format(date);
+}
+
+// Quick Test Execution
+console.log("Format 847400000000 bytes:", formatBytes(847400000000));
+console.log("Format $5,000 prize pool:", formatCurrency(5000));
+console.log("Today's Date:", formatDate());
+`;
+
+// src/utils/cn.ts
+const CN_TS_CODE = `// src/utils/cn.ts — ClassName merging utility for Tailwind CSS
+import { clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
+export function cn(...inputs) {
+  return twMerge(clsx(inputs));
+}
+
+console.log("Utility cn() ready for dynamic Tailwind class synthesis.");
+`;
+
+// src/hooks/useTheme.ts
+const USE_THEME_TS_CODE = `// src/hooks/useTheme.ts — Dynamic Theme Management Hook
+import { useState, useEffect } from 'react';
+
+export function useTheme() {
+  const [theme, setTheme] = useState('dark');
+
+  const toggleTheme = () => {
+    setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
+  };
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+
+  return { theme, toggleTheme, isDark: theme === 'dark' };
+}
+
+console.log("useTheme hook initialized with default 'dark' mode.");
+`;
+
+// src/hooks/useSwarm.ts
+const USE_SWARM_TS_CODE = `// src/hooks/useSwarm.ts — Multi-Agent Swarm Telemetry Hook
+import { useState } from 'react';
+
+export function useSwarm() {
+  const [workers] = useState([
+    { id: 'agent-1', role: 'Framing', status: 'working', progress: 85 },
+    { id: 'agent-2', role: 'Typing', status: 'working', progress: 92 },
+    { id: 'agent-3', role: 'Stamping', status: 'working', progress: 78 }
+  ]);
+
+  return {
+    workers,
+    activeCount: workers.filter(w => w.status === 'working').length
+  };
+}
+
+console.log("useSwarm hook initialized with 3 active concurrent agents.");
+`;
+
 // Initial files dictionary
 const INITIAL_PROJECT_FILES = {
   'Live Preview: CodeSrijan': {
@@ -582,7 +740,7 @@ const INITIAL_PROJECT_FILES = {
   },
   'AboutMe.tsx': {
     name: 'AboutMe.tsx',
-    path: 'src > profile > ⚛ AboutMe.tsx',
+    path: 'src > components > ⚛ AboutMe.tsx',
     icon: 'jsx',
     lang: 'TypeScript React',
     code: ABOUT_ME_CODE
@@ -629,12 +787,54 @@ const INITIAL_PROJECT_FILES = {
     lang: 'JavaScript',
     code: DEFAULT_APP_JS
   },
+  'animations.ts': {
+    name: 'animations.ts',
+    path: 'src > utils > animations.ts',
+    icon: 'ts',
+    lang: 'TypeScript',
+    code: ANIMATIONS_TS_CODE
+  },
+  'formatters.ts': {
+    name: 'formatters.ts',
+    path: 'src > utils > formatters.ts',
+    icon: 'ts',
+    lang: 'TypeScript',
+    code: FORMATTERS_TS_CODE
+  },
+  'cn.ts': {
+    name: 'cn.ts',
+    path: 'src > utils > cn.ts',
+    icon: 'ts',
+    lang: 'TypeScript',
+    code: CN_TS_CODE
+  },
+  'useTheme.ts': {
+    name: 'useTheme.ts',
+    path: 'src > hooks > useTheme.ts',
+    icon: 'ts',
+    lang: 'TypeScript',
+    code: USE_THEME_TS_CODE
+  },
+  'useSwarm.ts': {
+    name: 'useSwarm.ts',
+    path: 'src > hooks > useSwarm.ts',
+    icon: 'ts',
+    lang: 'TypeScript',
+    code: USE_SWARM_TS_CODE
+  },
   'Varun_Sehgal_Resume_Updated.tex': {
     name: 'Varun_Sehgal_Resume_Updated.tex',
     path: 'root > Varun_Sehgal_Resume_Updated.tex',
     icon: 'tex',
     lang: 'LaTeX',
     code: RESUME_TEX_CODE
+  },
+  'package.json': {
+    name: 'package.json',
+    path: 'root > package.json',
+    icon: 'json',
+    lang: 'JSON',
+    code: PACKAGE_JSON_CODE
   },
   'FinderApp.css': {
     name: 'FinderApp.css',
@@ -694,6 +894,19 @@ export const VsCodeApp = () => {
   const [refreshToast, setRefreshToast] = useState('');
   const [isVercelCollapsed, setIsVercelCollapsed] = useState(false);
   const [isDesktopCollapsed, setIsDesktopCollapsed] = useState(false);
+  const [isSrcCollapsed, setIsSrcCollapsed] = useState(false);
+  const [isComponentsCollapsed, setIsComponentsCollapsed] = useState(false);
+  const [isUtilsCollapsed, setIsUtilsCollapsed] = useState(false);
+  const [isHooksCollapsed, setIsHooksCollapsed] = useState(false);
+  const [isConfigCollapsed, setIsConfigCollapsed] = useState(false);
+  const [isDocsCollapsed, setIsDocsCollapsed] = useState(false);
+
+  // Safe and Guaranteed Unified File Opener
+  const handleOpenFile = (fileName) => {
+    if (!fileName || !projectFiles[fileName]) return;
+    setOpenTabs(prev => (prev.includes(fileName) ? prev : [...prev, fileName]));
+    setActiveFile(fileName);
+  };
 
   // CodeSrijan Interactive Simulator State
   const [rubricSim, setRubricSim] = useState({
@@ -917,7 +1130,39 @@ export const VsCodeApp = () => {
 
     let hasError = false;
 
-    if (isJS) {
+    if (fileName.endsWith('.tsx') || fileName.endsWith('.jsx')) {
+      linesToEmit.push(`[React 18 / Vite v8.3.2] Compiling component <${fileName.replace(/\.(tsx|jsx)$/, '')} />...`);
+      linesToEmit.push(`✔ Virtual DOM mounted in 14ms.`);
+      linesToEmit.push(`✔ Design Tokens: OKLCH palettes & Framer Motion spring physics active.`);
+      linesToEmit.push(`✔ Bundle size: ${(codeToRun.length / 1024).toFixed(1)} KB (production optimized).`);
+      setProblems([]);
+    } else if (fileName.endsWith('.css')) {
+      linesToEmit.push(`[LightningCSS / PostCSS] Compiling stylesheets for ${fileName}...`);
+      linesToEmit.push(`✔ ${(codeToRun.split('{').length - 1)} CSS rules and design token scopes processed.`);
+      linesToEmit.push(`✔ 0 syntax warnings, 100% W3C compliant.`);
+      setProblems([]);
+    } else if (fileName.endsWith('.md')) {
+      linesToEmit.push(`[Markdown Parser] Generating HTML AST for ${fileName}...`);
+      linesToEmit.push(`✔ Rendered ${(codeToRun.split('\n').length)} lines (${codeToRun.split(/\s+/).length} words).`);
+      linesToEmit.push(`✔ GFM table and code block syntax verified.`);
+      setProblems([]);
+    } else if (fileName.endsWith('.tex')) {
+      linesToEmit.push(`[pdflatex -interaction=nonstopmode] Compiling ${fileName}...`);
+      linesToEmit.push(`Output written on Varun_Sehgal_Resume.pdf (1 page, 84,210 bytes).`);
+      linesToEmit.push(`✔ ATS-Optimized single-page score: 98/100.`);
+      setProblems([]);
+    } else if (fileName.endsWith('.json')) {
+      try {
+        JSON.parse(codeToRun);
+        linesToEmit.push(`[JSON Validator] Parsed ${fileName} successfully.`);
+        linesToEmit.push(`✔ Valid JSON syntax with 0 errors.`);
+        setProblems([]);
+      } catch (e) {
+        hasError = true;
+        linesToEmit.push(`[JSON Error] ${e.message}`);
+        setProblems([{ file: fileName, message: e.message, line: 1, severity: 'error' }]);
+      }
+    } else if (isJS) {
       // Sandboxed execution capturing console outputs
       const capturedConsole = {
         log: (...args) => {
@@ -1135,10 +1380,30 @@ export const VsCodeApp = () => {
     if (iconType === 'ts') return <span className="tab-file-icon icon-ts text-[#38bdf8] font-bold text-[10.5px]">TS</span>;
     if (iconType === 'js') return <span className="tab-file-icon icon-js text-[#facc15] font-bold text-[10.5px]">JS</span>;
     if (iconType === 'py') return <span className="tab-file-icon icon-py text-[#38bdf8] font-bold text-[10.5px]">PY</span>;
-    if (iconType === 'tex') return <span className="tab-file-icon icon-tex">T</span>;
-    if (iconType === 'md') return <span className="tab-file-icon icon-md text-amber-400 font-bold text-[10.5px]">M↓</span>;
+    if (iconType === 'tex') return <span className="tab-file-icon icon-tex text-emerald-400 font-bold text-[10.5px]">T</span>;
+    if (iconType === 'md') return <span className="tab-file-icon icon-md text-sky-400 font-bold text-[10.5px]">M↓</span>;
+    if (iconType === 'json') return <span className="tab-file-icon icon-json text-[#f59e0b] font-bold text-[10.5px]">{'{}'}</span>;
     if (iconType === 'globe') return <span className="tab-file-icon icon-globe text-emerald-400">🌐</span>;
     return <span className="tab-file-icon icon-default">📄</span>;
+  };
+
+  // Render tree item helper with click feedback, indentation & active highlight
+  const renderTreeItem = (fileName, paddingLeft = '16px') => {
+    const f = projectFiles[fileName];
+    if (!f) return null;
+    const isActive = activeFile === fileName;
+    return (
+      <div
+        key={fileName}
+        className={`tree-item-file ${isActive ? 'active' : ''}`}
+        style={{ paddingLeft }}
+        onClick={() => handleOpenFile(fileName)}
+        title={f.path || fileName}
+      >
+        {renderTabIcon(f.icon)}
+        <span className="tree-file-name">{fileName}</span>
+      </div>
+    );
   };
 
   return (
@@ -1520,20 +1785,16 @@ export const VsCodeApp = () => {
                     <div className="tree-branch-group mb-2">
                       <div
                         className={`tree-item-file ${activeFile === 'Live Preview: CodeSrijan' ? 'active' : ''}`}
-                        onClick={() => {
-                          if (!openTabs.includes('Live Preview: CodeSrijan')) setOpenTabs([...openTabs, 'Live Preview: CodeSrijan']);
-                          setActiveFile('Live Preview: CodeSrijan');
-                        }}
+                        style={{ paddingLeft: '24px' }}
+                        onClick={() => handleOpenFile('Live Preview: CodeSrijan')}
                       >
                         <span className="tab-file-icon text-emerald-400">🌐</span>
                         <span className="tree-file-name text-emerald-400 font-semibold">Live Preview (Vercel)</span>
                       </div>
                       <div
                         className={`tree-item-file ${activeFile === 'codesrijan/page.tsx' ? 'active' : ''}`}
-                        onClick={() => {
-                          if (!openTabs.includes('codesrijan/page.tsx')) setOpenTabs([...openTabs, 'codesrijan/page.tsx']);
-                          setActiveFile('codesrijan/page.tsx');
-                        }}
+                        style={{ paddingLeft: '24px' }}
+                        onClick={() => handleOpenFile('codesrijan/page.tsx')}
                       >
                         <span className="tab-file-icon icon-jsx">⚛</span>
                         <span className="tree-file-name">page.tsx</span>
@@ -1548,18 +1809,9 @@ export const VsCodeApp = () => {
                   </div>
                   {!isDesktopCollapsed && (
                     <div className="tree-branch-group">
-                      <div className="tree-item-folder open">
-                        <ChevronDown size={13} />
-                        <span>src</span>
-                      </div>
-                      <div className="tree-item-folder sub open">
-                        <ChevronDown size={13} />
-                        <span>components</span>
-                      </div>
-
                       {/* Inline New File Creator */}
                       {isCreatingFile && (
-                        <div className="tree-item-file inline-new-file-box">
+                        <div className="tree-item-file inline-new-file-box" style={{ paddingLeft: '20px' }}>
                           <FilePlus size={13} className="text-sky-400" />
                           <input
                             ref={newFileInputRef}
@@ -1585,7 +1837,7 @@ export const VsCodeApp = () => {
 
                       {/* Inline New Folder Creator */}
                       {isCreatingFolder && (
-                        <div className="tree-item-folder inline-new-folder-box">
+                        <div className="tree-item-folder inline-new-folder-box" style={{ paddingLeft: '20px' }}>
                           <FolderPlus size={13} className="text-amber-400" />
                           <input
                             ref={newFolderInputRef}
@@ -1609,33 +1861,129 @@ export const VsCodeApp = () => {
                         </div>
                       )}
 
-                      {/* Custom User Folders */}
-                      {customFolders.map(folder => (
-                        <div key={folder} className="tree-item-folder sub open" style={{ paddingLeft: '32px' }}>
-                          <ChevronRight size={12} className="text-zinc-500" />
-                          <Folder size={13} className="text-amber-400/80" />
-                          <span className="text-zinc-300 text-[11px]">{folder}</span>
-                        </div>
-                      ))}
+                      {/* Folder 1: src */}
+                      <div
+                        className={`tree-item-folder ${!isSrcCollapsed ? 'open' : ''}`}
+                        onClick={() => setIsSrcCollapsed(prev => !prev)}
+                        style={{ paddingLeft: '16px' }}
+                      >
+                        {!isSrcCollapsed ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
+                        <Folder size={13} className="text-amber-400/90" />
+                        <span>src</span>
+                      </div>
 
-                      {/* Files List */}
-                      {Object.keys(projectFiles).filter(k => !k.includes('CodeSrijan') && !k.includes('codesrijan')).map((fileName) => {
-                        const f = projectFiles[fileName];
-                        const isActive = activeFile === fileName;
-                        return (
+                      {!isSrcCollapsed && (
+                        <div className="tree-branch-group">
+                          {/* Folder 1.1: components */}
                           <div
-                            key={fileName}
-                            className={`tree-item-file ${isActive ? 'active' : ''}`}
-                            onClick={() => {
-                              if (!openTabs.includes(fileName)) setOpenTabs([...openTabs, fileName]);
-                              setActiveFile(fileName);
-                            }}
+                            className={`tree-item-folder sub ${!isComponentsCollapsed ? 'open' : ''}`}
+                            onClick={() => setIsComponentsCollapsed(prev => !prev)}
+                            style={{ paddingLeft: '28px' }}
                           >
-                            {renderTabIcon(f.icon)}
-                            <span className="tree-file-name">{fileName}</span>
+                            {!isComponentsCollapsed ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
+                            <Folder size={13} className="text-amber-400/90" />
+                            <span>components</span>
                           </div>
-                        );
-                      })}
+                          {!isComponentsCollapsed && (
+                            <div className="tree-branch-group">
+                              {renderTreeItem('varunos-portfolio.tsx', '40px')}
+                              {renderTreeItem('AboutMe.tsx', '40px')}
+                              {renderTreeItem('TerminalApp.jsx', '40px')}
+                              {renderTreeItem('FinderApp.css', '40px')}
+                            </div>
+                          )}
+
+                          {/* Folder 1.2: utils */}
+                          <div
+                            className={`tree-item-folder sub ${!isUtilsCollapsed ? 'open' : ''}`}
+                            onClick={() => setIsUtilsCollapsed(prev => !prev)}
+                            style={{ paddingLeft: '28px' }}
+                          >
+                            {!isUtilsCollapsed ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
+                            <Folder size={13} className="text-amber-400/90" />
+                            <span>utils</span>
+                          </div>
+                          {!isUtilsCollapsed && (
+                            <div className="tree-branch-group">
+                              {renderTreeItem('animations.ts', '40px')}
+                              {renderTreeItem('formatters.ts', '40px')}
+                              {renderTreeItem('cn.ts', '40px')}
+                            </div>
+                          )}
+
+                          {/* Folder 1.3: hooks */}
+                          <div
+                            className={`tree-item-folder sub ${!isHooksCollapsed ? 'open' : ''}`}
+                            onClick={() => setIsHooksCollapsed(prev => !prev)}
+                            style={{ paddingLeft: '28px' }}
+                          >
+                            {!isHooksCollapsed ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
+                            <Folder size={13} className="text-amber-400/90" />
+                            <span>hooks</span>
+                          </div>
+                          {!isHooksCollapsed && (
+                            <div className="tree-branch-group">
+                              {renderTreeItem('useTheme.ts', '40px')}
+                              {renderTreeItem('useSwarm.ts', '40px')}
+                            </div>
+                          )}
+
+                          {/* Folder 1.4: config */}
+                          <div
+                            className={`tree-item-folder sub ${!isConfigCollapsed ? 'open' : ''}`}
+                            onClick={() => setIsConfigCollapsed(prev => !prev)}
+                            style={{ paddingLeft: '28px' }}
+                          >
+                            {!isConfigCollapsed ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
+                            <Folder size={13} className="text-amber-400/90" />
+                            <span>config</span>
+                          </div>
+                          {!isConfigCollapsed && (
+                            <div className="tree-branch-group">
+                              {renderTreeItem('tools-and-stack.ts', '40px')}
+                              {renderTreeItem('portfolio.config.ts', '40px')}
+                            </div>
+                          )}
+
+                          {/* Custom User Folders */}
+                          {customFolders.filter(f => !['utils', 'hooks', 'components', 'config'].includes(f)).map(folder => (
+                            <div key={folder} className="tree-item-folder sub open" style={{ paddingLeft: '28px' }}>
+                              <ChevronRight size={12} className="text-zinc-500" />
+                              <Folder size={13} className="text-amber-400/80" />
+                              <span className="text-zinc-300 text-[11px]">{folder}</span>
+                            </div>
+                          ))}
+
+                          {/* Files directly under src */}
+                          {renderTreeItem('test.js', '28px')}
+                          {renderTreeItem('app.js', '28px')}
+                        </div>
+                      )}
+
+                      {/* Folder 2: docs */}
+                      <div
+                        className={`tree-item-folder ${!isDocsCollapsed ? 'open' : ''}`}
+                        onClick={() => setIsDocsCollapsed(prev => !prev)}
+                        style={{ paddingLeft: '16px' }}
+                      >
+                        {!isDocsCollapsed ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
+                        <Folder size={13} className="text-amber-400/90" />
+                        <span>docs</span>
+                      </div>
+                      {!isDocsCollapsed && (
+                        <div className="tree-branch-group">
+                          {renderTreeItem('vibecoding-manifesto.md', '28px')}
+                        </div>
+                      )}
+
+                      {/* Root files */}
+                      {renderTreeItem('Varun_Sehgal_Resume_Updated.tex', '16px')}
+                      {renderTreeItem('package.json', '16px')}
+
+                      {/* Custom dynamically added files */}
+                      {Object.keys(projectFiles).filter(k =>
+                        !['Live Preview: CodeSrijan', 'codesrijan/page.tsx', 'varunos-portfolio.tsx', 'AboutMe.tsx', 'TerminalApp.jsx', 'FinderApp.css', 'animations.ts', 'formatters.ts', 'cn.ts', 'useTheme.ts', 'useSwarm.ts', 'tools-and-stack.ts', 'portfolio.config.ts', 'test.js', 'app.js', 'vibecoding-manifesto.md', 'Varun_Sehgal_Resume_Updated.tex', 'package.json'].includes(k)
+                      ).map(k => renderTreeItem(k, '16px'))}
                     </div>
                   )}
                 </div>
