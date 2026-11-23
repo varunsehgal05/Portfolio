@@ -3,6 +3,7 @@ import MenuBar from './MenuBar';
 import DesktopIcon from './DesktopIcon';
 import Window from './Window';
 import Dock from './Dock';
+import DeviceHomeScreen from './DeviceHomeScreen';
 import { portfolioApps, desktopIconIds } from '../config/apps';
 import { desktopWallpapers } from '../config/wallpapers';
 import LiveMouseSwarm from './LiveMouseSwarm';
@@ -67,6 +68,36 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
     maximizedWindows.includes(activeWindow) &&
     !minimizedWindows.includes(activeWindow)
   );
+
+  // Responsive Device Modes (macOS Sequoia desktop vs iPadOS tablet vs iOS mobile)
+  const [windowWidth, setWindowWidth] = useState(() => (typeof window !== 'undefined' ? window.innerWidth : 1200));
+  const [deviceModeOverride, setDeviceModeOverride] = useState(() => {
+    try {
+      const p = new URLSearchParams(window.location.search);
+      const m = p.get('mode');
+      if (['desktop', 'tablet', 'mobile'].includes(m)) return m;
+      return localStorage.getItem('varunos_device_mode') || 'auto';
+    } catch {
+      return 'auto';
+    }
+  });
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const effectiveDeviceMode = deviceModeOverride !== 'auto'
+    ? deviceModeOverride
+    : (windowWidth <= 640 ? 'mobile' : (windowWidth <= 1024 ? 'tablet' : 'desktop'));
+
+  const handleSetDeviceMode = (mode) => {
+    setDeviceModeOverride(mode);
+    try {
+      localStorage.setItem('varunos_device_mode', mode);
+    } catch {}
+  };
 
   useEffect(() => {
     if (isFullScreenActive) {
@@ -450,7 +481,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
 
   return (
     <div 
-      className={`desktop ${swarmStage < 5 ? 'desktop-in-rebuild' : ''}`}
+      className={`desktop mode-${effectiveDeviceMode} ${swarmStage < 5 ? 'desktop-in-rebuild' : ''}`}
     >
       {/* Smooth Wallpaper Switching Animated Backdrop (macOS Sequoia Crossfade, revealed in Stage 1) */}
       <div className={`desktop-wallpaper-viewport ${swarmStage < 5 ? (swarmStage >= 1 ? 'stage-revealed' : 'stage-hidden') : ''}`} aria-hidden="true">
@@ -477,54 +508,75 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
       )}
 
       {/* Collaborative Swarm Live Mouse Flocking (5 Elite Collaborative Agents on Desktop when enabled) */}
-      <LiveMouseSwarm isEnabled={isSwarmFollowEnabled && !activeWindow && !isRebuilding} isRebuildActive={isRebuilding} agentCount={5} />
+      {effectiveDeviceMode === 'desktop' && (
+        <LiveMouseSwarm isEnabled={isSwarmFollowEnabled && !activeWindow && !isRebuilding} isRebuildActive={isRebuilding} agentCount={5} />
+      )}
 
-      {/* Top MenuBar wrapper (revealed in Stage 2) */}
-      <div className={`desktop-menubar-wrap ${swarmStage < 5 ? (swarmStage >= 2 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
-        <MenuBar 
-          userName={userName} 
-          onReplaySwarm={handleInternalReplaySwarm}
+      {/* iPadOS / iOS Home Screen & Status Bar View */}
+      {effectiveDeviceMode !== 'desktop' && (
+        <DeviceHomeScreen
+          mode={effectiveDeviceMode}
           openWindows={openWindows}
-          minimizedWindows={minimizedWindows}
           activeWindow={activeWindow}
-          portfolioApps={portfolioApps}
           onOpenApp={openApp}
-          onCloseApp={closeApp}
-          onFocusApp={focusApp}
-          onMinimizeApp={toggleMinimize}
-          onMinimizeActive={minimizeActive}
-          onToggleMaximize={toggleMaximizeWindow}
-          onMinimizeAll={minimizeAll}
-          onRestoreAll={restoreAll}
-          onCloseAll={closeAll}
+          deviceModeOverride={deviceModeOverride}
+          onSetDeviceMode={handleSetDeviceMode}
         />
-      </div>
+      )}
+
+      {/* Top MenuBar wrapper (macOS Desktop mode only, revealed in Stage 2) */}
+      {effectiveDeviceMode === 'desktop' && (
+        <div className={`desktop-menubar-wrap ${swarmStage < 5 ? (swarmStage >= 2 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
+          <MenuBar 
+            userName={userName} 
+            onReplaySwarm={handleInternalReplaySwarm}
+            openWindows={openWindows}
+            minimizedWindows={minimizedWindows}
+            activeWindow={activeWindow}
+            portfolioApps={portfolioApps}
+            onOpenApp={openApp}
+            onCloseApp={closeApp}
+            onFocusApp={focusApp}
+            onMinimizeApp={toggleMinimize}
+            onMinimizeActive={minimizeActive}
+            onToggleMaximize={toggleMaximizeWindow}
+            onMinimizeAll={minimizeAll}
+            onRestoreAll={restoreAll}
+            onCloseAll={closeAll}
+            deviceModeOverride={deviceModeOverride}
+            effectiveDeviceMode={effectiveDeviceMode}
+            onSetDeviceMode={handleSetDeviceMode}
+          />
+        </div>
+      )}
 
       <div className="desktop-content">
-        {/* Left Column Desktop Icons (Revealed 1-by-1 in Stage 3 as Sarah stamps them) */}
-        <div className={`desktop-icons ${isRebuilding ? (swarmStage >= 3 || stampedIconCount > 0 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
-          {displayedIcons.map((id, index) => {
-            const app = portfolioApps[id];
-            if (!app) return null;
-            const isRevealed = !isRebuilding ? true : (swarmStage >= 4 ? true : index < stampedIconCount);
-            return (
-              <DesktopIcon
-                key={app.id}
-                app={app}
-                className={`desktop-icon-stagger-item ${isRevealed ? 'is-stamped-visible' : 'is-stamped-hidden'}`}
-                style={{
-                  '--icon-delay': `${index * 0.08}s`,
-                  opacity: isRevealed ? 1 : 0,
-                  transform: isRevealed ? 'none' : 'scale(0.5) translateY(-8px)',
-                  pointerEvents: isRevealed ? 'auto' : 'none',
-                  transition: 'opacity 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)'
-                }}
-                onClick={() => openApp(app.id)}
-                onDoubleClick={() => openApp(app.id)}
-              />
-            );
-          })}
-        </div>
+        {/* Left Column Desktop Icons (macOS Desktop mode only, Revealed 1-by-1 in Stage 3) */}
+        {effectiveDeviceMode === 'desktop' && (
+          <div className={`desktop-icons ${isRebuilding ? (swarmStage >= 3 || stampedIconCount > 0 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
+            {displayedIcons.map((id, index) => {
+              const app = portfolioApps[id];
+              if (!app) return null;
+              const isRevealed = !isRebuilding ? true : (swarmStage >= 4 ? true : index < stampedIconCount);
+              return (
+                <DesktopIcon
+                  key={app.id}
+                  app={app}
+                  className={`desktop-icon-stagger-item ${isRevealed ? 'is-stamped-visible' : 'is-stamped-hidden'}`}
+                  style={{
+                    '--icon-delay': `${index * 0.08}s`,
+                    opacity: isRevealed ? 1 : 0,
+                    transform: isRevealed ? 'none' : 'scale(0.5) translateY(-8px)',
+                    pointerEvents: isRevealed ? 'auto' : 'none',
+                    transition: 'opacity 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)'
+                  }}
+                  onClick={() => openApp(app.id)}
+                  onDoubleClick={() => openApp(app.id)}
+                />
+              );
+            })}
+          </div>
+        )}
 
         {/* Windows Layer (revealed in Stage 5 as real window is assembled & finalized) */}
         <div className={`desktop-windows-layer ${isRebuilding ? (swarmStage >= 5 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
@@ -553,13 +605,14 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
                 onOpenApp={openApp}
                 onReplaySwarm={handleInternalReplaySwarm}
                 isRebuilding={isRebuilding}
+                deviceMode={effectiveDeviceMode}
               />
             );
           })}
         </div>
 
-        {/* PixelAssistant / Clippy bot deferred for instant LCP performance */}
-        {loadClippy && (
+        {/* PixelAssistant / Clippy bot deferred for instant LCP performance - Desktop mode only */}
+        {effectiveDeviceMode === 'desktop' && loadClippy && (
           <div className={`desktop-bot-wrap ${swarmStage < 5 ? (swarmStage >= 5 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
             <Suspense fallback={null}>
               <PixelAssistant isIdle={isIdle} onOpenApp={openApp} hasOpenWindows={hasOpenWindows} />
@@ -567,18 +620,20 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
           </div>
         )}
 
-        {/* Bottom macOS Dock (revealed in Stage 4: capsule first, then apps) */}
-        <div className={`desktop-dock-wrap ${swarmStage < 5 ? (swarmStage >= 4 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
-          <Dock
-            openWindows={openWindows}
-            minimizedWindows={minimizedWindows}
-            activeWindow={activeWindow}
-            bouncingAppProp={bouncingApp}
-            isFullScreenActive={isFullScreenActive}
-            onAppClick={handleDockClick}
-            stampedDockCount={swarmStage >= 5 ? 10 : (swarmStage >= 4 ? stampedDockCount : 0)}
-          />
-        </div>
+        {/* Bottom macOS Dock (Desktop macOS mode only, revealed in Stage 4) */}
+        {effectiveDeviceMode === 'desktop' && (
+          <div className={`desktop-dock-wrap ${swarmStage < 5 ? (swarmStage >= 4 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
+            <Dock
+              openWindows={openWindows}
+              minimizedWindows={minimizedWindows}
+              activeWindow={activeWindow}
+              bouncingAppProp={bouncingApp}
+              isFullScreenActive={isFullScreenActive}
+              onAppClick={handleDockClick}
+              stampedDockCount={swarmStage >= 5 ? 10 : (swarmStage >= 4 ? stampedDockCount : 0)}
+            />
+          </div>
+        )}
       </div>
 
     </div>

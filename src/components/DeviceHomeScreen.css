@@ -1,0 +1,912 @@
+/* =========================================================================
+   DeviceHomeScreen.css - iPadOS & iOS Authentic Home Screen & Status Bars
+   ========================================================================= */
+
+.device-home-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+/* =========================================================================
+   1. iPadOS STATUS BAR
+   ========================================================================= */
+.ipados-status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 38px;
+  padding: 0 20px;
+  background: rgba(15, 20, 30, 0.65);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: #f1f5f9;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+  z-index: 1000;
+  flex-shrink: 0;
+}
+
+.ipad-status-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+}
+
+.ipad-status-time {
+  color: #ffffff;
+}
+
+.ipad-status-date {
+  color: rgba(255, 255, 255, 0.65);
+  font-weight: 500;
+  font-size: 12.5px;
+}
+
+.ipad-status-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ipad-camera-lens {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #1e293b 0%, #020617 100%);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.15), 0 0 0 1.5px rgba(255, 255, 255, 0.08);
+}
+
+.ipad-status-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.ipad-status-icon {
+  color: #f1f5f9;
+}
+
+.ipad-battery-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ipad-battery-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.ipad-battery-outline {
+  width: 24px;
+  height: 12px;
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+  border-radius: 4px;
+  padding: 1.5px;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.ipad-battery-outline::after {
+  content: '';
+  position: absolute;
+  right: -3.5px;
+  top: 3px;
+  width: 2px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 0 1.5px 1.5px 0;
+}
+
+.ipad-battery-fill {
+  height: 100%;
+  background: #22c55e;
+  border-radius: 1.5px;
+}
+
+/* =========================================================================
+   2. iOS DYNAMIC ISLAND & STATUS BAR
+   ========================================================================= */
+.ios-status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 44px;
+  padding: 0 16px;
+  background: transparent;
+  color: #f8fafc;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+  z-index: 1000;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.ios-status-left {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: #ffffff;
+}
+
+.ios-dynamic-island {
+  position: absolute;
+  left: 50%;
+  top: 8px;
+  transform: translateX(-50%);
+  width: 114px;
+  height: 30px;
+  background: #000000;
+  border-radius: 20px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1001;
+}
+
+.ios-dynamic-island.expanded {
+  width: 240px;
+  height: 42px;
+  border-radius: 22px;
+}
+
+.island-lens-left {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #09090b;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.2);
+}
+
+.island-center-content {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  overflow: hidden;
+}
+
+.island-brand {
+  font-size: 11px;
+  font-weight: 600;
+  color: #94a3b8;
+  letter-spacing: 0.2px;
+}
+
+.island-app-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #38bdf8;
+  letter-spacing: 0.3px;
+}
+
+.island-pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #38bdf8;
+  animation: islandBlink 1.5s infinite;
+}
+
+@keyframes islandBlink {
+  0%, 100% { opacity: 0.4; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+.island-wave-right {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 10px;
+}
+
+.wave-bar {
+  width: 2.5px;
+  background: #22c55e;
+  border-radius: 1px;
+}
+
+.wave-bar.b1 { height: 8px; animation: waveAnim 0.7s infinite alternate ease-in-out; }
+.wave-bar.b2 { height: 11px; animation: waveAnim 0.7s 0.2s infinite alternate ease-in-out; }
+.wave-bar.b3 { height: 6px; animation: waveAnim 0.7s 0.4s infinite alternate ease-in-out; }
+
+@keyframes waveAnim {
+  0% { transform: scaleY(0.4); }
+  100% { transform: scaleY(1); }
+}
+
+.ios-status-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ios-signal-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 11px;
+}
+
+.ios-signal-bars .bar {
+  width: 3px;
+  background: #ffffff;
+  border-radius: 1px;
+}
+
+.ios-signal-bars .bar1 { height: 3.5px; }
+.ios-signal-bars .bar2 { height: 6px; }
+.ios-signal-bars .bar3 { height: 8.5px; }
+.ios-signal-bars .bar4 { height: 11px; }
+
+.ios-5g-badge {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: -0.2px;
+  color: #ffffff;
+}
+
+.ios-status-icon {
+  color: #ffffff;
+}
+
+.ios-battery-pill {
+  width: 22px;
+  height: 11.5px;
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  border-radius: 3.5px;
+  padding: 1px;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.ios-battery-pill::after {
+  content: '';
+  position: absolute;
+  right: -3px;
+  top: 2.5px;
+  width: 1.5px;
+  height: 3.5px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 0 1px 1px 0;
+}
+
+.ios-battery-fill {
+  height: 100%;
+  background: #ffffff;
+  border-radius: 1.5px;
+}
+
+/* =========================================================================
+   3. DEVICE SWITCHER PILL & DROPDOWN
+   ========================================================================= */
+.device-switcher-pill-wrap {
+  position: relative;
+}
+
+.device-switcher-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 14px;
+  color: #f8fafc;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.device-switcher-pill:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.device-switcher-pill.compact {
+  padding: 4px 6px;
+  border-radius: 10px;
+}
+
+.device-switcher-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 195px;
+  background: rgba(22, 27, 38, 0.96);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
+  padding: 6px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  animation: switcherFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes switcherFadeIn {
+  from { opacity: 0; transform: translateY(-4px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.switcher-header {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #94a3b8;
+  padding: 5px 8px 3px;
+}
+
+.switcher-opt {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  padding: 7px 10px;
+  border: none;
+  background: transparent;
+  color: #e2e8f0;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+}
+
+.switcher-opt:hover {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+}
+
+.switcher-opt.active {
+  background: rgba(56, 189, 248, 0.22);
+  color: #38bdf8;
+  font-weight: 700;
+}
+
+/* =========================================================================
+   4. HOME SCREEN BODY & WIDGETS
+   ========================================================================= */
+.device-home-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 16px 24px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* iPad Today Widget Card */
+.ipad-today-widget {
+  width: 100%;
+  max-width: 780px;
+  background: rgba(26, 32, 46, 0.65);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  padding: 18px 24px;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+
+.ipad-widget-profile {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+.ipad-widget-avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.ipad-widget-avatar {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(56, 189, 248, 0.5);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+.ipad-online-dot {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 12px;
+  height: 12px;
+  background: #22c55e;
+  border: 2px solid #1a202c;
+  border-radius: 50%;
+}
+
+.ipad-widget-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.ipad-widget-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ipad-widget-name {
+  font-size: 19px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -0.3px;
+}
+
+.ipad-role-pill {
+  font-size: 11px;
+  font-weight: 700;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.ipad-widget-desc {
+  font-size: 12.5px;
+  color: #cbd5e1;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.ipad-widget-tags {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+  flex-wrap: wrap;
+}
+
+.widget-tag {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 2px 7px;
+  border-radius: 8px;
+}
+
+.ipad-widget-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  flex-shrink: 0;
+}
+
+.ipad-quick-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.08);
+  color: #f1f5f9;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ipad-quick-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  transform: translateY(-1px);
+}
+
+.ipad-quick-btn.primary {
+  background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+  border-color: rgba(56, 189, 248, 0.5);
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+}
+
+/* iOS Glance Card */
+.ios-glance-widget {
+  width: 100%;
+  max-width: 360px;
+  background: rgba(26, 32, 46, 0.72);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.ios-widget-avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.ios-widget-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid rgba(56, 189, 248, 0.5);
+}
+
+.ios-online-dot {
+  position: absolute;
+  bottom: 1px;
+  right: 1px;
+  width: 10px;
+  height: 10px;
+  background: #22c55e;
+  border: 1.5px solid #1a202c;
+  border-radius: 50%;
+}
+
+.ios-widget-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ios-widget-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.2px;
+}
+
+.ios-widget-sub {
+  font-size: 11.5px;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.ios-status-tag {
+  font-size: 10px;
+  font-weight: 600;
+  color: #4ade80;
+}
+
+/* =========================================================================
+   5. APP ICONS GRID (iPad & iPhone)
+   ========================================================================= */
+.device-app-grid {
+  display: grid;
+  width: 100%;
+  box-sizing: border-box;
+  justify-items: center;
+}
+
+/* iPad: 5 columns */
+.device-app-grid.grid-tablet {
+  grid-template-columns: repeat(5, 1fr);
+  max-width: 760px;
+  gap: 28px 20px;
+  margin-bottom: 30px;
+}
+
+/* iPhone: 4 columns */
+.device-app-grid.grid-mobile {
+  grid-template-columns: repeat(4, 1fr);
+  max-width: 380px;
+  gap: 20px 10px;
+  margin-bottom: 24px;
+}
+
+.device-app-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+}
+
+.device-app-item:hover {
+  transform: scale(1.06);
+}
+
+.device-app-item:active {
+  transform: scale(0.94);
+}
+
+/* Squircle Icon Styling */
+.device-app-icon-squircle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.12);
+  transition: all 0.2s ease;
+}
+
+.grid-tablet .device-app-icon-squircle {
+  width: 68px;
+  height: 68px;
+  border-radius: 18px;
+}
+
+.grid-mobile .device-app-icon-squircle {
+  width: 58px;
+  height: 58px;
+  border-radius: 15px;
+}
+
+.device-app-icon-inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: inherit;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Running dot */
+.app-running-dot {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+}
+
+.device-app-label {
+  margin-top: 6px;
+  color: #f8fafc;
+  font-weight: 500;
+  text-align: center;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.95);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+  letter-spacing: -0.1px;
+}
+
+.grid-tablet .device-app-label {
+  font-size: 12.5px;
+}
+
+.grid-mobile .device-app-label {
+  font-size: 11px;
+}
+
+/* Individual App Icon Gradients */
+.finder-bg {
+  background: linear-gradient(135deg, #38bdf8 0%, #1d4ed8 100%);
+}
+
+.figma-bg {
+  background: #1e1e1e;
+}
+
+.vscode-bg {
+  background: #1e1e1e;
+  border: 1px solid #334155;
+}
+
+.terminal-bg {
+  background: #09090b;
+  border: 1px solid #27272a;
+}
+
+.resume-bg {
+  background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+  position: relative;
+}
+
+.resume-pdf-pill {
+  position: absolute;
+  bottom: 6px;
+  font-size: 7.5px;
+  font-weight: 900;
+  background: #7f1d1d;
+  color: #fff;
+  padding: 0 3px;
+  border-radius: 3px;
+  letter-spacing: 0.5px;
+}
+
+.contact-bg {
+  background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+}
+
+.reviews-bg {
+  background: linear-gradient(135deg, #f59e0b 0%, #dc2626 100%);
+}
+
+.settings-bg {
+  background: linear-gradient(135deg, #64748b 0%, #334155 100%);
+}
+
+.coffee-bg {
+  background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%);
+}
+
+.trash-bg {
+  background: linear-gradient(135deg, #475569 0%, #1e293b 100%);
+}
+
+/* iOS Search Pill */
+.ios-search-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 18px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 8px;
+  margin-bottom: 24px;
+  transition: all 0.2s ease;
+}
+
+.ios-search-pill:hover {
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+/* =========================================================================
+   6. BOTTOM FLOATING DOCK (iPad & iPhone)
+   ========================================================================= */
+.device-bottom-dock {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 0 16px;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  z-index: 900;
+}
+
+.dock-tablet {
+  margin-bottom: 16px;
+}
+
+.dock-mobile {
+  margin-bottom: 18px;
+}
+
+.device-dock-inner {
+  display: flex;
+  align-items: center;
+  background: rgba(22, 27, 38, 0.72);
+  backdrop-filter: blur(32px) saturate(180%);
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
+}
+
+.dock-tablet .device-dock-inner {
+  border-radius: 28px;
+  padding: 10px 18px;
+  gap: 16px;
+}
+
+.dock-mobile .device-dock-inner {
+  border-radius: 32px;
+  padding: 9px 18px;
+  gap: 18px;
+  width: 100%;
+  max-width: 320px;
+  justify-content: space-around;
+}
+
+.device-dock-item {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.device-dock-item:hover {
+  transform: scale(1.12) translateY(-2px);
+}
+
+.device-dock-item:active {
+  transform: scale(0.92);
+}
+
+.device-dock-icon-squircle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: inherit;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+}
+
+.dock-tablet .device-dock-icon-squircle {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+}
+
+.dock-mobile .device-dock-icon-squircle {
+  width: 50px;
+  height: 50px;
+  border-radius: 13px;
+}
+
+.dock-running-dot {
+  position: absolute;
+  bottom: -5px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.85);
+}
+
+/* =========================================================================
+   7. iOS BOTTOM HOME INDICATOR
+   ========================================================================= */
+.ios-home-indicator {
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 134px;
+  height: 4.5px;
+  background: rgba(255, 255, 255, 0.75);
+  border-radius: 100px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}

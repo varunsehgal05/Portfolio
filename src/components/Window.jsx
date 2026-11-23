@@ -30,7 +30,8 @@ const Window = ({
   onOpenApp,
   onReplaySwarm,
   isRebuilding = false,
-  defaultMaximized = false
+  defaultMaximized = false,
+  deviceMode = 'desktop'
 }) => {
   const DOCK_CLEARANCE = 86;
   const MENUBAR_HEIGHT = 28;
@@ -52,11 +53,26 @@ const Window = ({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Default bounds and position based on app type
-  const getDefaultSize = () => {
+  // Default bounds and position based on app type & device mode (desktop, iPadOS, iOS)
+  const getDefaultSize = (mode = deviceMode) => {
     if (typeof window === 'undefined') return { width: 800, height: 500 };
-    const availableHeight = Math.max(300, window.innerHeight - MENUBAR_HEIGHT - DOCK_CLEARANCE);
-    const availableWidth = Math.max(400, window.innerWidth);
+    const curW = windowDimensions.width || window.innerWidth;
+    const curH = windowDimensions.height || window.innerHeight;
+
+    if (mode === 'mobile') {
+      const w = Math.min(curW - 16, 440);
+      const h = Math.min(curH - 96, 680);
+      return { width: Math.max(280, w), height: Math.max(260, h) };
+    }
+
+    if (mode === 'tablet') {
+      const w = Math.min(curW - 40, 840);
+      const h = Math.min(curH - 120, 680);
+      return { width: Math.max(360, w), height: Math.max(340, h) };
+    }
+
+    const availableHeight = Math.max(300, curH - MENUBAR_HEIGHT - DOCK_CLEARANCE);
+    const availableWidth = Math.max(400, curW);
 
     if (app.id === 'trash') return { width: Math.min(availableWidth - 80, 800), height: Math.min(availableHeight - 20, 560) };
     if (app.id === 'terminal') return { width: Math.min(availableWidth - 40, 820), height: Math.min(availableHeight - 30, 490) };
@@ -70,19 +86,55 @@ const Window = ({
     return { width: Math.min(availableWidth - 80, 800), height: Math.min(availableHeight, 500) };
   };
 
-  const getInitialPosition = () => {
+  const getInitialPosition = (mode = deviceMode) => {
     if (typeof window === 'undefined') return { x: 40, y: 40 };
-    const curW = window.innerWidth;
-    const curH = window.innerHeight;
+    const curW = windowDimensions.width || window.innerWidth;
+    const curH = windowDimensions.height || window.innerHeight;
+    const size = getDefaultSize(mode);
+
+    if (mode === 'mobile') {
+      const x = Math.max(8, Math.round((curW - size.width) / 2));
+      const y = 46;
+      return { x, y };
+    }
+
+    if (mode === 'tablet') {
+      const x = Math.max(16, Math.round((curW - size.width) / 2));
+      const y = Math.max(42, Math.round((curH - 80 - size.height) / 2));
+      return { x, y };
+    }
+
     const availableHeight = Math.max(200, curH - MENUBAR_HEIGHT - DOCK_CLEARANCE);
-    const size = getDefaultSize();
     const centerX = Math.max(10, Math.round((curW - size.width) / 2));
     const centerY = Math.max(MENUBAR_HEIGHT + 10, Math.round(MENUBAR_HEIGHT + (availableHeight - size.height) / 2));
     return { x: centerX, y: centerY };
   };
 
-  const [position, setPosition] = useState(getInitialPosition());
-  const [size, setSize] = useState(getDefaultSize());
+  const [position, setPosition] = useState(getInitialPosition(deviceMode));
+  const [size, setSize] = useState(getDefaultSize(deviceMode));
+
+  // Responsive recalibration when screen resizes or device mode switches
+  useEffect(() => {
+    const curW = windowDimensions.width;
+    const curH = windowDimensions.height;
+    const defaultSz = getDefaultSize(deviceMode);
+    
+    setSize(prev => {
+      const w = typeof prev.width === 'number' ? prev.width : parseInt(prev.width, 10);
+      const h = typeof prev.height === 'number' ? prev.height : parseInt(prev.height, 10);
+      if (w > curW - 12 || h > curH - 50 || deviceMode === 'mobile') {
+        return defaultSz;
+      }
+      return prev;
+    });
+
+    setPosition(prev => {
+      if (prev.x > curW - 80 || prev.y > curH - 80 || deviceMode === 'mobile') {
+        return getInitialPosition(deviceMode);
+      }
+      return prev;
+    });
+  }, [deviceMode, windowDimensions.width, windowDimensions.height]);
   const [localMaximized, setLocalMaximized] = useState(defaultMaximized);
   const isMaximized = controlledMaximized !== undefined ? controlledMaximized : localMaximized;
   const [isInteracting, setIsInteracting] = useState(false);
@@ -423,70 +475,155 @@ const Window = ({
         }}
         onMouseDown={onFocus}
         onTouchStart={onFocus}
-        dragHandleClassName="window-titlebar"
-        cancel=".mac-traffic-lights, .mac-btn, button, a, input, [data-no-drag]"
+        dragHandleClassName="rnd-drag-handle"
+        cancel=".mac-traffic-lights, .mac-btn, .mobile-sheet-btn, button, a, input, select, textarea, [data-no-drag]"
         disableDragging={isMaximized || animState !== 'visible'}
-        enableResizing={!isMaximized && animState === 'visible'}
-        minWidth={app.id === 'terminal' ? 560 : 320}
-        minHeight={220}
+        enableResizing={!isMaximized && animState === 'visible' && deviceMode !== 'mobile'}
+        minWidth={deviceMode === 'mobile' ? Math.min(windowDimensions.width - 16, 260) : (app.id === 'terminal' ? 520 : 300)}
+        minHeight={deviceMode === 'mobile' ? 180 : 200}
         bounds="parent"
         style={{ zIndex: zIndex !== undefined ? zIndex : (isActive ? 300 : (isMaximized ? 40 : 20)) }}
       >
-        <div ref={windowInnerRef} className={`window-inner ${getAnimClass()}`}>
-          {/* macOS Style Titlebar - double-click to toggle fullscreen, drag down to restore */}
-          <div
-            className={`window-titlebar ${isMaximized ? 'is-maximized-titlebar' : ''}`}
-            onPointerDown={handleTitleBarPointerDown}
-            onDoubleClick={handleMaximize}
-            title={isMaximized ? "Drag down from the middle to restore or minimize (like in Windows)" : "Double-click to toggle full screen"}
-          >
-            <div className="mac-traffic-lights">
-              <button
-                className="mac-btn close"
-                aria-label="Close window"
-                onMouseDown={(e) => e.stopPropagation()}
-                onTouchStart={(e) => e.stopPropagation()}
-                onClick={handleClose}
-                title="Close"
-              >
-                <span className="mac-symbol">×</span>
-              </button>
-              <button
-                className="mac-btn minimize"
-                aria-label="Minimize window"
-                onMouseDown={(e) => e.stopPropagation()}
-                onTouchStart={(e) => e.stopPropagation()}
-                onClick={handleMinimizeClick}
-                title="Minimize"
-              >
-                <span className="mac-symbol">–</span>
-              </button>
-              <button
-                className="mac-btn maximize"
-                aria-label={isMaximized ? "Exit full screen" : "Full screen"}
-                onMouseDown={(e) => e.stopPropagation()}
-                onTouchStart={(e) => e.stopPropagation()}
-                onClick={handleMaximize}
-                title={isMaximized ? "Exit Full Screen" : "Full Screen"}
-              >
-                <span className="mac-symbol">{isMaximized ? '⤢' : '+'}</span>
-              </button>
-            </div>
-
-            <div className="window-title">
-              <Folder size={13} className="titlebar-folder-icon" />
-              <span>{app.title || (app.id === 'finder' ? 'VarunOS — Portfolio & Projects' : app.name)}</span>
-            </div>
-
-            {/* Sleek Top Drag Notch for Full Screen Restore (Never overlaps title text) */}
-            {isMaximized && (
-              <div className="titlebar-fullscreen-pull-handle" title="Drag down from top to restore window">
-                <div className="pull-handle-bar" />
+        <div ref={windowInnerRef} className={`window-inner ${getAnimClass()} mode-${deviceMode}`}>
+          {/* Header Bar: Mobile iOS Sheet Header OR iPad Stage Manager Header OR macOS Titlebar */}
+          {deviceMode === 'mobile' ? (
+            <div className="mobile-sheet-header rnd-drag-handle" onPointerDown={handleTitleBarPointerDown}>
+              <div className="mobile-sheet-grabber rnd-drag-handle" title="Drag to move sheet" />
+              <div className="mobile-sheet-titlebar rnd-drag-handle">
+                <div className="mobile-sheet-left rnd-drag-handle">
+                  <span className="mobile-sheet-app-icon">📱</span>
+                  <span className="mobile-sheet-title">{app.title || app.name}</span>
+                </div>
+                <div className="mobile-sheet-actions" data-no-drag>
+                  <button
+                    className="mobile-sheet-btn minimize"
+                    aria-label="Minimize"
+                    onMouseDown={(e) => e.stopPropagation()}
+                    onTouchStart={(e) => e.stopPropagation()}
+                    onClick={handleMinimizeClick}
+                    title="Minimize"
+                  >
+                    –
+                  </button>
+                  <button
+                    className="mobile-sheet-btn close"
+                    aria-label="Close"
+                    onMouseDown={(e) => e.stopPropagation()}
+                    onTouchStart={(e) => e.stopPropagation()}
+                    onClick={handleClose}
+                    title="Close"
+                  >
+                    ×
+                  </button>
+                </div>
               </div>
-            )}
+            </div>
+          ) : deviceMode === 'tablet' ? (
+            <div
+              className={`window-titlebar ipad-stage-titlebar rnd-drag-handle ${isMaximized ? 'is-maximized-titlebar' : ''}`}
+              onPointerDown={handleTitleBarPointerDown}
+              onDoubleClick={handleMaximize}
+              title="Drag to move window"
+            >
+              <div className="mac-traffic-lights" data-no-drag>
+                <button
+                  className="mac-btn close"
+                  aria-label="Close window"
+                  onMouseDown={(e) => e.stopPropagation()}
+                  onTouchStart={(e) => e.stopPropagation()}
+                  onClick={handleClose}
+                  title="Close"
+                >
+                  <span className="mac-symbol">×</span>
+                </button>
+                <button
+                  className="mac-btn minimize"
+                  aria-label="Minimize window"
+                  onMouseDown={(e) => e.stopPropagation()}
+                  onTouchStart={(e) => e.stopPropagation()}
+                  onClick={handleMinimizeClick}
+                  title="Minimize"
+                >
+                  <span className="mac-symbol">–</span>
+                </button>
+                <button
+                  className="mac-btn maximize"
+                  aria-label={isMaximized ? "Exit full screen" : "Full screen"}
+                  onMouseDown={(e) => e.stopPropagation()}
+                  onTouchStart={(e) => e.stopPropagation()}
+                  onClick={handleMaximize}
+                  title={isMaximized ? "Exit Full Screen" : "Full Screen"}
+                >
+                  <span className="mac-symbol">{isMaximized ? '⤢' : '+'}</span>
+                </button>
+              </div>
 
-            <div className="titlebar-right-spacer" />
-          </div>
+              {/* iPad Stage Manager Center Grabber Dots */}
+              <div className="ipad-stage-grabber rnd-drag-handle" title="Drag to move window">
+                <span className="stage-dot" />
+                <span className="stage-dot" />
+                <span className="stage-dot" />
+                <span className="stage-title">{app.title || app.name}</span>
+              </div>
+
+              <div className="titlebar-right-spacer" />
+            </div>
+          ) : (
+            /* macOS Desktop Style Titlebar */
+            <div
+              className={`window-titlebar rnd-drag-handle ${isMaximized ? 'is-maximized-titlebar' : ''}`}
+              onPointerDown={handleTitleBarPointerDown}
+              onDoubleClick={handleMaximize}
+              title={isMaximized ? "Drag down from the middle to restore or minimize (like in Windows)" : "Double-click to toggle full screen, drag to move"}
+            >
+              <div className="mac-traffic-lights" data-no-drag>
+                <button
+                  className="mac-btn close"
+                  aria-label="Close window"
+                  onMouseDown={(e) => e.stopPropagation()}
+                  onTouchStart={(e) => e.stopPropagation()}
+                  onClick={handleClose}
+                  title="Close"
+                >
+                  <span className="mac-symbol">×</span>
+                </button>
+                <button
+                  className="mac-btn minimize"
+                  aria-label="Minimize window"
+                  onMouseDown={(e) => e.stopPropagation()}
+                  onTouchStart={(e) => e.stopPropagation()}
+                  onClick={handleMinimizeClick}
+                  title="Minimize"
+                >
+                  <span className="mac-symbol">–</span>
+                </button>
+                <button
+                  className="mac-btn maximize"
+                  aria-label={isMaximized ? "Exit full screen" : "Full screen"}
+                  onMouseDown={(e) => e.stopPropagation()}
+                  onTouchStart={(e) => e.stopPropagation()}
+                  onClick={handleMaximize}
+                  title={isMaximized ? "Exit Full Screen" : "Full Screen"}
+                >
+                  <span className="mac-symbol">{isMaximized ? '⤢' : '+'}</span>
+                </button>
+              </div>
+
+              <div className="window-title rnd-drag-handle">
+                <Folder size={13} className="titlebar-folder-icon" />
+                <span>{app.title || (app.id === 'finder' ? 'VarunOS — Portfolio & Projects' : app.name)}</span>
+              </div>
+
+              {/* Sleek Top Drag Notch for Full Screen Restore */}
+              {isMaximized && (
+                <div className="titlebar-fullscreen-pull-handle" title="Drag down from top to restore window">
+                  <div className="pull-handle-bar" />
+                </div>
+              )}
+
+              <div className="titlebar-right-spacer" />
+            </div>
+          )}
 
           <div className={`window-content ${app.id === 'resume' || app.id === 'contact' || app.id === 'figma' || app.id === 'finder' || app.id === 'settings' || app.id === 'vscode' || app.id === 'terminal' || app.id === 'trash' ? 'no-padding' : ''}`}>
             {renderContent()}

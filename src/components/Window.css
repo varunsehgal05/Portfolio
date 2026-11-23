@@ -605,3 +605,156 @@
 [data-theme="light"] .app-window.active {
   box-shadow: 0 24px 70px rgba(0, 0, 0, 0.22) !important;
 }
+
+/* ========================================================
+   UNIVERSAL MOVEABLE DRAG HANDLE & TOUCH CONTROLS
+   ======================================================== */
+.rnd-drag-handle {
+  touch-action: none;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.rnd-drag-handle:active {
+  cursor: grabbing;
+}
+
+/* ========================================================
+   iOS MOBILE SHEET WINDOW STYLES (mode-mobile)
+   ======================================================== */
+.window-inner.mode-mobile {
+  border-radius: 20px !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.15) !important;
+}
+
+.mobile-sheet-header {
+  display: flex;
+  flex-direction: column;
+  background: rgba(18, 24, 34, 0.96);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 4px;
+}
+
+.mobile-sheet-grabber {
+  width: 38px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: 10px;
+  margin: 7px auto 5px;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.mobile-sheet-grabber:hover,
+.mobile-sheet-grabber:active {
+  background: rgba(56, 189, 248, 0.85);
+  transform: scaleX(1.1);
+}
+
+.mobile-sheet-titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px 6px;
+}
+
+.mobile-sheet-left {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+
+.mobile-sheet-app-icon {
+  font-size: 13px;
+  line-height: 1;
+}
+
+.mobile-sheet-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #f8fafc;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 220px;
+}
+
+.mobile-sheet-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.mobile-sheet-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.08);
+  color: #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.mobile-sheet-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.mobile-sheet-btn.close:hover {
+  background: #ef4444;
+  border-color: #ef4444;
+  color: #ffffff;
+}
+
+/* ========================================================
+   iPadOS STAGE MANAGER WINDOW STYLES (mode-tablet)
+   ======================================================== */
+.window-inner.mode-tablet {
+  border-radius: 16px !important;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.12) !important;
+}
+
+.ipad-stage-titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.ipad-stage-grabber {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+}
+
+.ipad-stage-grabber:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.stage-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.stage-title {
+  margin-left: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #e2e8f0;
+}

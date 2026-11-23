@@ -682,3 +682,79 @@
   border-top: 1px solid #e2e8f0;
   color: #64748b;
 }
+
+/* ========================================================
+   RESPONSIVE MOBILE & TABLET ADAPTATIONS FOR FINDER
+   ======================================================== */
+@media (max-width: 640px) {
+  .finder-container {
+    flex-direction: column;
+  }
+
+  .finder-sidebar {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 80px;
+    border-right: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 6px 8px;
+    flex-shrink: 0;
+  }
+
+  .finder-sidebar-content {
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 6px;
+    padding-bottom: 2px;
+  }
+
+  .finder-sidebar-section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .finder-section-title,
+  .finder-sidebar-section:has(.finder-tag-row),
+  .finder-profile-card {
+    display: none !important;
+  }
+
+  .finder-nav-item {
+    padding: 4px 8px;
+    font-size: 11px;
+    white-space: nowrap;
+    border-radius: 8px;
+  }
+
+  .finder-toolbar {
+    padding: 6px 10px;
+    gap: 8px;
+  }
+
+  .finder-toolbar-history {
+    display: none;
+  }
+
+  .finder-projects-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .finder-hero-banner {
+    padding: 14px 12px;
+  }
+
+  .finder-hero-title {
+    font-size: 16px;
+  }
+
+  .finder-hero-subtitle {
+    font-size: 11.5px;
+  }
+}
+
