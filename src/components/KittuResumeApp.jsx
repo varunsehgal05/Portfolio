@@ -12,7 +12,6 @@ const KittuResumeApp = ({
   onBack,
   onTriggerSwarm,
   onScrollToTop,
-  onSwarmProgress,
   isParentLoading = false,
   canvasPan = { x: 0, y: 0 },
   canvasZoom = 1
@@ -207,7 +206,7 @@ const KittuResumeApp = ({
     // 1. All 4 Swarm agents enter top of blank sheet together (multitasking start)
     schedule(() => {
       const box = getBox('.cv-name', { x: 28, y: 35, w: 460, h: 75 });
-      const boxPol = getBox('.cv-polaroid', { x: 730, y: 240, w: 260, h: 260 });
+      const boxPol = getBox('.cv-polaroid', { x: 730, y: 110, w: 260, h: 260 });
       set4Swarm({
         elena: { x: box.x, y: box.y, tool: 'R', role: 'Framing' },
         alex: { x: box.x + box.w + 24, y: box.y + 12, tool: 'V', role: 'Layout' },
@@ -218,14 +217,14 @@ const KittuResumeApp = ({
       setActiveGuides([{ type: 'h', y: box.y + box.h, x1: box.x, x2: box.x + box.w }]);
     }, 100);
 
-    // 2. Stage 1: Varun types "Varun Sehgal" with tracking cursor, Elena holds frame, Sarah pre-stages sticky, Alex measures
+    // 2. Stage 1: Varun types "Varun Sehgal" with tracking cursor, Elena holds frame, Sarah pre-stages polaroid, Alex measures
     schedule(() => {
       const box = getBox('.cv-name', { x: 28, y: 35, w: 460, h: 75 });
-      const boxNote = getBox('.cv-note', { x: 690, y: 60, w: 340, h: 160 });
+      const boxPol = getBox('.cv-polaroid', { x: 730, y: 110, w: 260, h: 260 });
       set4Swarm({
         elena: { x: box.x + box.w - 10, y: box.y + box.h, tool: 'R', role: 'Framing' },
         alex: { x: box.x + box.w + 24, y: box.y + 12, tool: 'V', role: 'Layout' },
-        sarah: { x: boxNote.x + 40, y: boxNote.y + 14, tool: '❖', role: 'Stamping' },
+        sarah: { x: boxPol.x + 40, y: boxPol.y + 30, tool: '❖', role: 'Stamping' },
         varun: { x: box.x + 35, y: box.y + 18, tool: 'T', role: 'Typing' }
       });
       typeText('Varun Sehgal', setTypedName, 40, 32, 'varun', box.x + 35);
@@ -235,11 +234,11 @@ const KittuResumeApp = ({
     schedule(() => {
       setBuildStage(1);
       const boxLede = getBox('.cv-lede', { x: 28, y: 125, w: 600, h: 160 });
-      const boxNote = getBox('.cv-note', { x: 690, y: 60, w: 340, h: 160 });
+      const boxPol = getBox('.cv-polaroid', { x: 730, y: 110, w: 260, h: 260 });
       set4Swarm({
         elena: { x: boxLede.x, y: boxLede.y, tool: 'R', role: 'Framing' },
         alex: { x: boxLede.x + boxLede.w + 20, y: boxLede.y + 24, tool: 'V', role: 'Layout' },
-        sarah: { x: boxNote.x + 40, y: boxNote.y + 14, tool: '❖', role: 'Stamping' },
+        sarah: { x: boxPol.x + 50, y: boxPol.y + 40, tool: '❖', role: 'Stamping' },
         varun: { x: boxLede.x + 24, y: boxLede.y + 20, tool: 'T', role: 'Typing' }
       });
       setActiveSelection({ x: boxLede.x, y: boxLede.y, w: boxLede.w, h: boxLede.h });
@@ -247,102 +246,79 @@ const KittuResumeApp = ({
       typeText('I study and craft friction-free product experiences: tactile, beautiful, and fast.', setTypedLede, 80, 16, 'varun', boxLede.x + 24);
     }, 850);
 
-    // 4. Stage 3: Sticky Note (Tactile Stamp & Live Typing)
+    // 4. Stage 3: Polaroid Photo (Tactile Stamp & Caption Typing)
     schedule(() => {
       setBuildStage(2);
-      const boxNote = getBox('.cv-note', { x: 690, y: 60, w: 340, h: 160 });
-      const boxPol = getBox('.cv-polaroid', { x: 730, y: 240, w: 260, h: 260 });
+      const boxPol = getBox('.cv-polaroid', { x: 730, y: 110, w: 260, h: 260 });
       set4Swarm({
-        elena: { x: boxNote.x, y: boxNote.y, tool: 'R', role: 'Framing' },
-        alex: { x: boxNote.x + boxNote.w + 16, y: boxNote.y + 20, tool: 'V', role: 'Layout' },
-        sarah: { x: boxPol.x + 40, y: boxPol.y + 40, tool: '❖', role: 'Stamping' },
-        varun: { x: boxNote.x + 20, y: boxNote.y + 26, tool: 'T', role: 'Typing' }
-      });
-      setActiveSelection({ x: boxNote.x, y: boxNote.y, w: boxNote.w, h: boxNote.h });
-      setActiveGuides([{ type: 'v', x: boxNote.x, y1: boxNote.y - 20, y2: boxNote.y + 350 }]);
-      setBuildStage(3); // Pops with cv-stamp-pop!
-      typeText('Now: AI Interview & EventFlow', setTypedNoteHead, 60, 20);
-      typeText('Architecting multi-token design systems in Figma and translating them with sub-millisecond fidelity into Next.js & Tailwind components.', setTypedNoteBody, 500, 8);
-    }, 2200);
-
-    // 5. Stage 4: Polaroid Photo (Tactile Stamp & Caption Typing)
-    schedule(() => {
-      const boxPol = getBox('.cv-polaroid', { x: 730, y: 240, w: 260, h: 260 });
-      const box1 = getBox('.cv-stats li:nth-child(1)', { x: 28, y: 520, w: 320, h: 85 });
-      set4Swarm({
-        elena: { x: box1.x, y: box1.y, tool: 'R', role: 'Framing' },
+        elena: { x: boxPol.x, y: boxPol.y, tool: 'R', role: 'Framing' },
         alex: { x: boxPol.x + boxPol.w + 16, y: boxPol.y + 40, tool: 'V', role: 'Layout' },
         sarah: { x: boxPol.x + boxPol.w / 2, y: boxPol.y + 90, tool: '❖', role: 'Stamping' },
         varun: { x: boxPol.x + 28, y: boxPol.y + boxPol.h - 18, tool: 'T', role: 'Typing' }
       });
       setActiveSelection({ x: boxPol.x, y: boxPol.y, w: boxPol.w, h: boxPol.h });
       setActiveGuides([]);
-      setBuildStage(4); // Pops with cv-stamp-pop!
+      setBuildStage(3); // Pops with cv-stamp-pop!
       typeText('Varun Sehgal, 2026 →', setTypedPolaroidCaption, 60, 20);
-    }, 3500);
+    }, 1900);
 
-    // 6. Stage 5: Stat 1 (6+ Projects)
+    // 5. Stage 4: Stat 1 (6+ Projects)
     schedule(() => {
-      const box1 = getBox('.cv-stats li:nth-child(1)', { x: 28, y: 520, w: 320, h: 85 });
-      const box2 = getBox('.cv-stats li:nth-child(2)', { x: 372, y: 520, w: 320, h: 85 });
+      const box1 = getBox('.cv-stats li:nth-child(1)', { x: 28, y: 460, w: 320, h: 85 });
+      const box2 = getBox('.cv-stats li:nth-child(2)', { x: 372, y: 460, w: 320, h: 85 });
       set4Swarm({
         elena: { x: box2.x, y: box2.y, tool: 'R', role: 'Framing' },
         alex: { x: box1.x + box1.w + 12, y: box1.y + 16, tool: 'V', role: 'Layout' },
         sarah: { x: box1.x + box1.w / 2, y: box1.y + 24, tool: '❖', role: 'Stamping' },
         varun: { x: box1.x + 36, y: box1.y + 22, tool: 'T', role: 'Typing' }
       });
-      setActiveSelection({ x: box1.x, y: box1.y, w: box1.w, h: box1.h, label: '❖ Stat 1 • 6+ Projects' });
-      setBuildStage(5);
+      setActiveSelection({ x: box1.x, y: box1.y, w: box1.w, h: box1.h });
+      setBuildStage(4);
       typeText('6+', setTypedStat1, 40, 30);
-    }, 4500);
+    }, 2900);
 
-    // 7. Stage 6: Stat 2 (200+ Hackers)
+    // 6. Stage 5: Stat 2 (200+ Hackers)
     schedule(() => {
-      const box2 = getBox('.cv-stats li:nth-child(2)', { x: 372, y: 520, w: 320, h: 85 });
-      const box3 = getBox('.cv-stats li:nth-child(3)', { x: 716, y: 520, w: 320, h: 85 });
+      const box2 = getBox('.cv-stats li:nth-child(2)', { x: 372, y: 460, w: 320, h: 85 });
+      const box3 = getBox('.cv-stats li:nth-child(3)', { x: 716, y: 460, w: 320, h: 85 });
       set4Swarm({
         elena: { x: box3.x, y: box3.y, tool: 'R', role: 'Framing' },
         alex: { x: box2.x + box2.w + 12, y: box2.y + 16, tool: 'V', role: 'Layout' },
         sarah: { x: box2.x + box2.w / 2, y: box2.y + 24, tool: '❖', role: 'Stamping' },
         varun: { x: box2.x + 36, y: box2.y + 22, tool: 'T', role: 'Typing' }
       });
-      setActiveSelection({ x: box2.x, y: box2.y, w: box2.w, h: box2.h, label: '❖ Stat 2 • 200+ Hackers' });
-      setBuildStage(6);
+      setActiveSelection({ x: box2.x, y: box2.y, w: box2.w, h: box2.h });
+      setBuildStage(5);
       typeText('200+', setTypedStat2, 40, 30);
-    }, 5300);
+    }, 3700);
 
-    // 8. Stage 7/8: Stat 3 (🥈 1st Runner-Up at HACKeThor)
+    // 7. Stage 6: Stat 3 (🥈 1st Runner-Up at HACKeThor)
     schedule(() => {
-      const box3 = getBox('.cv-stats li:nth-child(3)', { x: 716, y: 520, w: 320, h: 85 });
+      const box3 = getBox('.cv-stats li:nth-child(3)', { x: 716, y: 460, w: 320, h: 85 });
       set4Swarm({
         elena: { x: box3.x, y: box3.y, tool: 'R', role: 'Framing' },
         alex: { x: box3.x + box3.w - 10, y: box3.y + 16, tool: 'V', role: 'Layout' },
         sarah: { x: box3.x + box3.w / 2, y: box3.y + 24, tool: '❖', role: 'Stamping' },
         varun: { x: box3.x + 36, y: box3.y + 22, tool: 'T', role: 'Typing' }
       });
-      setActiveSelection({ x: box3.x, y: box3.y, w: box3.w, h: box3.h, label: '❖ Stat 3 • 🥈 1st Runner-Up' });
-      setBuildStage(7);
+      setActiveSelection({ x: box3.x, y: box3.y, w: box3.w, h: box3.h });
+      setBuildStage(6);
       typeText('🥈 1st Runner-Up', setTypedStat3, 40, 25);
-    }, 6100);
+    }, 4500);
 
-    // 9. Top section complete! Seamlessly glide to "What I work on"
+    // 8. Top section complete! Cursors rest cleanly; no auto-triggering lower sections
     schedule(() => {
-      setBuildStage(8);
+      setBuildStage(7);
       setActiveSelection(null);
       setActiveGuides([]);
-      const statBox = getBox('.cv-stats li:nth-child(2)', { x: 372, y: 520, w: 320, h: 85 });
+      const statBox = getBox('.cv-stats li:nth-child(2)', { x: 372, y: 460, w: 320, h: 85 });
       set4Swarm({
         elena: { x: statBox.x - 60, y: statBox.y + statBox.h + 35, tool: '✓', role: 'Framing' },
         alex: { x: statBox.x + 50, y: statBox.y + statBox.h + 35, tool: 'V', role: 'Layout' },
         sarah: { x: statBox.x + 170, y: statBox.y + statBox.h + 35, tool: '❖', role: 'Stamping' },
         varun: { x: statBox.x + 290, y: statBox.y + statBox.h + 35, tool: '↓', role: 'Typing' }
       });
-      schedule(() => {
-        if (!sectionsTriggeredRef.current.workOn) {
-          triggerSection('workOn');
-        }
-      }, 400);
-    }, 6900);
+    }, 5300);
   };
 
   // Progressive section builders triggered dynamically on scroll
@@ -352,7 +328,6 @@ const KittuResumeApp = ({
     setSectionsTriggered(prev => ({ ...prev, [sectionKey]: true }));
 
     if (sectionKey === 'workOn') {
-      if (onSwarmProgress) onSwarmProgress(-180);
       // Section: What I work on (Cards 1, 2, 3 - 2 Swarm Collaborative Framing & Live Typing)
       // Card 1: Product Design & Systems
       schedule(() => {
@@ -410,14 +385,9 @@ const KittuResumeApp = ({
           elena: { x: box2.x - 40, y: box2.y + box2.h + 24, role: 'Framing' },
           varun: { x: box2.x + 120, y: box2.y + box2.h + 24, role: 'Typing' }
         });
-        // Seamlessly auto-progress to Where I've worked (Zero freeze, zero blank void)
-        schedule(() => {
-          triggerSection('timeline');
-        }, 350);
       }, 3400);
     }
     else if (sectionKey === 'timeline') {
-      if (onSwarmProgress) onSwarmProgress(-460);
       // Section: Where I've worked & Study (2 Swarms working at once: Elena frames & stamps, Varun types title AND bullets!)
       // Job 1: UniEvent (Stage 12)
       schedule(() => {
@@ -551,14 +521,9 @@ const KittuResumeApp = ({
         setBuildStage(s => Math.max(s, 16));
         setActiveSelection(null);
         setActiveGuides([]);
-        // Seamlessly auto-progress to Things I've made
-        schedule(() => {
-          triggerSection('projects');
-        }, 350);
       }, 7500);
     }
     else if (sectionKey === 'projects') {
-      if (onSwarmProgress) onSwarmProgress(-980);
       // Section: Things I've made (6 Projects - 2 Swarms framing boxes and typing titles & descriptions!)
       // Project 1: CodeSrijan (Hero Card)
       schedule(() => {
@@ -703,16 +668,9 @@ const KittuResumeApp = ({
           elena: { x: box.x + 40, y: box.y + box.h + 24, role: 'Framing' },
           varun: { x: box.x + 200, y: box.y + box.h + 24, role: 'Typing' }
         });
-        // Auto-progress to contact
-        schedule(() => {
-          if (!sectionsTriggeredRef.current.contact) {
-            triggerSection('contact');
-          }
-        }, 400);
       }, 8600);
     }
     else if (sectionKey === 'contact') {
-      if (onSwarmProgress) onSwarmProgress(-1450);
       // Section: Say hello (2 Swarm live typing and framing)
       schedule(() => {
         const box = getBox('.cv-contact', { x: 28, y: 2340, w: 1032, h: 180 });
@@ -741,39 +699,36 @@ const KittuResumeApp = ({
         setActiveGuides([]);
       }, 1600);
 
-      // Done: smooth glide back to top-center
+      // Done: build complete
       schedule(() => {
         setIsBuilding(false);
         setBuildStage(24);
         setActiveCursors([]);
         setActiveSelection(null);
         setActiveGuides([]);
-        if (onScrollToTop) {
-          onScrollToTop();
-        }
       }, 2800);
     }
   };
 
   // Progressive scroll trigger strictly tied to notebook paper coordinates
-  // Prevents contact section from ever triggering prematurely!
+  // Only triggers when the user manually scrolls down to explore each section!
   useEffect(() => {
     if (!isBuilding || isReplayingRef.current) return;
 
     const notebookScroll = Math.max(0, (36 - (canvasPan?.y || 0)) / (canvasZoom || 1));
 
-    if (!sectionsTriggeredRef.current.workOn && notebookScroll >= 140) {
+    if (!sectionsTriggeredRef.current.workOn && notebookScroll >= 220) {
       triggerSection('workOn');
     }
-    if (!sectionsTriggeredRef.current.timeline && notebookScroll >= 440) {
+    if (!sectionsTriggeredRef.current.timeline && notebookScroll >= 620) {
       if (!sectionsTriggeredRef.current.workOn) triggerSection('workOn');
       triggerSection('timeline');
     }
-    if (!sectionsTriggeredRef.current.projects && notebookScroll >= 1050) {
+    if (!sectionsTriggeredRef.current.projects && notebookScroll >= 1150) {
       if (!sectionsTriggeredRef.current.timeline) triggerSection('timeline');
       triggerSection('projects');
     }
-    if (!sectionsTriggeredRef.current.contact && notebookScroll >= 1650) {
+    if (!sectionsTriggeredRef.current.contact && notebookScroll >= 1750) {
       if (!sectionsTriggeredRef.current.projects) triggerSection('projects');
       triggerSection('contact');
     }
@@ -1078,22 +1033,9 @@ const KittuResumeApp = ({
               </div>
             </div>
 
-            {/* Right side: Sticky note (Stage 3) + Polaroid photo (Stage 4) */}
+            {/* Right side: Polaroid photo (Stage 3) */}
             <div className="cv-side">
-              <aside
-                className={`cv-note ${isBuilding && buildStage < 3 ? 'cv-item-hidden' : 'cv-item-visible cv-stamp-pop'}`}
-                aria-label="What I'm working on now"
-              >
-                <p className="cv-note-head">
-                  {typedNoteHead || (!isBuilding ? 'Now: AI Interview & EventFlow' : '\u00A0')}
-                  {isBuilding && buildStage === 3 && typedNoteHead && <span className="cv-typing-caret">|</span>}
-                </p>
-                <p>
-                  {typedNoteBody || (!isBuilding ? 'Architecting multi-token design systems in Figma and translating them with sub-millisecond fidelity into Next.js & Tailwind components.' : '\u00A0')}
-                </p>
-              </aside>
-
-              <div className={`cv-polaroid ${isBuilding && buildStage < 4 ? 'cv-item-hidden' : 'cv-item-visible cv-stamp-pop'}`}>
+              <div className={`cv-polaroid ${isBuilding && buildStage < 3 ? 'cv-item-hidden' : 'cv-item-visible cv-stamp-pop'}`}>
                 <img
                   src="/varun.jpg"
                   alt="Varun Sehgal"
@@ -1101,22 +1043,22 @@ const KittuResumeApp = ({
                 />
                 <span>
                   {typedPolaroidCaption || (!isBuilding ? 'Varun Sehgal, 2026 →' : '\u00A0')}
-                  {isBuilding && buildStage === 4 && typedPolaroidCaption && <span className="cv-typing-caret">|</span>}
+                  {isBuilding && buildStage === 3 && typedPolaroidCaption && <span className="cv-typing-caret">|</span>}
                 </span>
               </div>
             </div>
 
-            {/* In Numbers Stats Row (3 Wob-Pills) - Sequentially stamped one by one (Stages 5, 6, 7) */}
+            {/* In Numbers Stats Row (3 Wob-Pills) - Sequentially stamped one by one (Stages 4, 5, 6) */}
             <ul className="cv-stats" aria-label="In numbers">
-              <li className={`cv-stat ${isBuilding && buildStage < 5 ? 'cv-item-hidden' : 'cv-item-visible cv-stamp-pop'}`}>
+              <li className={`cv-stat ${isBuilding && buildStage < 4 ? 'cv-item-hidden' : 'cv-item-visible cv-stamp-pop'}`}>
                 <strong>{typedStat1 || (!isBuilding ? '6+' : '\u00A0')}</strong>
                 <span>industry &amp; SaaS projects shipped</span>
               </li>
-              <li className={`cv-stat ${isBuilding && buildStage < 6 ? 'cv-item-hidden' : 'cv-item-visible cv-stamp-pop'}`}>
+              <li className={`cv-stat ${isBuilding && buildStage < 5 ? 'cv-item-hidden' : 'cv-item-visible cv-stamp-pop'}`}>
                 <strong>{typedStat2 || (!isBuilding ? '200+' : '\u00A0')}</strong>
                 <span>hackers organized at CodeSrijan</span>
               </li>
-              <li className={`cv-stat ${isBuilding && buildStage < 7 ? 'cv-item-hidden' : 'cv-item-visible cv-stamp-pop'}`}>
+              <li className={`cv-stat ${isBuilding && buildStage < 6 ? 'cv-item-hidden' : 'cv-item-visible cv-stamp-pop'}`}>
                 <strong>{typedStat3 || (!isBuilding ? '🥈 1st Runner-Up' : '\u00A0')}</strong>
                 <span>(2nd Place) at HACKeThor (Unstop)</span>
               </li>

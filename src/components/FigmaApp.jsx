@@ -2810,32 +2810,6 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     canvasPan={pan}
                     canvasZoom={zoom}
                     onBack={() => setActiveTab('home')}
-                    onSwarmProgress={(targetY) => {
-                      if (panRafRef.current) cancelAnimationFrame(panRafRef.current);
-                      // Smoothly glide canvas pan vertically to follow typing cursors while keeping horizontal Top-Mid
-                      const stageW = containerRef.current?.clientWidth || 900;
-                      const fitZoom = calculateFitZoom('resume', stageW);
-                      const targetX = Math.round((stageW - 1080 * fitZoom) / 2);
-                      const startX = panRef.current.x;
-                      const startY = panRef.current.y;
-                      const startTime = performance.now();
-                      const duration = 500;
-                      const animatePan = (now) => {
-                        const elapsed = now - startTime;
-                        const progress = Math.min(1, elapsed / duration);
-                        const eased = 1 - Math.pow(1 - progress, 3);
-                        const curX = Math.round(startX + (targetX - startX) * eased);
-                        const curY = Math.round(startY + (targetY - startY) * eased);
-                        setPan({ x: curX, y: curY });
-                        panRef.current = { x: curX, y: curY };
-                        if (progress < 1) {
-                          panRafRef.current = requestAnimationFrame(animatePan);
-                        } else {
-                          panRafRef.current = null;
-                        }
-                      };
-                      panRafRef.current = requestAnimationFrame(animatePan);
-                    }}
                     onScrollToTop={() => {
                       if (panRafRef.current) cancelAnimationFrame(panRafRef.current);
                       // Smoothly glide canvas pan back to top so user is dragged up to TOP-MID of notebook

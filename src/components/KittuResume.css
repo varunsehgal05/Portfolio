@@ -160,11 +160,9 @@
 }
 
 /* Taped sticky note effect */
-.cv-note:after,
 .cv-polaroid:after,
 .cv-thread:after,
-.cv-made-big .cv-made-card:after,
-.cv-made-big a:after {
+.cv-made-big .cv-made-card:after {
   content: "";
   background: var(--tape);
   pointer-events: none;
@@ -237,34 +235,15 @@
 
 .cv-side {
   justify-self: end;
-  gap: 28px;
   width: min(100%, 23rem);
-  display: grid;
-}
-
-.cv-note {
-  background: var(--sticky);
-  color: var(--sticky-ink);
-  box-shadow: var(--shadow);
-  padding: 24px 22px 22px;
-  font-size: 1.15rem;
-  line-height: 1.4;
-  position: relative;
-  transform: rotate(2deg);
-  border-radius: 4px;
-}
-
-.cv-note-head {
-  font-family: var(--nf-hand), cursive;
-  margin-bottom: 8px;
-  font-size: 2rem;
-  font-weight: 700;
-  line-height: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .cv-polaroid {
   color: #2b2b2b;
-  width: 82%;
+  width: min(100%, 250px);
   box-shadow: var(--shadow);
   background: #ffffff;
   justify-self: center;
@@ -753,10 +732,11 @@
 }
 
 .cv-item-hidden {
-  opacity: 0.12 !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
   transform: translateY(6px) scale(0.99);
   pointer-events: none !important;
-  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 .cv-typing-caret {
@@ -774,6 +754,7 @@
 
 .cv-item-visible {
   opacity: 1 !important;
+  visibility: visible !important;
   transform: translateY(0) scale(1) !important;
   pointer-events: auto !important;
   transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
