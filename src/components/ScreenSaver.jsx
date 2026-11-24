@@ -606,14 +606,6 @@ const ScreenSaver = ({ isIdle, onWake }) => {
             #Frame_HeroClock 820 x 440
           </div>
 
-          {/* Elena Cursor Annotation attached to top edge */}
-          <div className="figma-cursor-pill elena-cursor">
-            <svg className="cursor-arrow-svg" width="10" height="12" viewBox="0 0 10 12" fill="none">
-              <path d="M0 0L10 6L4.5 7.5L2 12L0 0Z" fill="#f59e0b" />
-            </svg>
-            <span>Elena (Product) Vibe check ✌️</span>
-          </div>
-
           {/* Top-Right AutoLayout Tag */}
           <div className="frame-meta-tag top-right-label">
             AutoLayout: Col · Gap: 24 · Center
