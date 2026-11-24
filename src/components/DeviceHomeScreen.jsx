@@ -17,7 +17,19 @@ import {
   Coffee,
   Trash2,
   Folder,
-  Volume2
+  Volume2,
+  Lock,
+  Moon,
+  Clock,
+  Trophy,
+  Award,
+  Copy,
+  Check,
+  ShieldCheck,
+  Cpu,
+  Code2,
+  Terminal,
+  Zap
 } from 'lucide-react';
 import './DeviceHomeScreen.css';
 
@@ -123,7 +135,7 @@ const DeviceHomeScreen = ({
   onSetDeviceMode
 }) => {
   const [time, setTime] = useState(new Date());
-  const [showDeviceMenu, setShowDeviceMenu] = useState(false);
+  const [copiedId, setCopiedId] = useState(false);
   const [dynamicIslandExpanded, setDynamicIslandExpanded] = useState(false);
 
   useEffect(() => {
@@ -145,6 +157,22 @@ const DeviceHomeScreen = ({
     }
   };
 
+  // Immediate Sleep & Lo-Fi Screensaver Trigger
+  const handleSleepTrigger = (e) => {
+    if (e) e.stopPropagation();
+    window.dispatchEvent(new CustomEvent('varunos:sleep'));
+  };
+
+  const handleCopyCredential = (e) => {
+    if (e) e.stopPropagation();
+    const credId = 'd883bbf5-5d9f-43e9-a417-21a49009f4ff';
+    if (navigator?.clipboard?.writeText) {
+      navigator.clipboard.writeText(credId);
+    }
+    setCopiedId(true);
+    setTimeout(() => setCopiedId(false), 2400);
+  };
+
   const dockApps = mode === 'mobile' ? DOCK_APP_IDS.mobile : DOCK_APP_IDS.tablet;
 
   return (
@@ -163,6 +191,15 @@ const DeviceHomeScreen = ({
           </div>
 
           <div className="ipad-status-right">
+            <button
+              className="ipad-status-sleep-btn"
+              onClick={handleSleepTrigger}
+              title="Put iPad to sleep (Lo-Fi Screensaver)"
+              type="button"
+            >
+              <Moon size={12} className="sleep-icon" />
+              <span>Lock</span>
+            </button>
             <Wifi size={14} className="ipad-status-icon" />
             <div className="ipad-battery-pill" title="Battery: 98%">
               <span className="ipad-battery-text">98%</span>
@@ -204,6 +241,14 @@ const DeviceHomeScreen = ({
           </div>
 
           <div className="ios-status-right">
+            <button
+              className="ios-status-sleep-btn"
+              onClick={handleSleepTrigger}
+              title="Lock Screen & Lo-Fi"
+              type="button"
+            >
+              <Moon size={12} />
+            </button>
             {/* Cellular Signal Bars */}
             <div className="ios-signal-bars" title="5G Cellular: Full Signal">
               <span className="bar bar1" />
@@ -222,115 +267,298 @@ const DeviceHomeScreen = ({
 
       {/* 2. HOME SCREEN BODY */}
       <main className="device-home-body">
-        {/* Profile Glance Card (iPad & iOS Widget) */}
         {mode === 'tablet' ? (
-          <div className="ipad-today-widget">
-            <div className="ipad-widget-profile">
-              <div className="ipad-widget-avatar-wrap">
+          <>
+            {/* Top Smart Widgets Deck: Profile + VibeCoder Live Telemetry */}
+            <div className="ipad-top-deck">
+              {/* Widget 1: Profile & Quick Actions */}
+              <div className="ipad-today-widget">
+                <div className="ipad-widget-profile">
+                  <div className="ipad-widget-avatar-wrap">
+                    <picture>
+                      <source srcSet="/varun-avatar.webp" type="image/webp" />
+                      <img
+                        src="/varun-avatar.jpg"
+                        alt="Varun Sehgal avatar"
+                        className="ipad-widget-avatar"
+                        width="54"
+                        height="54"
+                      />
+                    </picture>
+                    <span className="ipad-online-dot" />
+                  </div>
+                  <div className="ipad-widget-info">
+                    <div className="ipad-widget-title-row">
+                      <h1 className="ipad-widget-name">Varun Sehgal</h1>
+                      <span className="ipad-role-pill">Lead UI/UX Designer</span>
+                    </div>
+                    <p className="ipad-widget-desc">
+                      Architecting AI-powered SaaS interfaces, high-conversion design systems & multi-app ecosystems.
+                    </p>
+                    <div className="ipad-widget-tags">
+                      <span className="widget-tag">Figma Systems</span>
+                      <span className="widget-tag">Next.js & React</span>
+                      <span className="widget-tag">National Hackathon Winner</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="ipad-widget-actions">
+                  <button
+                    className="ipad-quick-btn primary"
+                    onClick={() => handleAppClick('figma')}
+                  >
+                    <Sparkles size={13} />
+                    <span>Open Figma</span>
+                  </button>
+                  <button
+                    className="ipad-quick-btn"
+                    onClick={() => handleAppClick('resume')}
+                  >
+                    <FileText size={13} />
+                    <span>Resume</span>
+                  </button>
+                  <button
+                    className="ipad-quick-btn"
+                    onClick={() => handleAppClick('reviews')}
+                  >
+                    <Star size={13} />
+                    <span>Reviews</span>
+                  </button>
+                  <button
+                    className="ipad-quick-btn sleep"
+                    onClick={handleSleepTrigger}
+                    title="Lock Screen with Lo-Fi music"
+                  >
+                    <Moon size={13} />
+                    <span>Sleep & Lo-Fi</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Widget 2: VibeCoder Engine & Live Clock Widget */}
+              <div className="ipad-telemetry-widget">
+                <div className="telemetry-widget-header">
+                  <div className="telemetry-badge">
+                    <Zap size={11} className="telemetry-zap" />
+                    <span>VIBECODER LIVE ENGINE</span>
+                  </div>
+                  <span className="telemetry-fps">Canvas: 60 FPS</span>
+                </div>
+
+                <div className="telemetry-clock-display">
+                  <span className="telemetry-time">{formatTime()}</span>
+                  <span className="telemetry-sprint">Sprint 48 // Deep Focus</span>
+                </div>
+
+                <div className="telemetry-stats-row">
+                  <div className="telemetry-chip">
+                    <span className="chip-dot green" />
+                    <span>AST 100% Synced</span>
+                  </div>
+                  <div className="telemetry-chip">
+                    <span className="chip-dot blue" />
+                    <span>WebGL 2.0</span>
+                  </div>
+                  <div className="telemetry-chip">
+                    <span className="chip-dot purple" />
+                    <span>Lo-Fi Audio</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* APP ICONS GRID */}
+            <section className="device-app-grid grid-tablet" aria-label="Apps Grid">
+              {DEVICE_APPS.map((app) => {
+                const Icon = app.icon;
+                const isOpen = openWindows.includes(app.id);
+                const isActive = activeWindow === app.id;
+
+                return (
+                  <button
+                    key={app.id}
+                    className={`device-app-item ${isOpen ? 'is-open' : ''} ${isActive ? 'is-active' : ''}`}
+                    onClick={() => handleAppClick(app.id)}
+                    title={`Open ${app.name}`}
+                  >
+                    <div className="device-app-icon-squircle">
+                      <Icon />
+                      {isOpen && <span className="app-running-dot" />}
+                    </div>
+                    <span className="device-app-label">{app.name}</span>
+                  </button>
+                );
+              })}
+            </section>
+
+            {/* Bottom Widgets Deck: Hackathon Win Milestone + Engineering Specs */}
+            <div className="ipad-bottom-deck">
+              {/* Widget A: Hackathon Win Card (Matching User Screenshot) */}
+              <div className="ipad-milestone-widget">
+                <div className="milestone-card-top">
+                  <span className="milestone-date">Apr 2025</span>
+                  <span className="milestone-win-badge">
+                    <Trophy size={11} />
+                    <span>Hackathon Win</span>
+                  </span>
+                </div>
+                <h3 className="milestone-title">
+                  HAcKeThor 1st Runner-Up (2nd Place) <span className="milestone-sub-text">awarded 2nd Place / 1st Runner-Up by Unstop</span>
+                </h3>
+                <p className="milestone-desc">
+                  Awarded 1st runner-up (2nd place) in national competitive hackathon demonstrating rapid UX prototyping, interactive user testing, and AI tool integration under high pressure.
+                </p>
+                <div className="milestone-cred-bar">
+                  <span className="cred-pill orange">
+                    <Award size={12} />
+                    <span>1st Runner-Up (2nd Place)</span>
+                  </span>
+                  <span className="cred-pill-id">
+                    ID: d883bbf5-5d9f-43e9-a417-21a49009f4ff
+                  </span>
+                </div>
+                <div className="milestone-actions">
+                  <button
+                    className="milestone-btn primary"
+                    onClick={() => handleAppClick('finder')}
+                    title="View Verified Hackathon Credential"
+                  >
+                    <ShieldCheck size={13} />
+                    <span>Verify Credential</span>
+                  </button>
+                  <button
+                    className={`milestone-btn ${copiedId ? 'copied' : ''}`}
+                    onClick={handleCopyCredential}
+                    title="Copy Credential ID"
+                  >
+                    {copiedId ? <Check size={13} color="#22c55e" /> : <Copy size={13} />}
+                    <span>{copiedId ? 'Copied ID ✓' : 'Copy ID'}</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Widget B: Engineering & Design Tokens Architecture */}
+              <div className="ipad-specs-widget">
+                <div className="specs-card-top">
+                  <span className="specs-tag-title">System Architecture</span>
+                  <span className="specs-os-badge">iPadOS 18.2</span>
+                </div>
+                <h3 className="specs-title">Design Engineering & Vibe Stack</h3>
+                <div className="specs-metrics-grid">
+                  <div className="spec-metric-item">
+                    <span className="metric-label">Design Tokens</span>
+                    <span className="metric-value">Figma Variables + CSS</span>
+                  </div>
+                  <div className="spec-metric-item">
+                    <span className="metric-label">Runtime</span>
+                    <span className="metric-value">React 19 + Framer Motion</span>
+                  </div>
+                  <div className="spec-metric-item">
+                    <span className="metric-label">Audio Synth</span>
+                    <span className="metric-value">Procedural Lo-Fi (78 BPM)</span>
+                  </div>
+                  <div className="spec-metric-item">
+                    <span className="metric-label">Agent Engine</span>
+                    <span className="metric-value">Antigravity Swarm v2.4</span>
+                  </div>
+                </div>
+                <div className="specs-footer">
+                  <span className="specs-status-chip">
+                    <span className="status-dot-pulse" />
+                    <span>All 10 Apps Sandboxed & Verified</span>
+                  </span>
+                  <div className="specs-quick-actions">
+                    <button
+                      className="specs-pill-btn"
+                      onClick={() => handleAppClick('terminal')}
+                      title="Launch Shell"
+                    >
+                      <Terminal size={12} />
+                      <span>Shell</span>
+                    </button>
+                    <button
+                      className="specs-pill-btn"
+                      onClick={() => handleAppClick('vscode')}
+                      title="Open Code"
+                    >
+                      <Code2 size={12} />
+                      <span>Code</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </>
+        ) : (
+          /* Mobile View */
+          <>
+            <div className="ios-glance-widget">
+              <div className="ios-widget-avatar-wrap">
                 <picture>
                   <source srcSet="/varun-avatar.webp" type="image/webp" />
                   <img
                     src="/varun-avatar.jpg"
                     alt="Varun Sehgal avatar"
-                    className="ipad-widget-avatar"
-                    width="54"
-                    height="54"
+                    className="ios-widget-avatar"
+                    width="44"
+                    height="44"
                   />
                 </picture>
-                <span className="ipad-online-dot" />
+                <span className="ios-online-dot" />
               </div>
-              <div className="ipad-widget-info">
-                <div className="ipad-widget-title-row">
-                  <h1 className="ipad-widget-name">Varun Sehgal</h1>
-                  <span className="ipad-role-pill">Lead UI/UX Designer</span>
-                </div>
-                <p className="ipad-widget-desc">
-                  Architecting AI-powered SaaS interfaces, high-conversion design systems & multi-app ecosystems.
-                </p>
-                <div className="ipad-widget-tags">
-                  <span className="widget-tag">Figma Systems</span>
-                  <span className="widget-tag">Next.js & React</span>
-                  <span className="widget-tag">National Hackathon Winner</span>
-                </div>
+              <div className="ios-widget-info">
+                <div className="ios-widget-name">Varun Sehgal</div>
+                <div className="ios-widget-sub">UI/UX & Product Engineer</div>
+                <div className="ios-status-tag">🟢 Open for roles & freelance</div>
               </div>
-            </div>
-            <div className="ipad-widget-actions">
               <button
-                className="ipad-quick-btn primary"
-                onClick={() => handleAppClick('figma')}
+                className="ios-sleep-quick-btn"
+                onClick={handleSleepTrigger}
+                title="Lock & Lo-Fi"
               >
-                <Sparkles size={13} />
-                <span>Open Figma</span>
-              </button>
-              <button
-                className="ipad-quick-btn"
-                onClick={() => handleAppClick('resume')}
-              >
-                <FileText size={13} />
-                <span>Resume</span>
-              </button>
-              <button
-                className="ipad-quick-btn"
-                onClick={() => handleAppClick('reviews')}
-              >
-                <Star size={13} />
-                <span>Reviews</span>
+                <Moon size={14} />
               </button>
             </div>
-          </div>
-        ) : (
-          <div className="ios-glance-widget">
-            <div className="ios-widget-avatar-wrap">
-              <picture>
-                <source srcSet="/varun-avatar.webp" type="image/webp" />
-                <img
-                  src="/varun-avatar.jpg"
-                  alt="Varun Sehgal avatar"
-                  className="ios-widget-avatar"
-                  width="44"
-                  height="44"
-                />
-              </picture>
-              <span className="ios-online-dot" />
-            </div>
-            <div className="ios-widget-info">
-              <div className="ios-widget-name">Varun Sehgal</div>
-              <div className="ios-widget-sub">UI/UX & Product Engineer</div>
-              <div className="ios-status-tag">🟢 Open for roles & freelance</div>
-            </div>
-          </div>
-        )}
 
-        {/* APP ICONS GRID */}
-        <section className={`device-app-grid grid-${mode}`} aria-label="Apps Grid">
-          {DEVICE_APPS.map((app) => {
-            const Icon = app.icon;
-            const isOpen = openWindows.includes(app.id);
-            const isActive = activeWindow === app.id;
+            {/* Mobile App Grid */}
+            <section className="device-app-grid grid-mobile" aria-label="Apps Grid">
+              {DEVICE_APPS.map((app) => {
+                const Icon = app.icon;
+                const isOpen = openWindows.includes(app.id);
+                const isActive = activeWindow === app.id;
 
-            return (
-              <button
-                key={app.id}
-                className={`device-app-item ${isOpen ? 'is-open' : ''} ${isActive ? 'is-active' : ''}`}
-                onClick={() => handleAppClick(app.id)}
-                title={`Open ${app.name}`}
-              >
-                <div className="device-app-icon-squircle">
-                  <Icon />
-                  {isOpen && <span className="app-running-dot" />}
-                </div>
-                <span className="device-app-label">{app.name}</span>
-              </button>
-            );
-          })}
-        </section>
+                return (
+                  <button
+                    key={app.id}
+                    className={`device-app-item ${isOpen ? 'is-open' : ''} ${isActive ? 'is-active' : ''}`}
+                    onClick={() => handleAppClick(app.id)}
+                    title={`Open ${app.name}`}
+                  >
+                    <div className="device-app-icon-squircle">
+                      <Icon />
+                      {isOpen && <span className="app-running-dot" />}
+                    </div>
+                    <span className="device-app-label">{app.name}</span>
+                  </button>
+                );
+              })}
+            </section>
 
-        {/* iOS Search Pill */}
-        {mode === 'mobile' && (
-          <div className="ios-search-pill" onClick={() => handleAppClick('finder')} role="button" tabIndex={0}>
-            <Search size={13} />
-            <span>Search Portfolio</span>
-          </div>
+            {/* Mobile Hackathon Glance */}
+            <div className="ios-hackathon-card" onClick={() => handleAppClick('finder')}>
+              <div className="ios-hackathon-badge">
+                <Trophy size={11} />
+                <span>Hackathon 1st Runner-Up (2nd Place)</span>
+              </div>
+              <div className="ios-hackathon-sub">National UX & AI Prototyping Win by Unstop</div>
+            </div>
+
+            {/* iOS Search Pill */}
+            <div className="ios-search-pill" onClick={() => handleAppClick('finder')} role="button" tabIndex={0}>
+              <Search size={13} />
+              <span>Search Portfolio</span>
+            </div>
+          </>
         )}
       </main>
 

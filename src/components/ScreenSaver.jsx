@@ -478,6 +478,7 @@ const ScreenSaver = ({ isIdle, onWake }) => {
       ref={containerRef}
       className={`screensaver ${isIdle ? 'active' : ''}`}
       onClick={handleWake}
+      onTouchStart={handleWake}
       role="dialog"
       aria-modal="true"
       aria-label="Figma Screensaver Idle Mode"
