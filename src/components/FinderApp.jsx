@@ -132,7 +132,7 @@ const FinderApp = ({ onOpenApp, isRebuilding = false }) => {
   const FULL_HERO_TITLE = "Designing intuitive web apps & modern interfaces";
   const effectiveRebuilding = Boolean(isRebuilding);
   const [rebuildStep, setRebuildStep] = useState(() => isRebuilding ? (typeof window !== 'undefined' && window.__varunos_rebuild_active && typeof window.__varunos_finder_step === 'number' && window.__varunos_finder_step < 7 ? window.__varunos_finder_step : 0) : 7);
-  const [sidebarStep, setSidebarStep] = useState(() => isRebuilding ? (typeof window !== 'undefined' && window.__varunos_rebuild_active && typeof window.__varunos_sidebar_step === 'number' && window.__varunos_sidebar_step < 15 ? window.__varunos_sidebar_step : 0) : 15);
+  const [sidebarStep, setSidebarStep] = useState(() => isRebuilding ? (typeof window !== 'undefined' && window.__varunos_rebuild_active && typeof window.__varunos_sidebar_step === 'number' && window.__varunos_sidebar_step < 14 ? window.__varunos_sidebar_step : 0) : 14);
   const [typedTitle, setTypedTitle] = useState(() => isRebuilding ? '' : FULL_HERO_TITLE);
   const [toolbarStep, setToolbarStep] = useState(() => isRebuilding ? 0 : 4);
   const [typedPath, setTypedPath] = useState(() => isRebuilding ? '' : 'Macintosh HD > Users > varun > Featured Works');
@@ -143,7 +143,7 @@ const FinderApp = ({ onOpenApp, isRebuilding = false }) => {
   useEffect(() => {
     if (isRebuilding) {
       setRebuildStep(typeof window !== 'undefined' && window.__varunos_rebuild_active && typeof window.__varunos_finder_step === 'number' && window.__varunos_finder_step < 7 ? window.__varunos_finder_step : 0);
-      setSidebarStep(typeof window !== 'undefined' && window.__varunos_rebuild_active && typeof window.__varunos_sidebar_step === 'number' && window.__varunos_sidebar_step < 15 ? window.__varunos_sidebar_step : 0);
+      setSidebarStep(typeof window !== 'undefined' && window.__varunos_rebuild_active && typeof window.__varunos_sidebar_step === 'number' && window.__varunos_sidebar_step < 14 ? window.__varunos_sidebar_step : 0);
       setToolbarStep(0);
       setTypedTitle('');
       setTypedPath('');
@@ -152,7 +152,7 @@ const FinderApp = ({ onOpenApp, isRebuilding = false }) => {
       setCardBuildState({});
     } else {
       setRebuildStep(7);
-      setSidebarStep(15);
+      setSidebarStep(14);
       setToolbarStep(4);
       setTypedTitle(FULL_HERO_TITLE);
       setTypedPath('Macintosh HD > Users > varun > Featured Works');
@@ -202,7 +202,7 @@ const FinderApp = ({ onOpenApp, isRebuilding = false }) => {
 
   useEffect(() => {
     if (rebuildStep >= 2) {
-      setSidebarStep(15);
+      setSidebarStep(14);
     }
   }, [rebuildStep]);
 
@@ -267,7 +267,7 @@ const FinderApp = ({ onOpenApp, isRebuilding = false }) => {
         window.__varunos_finder_step = e.detail.step;
         setRebuildStep(e.detail.step);
         if (e.detail.step >= 7) {
-          setSidebarStep(15);
+          setSidebarStep(14);
           setToolbarStep(4);
           setTypedPath('Macintosh HD > Users > varun > Featured Works');
           setTypedSearch('Search in Finder...');
@@ -381,13 +381,12 @@ const FinderApp = ({ onOpenApp, isRebuilding = false }) => {
             <div className={`finder-section-title ${isSidebarItemVisible(10) ? 'finder-sidebar-item-stamped' : 'finder-sidebar-item-hidden'}`}>Tags</div>
             <div className={`finder-tag-row ${isSidebarItemVisible(11) ? 'finder-sidebar-item-stamped' : 'finder-sidebar-item-hidden'}`}><span className="tag-dot red"></span><span>Work</span></div>
             <div className={`finder-tag-row ${isSidebarItemVisible(12) ? 'finder-sidebar-item-stamped' : 'finder-sidebar-item-hidden'}`}><span className="tag-dot orange"></span><span>Design</span></div>
-            <div className={`finder-tag-row ${isSidebarItemVisible(13) ? 'finder-sidebar-item-stamped' : 'finder-sidebar-item-hidden'}`}><span className="tag-dot purple"></span><span>AI & LLM</span></div>
-            <div className={`finder-tag-row ${isSidebarItemVisible(14) ? 'finder-sidebar-item-stamped' : 'finder-sidebar-item-hidden'}`}><span className="tag-dot blue"></span><span>Personal</span></div>
+            <div className={`finder-tag-row ${isSidebarItemVisible(13) ? 'finder-sidebar-item-stamped' : 'finder-sidebar-item-hidden'}`}><span className="tag-dot blue"></span><span>Personal</span></div>
           </div>
         </div>
 
         {/* User Profile Card at bottom */}
-        <div className={`finder-profile-card ${isSidebarItemVisible(15) ? 'finder-sidebar-item-stamped' : 'finder-sidebar-item-hidden'}`}>
+        <div className={`finder-profile-card ${isSidebarItemVisible(14) ? 'finder-sidebar-item-stamped' : 'finder-sidebar-item-hidden'}`}>
           <div className="finder-avatar-circle">
             <picture>
               <source srcSet="/varun-avatar.webp" type="image/webp" />

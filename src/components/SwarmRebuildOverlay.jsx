@@ -1280,7 +1280,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           'CodeSrijan Hackathon Platform'
         ];
 
-        // 15 Sidebar Items for deliberate, sequential 1-by-1 stamping by Elena Rostova
+        // 14 Sidebar Items for deliberate, sequential 1-by-1 stamping by Elena Rostova
         const SIDEBAR_ITEMS = [
           { step: 1, label: 'Sidebar Frame', chat: 'extruding sidebar frame (200px)', yRel: 14, h: 28, isHeader: false },
           { step: 2, label: 'Favorites', chat: 'stamping Favorites section', yRel: 34, h: 20, isHeader: true },
@@ -1294,9 +1294,8 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           { step: 10, label: 'Tags', chat: 'stamping Tags section', yRel: 258, h: 20, isHeader: true },
           { step: 11, label: 'Tag: Work', chat: 'stamping 🔴 Work tag', yRel: 280, h: 20, isHeader: false },
           { step: 12, label: 'Tag: Design', chat: 'stamping 🟠 Design tag', yRel: 300, h: 20, isHeader: false },
-          { step: 13, label: 'Tag: AI & LLM', chat: 'stamping 🟣 AI & LLM tag', yRel: 320, h: 20, isHeader: false },
-          { step: 14, label: 'Tag: Personal', chat: 'stamping 🔵 Personal tag', yRel: 340, h: 20, isHeader: false },
-          { step: 15, label: 'Varun Profile Card', chat: 'mounting profile card', yRel: Math.max(380, sidebarBox.h - 52), h: 48, isHeader: false }
+          { step: 13, label: 'Tag: Personal', chat: 'stamping 🔵 Personal tag', yRel: 320, h: 20, isHeader: false },
+          { step: 14, label: 'Varun Profile Card', chat: 'mounting profile card', yRel: Math.max(360, sidebarBox.h - 52), h: 48, isHeader: false }
         ];
 
         // 5.1: Alex Chen Extrudes Outer Window Frame Box (13.0s - 14.4s) -> Step 0
@@ -1395,9 +1394,9 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
         else if (pWin < 5.2) {
           const tMulti = Math.min(1, Math.max(0, (pWin - 1.2) / 4.0));
 
-          // 1. Elena Rostova: 15 Sidebar Items 1-by-1
-          const stepFloat = tMulti * 15;
-          const itemIdx = Math.min(14, Math.floor(stepFloat));
+          // 1. Elena Rostova: 14 Sidebar Items 1-by-1
+          const stepFloat = tMulti * SIDEBAR_ITEMS.length;
+          const itemIdx = Math.min(SIDEBAR_ITEMS.length - 1, Math.floor(stepFloat));
           const subProg = stepFloat - itemIdx;
           const currentItem = SIDEBAR_ITEMS[itemIdx];
 
