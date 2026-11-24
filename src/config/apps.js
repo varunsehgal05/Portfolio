@@ -27,7 +27,7 @@ export const portfolioApps = {
   },
   resume: {
     id: 'resume',
-    name: 'Resume.pdf',
+    name: 'Resume',
     title: 'Preview — Varun_Sehgal_Resume.pdf',
     url: '/resume.pdf',
     icon: 'resume'

@@ -31,13 +31,13 @@ const PdfIcon = () => (
       bottom: '1px',
       background: '#b91c1c',
       color: '#fff',
-      fontSize: '7px',
+      fontSize: '6px',
       fontWeight: '800',
-      padding: '0 2px',
+      padding: '0 2.5px',
       borderRadius: '2px',
       letterSpacing: '0.2px'
     }}>
-      PDF
+      RESUME
     </span>
   </div>
 );

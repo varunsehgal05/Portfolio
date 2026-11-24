@@ -63,7 +63,7 @@ const TerminalAppIcon = () => (
 const ResumeAppIcon = () => (
   <div className="device-app-icon-inner resume-bg">
     <FileText size={24} color="#ffffff" />
-    <span className="resume-pdf-pill">PDF</span>
+    <span className="resume-pdf-pill">RESUME</span>
   </div>
 );
 

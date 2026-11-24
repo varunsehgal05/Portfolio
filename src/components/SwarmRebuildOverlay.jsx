@@ -800,7 +800,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           updateStage(3, 740); // Reveal Desktop Icons container in Desktop.jsx
         }
 
-        const iconNames = ['Figma', 'VS Code', 'Resume.pdf', 'Contact', 'Reviews', 'Buy Me a Coffee', 'Trash'];
+        const iconNames = ['Figma', 'VS Code', 'Resume', 'Contact', 'Reviews', 'Buy Me a Coffee', 'Trash'];
         if (!iconCacheRef.current || (now - lastIconMeasureRef.current > 500)) {
           lastIconMeasureRef.current = now;
           const domIcons = typeof document !== 'undefined' ? document.querySelectorAll('.desktop-icon-container') : null;
@@ -1283,7 +1283,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
           { step: 6, label: 'Locations', chat: 'stamping Locations section', yRel: 146, h: 20, isHeader: true },
           { step: 7, label: 'VS Code Projects', chat: 'stamping VS Code Projects', yRel: 170, h: 26, isHeader: false },
           { step: 8, label: 'GitHub Repos', chat: 'stamping GitHub Repos', yRel: 198, h: 26, isHeader: false },
-          { step: 9, label: 'Resume PDF', chat: 'stamping Resume PDF', yRel: 226, h: 26, isHeader: false },
+          { step: 9, label: 'Resume', chat: 'stamping Resume', yRel: 226, h: 26, isHeader: false },
           { step: 10, label: 'Tags', chat: 'stamping Tags section', yRel: 258, h: 20, isHeader: true },
           { step: 11, label: 'Tag: Work', chat: 'stamping 🔴 Work tag', yRel: 280, h: 20, isHeader: false },
           { step: 12, label: 'Tag: Design', chat: 'stamping 🟠 Design tag', yRel: 300, h: 20, isHeader: false },

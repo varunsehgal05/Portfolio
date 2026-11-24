@@ -744,14 +744,14 @@
 
 .resume-pdf-pill {
   position: absolute;
-  bottom: 6px;
-  font-size: 7.5px;
+  bottom: 5px;
+  font-size: 6px;
   font-weight: 900;
   background: #7f1d1d;
   color: #fff;
   padding: 0 3px;
   border-radius: 3px;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
 }
 
 .contact-bg {
