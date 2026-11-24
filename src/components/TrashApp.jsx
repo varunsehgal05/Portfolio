@@ -330,6 +330,27 @@ const TrashApp = ({ onClose, onOpenApp }) => {
     playAIChime();
   };
 
+  // Clippy close sequence
+  const startClippyCloseSequence = () => {
+    playAIChime();
+    window.dispatchEvent(new CustomEvent('varunos-clippy-speak', {
+      detail: {
+        text: "Closing Trash! Let's explore Varun's real work in Figma and Projects! 📎",
+        animation: "Explain",
+        highlightDuration: 4000,
+        hold: false
+      }
+    }));
+    if (onClose) {
+      onClose();
+    }
+    setTimeout(() => {
+      if (onOpenApp) {
+        onOpenApp('figma');
+      }
+    }, 300);
+  };
+
   const renderItemIcon = (type, color) => {
     switch (type) {
       case 'figma':

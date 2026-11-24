@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, Suspense, lazy } from 'react';
+import React, { useState, useEffect, useRef, Suspense, lazy } from 'react';
 import Desktop from './components/Desktop';
 import ScreenSaver from './components/ScreenSaver';
 import SwarmRebuildOverlay from './components/SwarmRebuildOverlay';
@@ -7,6 +7,65 @@ import './index.css';
 const AdminPortal = lazy(() => import('./components/AdminPortal'));
 
 const IDLE_TIMEOUT = 180000; // 3 minutes
+
+class RootErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('Root App caught an error:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          background: '#0a0d14',
+          color: '#e2e8f0',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '24px',
+          fontFamily: '-apple-system, system-ui, sans-serif',
+          zIndex: 999999
+        }}>
+          <h2 style={{ fontSize: '20px', color: '#f87171', margin: '0 0 12px 0' }}>VarunOS Recovered From an Issue</h2>
+          <p style={{ color: '#94a3b8', fontSize: '13px', margin: '0 0 20px 0', maxWidth: '420px', textAlign: 'center' }}>
+            {this.state.error?.message || 'A runtime script error occurred. Click below to reload the workspace.'}
+          </p>
+          <button
+            onClick={() => {
+              this.setState({ hasError: false, error: null });
+              window.location.href = window.location.pathname;
+            }}
+            style={{
+              padding: '8px 18px',
+              borderRadius: '8px',
+              background: '#0284c7',
+              color: '#ffffff',
+              border: 'none',
+              cursor: 'pointer',
+              fontWeight: 600,
+              fontSize: '13px'
+            }}
+          >
+            Reload Desktop
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 function App() {
   // Check if current route is the Admin Portal (/varun_admin, #/varun_admin, or ?admin=true)
@@ -151,41 +210,43 @@ function App() {
   }, []);
 
   return (
-    <div className="app-container">
-      {/* 1. Interactive Desktop */}
-      <Desktop 
-        isIdle={isIdle} 
-        userName={userName}
-        onReplaySwarm={handleReplaySwarm}
-        swarmStage={bootState === 'swarm' ? swarmStage : 5}
-        isRebuilding={bootState === 'swarm'}
-      />
-
-      {/* 2. Swarm Rebuild Overlay Animation (on boot & replay) */}
-      {bootState === 'swarm' && (
-        <SwarmRebuildOverlay 
-          key={`rebuild-${rebuildKey}`}
-          userName={userName} 
-          onStageChange={setSwarmStage}
-          onComplete={handleSwarmComplete} 
+    <RootErrorBoundary>
+      <div className="app-container">
+        {/* 1. Interactive Desktop */}
+        <Desktop 
+          isIdle={isIdle} 
+          userName={userName}
+          onReplaySwarm={handleReplaySwarm}
+          swarmStage={bootState === 'swarm' ? swarmStage : 5}
+          isRebuilding={bootState === 'swarm'}
         />
-      )}
 
-      {/* 3. Idle ScreenSaver */}
-      <ScreenSaver isIdle={isIdle} onWake={() => setIsIdle(false)} />
-
-      {/* 4. Admin Portal (/varun_admin, #/varun_admin, or Ctrl+Alt+A) */}
-      {isAdminRoute && (
-        <Suspense fallback={null}>
-          <AdminPortal 
-            onExit={() => {
-              setIsAdminRoute(false);
-              window.history.pushState(null, '', '/');
-            }} 
+        {/* 2. Swarm Rebuild Overlay Animation (on boot & replay) */}
+        {bootState === 'swarm' && (
+          <SwarmRebuildOverlay 
+            key={`rebuild-${rebuildKey}`}
+            userName={userName} 
+            onStageChange={setSwarmStage}
+            onComplete={handleSwarmComplete} 
           />
-        </Suspense>
-      )}
-    </div>
+        )}
+
+        {/* 3. Idle ScreenSaver */}
+        <ScreenSaver isIdle={isIdle} onWake={() => setIsIdle(false)} />
+
+        {/* 4. Admin Portal (/varun_admin, #/varun_admin, or Ctrl+Alt+A) */}
+        {isAdminRoute && (
+          <Suspense fallback={null}>
+            <AdminPortal 
+              onExit={() => {
+                setIsAdminRoute(false);
+                window.history.pushState(null, '', '/');
+              }} 
+            />
+          </Suspense>
+        )}
+      </div>
+    </RootErrorBoundary>
   );
 }
 

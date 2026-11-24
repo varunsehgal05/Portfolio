@@ -16,6 +16,60 @@ const TrashApp = lazy(() => import('./TrashApp'));
 const CoffeeApp = lazy(() => import('./CoffeeApp'));
 const ReviewsApp = lazy(() => import('./ReviewsApp'));
 
+class WindowErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('Window app error:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{
+          padding: '24px',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: '#e2e8f0',
+          textAlign: 'center',
+          background: '#090d16'
+        }}>
+          <h3 style={{ margin: '0 0 8px 0', fontSize: '15px', color: '#f87171' }}>App Encountered an Issue</h3>
+          <p style={{ margin: '0 0 14px 0', fontSize: '12px', color: '#94a3b8', maxWidth: '340px' }}>
+            {this.state.error?.message || 'An unexpected error occurred in this window.'}
+          </p>
+          <button
+            onClick={() => this.setState({ hasError: false, error: null })}
+            style={{
+              padding: '6px 14px',
+              borderRadius: '8px',
+              background: '#0284c7',
+              color: '#ffffff',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '12px',
+              fontWeight: 600
+            }}
+          >
+            Reload Window
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 const Window = ({
   app,
   userName,
@@ -118,7 +172,7 @@ const Window = ({
     const curW = windowDimensions.width;
     const curH = windowDimensions.height;
     const defaultSz = getDefaultSize(deviceMode);
-    
+
     setSize(prev => {
       const w = typeof prev.width === 'number' ? prev.width : parseInt(prev.width, 10);
       const h = typeof prev.height === 'number' ? prev.height : parseInt(prev.height, 10);
@@ -637,7 +691,9 @@ const Window = ({
           )}
 
           <div className={`window-content ${app.id === 'resume' || app.id === 'contact' || app.id === 'figma' || app.id === 'finder' || app.id === 'settings' || app.id === 'vscode' || app.id === 'terminal' || app.id === 'trash' ? 'no-padding' : ''}`}>
-            {renderContent()}
+            <WindowErrorBoundary>
+              {renderContent()}
+            </WindowErrorBoundary>
           </div>
         </div>
       </Rnd>
