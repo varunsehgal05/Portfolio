@@ -670,6 +670,19 @@ const FigmaApp = ({ isInteracting, userName, onOpenApp }) => {
     return () => clearTimeout(safetyTimer);
   }, []);
 
+  // Guarantee 100% (1.0) zoom strictly by default on initial mount and normalize any stale zoom state
+  useEffect(() => {
+    setZoom(1);
+    centerCanvasView(activeTab, 1);
+  }, []);
+
+  useEffect(() => {
+    // If zoom ever floats at 0.88 (or 88%) from an older cached session, snap it to 1.0 (100%)
+    if (zoom === 0.88 || Math.round(zoom * 100) === 88) {
+      setZoom(1);
+    }
+  }, [zoom]);
+
   // FigJam Process Board state (Creative Whiteboard)
   const [sprintTime, setSprintTime] = useState(8 * 60 + 45);
   const [isSprintTimerRunning, setIsSprintTimerRunning] = useState(true);
@@ -1095,7 +1108,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
   };
 
   const resetWorkspace = () => {
-    centerCanvasView(activeTab);
+    centerCanvasView(activeTab, 1);
     setFloatingShapes(INITIAL_SHAPES);
     setCurrentTheme('default');
     setColorMenuOpen(false);
@@ -1215,7 +1228,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
         });
       }
       if (e.shiftKey && (e.key === '1' || e.key === '!')) {
-        centerCanvasView(activeTab);
+        centerCanvasView(activeTab, 1);
         showToast('Canvas Centered (100%)');
       }
       // Zoom shortcuts: Cmd/Ctrl + '+', '-', '0'
@@ -1447,7 +1460,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
           duration={750}
           onLoaded={() => {
             setIsAppLoading(false);
-            centerCanvasView(activeTab);
+            centerCanvasView(activeTab, 1);
           }}
         />
       )}
@@ -1571,8 +1584,8 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
             <button
               type="button"
               className="canvas-center-btn"
-              onClick={() => { centerCanvasView(activeTab); showToast('Canvas Centered (Shift+1)'); }}
-              title="Center View (Shift+1)"
+              onClick={() => { centerCanvasView(activeTab, 1); showToast('Canvas Centered (100%)'); }}
+              title="Center View 100% (Shift+1)"
             >
               <Crosshair size={14} />
             </button>
@@ -1617,11 +1630,11 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   type="button"
                   className="zoom-menu-item"
                   onClick={() => {
-                    centerCanvasView(activeTab);
+                    centerCanvasView(activeTab, 1);
                     setShowZoomMenu(false);
                   }}
                 >
-                  <span>Zoom to Fit / Center</span>
+                  <span>Zoom to 100% / Center</span>
                   <span className="zoom-shortcut">Shift 1</span>
                 </button>
                 <div className="zoom-menu-divider" />

@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { createPortal } from 'react-dom';
 import { 
   Trash2, 
   RotateCcw, 
@@ -251,23 +250,9 @@ const TrashApp = ({ onClose, onOpenApp }) => {
   const [isShredding, setIsShredding] = useState(false);
   const [bannerNotice, setBannerNotice] = useState(null);
 
-  // Virtual Clippy Mouse Controller state
-  const [aiMouse, setAiMouse] = useState({
-    active: false,
-    x: 0,
-    y: 0,
-    label: '📎 Clippy',
-    isClicking: false,
-    ripple: null
-  });
-
-  const countdownTimerRef = useRef(null);
-  const isClosingProcessRef = useRef(false);
-
   // 1. Initial Mount: clean up any active timers or balloons
   useEffect(() => {
     return () => {
-      if (countdownTimerRef.current) clearTimeout(countdownTimerRef.current);
       window.dispatchEvent(new CustomEvent('varunos-clippy-hide'));
     };
   }, []);
@@ -343,140 +328,6 @@ const TrashApp = ({ onClose, onOpenApp }) => {
   const handleItemDoubleClick = (item) => {
     setActivePreviewItem(item);
     playAIChime();
-  };
-
-  const glideToWindowCloseButton = () => {
-    // Find Red close button on active window
-    const redCloseBtn = document.querySelector('.app-window.active .mac-btn.close') || document.querySelector('.mac-btn.close');
-    let winCloseX = 80;
-    let winCloseY = 60;
-
-    if (redCloseBtn) {
-      const rRect = redCloseBtn.getBoundingClientRect();
-      winCloseX = rRect.left + rRect.width / 2;
-      winCloseY = rRect.top + rRect.height / 2;
-    }
-
-    setAiMouse(prev => ({
-      ...prev,
-      x: winCloseX,
-      y: winCloseY,
-      label: '📎 Clippy: "Closing Trash! Let\'s see the real portfolio!"'
-    }));
-
-    // After gliding to Red Close Button (700ms) -> Click and Close Window!
-    setTimeout(() => {
-      playMechanicalClick();
-      setAiMouse(prev => ({
-        ...prev,
-        isClicking: true,
-        ripple: { x: winCloseX, y: winCloseY }
-      }));
-
-      // Close Trash Window
-      setTimeout(() => {
-        if (onClose) {
-          onClose();
-        }
-        // Fade out mouse
-        setAiMouse(prev => ({ ...prev, active: false }));
-        isClosingProcessRef.current = false;
-
-        // Bonus: Promptly redirect user to the real work in Figma!
-        setTimeout(() => {
-          if (onOpenApp) {
-            onOpenApp('figma');
-          }
-        }, 350);
-      }, 300);
-    }, 700);
-  };
-
-  // EXECUTE CLIPPY VIRTUAL MOUSE CLOSE SEQUENCE
-  const startClippyCloseSequence = () => {
-    if (isClosingProcessRef.current) return;
-    isClosingProcessRef.current = true;
-    if (countdownTimerRef.current) clearTimeout(countdownTimerRef.current);
-
-    window.dispatchEvent(new CustomEvent('varunos-clippy-speak', {
-      detail: {
-        text: "On it! Closing trash so you can explore Varun's real work! 📎",
-        animation: "Explain",
-        highlightDuration: 4000,
-        hold: false
-      }
-    }));
-
-    // Initial mouse spawn point (middle of viewport)
-    const startX = window.innerWidth / 2;
-    const startY = window.innerHeight / 2 + 60;
-
-    const modalCloseBtn = document.querySelector('.trash-modal-close') || document.querySelector('.modal-done-btn');
-
-    if (modalCloseBtn && activePreviewItem) {
-      // Modal is open: Step 1: Target Modal Close Button
-      setAiMouse({
-        active: true,
-        x: startX,
-        y: startY,
-        label: '📎 Clippy: "Closing file preview..."',
-        isClicking: false,
-        ripple: null
-      });
-
-      setTimeout(() => {
-        const rect = modalCloseBtn.getBoundingClientRect();
-        const targetX = rect.left + rect.width / 2;
-        const targetY = rect.top + rect.height / 2;
-
-        setAiMouse(prev => ({
-          ...prev,
-          x: targetX,
-          y: targetY,
-          label: '📎 Clippy: "Closing preview..."'
-        }));
-
-        // After gliding to modal close button (650ms) -> Click!
-        setTimeout(() => {
-          playMechanicalClick();
-          setAiMouse(prev => ({
-            ...prev,
-            isClicking: true,
-            ripple: { x: targetX, y: targetY }
-          }));
-
-          // Dismiss preview modal
-          setActivePreviewItem(null);
-
-          // Step 2: Glide to window traffic light Red Close Button
-          setTimeout(() => {
-            setAiMouse(prev => ({
-              ...prev,
-              isClicking: false,
-              ripple: null,
-              label: '📎 Clippy: "Now closing Trash window! 👋"'
-            }));
-            glideToWindowCloseButton();
-          }, 300);
-
-        }, 650);
-
-      }, 100);
-    } else {
-      // No modal open: glide directly to window close button
-      setAiMouse({
-        active: true,
-        x: startX,
-        y: startY,
-        label: '📎 Clippy: "Now closing Trash window! 👋"',
-        isClicking: false,
-        ripple: null
-      });
-
-      setTimeout(() => {
-        glideToWindowCloseButton();
-      }, 100);
-    }
   };
 
   const renderItemIcon = (type, color) => {
@@ -795,70 +646,6 @@ const TrashApp = ({ onClose, onOpenApp }) => {
             </div>
           </div>
         </div>
-      )}
-
-      {/* VIRTUAL AI MOUSE CURSOR PORTAL (Travels anywhere on screen to close preview & trash) */}
-      {aiMouse.active && typeof document !== 'undefined' && createPortal(
-        <div 
-          className="virtual-ai-mouse-layer"
-          style={{
-            position: 'fixed',
-            left: 0,
-            top: 0,
-            width: '100vw',
-            height: '100vh',
-            pointerEvents: 'none',
-            zIndex: 99999999
-          }}
-        >
-          {/* Animated Cursor */}
-          <div 
-            className={`virtual-ai-mouse-pointer ${aiMouse.isClicking ? 'clicking' : ''}`}
-            style={{
-              position: 'absolute',
-              left: `${aiMouse.x}px`,
-              top: `${aiMouse.y}px`,
-              transition: 'left 0.65s cubic-bezier(0.25, 1, 0.5, 1), top 0.65s cubic-bezier(0.25, 1, 0.5, 1)',
-              transform: aiMouse.isClicking ? 'scale(0.82)' : 'scale(1)',
-              filter: 'drop-shadow(0 4px 12px rgba(13, 153, 255, 0.5))'
-            }}
-          >
-            {/* macOS-style Cursor SVG */}
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path 
-                d="M5.5 3.5L19.5 13.5L13.5 15L10 21.5L7.5 20.5L11 14L5.5 14L5.5 3.5Z" 
-                fill="#000000"
-              />
-              <path 
-                d="M6.5 5L17.5 13L12.5 14.2L9.5 19.8L8.2 19.2L11.2 13.5L6.5 13.5L6.5 5Z" 
-                fill="#ffffff"
-              />
-              <path 
-                d="M7 6L16 12.5L12 13.5L9.5 18.5L8.7 18.1L11.2 13.2L7 13.2L7 6Z" 
-                fill="#38bdf8"
-              />
-            </svg>
-
-            {/* Clippy Speech & Label Tag */}
-            <div className="virtual-ai-mouse-badge">
-              <Paperclip size={11} className="text-amber-300" />
-              <span>{aiMouse.label}</span>
-            </div>
-          </div>
-
-          {/* Click Ripple Effect */}
-          {aiMouse.ripple && (
-            <div 
-              className="virtual-ai-click-ripple"
-              style={{
-                position: 'absolute',
-                left: `${aiMouse.ripple.x}px`,
-                top: `${aiMouse.ripple.y}px`
-              }}
-            />
-          )}
-        </div>,
-        document.body
       )}
     </div>
   );

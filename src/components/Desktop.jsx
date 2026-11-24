@@ -210,6 +210,9 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
     if (!isRebuilding || swarmStage >= 5) {
       setStampedIconCount(6);
       setStampedDockCount(10);
+    } else if (swarmStage >= 4) {
+      // During dock framing & bottom bar assembly (Stage 4), left desktop icons must remain visible
+      setStampedIconCount(6);
     } else if (swarmStage === 0) {
       setStampedIconCount(0);
       setStampedDockCount(0);
