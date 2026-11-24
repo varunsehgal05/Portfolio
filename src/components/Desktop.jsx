@@ -175,30 +175,15 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
   // Track sequential dock icon stamping during Swarm Rebuild (reveal 1-by-1 in Stage 4)
   const [stampedDockCount, setStampedDockCount] = useState(() => (!isRebuilding && swarmStage >= 5 ? 10 : 0));
 
-  // Defer Clippy until explicit user interaction (or 25s idle fallback) for instant LCP performance (100 Lighthouse score)
+  // Defer Clippy until explicit user request (Clicking Clippy launcher or speech event)
   const [loadClippy, setLoadClippy] = useState(false);
   useEffect(() => {
-    const handleInteract = () => {
-      setLoadClippy(true);
-      window.removeEventListener('click', handleInteract);
-      window.removeEventListener('touchstart', handleInteract);
-    };
-    window.addEventListener('click', handleInteract, { once: true, passive: true });
-    window.addEventListener('touchstart', handleInteract, { once: true, passive: true });
-    
-    // Idle fallback: only load after 25s when initial LCP/FCP audits and hydration are 100% complete
-    const fallbackTimer = setTimeout(() => {
-      if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-        window.requestIdleCallback(() => setLoadClippy(true));
-      } else {
-        setLoadClippy(true);
-      }
-    }, 25000);
-
+    const handleClippyRequest = () => setLoadClippy(true);
+    window.addEventListener('varunos-clippy-speak', handleClippyRequest);
+    window.addEventListener('varunos-open-clippy', handleClippyRequest);
     return () => {
-      window.removeEventListener('click', handleInteract);
-      window.removeEventListener('touchstart', handleInteract);
-      clearTimeout(fallbackTimer);
+      window.removeEventListener('varunos-clippy-speak', handleClippyRequest);
+      window.removeEventListener('varunos-open-clippy', handleClippyRequest);
     };
   }, []);
 
@@ -612,11 +597,23 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
         </div>
 
         {/* PixelAssistant / Clippy bot deferred for instant LCP performance - Desktop mode only */}
-        {effectiveDeviceMode === 'desktop' && loadClippy && (
+        {effectiveDeviceMode === 'desktop' && (
           <div className={`desktop-bot-wrap ${swarmStage < 5 ? (swarmStage >= 5 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
-            <Suspense fallback={null}>
-              <PixelAssistant isIdle={isIdle} onOpenApp={openApp} hasOpenWindows={hasOpenWindows} />
-            </Suspense>
+            {loadClippy ? (
+              <Suspense fallback={null}>
+                <PixelAssistant isIdle={isIdle} onOpenApp={openApp} hasOpenWindows={hasOpenWindows} />
+              </Suspense>
+            ) : (
+              <button
+                className="clippy-lightweight-trigger"
+                onClick={() => setLoadClippy(true)}
+                title="Chat with Clippy AI Assistant"
+                aria-label="Clippy AI Assistant"
+              >
+                <span className="clippy-trigger-icon">📎</span>
+                <span className="clippy-trigger-pulse" />
+              </button>
+            )}
           </div>
         )}
 

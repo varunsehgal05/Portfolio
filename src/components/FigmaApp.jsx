@@ -3776,33 +3776,6 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                       </button>
                     </div>
                   </div>
-
-                  {/* Export */}
-                  <div className="prop-section">
-                    <div className="prop-section-header">
-                      <span className="prop-section-title">Export</span>
-                      <div className="prop-export-presets">
-                        {['PNG', 'SVG', 'PDF'].map(fmt => (
-                          <button
-                            key={fmt}
-                            type="button"
-                            className={`prop-fmt-pill ${exportFormat === fmt ? 'active' : ''}`}
-                            onClick={() => setExportFormat(fmt)}
-                          >
-                            {fmt}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      className="prop-export-action-btn"
-                      onClick={handleExportFrame}
-                    >
-                      <span className="material-symbols-outlined text-[16px]">file_download</span>
-                      <span>Export Varun_Sehgal_Portfolio ({exportFormat})</span>
-                    </button>
-                  </div>
                 </>
               )}
 

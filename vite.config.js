@@ -13,6 +13,7 @@ export default defineConfig({
     ]
   },
   build: {
+    modulePreload: false,
     rollupOptions: {
       output: {
         manualChunks(id) {
@@ -24,6 +25,9 @@ export default defineConfig({
           }
           if (id.includes('clippyjs')) {
             return 'vendor-clippy';
+          }
+          if (id.includes('firebase')) {
+            return 'vendor-firebase';
           }
         }
       }

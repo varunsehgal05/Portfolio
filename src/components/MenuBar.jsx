@@ -1,16 +1,16 @@
 import { useState, useEffect, useRef } from 'react';
 import { format } from 'date-fns';
-import { 
-  Wifi, 
-  Battery, 
-  Sparkles, 
-  User, 
-  Power, 
-  Volume2, 
-  VolumeX, 
-  Sliders, 
-  Calendar as CalendarIcon, 
-  Check, 
+import {
+  Wifi,
+  Battery,
+  Sparkles,
+  User,
+  Power,
+  Volume2,
+  VolumeX,
+  Sliders,
+  Calendar as CalendarIcon,
+  Check,
   ExternalLink,
   Code2,
   FolderOpen,
@@ -88,8 +88,8 @@ const PORTFOLIO_ROLES = [
   }
 ];
 
-const MenuBar = ({ 
-  userName = 'Guest', 
+const MenuBar = ({
+  userName = 'Guest',
   onReplaySwarm,
   openWindows = [],
   minimizedWindows = [],
@@ -164,7 +164,7 @@ const MenuBar = ({
     try {
       localStorage.setItem('varunos_user_name', role.name);
       localStorage.setItem('varunos_user_role', role.id);
-    } catch {}
+    } catch { }
     window.dispatchEvent(new CustomEvent('varunos-user-change', { detail: { userName: role.name, roleId: role.id } }));
     if (role.app) {
       if (onOpenApp) {
@@ -280,7 +280,7 @@ const MenuBar = ({
     setIsSwarmFollow(nextState);
     try {
       localStorage.setItem('varunos_swarm_follow_mouse', String(nextState));
-    } catch {}
+    } catch { }
     window.dispatchEvent(new CustomEvent('varunos-toggle-swarm-follow', { detail: { enabled: nextState } }));
     showToast(nextState ? "Swarm Follow Enabled" : "Swarm Follow Paused", nextState ? "Agents flock to cursor" : "Agents stay stationed", "✨");
   };
@@ -290,7 +290,7 @@ const MenuBar = ({
     setCurrentTheme(nextTheme);
     try {
       localStorage.setItem('varunos_theme_mode', nextTheme);
-    } catch {}
+    } catch { }
     document.documentElement.setAttribute('data-theme', nextTheme);
     window.dispatchEvent(new CustomEvent('varunos-theme-change', { detail: { mode: nextTheme } }));
     showToast(nextTheme === 'light' ? "Light Mode Active" : "Dark Mode Active", "Theme updated", nextTheme === 'light' ? "☀️" : "🌙");
@@ -333,7 +333,7 @@ const MenuBar = ({
       <div className="menu-left">
         {/* Apple / VarunOS System Trigger */}
         <div className="menu-item-wrapper">
-          <span 
+          <span
             className={`menu-item bold menu-brand-trigger ${activeMenu === 'apple' ? 'active' : ''}`}
             onClick={() => toggleMenu('apple')}
             title="VarunOS System Menu"
@@ -348,8 +348,8 @@ const MenuBar = ({
                 <span className="apple-dropdown-user">User: {userName}</span>
               </div>
               <div className="apple-dropdown-divider" />
-              <button 
-                className="apple-dropdown-item" 
+              <button
+                className="apple-dropdown-item"
                 onClick={() => {
                   setActiveMenu(null);
                   setShowAboutModal(true);
@@ -358,8 +358,8 @@ const MenuBar = ({
                 <Monitor size={14} className="dropdown-icon" />
                 <span>About VarunOS Sequoia...</span>
               </button>
-              <button 
-                className="apple-dropdown-item" 
+              <button
+                className="apple-dropdown-item"
                 onClick={() => handleOpenAppItem('settings')}
               >
                 <Sliders size={14} className="dropdown-icon" />
@@ -372,8 +372,8 @@ const MenuBar = ({
                 <span className="dropdown-shortcut">⌘R</span>
               </button>
               <div className="apple-dropdown-divider" />
-              <button 
-                className="apple-dropdown-item coffee-action-item" 
+              <button
+                className="apple-dropdown-item coffee-action-item"
                 onClick={() => {
                   setActiveMenu(null);
                   window.dispatchEvent(new CustomEvent('varunos-open-coffee-modal'));
@@ -383,8 +383,8 @@ const MenuBar = ({
                 <span>☕ Buy Varun a Coffee / Donate...</span>
                 <span className="dropdown-shortcut">UPI QR</span>
               </button>
-              <button 
-                className="apple-dropdown-item" 
+              <button
+                className="apple-dropdown-item"
                 onClick={() => {
                   setActiveMenu(null);
                   window.open('https://github.com/varunsehgal05/Portfolio', '_blank');
@@ -405,7 +405,7 @@ const MenuBar = ({
 
         {/* File Menu */}
         <div className="menu-item-wrapper">
-          <span 
+          <span
             className={`menu-item ${activeMenu === 'file' ? 'active' : ''}`}
             onClick={() => toggleMenu('file')}
           >
@@ -413,11 +413,11 @@ const MenuBar = ({
           </span>
           {activeMenu === 'file' && (
             <div className="apple-dropdown-menu sub-menu">
-              <button 
-                className="apple-dropdown-item" 
-                onClick={() => { 
-                  setActiveMenu(null); 
-                  window.open('/Varun_Sehgal_Resume_Updated.pdf', '_blank'); 
+              <button
+                className="apple-dropdown-item"
+                onClick={() => {
+                  setActiveMenu(null);
+                  window.open('/Varun_Sehgal_Resume_Updated.pdf', '_blank');
                   showToast("Opened PDF", "Varun_Sehgal_Resume_Updated.pdf", "📄");
                 }}
               >
@@ -425,8 +425,8 @@ const MenuBar = ({
                 <span>Open Resume PDF</span>
                 <span className="dropdown-shortcut">⌘O</span>
               </button>
-              <button 
-                className="apple-dropdown-item" 
+              <button
+                className="apple-dropdown-item"
                 onClick={() => handleOpenAppItem('terminal')}
               >
                 <Laptop size={14} className="dropdown-icon" />
@@ -434,8 +434,8 @@ const MenuBar = ({
                 <span className="dropdown-shortcut">⌥T</span>
               </button>
               {activeWindow && (
-                <button 
-                  className="apple-dropdown-item" 
+                <button
+                  className="apple-dropdown-item"
                   onClick={() => {
                     setActiveMenu(null);
                     if (onCloseApp) onCloseApp(activeWindow);
@@ -458,7 +458,7 @@ const MenuBar = ({
 
         {/* Edit Menu */}
         <div className="menu-item-wrapper">
-          <span 
+          <span
             className={`menu-item ${activeMenu === 'edit' ? 'active' : ''}`}
             onClick={() => toggleMenu('edit')}
           >
@@ -466,10 +466,10 @@ const MenuBar = ({
           </span>
           {activeMenu === 'edit' && (
             <div className="apple-dropdown-menu sub-menu">
-              <button 
-                className="apple-dropdown-item" 
-                onClick={() => { 
-                  setActiveMenu(null); 
+              <button
+                className="apple-dropdown-item"
+                onClick={() => {
+                  setActiveMenu(null);
                   copyToClipboard('varunsehgal2005@gmail.com', "Copied Varun's Email", "varunsehgal2005@gmail.com", "📋");
                 }}
               >
@@ -477,30 +477,30 @@ const MenuBar = ({
                 <span>Copy Varun's Email</span>
                 <span className="dropdown-shortcut">⌘C</span>
               </button>
-              <button 
-                className="apple-dropdown-item" 
-                onClick={() => { 
-                  setActiveMenu(null); 
+              <button
+                className="apple-dropdown-item"
+                onClick={() => {
+                  setActiveMenu(null);
                   copyToClipboard('https://www.linkedin.com/in/varunsehgal02', "Copied LinkedIn Link", "linkedin.com/in/varunsehgal02", "🔗");
                 }}
               >
                 <Check size={14} className="dropdown-icon text-cyan-400" />
                 <span>Copy LinkedIn Link</span>
               </button>
-              <button 
-                className="apple-dropdown-item" 
-                onClick={() => { 
-                  setActiveMenu(null); 
+              <button
+                className="apple-dropdown-item"
+                onClick={() => {
+                  setActiveMenu(null);
                   copyToClipboard(window.location.href, "Copied Portfolio URL", window.location.href, "🌐");
                 }}
               >
                 <Check size={14} className="dropdown-icon text-purple-400" />
                 <span>Copy Portfolio URL</span>
               </button>
-              <button 
-                className="apple-dropdown-item" 
-                onClick={() => { 
-                  setActiveMenu(null); 
+              <button
+                className="apple-dropdown-item"
+                onClick={() => {
+                  setActiveMenu(null);
                   copyToClipboard('https://github.com/varunsehgal05/Portfolio', "Copied GitHub Repo URL", "github.com/varunsehgal05/Portfolio", "💻");
                 }}
               >
@@ -513,7 +513,7 @@ const MenuBar = ({
 
         {/* View Menu */}
         <div className="menu-item-wrapper">
-          <span 
+          <span
             className={`menu-item ${activeMenu === 'view' ? 'active' : ''}`}
             onClick={() => toggleMenu('view')}
           >
@@ -546,7 +546,7 @@ const MenuBar = ({
 
         {/* Window Menu - Fully Functional with Active App Controls & Dynamic App Stacking List */}
         <div className="menu-item-wrapper">
-          <span 
+          <span
             className={`menu-item ${activeMenu === 'window' ? 'active' : ''}`}
             onClick={() => toggleMenu('window')}
           >
@@ -555,11 +555,11 @@ const MenuBar = ({
           {activeMenu === 'window' && (
             <div className="apple-dropdown-menu sub-menu window-dropdown-menu">
               {/* Active Window Minimize */}
-              <button 
-                className={`apple-dropdown-item ${!activeWindow ? 'disabled' : ''}`} 
-                onClick={() => { 
+              <button
+                className={`apple-dropdown-item ${!activeWindow ? 'disabled' : ''}`}
+                onClick={() => {
                   if (!activeWindow) return;
-                  setActiveMenu(null); 
+                  setActiveMenu(null);
                   if (onMinimizeActive) {
                     onMinimizeActive();
                   } else if (onMinimizeApp) {
@@ -575,11 +575,11 @@ const MenuBar = ({
               </button>
 
               {/* Active Window Zoom/Maximize */}
-              <button 
-                className={`apple-dropdown-item ${!activeWindow ? 'disabled' : ''}`} 
-                onClick={() => { 
+              <button
+                className={`apple-dropdown-item ${!activeWindow ? 'disabled' : ''}`}
+                onClick={() => {
                   if (!activeWindow) return;
-                  setActiveMenu(null); 
+                  setActiveMenu(null);
                   if (onToggleMaximize) {
                     onToggleMaximize(activeWindow);
                   }
@@ -594,11 +594,11 @@ const MenuBar = ({
               <div className="apple-dropdown-divider" />
 
               {/* Minimize All */}
-              <button 
-                className={`apple-dropdown-item ${openWindows.length === 0 ? 'disabled' : ''}`} 
-                onClick={() => { 
+              <button
+                className={`apple-dropdown-item ${openWindows.length === 0 ? 'disabled' : ''}`}
+                onClick={() => {
                   if (openWindows.length === 0) return;
-                  setActiveMenu(null); 
+                  setActiveMenu(null);
                   if (onMinimizeAll) onMinimizeAll();
                   showToast("All Windows Minimized", "Desktop cleared", "🗕");
                 }}
@@ -609,10 +609,10 @@ const MenuBar = ({
               </button>
 
               {/* Bring All to Front / Restore All */}
-              <button 
-                className="apple-dropdown-item" 
-                onClick={() => { 
-                  setActiveMenu(null); 
+              <button
+                className="apple-dropdown-item"
+                onClick={() => {
+                  setActiveMenu(null);
                   if (onRestoreAll) onRestoreAll();
                   showToast("All Windows Restored", "Brought to front", "📂");
                 }}
@@ -621,11 +621,11 @@ const MenuBar = ({
               </button>
 
               {/* Close All Windows */}
-              <button 
-                className={`apple-dropdown-item ${openWindows.length === 0 ? 'disabled' : ''}`} 
-                onClick={() => { 
+              <button
+                className={`apple-dropdown-item ${openWindows.length === 0 ? 'disabled' : ''}`}
+                onClick={() => {
                   if (openWindows.length === 0) return;
-                  setActiveMenu(null); 
+                  setActiveMenu(null);
                   if (onCloseAll) onCloseAll();
                   showToast("All Windows Closed", "Workspace reset", "✕");
                 }}
@@ -673,7 +673,7 @@ const MenuBar = ({
 
         {/* Help Menu - Interactive Help Center & Shortcuts Tour */}
         <div className="menu-item-wrapper">
-          <span 
+          <span
             className={`menu-item ${activeMenu === 'help' ? 'active' : ''}`}
             onClick={() => toggleMenu('help')}
           >
@@ -681,8 +681,8 @@ const MenuBar = ({
           </span>
           {activeMenu === 'help' && (
             <div className="apple-dropdown-menu sub-menu help-dropdown-menu">
-              <button 
-                className="apple-dropdown-item primary-action" 
+              <button
+                className="apple-dropdown-item primary-action"
                 onClick={() => {
                   setActiveMenu(null);
                   setHelpActiveTab('tour');
@@ -693,8 +693,8 @@ const MenuBar = ({
                 <span>VarunOS Help Center & Tour</span>
               </button>
 
-              <button 
-                className="apple-dropdown-item" 
+              <button
+                className="apple-dropdown-item"
                 onClick={() => {
                   setActiveMenu(null);
                   setHelpActiveTab('shortcuts');
@@ -706,8 +706,8 @@ const MenuBar = ({
                 <span className="dropdown-shortcut">⌘/</span>
               </button>
 
-              <button 
-                className="apple-dropdown-item" 
+              <button
+                className="apple-dropdown-item"
                 onClick={() => {
                   setActiveMenu(null);
                   setHelpActiveTab('easter_eggs');
@@ -720,8 +720,8 @@ const MenuBar = ({
 
               <div className="apple-dropdown-divider" />
 
-              <button 
-                className="apple-dropdown-item" 
+              <button
+                className="apple-dropdown-item"
                 onClick={() => {
                   setActiveMenu(null);
                   setShowAboutModal(true);
@@ -739,11 +739,11 @@ const MenuBar = ({
 
               <div className="apple-dropdown-divider" />
 
-              <button 
-                className="apple-dropdown-item" 
-                onClick={() => { 
-                  setActiveMenu(null); 
-                  window.open('https://www.linkedin.com/in/varunsehgal02', '_blank'); 
+              <button
+                className="apple-dropdown-item"
+                onClick={() => {
+                  setActiveMenu(null);
+                  window.open('https://www.linkedin.com/in/varunsehgal02', '_blank');
                   showToast("Opening LinkedIn", "varunsehgal02", "↗");
                 }}
               >
@@ -751,12 +751,12 @@ const MenuBar = ({
                 <span>Contact Varun on LinkedIn</span>
                 <span className="dropdown-shortcut">↗</span>
               </button>
-              
-              <button 
-                className="apple-dropdown-item" 
-                onClick={() => { 
-                  setActiveMenu(null); 
-                  window.open('mailto:varunsehgal2005@gmail.com'); 
+
+              <button
+                className="apple-dropdown-item"
+                onClick={() => {
+                  setActiveMenu(null);
+                  window.open('mailto:varunsehgal2005@gmail.com');
                   showToast("Opening Mail Client", "varunsehgal2005@gmail.com", "✉");
                 }}
               >
@@ -767,11 +767,11 @@ const MenuBar = ({
           )}
         </div>
       </div>
-      
+
       <div className="menu-right">
         {/* Active Collaborator / Role Switcher Popover */}
         <div className="menu-item-wrapper">
-          <div 
+          <div
             role="button"
             tabIndex={0}
             className={`menu-user-presence ${activeMenu === 'user' ? 'active' : ''}`}
@@ -811,8 +811,8 @@ const MenuBar = ({
                       <div className="role-option-info">
                         <div className="role-option-top">
                           <span className="role-option-name">{role.name}</span>
-                          <span 
-                            className="role-option-badge" 
+                          <span
+                            className="role-option-badge"
                             style={{ color: role.color, background: role.bg }}
                           >
                             {role.title}
@@ -908,10 +908,10 @@ const MenuBar = ({
         </div>
 
         {/* Swarm Rebuild Trigger */}
-        <button 
-          className="menu-swarm-replay-btn" 
+        <button
+          className="menu-swarm-replay-btn"
           aria-label="Swarm Rebuild"
-          onClick={handleTriggerSwarm} 
+          onClick={handleTriggerSwarm}
           title="Replay Swarm Rebuild Animation"
         >
           <Sparkles size={12} />
@@ -930,7 +930,7 @@ const MenuBar = ({
 
         {/* Functional Sound / Volume */}
         <div className="menu-item-wrapper">
-          <button 
+          <button
             className={`menu-icon-btn ${activeMenu === 'sound' ? 'active' : ''}`}
             aria-label={`Sound Volume: ${isMuted ? 'Muted' : `${volume}%`}`}
             onClick={() => toggleMenu('sound')}
@@ -945,17 +945,17 @@ const MenuBar = ({
                 <span className="sound-vol-label">{isMuted ? 'Muted' : `${volume}%`}</span>
               </div>
               <div className="sound-slider-row">
-                <button 
+                <button
                   className="sound-mute-toggle"
                   aria-label="Toggle sound mute"
                   onClick={() => setIsMuted(!isMuted)}
                 >
                   {isMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
                 </button>
-                <input 
-                  type="range" 
-                  min="0" 
-                  max="100" 
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
                   aria-label="Volume level slider"
                   value={isMuted ? 0 : volume}
                   onChange={(e) => {
@@ -974,7 +974,7 @@ const MenuBar = ({
 
         {/* Functional Wi-Fi */}
         <div className="menu-item-wrapper">
-          <button 
+          <button
             className={`menu-icon-btn ${activeMenu === 'wifi' ? 'active' : ''}`}
             aria-label="Wi-Fi Connection Settings"
             onClick={() => toggleMenu('wifi')}
@@ -1006,7 +1006,7 @@ const MenuBar = ({
 
         {/* Functional Battery */}
         <div className="menu-item-wrapper">
-          <button 
+          <button
             className={`menu-icon-btn ${activeMenu === 'battery' ? 'active' : ''}`}
             aria-label="Battery Status: 100% Fully Charged"
             onClick={() => toggleMenu('battery')}
@@ -1035,7 +1035,7 @@ const MenuBar = ({
 
         {/* Interactive Clock & Calendar */}
         <div className="menu-item-wrapper">
-          <span 
+          <span
             className={`menu-time ${activeMenu === 'calendar' ? 'active' : ''}`}
             role="button"
             tabIndex={0}
@@ -1113,7 +1113,7 @@ const MenuBar = ({
                 </div>
 
                 <div className="about-actions-row">
-                  <button 
+                  <button
                     className="about-action-btn primary"
                     onClick={() => {
                       setShowAboutModal(false);
@@ -1123,7 +1123,7 @@ const MenuBar = ({
                   >
                     System Tour & Help...
                   </button>
-                  <button 
+                  <button
                     className="about-action-btn"
                     onClick={() => {
                       setShowAboutModal(false);
@@ -1132,7 +1132,7 @@ const MenuBar = ({
                   >
                     Varun's LinkedIn ↗
                   </button>
-                  <button 
+                  <button
                     className="about-action-btn"
                     onClick={() => setShowAboutModal(false)}
                   >
@@ -1165,28 +1165,28 @@ const MenuBar = ({
             </div>
 
             <div className="help-dialog-nav">
-              <button 
+              <button
                 className={`help-nav-pill ${helpActiveTab === 'tour' ? 'active' : ''}`}
                 onClick={() => setHelpActiveTab('tour')}
               >
                 <Compass size={13} />
                 <span>Desktop Tour</span>
               </button>
-              <button 
+              <button
                 className={`help-nav-pill ${helpActiveTab === 'shortcuts' ? 'active' : ''}`}
                 onClick={() => setHelpActiveTab('shortcuts')}
               >
                 <Keyboard size={13} />
                 <span>Keyboard Shortcuts</span>
               </button>
-              <button 
+              <button
                 className={`help-nav-pill ${helpActiveTab === 'easter_eggs' ? 'active' : ''}`}
                 onClick={() => setHelpActiveTab('easter_eggs')}
               >
                 <Sparkles size={13} />
                 <span>Features & Easter Eggs</span>
               </button>
-              <button 
+              <button
                 className={`help-nav-pill ${helpActiveTab === 'contact' ? 'active' : ''}`}
                 onClick={() => setHelpActiveTab('contact')}
               >
@@ -1202,7 +1202,7 @@ const MenuBar = ({
                   <p className="help-section-intro">
                     VarunOS transforms traditional static portfolio design into an interactive operating system with real multi-agent swarms, editable Figma prototypes, and live code environments.
                   </p>
-                  
+
                   <div className="help-cards-grid">
                     <div className="help-card" onClick={() => handleOpenAppItem('figma')}>
                       <div className="help-card-header">
@@ -1265,7 +1265,7 @@ const MenuBar = ({
                 <div className="help-tab-pane">
                   <h3 className="help-section-title">VarunOS Keyboard Shortcuts Cheat Sheet</h3>
                   <p className="help-section-intro">Use these macOS keyboard shortcuts for rapid navigation and productivity.</p>
-                  
+
                   <div className="shortcuts-table">
                     <div className="shortcut-row">
                       <div className="shortcut-keys">
@@ -1343,7 +1343,7 @@ const MenuBar = ({
               {helpActiveTab === 'easter_eggs' && (
                 <div className="help-tab-pane">
                   <h3 className="help-section-title">VarunOS Interactive Features & Easter Eggs</h3>
-                  
+
                   <div className="tips-list">
                     <div className="tip-item">
                       <span className="tip-badge">Perspective Switcher</span>
@@ -1388,13 +1388,13 @@ const MenuBar = ({
                         </div>
                       </div>
                       <div className="channel-action-row">
-                        <button 
+                        <button
                           className="channel-action-btn primary"
                           onClick={() => window.open('https://www.linkedin.com/in/varunsehgal02', '_blank')}
                         >
                           Visit LinkedIn Profile ↗
                         </button>
-                        <button 
+                        <button
                           className="channel-action-btn"
                           onClick={() => copyToClipboard('https://www.linkedin.com/in/varunsehgal02', "Copied LinkedIn Link", "linkedin.com/in/varunsehgal02", "🔗")}
                         >
@@ -1412,13 +1412,13 @@ const MenuBar = ({
                         </div>
                       </div>
                       <div className="channel-action-row">
-                        <button 
+                        <button
                           className="channel-action-btn primary"
                           onClick={() => window.open('mailto:varunsehgal2005@gmail.com')}
                         >
                           Send Email Direct ✉
                         </button>
-                        <button 
+                        <button
                           className="channel-action-btn"
                           onClick={() => copyToClipboard('varunsehgal2005@gmail.com', "Copied Email Address", "varunsehgal2005@gmail.com", "📋")}
                         >
@@ -1436,13 +1436,13 @@ const MenuBar = ({
                         </div>
                       </div>
                       <div className="channel-action-row">
-                        <button 
+                        <button
                           className="channel-action-btn primary"
                           onClick={() => window.open('https://github.com/varunsehgal05', '_blank')}
                         >
                           View GitHub Repos ↗
                         </button>
-                        <button 
+                        <button
                           className="channel-action-btn"
                           onClick={() => copyToClipboard('https://github.com/varunsehgal05', "Copied GitHub Profile", "github.com/varunsehgal05", "💻")}
                         >

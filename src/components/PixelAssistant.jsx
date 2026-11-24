@@ -1,6 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import { initAgent } from "clippyjs";
-import { Clippy } from "clippyjs/agents";
 import { Send, X, ExternalLink, Download, Folder, Sparkles, Volume2, VolumeX, Terminal, Code2, Compass, Mail, FileText, User } from 'lucide-react';
 import './PixelAssistant.css';
 
@@ -557,6 +555,10 @@ const PixelAssistant = ({ isIdle, onOpenApp, hasOpenWindows }) => {
 
     const loadClippy = async () => {
       try {
+        const [{ initAgent }, { Clippy }] = await Promise.all([
+          import("clippyjs"),
+          import("clippyjs/agents")
+        ]);
         const agent = await initAgent(Clippy);
         if (!isMounted) {
           agent.dispose();
