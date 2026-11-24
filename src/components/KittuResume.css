@@ -731,11 +731,15 @@
   transition: opacity 0.3s ease;
 }
 
-.cv-item-hidden {
+.cv-item-hidden,
+.cv-item-hidden * {
   opacity: 0 !important;
   visibility: hidden !important;
-  transform: translateY(6px) scale(0.99);
   pointer-events: none !important;
+}
+
+.cv-item-hidden {
+  transform: translateY(6px) scale(0.99);
   transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
