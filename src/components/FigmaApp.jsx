@@ -1,22 +1,22 @@
 import { useState, useRef, useEffect } from 'react';
-import { 
-  Home, 
-  LayoutDashboard, 
-  Briefcase, 
-  User, 
-  FileText, 
-  GitFork, 
-  Boxes, 
-  Minus, 
-  Plus, 
-  Crosshair, 
-  ChevronDown, 
-  Mail, 
-  Share2, 
-  Grid3X3, 
+import {
+  Home,
+  LayoutDashboard,
+  Briefcase,
+  User,
+  FileText,
+  GitFork,
+  Boxes,
+  Minus,
+  Plus,
+  Crosshair,
+  ChevronDown,
+  Mail,
+  Share2,
+  Grid3X3,
   Sidebar,
   ExternalLink,
-  Copy 
+  Copy
 } from 'lucide-react';
 import FirebaseImage from './FirebaseImage';
 import FigmaLoadingScreen from './FigmaLoadingScreen';
@@ -1855,8 +1855,9 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
           2. Main Workspace Layout
           ========================================================================= */}
       <div className="lovable-workspace-layout">
-        {/* Left Sidebar ("Layers", "Pages" & "Assets") */}
-        <aside className="lovable-sidebar">
+        {/* Left Sidebar ("Layers", "Pages" & "Assets") - strictly excluded on mobile phones */}
+        {!isMobilePhone && (
+          <aside className="lovable-sidebar">
           <div className="sidebar-header">
             <h2 className="sidebar-heading">Varun_Sehgal_Portfolio</h2>
             <p className="sidebar-sub">PAGE: {activeTab.toUpperCase()}</p>
@@ -2047,9 +2048,10 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
             </a>
           </div>
         </aside>
+      )}
 
-        {/* Assets Slide-out Drawer */}
-        {showAssets && (
+      {/* Assets Slide-out Drawer */}
+      {showAssets && !isMobilePhone && (
           <div className="lovable-assets-drawer">
             <div className="drawer-header">
               <h3>Design Assets</h3>

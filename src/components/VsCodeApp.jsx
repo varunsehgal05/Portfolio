@@ -1029,8 +1029,11 @@ export const VsCodeApp = () => {
   const [isRunning, setIsRunning] = useState(false);
   const editorTextareaRef = useRef(null);
 
-  // Terminal & Output Dock State
-  const [terminalOpen, setTerminalOpen] = useState(true);
+  // Terminal & Output Dock State: collapsed by default on mobile phones
+  const [terminalOpen, setTerminalOpen] = useState(() => {
+    if (typeof window !== 'undefined' && window.innerWidth <= 768) return false;
+    return true;
+  });
   const [terminalTab, setTerminalTab] = useState('terminal'); // 'problems' | 'output' | 'debug' | 'terminal' | 'ports' | 'comments'
   const [terminalHeight, setTerminalHeight] = useState(180);
   const [terminalInput, setTerminalInput] = useState('');

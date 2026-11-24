@@ -9460,8 +9460,9 @@
    FIGMA MOBILE-ONLY & TABLET / IPAD RESPONSIVE ENHANCEMENTS
    ========================================================================== */
 
-/* Strictly remove right edit properties bar on mobile phones only (<= 768px or .mode-mobile) */
+/* Strictly remove sidebars on mobile phones only (<= 768px or .mode-mobile) */
 @media (max-width: 768px) {
+  .lovable-sidebar,
   .lovable-properties-sidebar,
   .nav-sidebar-toggle-btn {
     display: none !important;
@@ -9542,6 +9543,7 @@
   }
 }
 
+.mode-mobile .lovable-sidebar,
 .mode-mobile .lovable-properties-sidebar,
 .mode-mobile .nav-sidebar-toggle-btn {
   display: none !important;
