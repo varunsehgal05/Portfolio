@@ -1,8 +1,51 @@
+export const ipadDefaultWallpaper = {
+  id: 'ipad-dune',
+  name: 'iPadOS Dark Dunes',
+  tag: 'iPadOS Contour',
+  thumbnail: '/wallpapers/ipad-dune-dark.jpg',
+  style: {
+    backgroundColor: '#090b10',
+    backgroundImage: 'url(/wallpapers/ipad-dune-dark.jpg)',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center center',
+    backgroundRepeat: 'no-repeat'
+  }
+};
+
+export const mobileDefaultWallpaper = {
+  id: 'ios-aurora',
+  name: 'iOS Titanium Aurora',
+  tag: 'iOS OLED',
+  thumbnail: '/wallpapers/ios-aurora-dark.jpg',
+  style: {
+    backgroundColor: '#000000',
+    backgroundImage: 'url(/wallpapers/ios-aurora-dark.jpg)',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center center',
+    backgroundRepeat: 'no-repeat'
+  }
+};
+
+export function getDeviceWallpaper(wallpaperId = 'default', mode = 'desktop') {
+  if (wallpaperId === 'default') {
+    if (mode === 'tablet') return ipadDefaultWallpaper;
+    if (mode === 'mobile') return mobileDefaultWallpaper;
+    return desktopWallpapers[0]; // Sequoia Midnight
+  }
+  const found = desktopWallpapers.find(w => w.id === wallpaperId);
+  if (found) {
+    return found;
+  }
+  if (mode === 'tablet') return ipadDefaultWallpaper;
+  if (mode === 'mobile') return mobileDefaultWallpaper;
+  return desktopWallpapers[0];
+}
+
 export const desktopWallpapers = [
   {
     id: 'default',
     name: 'Sequoia Midnight',
-    tag: 'Dark Grid',
+    tag: 'macOS Grid',
     thumbnail: null,
     style: {
       backgroundColor: '#0c0c10',
@@ -12,6 +55,8 @@ export const desktopWallpapers = [
       backgroundRepeat: 'repeat, no-repeat'
     }
   },
+  ipadDefaultWallpaper,
+  mobileDefaultWallpaper,
   {
     id: 'roxy-calendar',
     name: 'Roxy Ifrita (Teal Calendar)',

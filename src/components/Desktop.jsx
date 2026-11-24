@@ -5,7 +5,7 @@ import Window from './Window';
 import Dock from './Dock';
 import DeviceHomeScreen from './DeviceHomeScreen';
 import { portfolioApps, desktopIconIds } from '../config/apps';
-import { desktopWallpapers } from '../config/wallpapers';
+import { desktopWallpapers, getDeviceWallpaper } from '../config/wallpapers';
 import LiveMouseSwarm from './LiveMouseSwarm';
 import './Desktop.css';
 
@@ -193,7 +193,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
     const found = desktopWallpapers.find(w => w.id === id) || desktopWallpapers[0];
     if (found.id === activeWallpaperId && !isWpTransitioning) return;
 
-    const currentWp = desktopWallpapers.find(w => w.id === activeWallpaperId) || desktopWallpapers[0];
+    const currentWp = getDeviceWallpaper(activeWallpaperId, effectiveDeviceMode);
 
     if (wpTransitionTimerRef.current) {
       clearTimeout(wpTransitionTimerRef.current);
@@ -435,7 +435,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
   }, [isRebuilding, swarmStage]);
 
   const displayedIcons = desktopIconIds || ['figma', 'vscode', 'resume', 'contact', 'coffee', 'trash'];
-  const activeWallpaper = desktopWallpapers.find(w => w.id === activeWallpaperId) || desktopWallpapers[0];
+  const activeWallpaper = getDeviceWallpaper(activeWallpaperId, effectiveDeviceMode);
 
   return (
     <div
@@ -477,6 +477,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
           openWindows={openWindows}
           activeWindow={activeWindow}
           onOpenApp={openApp}
+          activeWallpaper={activeWallpaper}
         />
       )}
 

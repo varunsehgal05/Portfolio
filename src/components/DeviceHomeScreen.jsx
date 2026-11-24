@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getDeviceWallpaper } from '../config/wallpapers';
 import {
   Wifi,
   Battery,
@@ -132,11 +133,15 @@ const DeviceHomeScreen = ({
   activeWindow = null,
   onOpenApp,
   deviceModeOverride = 'auto',
-  onSetDeviceMode
+  onSetDeviceMode,
+  activeWallpaper = null
 }) => {
   const [time, setTime] = useState(new Date());
   const [copiedId, setCopiedId] = useState(false);
   const [dynamicIslandExpanded, setDynamicIslandExpanded] = useState(false);
+
+  const fallbackWallpaper = getDeviceWallpaper('default', mode);
+  const currentWallpaper = activeWallpaper || fallbackWallpaper;
 
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
@@ -180,6 +185,13 @@ const DeviceHomeScreen = ({
 
   return (
     <div className={`device-home-container mode-${mode}`}>
+      {/* Device-Specific Authentic Wallpaper Layer (iPadOS Dark Dunes / iOS Titanium Aurora) */}
+      <div 
+        className="device-wallpaper-backdrop"
+        style={currentWallpaper.style}
+        aria-hidden="true"
+      />
+
       {/* 1. TOP STATUS BAR */}
       {mode === 'tablet' ? (
         // ================= iPadOS STATUS BAR =================
