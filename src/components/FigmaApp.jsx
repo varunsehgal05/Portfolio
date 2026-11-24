@@ -651,6 +651,7 @@ const FigmaApp = ({ isInteracting, userName, onOpenApp, deviceMode = 'desktop' }
   const panRef = useRef({ x: 0, y: 0 });
   panRef.current = pan;
   const panRafRef = useRef(null);
+  const resumeAutoScrollPauseUntilRef = useRef(0);
   const wheelRafRef = useRef(null);
   const pendingPanDeltaRef = useRef({ x: 0, y: 0 });
 
@@ -1155,18 +1156,21 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
     }
   };
 
-  // Canvas zoom: strictly 100% (1.0) by default for crystal-clear 1:1 pixel rendering
-  const calculateFitZoom = (_tab, _stageW) => {
+  // Canvas zoom: 100% by default, and gracefully fits narrow stages for the 1080px Resume artboard so text never clips under sidebars
+  const calculateFitZoom = (tab, stageW) => {
+    if (tab === 'resume' && stageW > 0 && stageW < 1116) {
+      return Math.min(1, Math.max(0.72, Number(((stageW - 36) / 1080).toFixed(2))));
+    }
     return 1;
   };
 
-  // Center Canvas View: positions artboard TOP-MID at 100% zoom (mathematically centered horizontally, sitting at comfortable top margin)
+  // Center Canvas View: positions artboard TOP-MID (mathematically centered horizontally, sitting at comfortable top margin)
   const centerCanvasView = (tab = activeTab, forcedZoom = null) => {
     if (!containerRef.current) return;
     const stageW = containerRef.current.clientWidth || 900;
     const dim = getTabDimensions(tab);
 
-    const activeZoom = forcedZoom !== null ? forcedZoom : 1;
+    const activeZoom = forcedZoom !== null ? forcedZoom : calculateFitZoom(tab, stageW);
     setZoom(activeZoom);
 
     // Exact mathematical horizontal center (Top-Mid for artboards, clean 0,0 for infinite canvas tabs)
@@ -1183,17 +1187,17 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
 
   const handleTabClick = (tab) => {
     if (activeTab === tab) {
-      centerCanvasView(tab, 1);
+      centerCanvasView(tab);
     } else {
       setActiveTab(tab);
     }
   };
 
-  // Center on tab switch & initial mount with top-center placement for all tabs at 100% zoom
+  // Center on tab switch & initial mount with top-center placement
   useEffect(() => {
-    centerCanvasView(activeTab, 1);
+    centerCanvasView(activeTab);
     const timer = setTimeout(() => {
-      centerCanvasView(activeTab, 1);
+      centerCanvasView(activeTab);
     }, 60);
     return () => clearTimeout(timer);
   }, [activeTab]);
@@ -1304,6 +1308,11 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
 
       if (dist > 3) {
         isDraggingCanvasRef.current = true;
+        resumeAutoScrollPauseUntilRef.current = Date.now() + 4000;
+        if (panRafRef.current) {
+          cancelAnimationFrame(panRafRef.current);
+          panRafRef.current = null;
+        }
       }
 
       if (rafId) return;
@@ -1361,6 +1370,11 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
       setZoom(z => Math.min(2.5, Math.max(0.4, Number((z * factor).toFixed(2)))));
     } else {
       e.preventDefault();
+      resumeAutoScrollPauseUntilRef.current = Date.now() + 4000;
+      if (panRafRef.current) {
+        cancelAnimationFrame(panRafRef.current);
+        panRafRef.current = null;
+      }
       const dx = Number.isFinite(e.deltaX) ? e.deltaX : 0;
       const dy = Number.isFinite(e.deltaY) ? e.deltaY : 0;
       pendingPanDeltaRef.current.x -= dx;
@@ -3003,7 +3017,60 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     canvasZoom={zoom}
                     onBack={() => setActiveTab('home')}
                     deviceMode={deviceMode}
+                    onFollowElement={(targetEl, opts = {}) => {
+                      if (!containerRef.current || !targetEl) return;
+                      if (!opts.force && Date.now() < resumeAutoScrollPauseUntilRef.current) return;
+
+                      const stageRect = containerRef.current.getBoundingClientRect();
+                      const elRect = targetEl.getBoundingClientRect();
+                      const safeTop = stageRect.top + 82;
+                      const safeBottom = stageRect.bottom - 148;
+                      const alignRatio = typeof opts.alignRatio === 'number' ? opts.alignRatio : 0.24;
+                      const isComfortable =
+                        elRect.top >= safeTop &&
+                        elRect.bottom <= safeBottom &&
+                        elRect.top <= stageRect.top + stageRect.height * 0.56;
+
+                      if (isComfortable && !opts.force) return;
+
+                      const availHeight = safeBottom - safeTop;
+                      let desiredTop = stageRect.top + Math.min(185, stageRect.height * alignRatio);
+                      if (elRect.height > (safeBottom - desiredTop) && availHeight > 120) {
+                        desiredTop = Math.max(safeTop, safeBottom - elRect.height - 20);
+                      }
+
+                      const shiftY = desiredTop - elRect.top;
+                      if (Math.abs(shiftY) < 28 && !opts.force) return;
+
+                      if (panRafRef.current) cancelAnimationFrame(panRafRef.current);
+
+                      const stageW = containerRef.current.clientWidth || 900;
+                      const targetX = Math.round((stageW - 1080 * zoom) / 2);
+                      const targetY = Math.round(Math.min(36, Math.max(-5000, panRef.current.y + shiftY)));
+                      const startX = panRef.current.x;
+                      const startY = panRef.current.y;
+                      const startTime = performance.now();
+                      const duration = opts.duration || 760;
+
+                      const animateFollow = (now) => {
+                        const t = Math.min(1, (now - startTime) / duration);
+                        const eased = t < 0.5
+                          ? 4 * t * t * t
+                          : 1 - Math.pow(-2 * t + 2, 3) / 2;
+                        const curX = Math.round(startX + (targetX - startX) * eased);
+                        const curY = Math.round(startY + (targetY - startY) * eased);
+                        setPan({ x: curX, y: curY });
+                        panRef.current = { x: curX, y: curY };
+                        if (t < 1) {
+                          panRafRef.current = requestAnimationFrame(animateFollow);
+                        } else {
+                          panRafRef.current = null;
+                        }
+                      };
+                      panRafRef.current = requestAnimationFrame(animateFollow);
+                    }}
                     onScrollToTop={() => {
+                      resumeAutoScrollPauseUntilRef.current = 0;
                       if (panRafRef.current) cancelAnimationFrame(panRafRef.current);
                       // Smoothly glide canvas pan back to top so user is dragged up to TOP-MID of notebook
                       const stageW = containerRef.current?.clientWidth || 900;
@@ -3014,11 +3081,13 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                       const startX = panRef.current.x;
                       const startY = panRef.current.y;
                       const startTime = performance.now();
-                      const duration = 650;
+                      const duration = 680;
                       const animateScroll = (now) => {
                         const elapsed = now - startTime;
                         const progress = Math.min(1, elapsed / duration);
-                        const eased = 1 - Math.pow(1 - progress, 3);
+                        const eased = progress < 0.5
+                          ? 4 * progress * progress * progress
+                          : 1 - Math.pow(-2 * progress + 2, 3) / 2;
                         const curX = Math.round(startX + (targetX - startX) * eased);
                         const curY = Math.round(startY + (targetY - startY) * eased);
                         setPan({ x: curX, y: curY });

@@ -712,7 +712,7 @@
   color: #0e7490;
 }
 
-/* Progressive Rebuild Animation for KittuResume */
+/* Progressive Rebuild & Smooth Paste Animation for KittuResume */
 .cv-hero-text,
 .cv-side,
 .cv-stats,
@@ -728,7 +728,7 @@
 .cv-thread,
 .cv-made li,
 .cv-timeline-wrap {
-  transition: opacity 0.3s ease;
+  transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), transform 0.48s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .cv-item-hidden,
@@ -739,47 +739,51 @@
 }
 
 .cv-item-hidden {
-  transform: translateY(6px) scale(0.99);
-  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transform: translateY(10px) scale(0.985);
+  transition: opacity 0.32s cubic-bezier(0.22, 1, 0.36, 1), transform 0.38s cubic-bezier(0.22, 1, 0.36, 1) !important;
 }
 
 .cv-typing-caret {
   display: inline-block;
   color: #A259FF;
-  font-weight: 300;
+  font-weight: 400;
   margin-left: 2px;
-  animation: cvBlink 0.6s infinite;
+  animation: cvBlink 0.55s ease-in-out infinite;
 }
 
 @keyframes cvBlink {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+  50% { opacity: 0.15; }
 }
 
 .cv-item-visible {
   opacity: 1 !important;
   visibility: visible !important;
-  transform: translateY(0) scale(1) !important;
   pointer-events: auto !important;
-  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: opacity 0.46s cubic-bezier(0.22, 1, 0.36, 1), transform 0.52s cubic-bezier(0.22, 1, 0.36, 1) !important;
 }
 
 .cv-stamp-pop {
-  animation: cvStampSpring 0.38s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation: cvPasteSettle 0.46s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-@keyframes cvStampSpring {
+@keyframes cvPasteSettle {
   0% {
     opacity: 0;
-    transform: scale(0.92) translateY(6px);
-  }
-  60% {
-    transform: scale(1.03) translateY(-2px);
+    transform: translateY(12px) scale(0.975);
   }
   100% {
     opacity: 1;
-    transform: scale(1) translateY(0);
+    transform: translateY(0) scale(1);
   }
+}
+
+.cv-sel {
+  transition: left 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    top 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    width 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.28s ease;
 }
 
 .cv-cursor {
@@ -787,7 +791,7 @@
   pointer-events: none;
   z-index: 120;
   will-change: transform, opacity;
-  transition: transform 0.38s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.35s ease;
+  transition: transform 0.56s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.38s ease;
 }
 
 /* Remake button bounce */

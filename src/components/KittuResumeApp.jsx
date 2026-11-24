@@ -3,998 +3,873 @@ import './KittuResume.css';
 
 /**
  * KittuResumeApp
- * Pixel-perfect recreation of https://www.kittu.pro/resume
- * Includes notebook paper styling, hand-drawn wobbly cards, custom fonts,
- * and the collaborative multiplayer cursor build animation ("one by one or 2 at a time").
+ * Interactive notebook-style Figma Resume with smooth viewport auto-scroll,
+ * collaborative swarm cursors, fast realistic typing, and smooth Figma component pasting.
  */
+
+const SECTION_HEADINGS = {
+  workOn: 'What I work on',
+  work: "Where I've worked",
+  study: 'Study, and the rest',
+  made: "Things I've made",
+  contact: 'Say hello'
+};
+
+const HERO_LEDE_FULL =
+  'I study and craft friction-free product experiences: how interaction models shape user psychology, and whether enterprise systems can be made fluid, beautiful, and tactile without losing execution speed.';
+const HERO_NOW_FULL =
+  'UI-UX Designer at UniEvent & Assistant Head of CODM Esports Operations at Assemble.';
+
+const WORK_CARDS = [
+  {
+    title: 'Product Design & Systems',
+    desc: 'I build coherent, accessible token hierarchies from zero. Defining spacing scales, color palettes in OKLCH, typography rules, and micro-interactions that scale across web and mobile.'
+  },
+  {
+    title: 'Tactile Hi-Fi Prototyping',
+    desc: 'Moving beyond static wireframes: crafting interactive state machines, physics-based springs, and clickable high-fidelity flows in Figma, Framer, and ProtoPie.'
+  },
+  {
+    title: 'Design Engineering',
+    desc: 'Zero-friction handoff: transforming Figma variables and layouts into executable React, Next.js, and Tailwind CSS components with 60fps animations.'
+  }
+];
+
+const JOBS_DATA = [
+  {
+    head: 'UI-UX Designer, UniEvent',
+    suffix: '',
+    meta: 'Jul 2026 — Nov 2026 • 5 Mos, Punjab, India (Remote)',
+    b1: 'Designed campus event ticketing platform (EventFlow) from initial wireframes to high-fidelity clickable prototype.',
+    b2: 'Slashed transaction drop-off by 30% across a 4-step booking workflow across 50+ reusable component variants.'
+  },
+  {
+    head: 'Assistant Head of CODM Esports Operations',
+    suffix: ', Assemble',
+    meta: 'Aug 2025 — Jan 2026 • 6 Mos, Bharatpur, Rajasthan, India (Remote)',
+    b1: 'Assisted in the planning and smooth execution of CODM tournaments and esports events.',
+    b2: 'Designed collaborative creator workspace tools and interaction prototypes in Figma.'
+  },
+  {
+    head: 'Operation internship',
+    suffix: ', Knaptix Ventures Private Limited',
+    meta: 'Jun 2025 — Aug 2025 • 3 Mos, Pune District, Maharashtra, India (Remote)',
+    b1: 'Operations support, brand identities, and conversion-focused SaaS landing pages for 10+ tech startups with a 95% client retention rate.',
+    b2: ''
+  }
+];
+
+const STUDY_TEXTS = {
+  0: 'B.Tech in Computer Science & Engineering',
+  '0_sub': 'Jaypee University of Engineering & Technology (JUET), Guna',
+  1: 'Senior Secondary (Class XII)',
+  2: '🥈 HACKeThor 1st Runner-Up (2nd Place)',
+  '2_sub': 'Awarded 1st Runner-Up (2nd Place) in National Level Hackathon organized by Unstop out of 500+ participants.',
+  3: 'CodeSrijan Organizer',
+  '3_sub': 'Lead UI/UX Designer and Frontend architect for 200+ hackathon participants across 50+ universities.',
+  4: 'Core Toolkit',
+  '4_sub': 'Figma, Framer, FigJam, ProtoPie, Webflow, React, Next.js, Tailwind CSS, TypeScript.'
+};
+
+const PROJECT_ITEMS = [
+  {
+    title: 'CodeSrijan Hackathon Portal',
+    desc: 'Full-stack live hackathon platform designed for Jaypee University with team matchmaking & rubric evaluation.'
+  },
+  {
+    title: 'EventFlow Ticketing',
+    desc: 'Campus event discovery & instant booking platform with 30% reduced drop-off.'
+  },
+  {
+    title: 'AI Interview Studio',
+    desc: 'Interactive question generator and audio mock-interview coach UI in Figma.'
+  },
+  {
+    title: 'Expensify Budget',
+    desc: 'Mobile personal finance app prototype with gesture-driven expense tagging.'
+  },
+  {
+    title: 'Movie Tickets App',
+    desc: 'Dynamic seat-selection matrix and trailer preview interaction flow.'
+  },
+  {
+    title: 'SaaS Landing Pages',
+    desc: 'High-converting responsive landing pages built for 10+ international tech startups.'
+  }
+];
+
+const CONTACT_INTRO_TEXT = 'For product design roles, design systems, or collaboration, write to me:';
+const CONTACT_EMAIL_TEXT = 'varun.sehgal02@gmail.com';
+
+const renderHighlightedLede = (text) => {
+  const prefix = 'I study and craft ';
+  const phrase = 'friction-free product experiences';
+  if (!text || text.length <= prefix.length) return text;
+  const hiStart = prefix.length;
+  const hiEnd = hiStart + phrase.length;
+  const before = text.slice(0, hiStart);
+  const highlighted = text.slice(hiStart, Math.min(text.length, hiEnd));
+  const after = text.length > hiEnd ? text.slice(hiEnd) : '';
+  return (
+    <>
+      {before}
+      <span className="cv-hi">{highlighted}</span>
+      {after}
+    </>
+  );
+};
+
+const renderFormattedNowLine = (text) => {
+  if (!text) return '\u00A0';
+  return text.split(/(UniEvent|Assemble)/g).map((part, idx) =>
+    part === 'UniEvent' || part === 'Assemble' ? <strong key={idx}>{part}</strong> : part
+  );
+};
 
 const KittuResumeApp = ({
   onBack,
-  onTriggerSwarm,
   onScrollToTop,
+  onFollowElement,
   isParentLoading = false,
-  canvasPan = { x: 0, y: 0 },
   canvasZoom = 1,
   deviceMode = 'desktop'
 }) => {
   const [copied, setCopied] = useState(false);
   const [isBuilding, setIsBuilding] = useState(true);
   const [buildStage, setBuildStage] = useState(0);
+
   const [typedName, setTypedName] = useState('');
   const [typedLede, setTypedLede] = useState('');
-  const [typedNoteHead, setTypedNoteHead] = useState('');
-  const [typedNoteBody, setTypedNoteBody] = useState('');
+  const [typedNowLine, setTypedNowLine] = useState('');
   const [typedPolaroidCaption, setTypedPolaroidCaption] = useState('');
   const [typedStat1, setTypedStat1] = useState('');
   const [typedStat2, setTypedStat2] = useState('');
   const [typedStat3, setTypedStat3] = useState('');
+  const [typedSections, setTypedSections] = useState({});
   const [typedWork, setTypedWork] = useState({});
-  const [typedTimeline, setTypedTimeline] = useState('');
+  const [typedWorkDescs, setTypedWorkDescs] = useState({});
   const [typedJobs, setTypedJobs] = useState({});
   const [typedJobBullets, setTypedJobBullets] = useState({});
+  const [typedJobBullets2, setTypedJobBullets2] = useState({});
   const [typedStudy, setTypedStudy] = useState({});
   const [typedProjects, setTypedProjects] = useState({});
   const [typedProjectDescs, setTypedProjectDescs] = useState({});
+  const [typedContactIntro, setTypedContactIntro] = useState('');
   const [typedEmail, setTypedEmail] = useState('');
+
   const [activeCursors, setActiveCursors] = useState([]);
   const [activeSelection, setActiveSelection] = useState(null);
   const [activeGuides, setActiveGuides] = useState([]);
-  const [sectionsTriggered, setSectionsTriggered] = useState({
-    workOn: false,
-    timeline: false,
-    projects: false,
-    contact: false
-  });
+
   const containerRef = useRef(null);
   const buildTimeoutRef = useRef([]);
-  const isReplayingRef = useRef(false);
-  const sectionsTriggeredRef = useRef({
-    workOn: false,
-    timeline: false,
-    projects: false,
-    contact: false
-  });
+  const buildRafRef = useRef(null);
+  const buildRunIdRef = useRef(0);
+  const onFollowElementRef = useRef(onFollowElement);
+
+  useEffect(() => {
+    onFollowElementRef.current = onFollowElement;
+  }, [onFollowElement]);
 
   const copyEmail = () => {
-    navigator.clipboard?.writeText('varun.sehgal02@gmail.com');
+    navigator.clipboard?.writeText(CONTACT_EMAIL_TEXT);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
   const clearTimeouts = () => {
-    buildTimeoutRef.current.forEach(t => clearTimeout(t));
+    buildTimeoutRef.current.forEach((t) => clearTimeout(t));
     buildTimeoutRef.current = [];
-  };
-
-  const schedule = (fn, delay) => {
-    const id = setTimeout(fn, delay);
-    buildTimeoutRef.current.push(id);
-    return id;
-  };
-
-  // Helper to coordinate all 4 Swarm agents simultaneously
-  const set4Swarm = ({
-    varun = {},
-    elena = {},
-    sarah = {},
-    alex = {}
-  }) => {
-    setActiveCursors([
-      {
-        id: 'varun',
-        name: 'Varun Sehgal',
-        color: '#A259FF',
-        tool: 'T',
-        role: 'Typing',
-        ...varun
-      },
-      {
-        id: 'elena',
-        name: 'Elena Rostova',
-        color: '#F59E0B',
-        tool: 'R',
-        role: 'Framing',
-        ...elena
-      },
-      {
-        id: 'sarah',
-        name: 'Sarah Lin',
-        color: '#0ACF83',
-        tool: '❖',
-        role: 'Stamping',
-        ...sarah
-      },
-      {
-        id: 'alex',
-        name: 'Alex Chen',
-        color: '#1ABCFE',
-        tool: 'V',
-        role: 'Layout',
-        ...alex
-      }
-    ]);
-  };
-
-  // Helper to coordinate 2 concurrent Swarm agents simultaneously
-  const set2Swarm = ({
-    elena = {},
-    varun = {}
-  }) => {
-    setActiveCursors([
-      {
-        id: 'elena',
-        name: 'Elena Rostova',
-        color: '#F59E0B',
-        tool: 'R',
-        role: 'Framing',
-        ...elena
-      },
-      {
-        id: 'varun',
-        name: 'Varun Sehgal',
-        color: '#A259FF',
-        tool: 'T',
-        role: 'Typing',
-        ...varun
-      }
-    ]);
-  };
-
-  // Human-calibrated letter-by-letter typing helper with cursor tracking
-  const typeText = (str, setter, startDelay, interval = 28, cursorId = 'varun', cursorBaseX = null, maxCursorOffset = 340) => {
-    for (let i = 1; i <= str.length; i++) {
-      schedule(() => {
-        setter(str.slice(0, i));
-        if (cursorId && cursorBaseX !== null) {
-          const offset = Math.min(i * 11, maxCursorOffset);
-          setActiveCursors(prev => prev.map(c => c.id === cursorId ? { ...c, x: cursorBaseX + offset } : c));
-        }
-      }, startDelay + i * interval);
+    if (buildRafRef.current) {
+      cancelAnimationFrame(buildRafRef.current);
+      buildRafRef.current = null;
     }
   };
 
-  // Helper to dynamically get real rendered bounding box relative to .cv-container, calibrated for canvas zoom
+  const wait = (ms, runId) =>
+    new Promise((resolve) => {
+      const id = setTimeout(() => {
+        resolve(runId === buildRunIdRef.current);
+      }, ms);
+      buildTimeoutRef.current.push(id);
+    });
+
+  // Dynamically measure real rendered box relative to .cv-container at current zoom
   const getBox = (selector, fallback) => {
     if (!containerRef.current) return fallback;
     const container = containerRef.current.querySelector('.cv-container') || containerRef.current;
     const el = container.querySelector(selector);
     if (!el) return fallback;
-    const z = canvasZoom || 1;
+    const z = Number.isFinite(canvasZoom) && canvasZoom > 0 ? canvasZoom : 1;
     const cRect = container.getBoundingClientRect();
     const eRect = el.getBoundingClientRect();
     if (eRect.width < 10 || eRect.height < 10) return fallback;
+    const x = Math.round((eRect.left - cRect.left) / z);
+    const y = Math.round((eRect.top - cRect.top) / z);
+    const w = Math.round(eRect.width / z);
+    const h = Math.round(eRect.height / z);
+    if (![x, y, w, h].every(Number.isFinite)) return fallback;
+    return { x, y, w, h };
+  };
+
+  // Smoothly pan the outer Figma viewport so the active card/line never builds off-screen
+  const followSelector = async (selector, opts = {}, runId) => {
+    if (runId !== buildRunIdRef.current || !containerRef.current) return false;
+    const container = containerRef.current.querySelector('.cv-container') || containerRef.current;
+    const el = container.querySelector(selector);
+    if (el && onFollowElementRef.current) {
+      onFollowElementRef.current(el, opts);
+      // Let viewport camera settle gently before typing/pasting begins
+      const ok = await wait(opts.settleMs ?? 280, runId);
+      return ok;
+    }
+    return true;
+  };
+
+  const normalizeCursor = (base, override = {}) => {
+    const merged = { ...base, ...override };
     return {
-      x: Math.round((eRect.left - cRect.left) / z),
-      y: Math.round((eRect.top - cRect.top) / z),
-      w: Math.round(eRect.width / z),
-      h: Math.round(eRect.height / z)
+      ...merged,
+      x: Number.isFinite(merged.x) ? merged.x : 0,
+      y: Number.isFinite(merged.y) ? merged.y : 0
     };
   };
 
-  // Build Full Resume Strictly Line-by-Line & One-by-One from Top to Footer
-  const buildTopSection = () => {
+  const set4Swarm = ({ varun = {}, elena = {}, sarah = {}, alex = {} }) => {
+    setActiveCursors([
+      normalizeCursor({ id: 'varun', name: 'Varun Sehgal', color: '#A259FF', role: 'Typing', transitionMs: 560, x: 0, y: 0 }, varun),
+      normalizeCursor({ id: 'elena', name: 'Elena Rostova', color: '#F59E0B', role: 'Framing', transitionMs: 580, x: 0, y: 0 }, elena),
+      normalizeCursor({ id: 'sarah', name: 'Sarah Lin', color: '#0ACF83', role: 'Pasting', transitionMs: 580, x: 0, y: 0 }, sarah),
+      normalizeCursor({ id: 'alex', name: 'Alex Chen', color: '#1ABCFE', role: 'Layout', transitionMs: 580, x: 0, y: 0 }, alex)
+    ]);
+  };
+
+  const set2Swarm = ({ elena = {}, varun = {}, sarah = null }) => {
+    const list = [
+      normalizeCursor({ id: 'elena', name: 'Elena Rostova', color: '#F59E0B', role: 'Framing', transitionMs: 560, x: 0, y: 0 }, elena),
+      normalizeCursor({ id: 'varun', name: 'Varun Sehgal', color: '#A259FF', role: 'Typing', transitionMs: 540, x: 0, y: 0 }, varun)
+    ];
+    if (sarah) {
+      list.push(
+        normalizeCursor({ id: 'sarah', name: 'Sarah Lin', color: '#0ACF83', role: 'Pasting', transitionMs: 560, x: 0, y: 0 }, sarah)
+      );
+    }
+    setActiveCursors(list);
+  };
+
+  // Time-exact 60fps fast-typing helper with fluid cursor glide (zero setTimeout drift)
+  const typeTextSmooth = (
+    str,
+    setter,
+    {
+      charMs = 14,
+      cursorId = 'varun',
+      cursorBaseX = null,
+      maxCursorOffset = 340,
+      maxDurationMs = 1300,
+      runId
+    }
+  ) =>
+    new Promise((resolve) => {
+      if (runId !== buildRunIdRef.current) {
+        resolve(false);
+        return;
+      }
+
+      const duration = Math.min(maxDurationMs, Math.max(200, str.length * charMs));
+      const startTime = performance.now();
+      let lastCharCount = 0;
+      let lastCursorTick = 0;
+
+      const stepFrame = (now) => {
+        if (runId !== buildRunIdRef.current) {
+          buildRafRef.current = null;
+          resolve(false);
+          return;
+        }
+
+        const progress = Math.min(1, (now - startTime) / duration);
+        // Slightly front-loaded curve for snappy, natural keystroke flow
+        const eased = progress < 1 ? progress : 1;
+        const charCount = Math.max(1, Math.min(str.length, Math.round(str.length * eased)));
+
+        if (charCount !== lastCharCount) {
+          lastCharCount = charCount;
+          setter(str.slice(0, charCount));
+        }
+
+        if (cursorId && cursorBaseX !== null && (now - lastCursorTick >= 70 || progress >= 1)) {
+          lastCursorTick = now;
+          const offset = Math.round(Math.min(charCount * 9.5, maxCursorOffset) * (0.35 + 0.65 * progress));
+          setActiveCursors((prev) =>
+            prev.map((c) =>
+              c.id === cursorId
+                ? { ...c, x: cursorBaseX + offset, transitionMs: 130 }
+                : c
+            )
+          );
+        }
+
+        if (progress < 1) {
+          buildRafRef.current = requestAnimationFrame(stepFrame);
+        } else {
+          buildRafRef.current = null;
+          resolve(true);
+        }
+      };
+
+      buildRafRef.current = requestAnimationFrame(stepFrame);
+    });
+
+  // Sequential Async Builder — strictly ordered, viewport-followed, un-rushed typing + Figma pasting
+  const buildTopSection = async (initialWaitMs = 120) => {
     clearTimeouts();
+    const runId = ++buildRunIdRef.current;
+
     setIsBuilding(true);
     setBuildStage(0);
     setTypedName('');
     setTypedLede('');
-    setTypedNoteHead('');
-    setTypedNoteBody('');
+    setTypedNowLine('');
     setTypedPolaroidCaption('');
     setTypedStat1('');
     setTypedStat2('');
     setTypedStat3('');
+    setTypedSections({});
     setTypedWork({});
-    setTypedTimeline('');
+    setTypedWorkDescs({});
     setTypedJobs({});
     setTypedJobBullets({});
+    setTypedJobBullets2({});
     setTypedStudy({});
     setTypedProjects({});
     setTypedProjectDescs({});
+    setTypedContactIntro('');
     setTypedEmail('');
     setActiveCursors([]);
     setActiveSelection(null);
     setActiveGuides([]);
-    sectionsTriggeredRef.current = {
-      workOn: false,
-      timeline: false,
-      projects: false,
-      contact: false
-    };
-    setSectionsTriggered({
-      workOn: false,
-      timeline: false,
-      projects: false,
-      contact: false
-    });
+
+    if (!(await wait(initialWaitMs, runId))) return;
 
     // =========================================================================
-    // SECTION 1: HERO (Stages 0 - 7)
+    // SECTION 1: HERO
     // =========================================================================
-    // 0a. All 4 Swarm agents enter top of blank sheet
-    schedule(() => {
-      const box = getBox('.cv-name', { x: 28, y: 35, w: 460, h: 75 });
-      const boxPol = getBox('.cv-polaroid', { x: 730, y: 110, w: 260, h: 260 });
-      set4Swarm({
-        elena: { x: box.x, y: box.y, tool: 'R', role: 'Framing' },
-        alex: { x: box.x + box.w + 24, y: box.y + 12, tool: 'V', role: 'Layout' },
-        sarah: { x: boxPol.x + 30, y: boxPol.y + 30, tool: '❖', role: 'Stamping' },
-        varun: { x: box.x + 35, y: box.y + 18, tool: 'T', role: 'Typing' }
-      });
-      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h });
-      setActiveGuides([{ type: 'h', y: box.y + box.h, x1: box.x, x2: box.x + box.w }]);
-    }, 80);
+    const nameBox = getBox('.cv-name', { x: 28, y: 35, w: 460, h: 75 });
+    const polBox0 = getBox('.cv-polaroid', { x: 730, y: 110, w: 260, h: 260 });
+    set4Swarm({
+      elena: { x: nameBox.x, y: nameBox.y, role: 'Framing' },
+      alex: { x: nameBox.x + nameBox.w + 24, y: nameBox.y + 12, role: 'Layout' },
+      sarah: { x: polBox0.x + 30, y: polBox0.y + 30, role: 'Ready' },
+      varun: { x: nameBox.x + 32, y: nameBox.y + 20, role: 'Typing' }
+    });
+    setActiveSelection({ x: nameBox.x, y: nameBox.y, w: nameBox.w, h: nameBox.h });
+    setActiveGuides([{ type: 'h', y: nameBox.y + nameBox.h, x1: nameBox.x, x2: nameBox.x + nameBox.w }]);
+    if (!(await wait(240, runId))) return;
 
     // 0b. Type "Varun Sehgal"
-    schedule(() => {
-      const box = getBox('.cv-name', { x: 28, y: 35, w: 460, h: 75 });
-      const boxPol = getBox('.cv-polaroid', { x: 730, y: 110, w: 260, h: 260 });
-      set4Swarm({
-        elena: { x: box.x + box.w - 10, y: box.y + box.h, tool: 'R', role: 'Framing' },
-        alex: { x: box.x + box.w + 24, y: box.y + 12, tool: 'V', role: 'Layout' },
-        sarah: { x: boxPol.x + 40, y: boxPol.y + 30, tool: '❖', role: 'Stamping' },
-        varun: { x: box.x + 35, y: box.y + 18, tool: 'T', role: 'Typing' }
-      });
-      typeText('Varun Sehgal', setTypedName, 0, 26, 'varun', box.x + 35, 220);
-    }, 240);
+    if (!(await typeTextSmooth('Varun Sehgal', setTypedName, { charMs: 28, cursorBaseX: nameBox.x + 32, maxCursorOffset: 240, runId }))) return;
+    if (!(await wait(160, runId))) return;
 
-    // 1. Lede paragraph line
-    schedule(() => {
-      setBuildStage(1);
-      const boxLede = getBox('.cv-lede', { x: 28, y: 125, w: 600, h: 120 });
-      const boxPol = getBox('.cv-polaroid', { x: 730, y: 110, w: 260, h: 260 });
-      set4Swarm({
-        elena: { x: boxLede.x, y: boxLede.y, tool: 'R', role: 'Framing' },
-        alex: { x: boxLede.x + boxLede.w + 20, y: boxLede.y + 24, tool: 'V', role: 'Layout' },
-        sarah: { x: boxPol.x + 50, y: boxPol.y + 40, tool: '❖', role: 'Stamping' },
-        varun: { x: boxLede.x + 24, y: boxLede.y + 20, tool: 'T', role: 'Typing' }
-      });
-      setActiveSelection({ x: boxLede.x, y: boxLede.y, w: boxLede.w, h: boxLede.h });
-      setActiveGuides([{ type: 'v', x: boxLede.x + boxLede.w, y1: boxLede.y, y2: boxLede.y + boxLede.h }]);
-      typeText('I study and craft friction-free product experiences: tactile, beautiful, and fast.', setTypedLede, 20, 12, 'varun', boxLede.x + 24, 380);
-    }, 620);
+    // 1. Lede paragraph fast & smooth typing
+    setBuildStage(1);
+    const ledeBox = getBox('.cv-lede', { x: 28, y: 125, w: 600, h: 120 });
+    set4Swarm({
+      elena: { x: ledeBox.x, y: ledeBox.y, role: 'Framing' },
+      alex: { x: ledeBox.x + ledeBox.w + 18, y: ledeBox.y + 24, role: 'Layout' },
+      sarah: { x: polBox0.x + 40, y: polBox0.y + 40, role: 'Prepping' },
+      varun: { x: ledeBox.x + 20, y: ledeBox.y + 20, role: 'Typing' }
+    });
+    setActiveSelection({ x: ledeBox.x, y: ledeBox.y, w: ledeBox.w, h: ledeBox.h });
+    setActiveGuides([{ type: 'v', x: ledeBox.x + ledeBox.w, y1: ledeBox.y, y2: ledeBox.y + ledeBox.h }]);
+    if (!(await wait(200, runId))) return;
+    if (!(await typeTextSmooth(HERO_LEDE_FULL, setTypedLede, { charMs: 11, stepChars: 2, cursorBaseX: ledeBox.x + 20, maxCursorOffset: 380, runId }))) return;
+    if (!(await wait(160, runId))) return;
 
-    // 2. Hero "Now" role line
-    schedule(() => {
-      setBuildStage(2);
-      const boxNow = getBox('.cv-now-line', { x: 28, y: 245, w: 580, h: 36 });
-      set4Swarm({
-        elena: { x: boxNow.x, y: boxNow.y, tool: 'R', role: 'Framing' },
-        alex: { x: boxNow.x + boxNow.w, y: boxNow.y + 10, tool: 'V', role: 'Layout' },
-        sarah: { x: boxNow.x + 200, y: boxNow.y + 10, tool: '❖', role: 'Stamping' },
-        varun: { x: boxNow.x + 24, y: boxNow.y + 12, tool: 'T', role: 'Typing' }
-      });
-      setActiveSelection({ x: boxNow.x, y: boxNow.y, w: boxNow.w, h: boxNow.h });
-    }, 1720);
+    // 2. Hero "Now" line — fast type
+    setBuildStage(2);
+    const nowBox = getBox('.cv-now-line', { x: 28, y: 245, w: 580, h: 36 });
+    set4Swarm({
+      elena: { x: nowBox.x, y: nowBox.y, role: 'Framing' },
+      alex: { x: nowBox.x + nowBox.w, y: nowBox.y + 10, role: 'Layout' },
+      sarah: { x: nowBox.x + 220, y: nowBox.y + 10, role: 'Styling' },
+      varun: { x: nowBox.x + 24, y: nowBox.y + 12, role: 'Typing' }
+    });
+    setActiveSelection({ x: nowBox.x, y: nowBox.y, w: nowBox.w, h: nowBox.h });
+    if (!(await wait(160, runId))) return;
+    if (!(await typeTextSmooth(HERO_NOW_FULL, setTypedNowLine, { charMs: 12, stepChars: 2, cursorBaseX: nowBox.x + 24, maxCursorOffset: 340, runId }))) return;
+    if (!(await wait(150, runId))) return;
 
-    // 3. Hero social links line
-    schedule(() => {
-      setBuildStage(3);
-      const boxLinks = getBox('.cv-hero .cv-links', { x: 28, y: 295, w: 380, h: 36 });
-      set4Swarm({
-        elena: { x: boxLinks.x, y: boxLinks.y, tool: 'R', role: 'Framing' },
-        alex: { x: boxLinks.x + boxLinks.w, y: boxLinks.y + 10, tool: 'V', role: 'Layout' },
-        sarah: { x: boxLinks.x + 160, y: boxLinks.y + 10, tool: '❖', role: 'Stamping' },
-        varun: { x: boxLinks.x + 24, y: boxLinks.y + 12, tool: 'T', role: 'Typing' }
-      });
-      setActiveSelection({ x: boxLinks.x, y: boxLinks.y, w: boxLinks.w, h: boxLinks.h });
-    }, 2020);
+    // 3. Social Links — Sarah smoothly pastes links strip
+    setBuildStage(3);
+    const linksBox = getBox('.cv-hero .cv-links', { x: 28, y: 295, w: 380, h: 36 });
+    set4Swarm({
+      elena: { x: linksBox.x, y: linksBox.y, role: 'Framing' },
+      alex: { x: linksBox.x + linksBox.w, y: linksBox.y + 10, role: 'Layout' },
+      sarah: { x: linksBox.x + 150, y: linksBox.y + 12, role: 'Pasting ⌘V' },
+      varun: { x: linksBox.x + 24, y: linksBox.y + 12, role: 'Reviewing' }
+    });
+    setActiveSelection({ x: linksBox.x, y: linksBox.y, w: linksBox.w, h: linksBox.h });
+    if (!(await wait(340, runId))) return;
 
-    // 4. Polaroid Photo & Caption
-    schedule(() => {
-      setBuildStage(4);
-      const boxPol = getBox('.cv-polaroid', { x: 730, y: 110, w: 260, h: 260 });
+    // 4. Polaroid Photo pasted + caption typed
+    setBuildStage(4);
+    const polBox = getBox('.cv-polaroid', { x: 730, y: 110, w: 260, h: 260 });
+    set4Swarm({
+      elena: { x: polBox.x, y: polBox.y, role: 'Framing' },
+      alex: { x: polBox.x + polBox.w + 14, y: polBox.y + 40, role: 'Layout' },
+      sarah: { x: polBox.x + polBox.w / 2, y: polBox.y + 85, role: 'Pasting ⌘V' },
+      varun: { x: polBox.x + 26, y: polBox.y + polBox.h - 18, role: 'Typing' }
+    });
+    setActiveSelection({ x: polBox.x, y: polBox.y, w: polBox.w, h: polBox.h });
+    setActiveGuides([]);
+    if (!(await wait(240, runId))) return;
+    if (!(await typeTextSmooth('Varun Sehgal, 2026 →', setTypedPolaroidCaption, { charMs: 22, cursorBaseX: polBox.x + 26, maxCursorOffset: 170, runId }))) return;
+    if (!(await wait(200, runId))) return;
+
+    // 5-7. Stat Pills (Smoothly follow stats bar, paste pill & type metric one by one)
+    if (!(await followSelector('.cv-stats', { alignRatio: 0.45, duration: 680, settleMs: 240 }, runId))) return;
+    const statsCfg = [
+      { stage: 5, sel: '.cv-stats li:nth-child(1)', text: '6+', setter: setTypedStat1 },
+      { stage: 6, sel: '.cv-stats li:nth-child(2)', text: '200+', setter: setTypedStat2 },
+      { stage: 7, sel: '.cv-stats li:nth-child(3)', text: '🥈 1st Runner-Up', setter: setTypedStat3 }
+    ];
+    for (const s of statsCfg) {
+      const sBox = getBox(s.sel, { x: 28, y: 460, w: 320, h: 85 });
       set4Swarm({
-        elena: { x: boxPol.x, y: boxPol.y, tool: 'R', role: 'Framing' },
-        alex: { x: boxPol.x + boxPol.w + 16, y: boxPol.y + 40, tool: 'V', role: 'Layout' },
-        sarah: { x: boxPol.x + boxPol.w / 2, y: boxPol.y + 90, tool: '❖', role: 'Stamping' },
-        varun: { x: boxPol.x + 28, y: boxPol.y + boxPol.h - 18, tool: 'T', role: 'Typing' }
+        elena: { x: sBox.x, y: sBox.y, role: 'Framing' },
+        alex: { x: sBox.x + sBox.w + 8, y: sBox.y + 18, role: 'Layout' },
+        sarah: { x: sBox.x + sBox.w / 2, y: sBox.y + 22, role: 'Pasting ⌘V' },
+        varun: { x: sBox.x + 36, y: sBox.y + 24, role: 'Typing' }
       });
-      setActiveSelection({ x: boxPol.x, y: boxPol.y, w: boxPol.w, h: boxPol.h });
+      setActiveSelection({ x: sBox.x, y: sBox.y, w: sBox.w, h: sBox.h });
+      setBuildStage(s.stage);
+      if (!(await wait(190, runId))) return;
+      if (!(await typeTextSmooth(s.text, s.setter, { charMs: 24, cursorBaseX: sBox.x + 36, maxCursorOffset: 180, runId }))) return;
+      if (!(await wait(160, runId))) return;
+    }
+
+    // =========================================================================
+    // SECTION 2: WHAT I WORK ON (Auto-scroll into view, paste cards + fast-type titles & descriptions)
+    // =========================================================================
+    if (!(await followSelector('#cv-work-on', { alignRatio: 0.2, duration: 760, settleMs: 300 }, runId))) return;
+    setBuildStage(8);
+    const workHead = getBox('#cv-work-on', { x: 28, y: 650, w: 300, h: 42 });
+    set2Swarm({
+      elena: { x: workHead.x, y: workHead.y, role: 'Framing' },
+      varun: { x: workHead.x + 28, y: workHead.y + 12, role: 'Typing' }
+    });
+    setActiveSelection({ x: workHead.x, y: workHead.y, w: workHead.w, h: workHead.h });
+    setActiveGuides([{ type: 'h', y: workHead.y + workHead.h, x1: workHead.x, x2: workHead.x + 980 }]);
+    if (!(await typeTextSmooth(SECTION_HEADINGS.workOn, (t) => setTypedSections((p) => ({ ...p, workOn: t })), { charMs: 22, cursorBaseX: workHead.x + 28, maxCursorOffset: 240, runId }))) return;
+    if (!(await wait(200, runId))) return;
+
+    const cardStages = [
+      { cardStage: 9, descStage: 10, idx: 0, sel: '.cv-thread-0' },
+      { cardStage: 11, descStage: 12, idx: 1, sel: '.cv-thread-1' },
+      { cardStage: 13, descStage: 14, idx: 2, sel: '.cv-thread-2' }
+    ];
+    for (const c of cardStages) {
+      const cBox = getBox(c.sel, { x: 28 + c.idx * 344, y: 710, w: 320, h: 195 });
+      setBuildStage(c.cardStage);
+      set2Swarm({
+        elena: { x: cBox.x, y: cBox.y, role: 'Framing' },
+        sarah: { x: cBox.x + cBox.w - 36, y: cBox.y + 24, role: 'Pasting ⌘V' },
+        varun: { x: cBox.x + 24, y: cBox.y + 28, role: 'Typing' }
+      });
+      setActiveSelection({ x: cBox.x, y: cBox.y, w: cBox.w, h: cBox.h });
       setActiveGuides([]);
-      typeText('Varun Sehgal, 2026 →', setTypedPolaroidCaption, 30, 16, 'varun', boxPol.x + 28, 170);
-    }, 2320);
+      if (!(await wait(230, runId))) return;
+      if (!(await typeTextSmooth(WORK_CARDS[c.idx].title, (t) => setTypedWork((p) => ({ ...p, [c.idx]: t })), { charMs: 18, cursorBaseX: cBox.x + 24, maxCursorOffset: 220, runId }))) return;
+      if (!(await wait(120, runId))) return;
 
-    // 5. Stat 1 (6+)
-    schedule(() => {
-      const box1 = getBox('.cv-stats li:nth-child(1)', { x: 28, y: 460, w: 320, h: 85 });
-      set4Swarm({
-        elena: { x: box1.x, y: box1.y, tool: 'R', role: 'Framing' },
-        alex: { x: box1.x + box1.w + 12, y: box1.y + 16, tool: 'V', role: 'Layout' },
-        sarah: { x: box1.x + box1.w / 2, y: box1.y + 24, tool: '❖', role: 'Stamping' },
-        varun: { x: box1.x + 36, y: box1.y + 22, tool: 'T', role: 'Typing' }
+      setBuildStage(c.descStage);
+      set2Swarm({
+        elena: { x: cBox.x + cBox.w - 16, y: cBox.y + cBox.h - 16, role: 'Framing' },
+        varun: { x: cBox.x + 24, y: cBox.y + 84, role: 'Typing' }
       });
-      setActiveSelection({ x: box1.x, y: box1.y, w: box1.w, h: box1.h });
-      setBuildStage(5);
-      typeText('6+', setTypedStat1, 20, 30);
-    }, 2820);
-
-    // 6. Stat 2 (200+)
-    schedule(() => {
-      const box2 = getBox('.cv-stats li:nth-child(2)', { x: 372, y: 460, w: 320, h: 85 });
-      set4Swarm({
-        elena: { x: box2.x, y: box2.y, tool: 'R', role: 'Framing' },
-        alex: { x: box2.x + box2.w + 12, y: box2.y + 16, tool: 'V', role: 'Layout' },
-        sarah: { x: box2.x + box2.w / 2, y: box2.y + 24, tool: '❖', role: 'Stamping' },
-        varun: { x: box2.x + 36, y: box2.y + 22, tool: 'T', role: 'Typing' }
-      });
-      setActiveSelection({ x: box2.x, y: box2.y, w: box2.w, h: box2.h });
-      setBuildStage(6);
-      typeText('200+', setTypedStat2, 20, 28);
-    }, 3280);
-
-    // 7. Stat 3 (1st Runner-Up)
-    schedule(() => {
-      const box3 = getBox('.cv-stats li:nth-child(3)', { x: 716, y: 460, w: 320, h: 85 });
-      set4Swarm({
-        elena: { x: box3.x, y: box3.y, tool: 'R', role: 'Framing' },
-        alex: { x: box3.x + box3.w - 10, y: box3.y + 16, tool: 'V', role: 'Layout' },
-        sarah: { x: box3.x + box3.w / 2, y: box3.y + 24, tool: '❖', role: 'Stamping' },
-        varun: { x: box3.x + 36, y: box3.y + 22, tool: 'T', role: 'Typing' }
-      });
-      setActiveSelection({ x: box3.x, y: box3.y, w: box3.w, h: box3.h });
-      setBuildStage(7);
-      typeText('🥈 1st Runner-Up', setTypedStat3, 20, 20);
-    }, 3760);
+      if (!(await wait(140, runId))) return;
+      if (!(await typeTextSmooth(WORK_CARDS[c.idx].desc, (t) => setTypedWorkDescs((p) => ({ ...p, [c.idx]: t })), { charMs: 10, stepChars: 2, cursorBaseX: cBox.x + 24, maxCursorOffset: 240, runId }))) return;
+      if (!(await wait(220, runId))) return;
+    }
 
     // =========================================================================
-    // SECTION 2: WHAT I WORK ON (Stages 8 - 14) - Strictly Line-by-Line
+    // SECTION 3: WHERE I'VE WORKED
     // =========================================================================
-    // 8. Heading: What I work on
-    schedule(() => {
-      setBuildStage(8);
-      setSectionsTriggered(prev => ({ ...prev, workOn: true }));
-      const head = getBox('#cv-work-on', { x: 28, y: 650, w: 300, h: 42 });
-      set2Swarm({
-        elena: { x: head.x, y: head.y, tool: 'R', role: 'Framing' },
-        varun: { x: head.x + 180, y: head.y + 12, tool: 'T', role: 'Typing' }
-      });
-      setActiveSelection({ x: head.x, y: head.y, w: head.w, h: head.h });
-      setActiveGuides([{ type: 'h', y: head.y + head.h, x1: head.x, x2: head.x + 980 }]);
-    }, 4300);
+    if (!(await followSelector('#cv-work', { alignRatio: 0.2, duration: 780, settleMs: 300 }, runId))) return;
+    setBuildStage(15);
+    const expHead = getBox('#cv-work', { x: 28, y: 940, w: 320, h: 42 });
+    set2Swarm({
+      elena: { x: expHead.x, y: expHead.y, role: 'Framing' },
+      varun: { x: expHead.x + 28, y: expHead.y + 12, role: 'Typing' }
+    });
+    setActiveSelection({ x: expHead.x, y: expHead.y, w: expHead.w, h: expHead.h });
+    if (!(await typeTextSmooth(SECTION_HEADINGS.work, (t) => setTypedSections((p) => ({ ...p, work: t })), { charMs: 22, cursorBaseX: expHead.x + 28, maxCursorOffset: 260, runId }))) return;
+    if (!(await wait(200, runId))) return;
 
-    // 9. Card 1 Frame + Title
-    schedule(() => {
-      setBuildStage(9);
-      const box0 = getBox('.cv-thread-0', { x: 28, y: 710, w: 320, h: 195 });
-      set2Swarm({
-        elena: { x: box0.x, y: box0.y, tool: 'R', role: 'Framing' },
-        varun: { x: box0.x + 24, y: box0.y + 22, tool: 'T', role: 'Typing' }
-      });
-      setActiveSelection({ x: box0.x, y: box0.y, w: box0.w, h: box0.h });
-      setActiveGuides([]);
-      typeText('Product Design & Systems', (t) => setTypedWork(prev => ({ ...prev, 0: t })), 20, 18, 'varun', box0.x + 24, 220);
-    }, 4520);
+    const jobStages = [
+      { headStage: 16, metaStage: 17, b1Stage: 18, b2Stage: 19, idx: 0, sel: '.cv-job:nth-child(1)' },
+      { headStage: 20, metaStage: 21, b1Stage: 22, b2Stage: 23, idx: 1, sel: '.cv-job:nth-child(2)' },
+      { headStage: 24, metaStage: 25, b1Stage: 26, b2Stage: null, idx: 2, sel: '.cv-job:nth-child(3)' }
+    ];
 
-    // 10. Card 1 Description line
-    schedule(() => {
-      setBuildStage(10);
-      const box0 = getBox('.cv-thread-0', { x: 28, y: 710, w: 320, h: 195 });
-      set2Swarm({
-        elena: { x: box0.x + box0.w - 16, y: box0.y + box0.h - 16, tool: 'R', role: 'Framing' },
-        varun: { x: box0.x + 24, y: box0.y + 84, tool: 'T', role: 'Typing' }
-      });
-    }, 5040);
+    for (const j of jobStages) {
+      if (!(await followSelector(j.sel, { alignRatio: 0.25, duration: 720, settleMs: 240 }, runId))) return;
+      const jBox = getBox(j.sel, { x: 28, y: 995 + j.idx * 125, w: 980, h: 105 });
+      const data = JOBS_DATA[j.idx];
 
-    // 11. Card 2 Frame + Title
-    schedule(() => {
-      setBuildStage(11);
-      const box1 = getBox('.cv-thread-1', { x: 372, y: 710, w: 320, h: 195 });
+      // Job Title typed
+      setBuildStage(j.headStage);
       set2Swarm({
-        elena: { x: box1.x, y: box1.y, tool: 'R', role: 'Framing' },
-        varun: { x: box1.x + 24, y: box1.y + 22, tool: 'T', role: 'Typing' }
+        elena: { x: jBox.x, y: jBox.y + 8, role: 'Framing' },
+        varun: { x: jBox.x + 28, y: jBox.y + 12, role: 'Typing' }
       });
-      setActiveSelection({ x: box1.x, y: box1.y, w: box1.w, h: box1.h });
-      typeText('Tactile Hi-Fi Prototyping', (t) => setTypedWork(prev => ({ ...prev, 1: t })), 20, 18, 'varun', box1.x + 24, 220);
-    }, 5300);
+      setActiveSelection({ x: jBox.x, y: jBox.y, w: jBox.w, h: jBox.h });
+      if (!(await wait(160, runId))) return;
+      if (!(await typeTextSmooth(data.head, (t) => setTypedJobs((p) => ({ ...p, [j.idx]: t })), { charMs: 16, cursorBaseX: jBox.x + 28, maxCursorOffset: 320, runId }))) return;
 
-    // 12. Card 2 Description line
-    schedule(() => {
-      setBuildStage(12);
-      const box1 = getBox('.cv-thread-1', { x: 372, y: 710, w: 320, h: 195 });
+      // Meta + Company pasted cleanly
+      setBuildStage(j.metaStage);
       set2Swarm({
-        elena: { x: box1.x + box1.w - 16, y: box1.y + box1.h - 16, tool: 'R', role: 'Framing' },
-        varun: { x: box1.x + 24, y: box1.y + 84, tool: 'T', role: 'Typing' }
+        elena: { x: jBox.x + jBox.w - 140, y: jBox.y + 12, role: 'Framing' },
+        sarah: { x: jBox.x + 190, y: jBox.y + 38, role: 'Pasting ⌘V' },
+        varun: { x: jBox.x + 30, y: jBox.y + 38, role: 'Ready' }
       });
-    }, 5840);
+      if (!(await wait(260, runId))) return;
 
-    // 13. Card 3 Frame + Title
-    schedule(() => {
-      setBuildStage(13);
-      const box2 = getBox('.cv-thread-2', { x: 716, y: 710, w: 320, h: 195 });
+      // Bullet 1 fast-typed
+      setBuildStage(j.b1Stage);
       set2Swarm({
-        elena: { x: box2.x, y: box2.y, tool: 'R', role: 'Framing' },
-        varun: { x: box2.x + 24, y: box2.y + 22, tool: 'T', role: 'Typing' }
+        elena: { x: jBox.x + 12, y: jBox.y + 60, role: 'Framing' },
+        varun: { x: jBox.x + 40, y: jBox.y + 62, role: 'Typing' }
       });
-      setActiveSelection({ x: box2.x, y: box2.y, w: box2.w, h: box2.h });
-      typeText('Design Engineering', (t) => setTypedWork(prev => ({ ...prev, 2: t })), 20, 18, 'varun', box2.x + 24, 200);
-    }, 6100);
+      if (!(await wait(140, runId))) return;
+      if (!(await typeTextSmooth(data.b1, (t) => setTypedJobBullets((p) => ({ ...p, [`${j.idx}_0`]: t })), { charMs: 10, stepChars: 2, cursorBaseX: jBox.x + 40, maxCursorOffset: 420, runId }))) return;
 
-    // 14. Card 3 Description line
-    schedule(() => {
-      setBuildStage(14);
-      const box2 = getBox('.cv-thread-2', { x: 716, y: 710, w: 320, h: 195 });
-      set2Swarm({
-        elena: { x: box2.x + box2.w - 16, y: box2.y + box2.h - 16, tool: 'R', role: 'Framing' },
-        varun: { x: box2.x + 24, y: box2.y + 84, tool: 'T', role: 'Typing' }
-      });
-    }, 6520);
+      // Bullet 2 fast-typed (if present)
+      if (j.b2Stage && data.b2) {
+        await wait(110, runId);
+        setBuildStage(j.b2Stage);
+        set2Swarm({
+          elena: { x: jBox.x + 12, y: jBox.y + 84, role: 'Framing' },
+          varun: { x: jBox.x + 40, y: jBox.y + 86, role: 'Typing' }
+        });
+        if (!(await wait(130, runId))) return;
+        if (!(await typeTextSmooth(data.b2, (t) => setTypedJobBullets2((p) => ({ ...p, [`${j.idx}_1`]: t })), { charMs: 10, stepChars: 2, cursorBaseX: jBox.x + 40, maxCursorOffset: 420, runId }))) return;
+      }
+
+      if (!(await wait(220, runId))) return;
+    }
 
     // =========================================================================
-    // SECTION 3: WHERE I'VE WORKED (Stages 15 - 26) - Strictly Line-by-Line
+    // SECTION 4: STUDY, AND THE REST
     // =========================================================================
-    // 15. Heading: Where I've worked
-    schedule(() => {
-      setBuildStage(15);
-      setSectionsTriggered(prev => ({ ...prev, timeline: true }));
-      const head = getBox('#cv-work', { x: 28, y: 940, w: 320, h: 42 });
-      set2Swarm({
-        elena: { x: head.x, y: head.y, tool: 'R', role: 'Framing' },
-        varun: { x: head.x + 190, y: head.y + 12, tool: 'T', role: 'Typing' }
-      });
-      setActiveSelection({ x: head.x, y: head.y, w: head.w, h: head.h });
-    }, 6820);
+    if (!(await followSelector('#cv-study', { alignRatio: 0.22, duration: 760, settleMs: 280 }, runId))) return;
+    setBuildStage(27);
+    const studyHead = getBox('#cv-study', { x: 28, y: 1365, w: 320, h: 42 });
+    set2Swarm({
+      elena: { x: studyHead.x, y: studyHead.y, role: 'Framing' },
+      varun: { x: studyHead.x + 28, y: studyHead.y + 12, role: 'Typing' }
+    });
+    setActiveSelection({ x: studyHead.x, y: studyHead.y, w: studyHead.w, h: studyHead.h });
+    if (!(await typeTextSmooth(SECTION_HEADINGS.study, (t) => setTypedSections((p) => ({ ...p, study: t })), { charMs: 20, cursorBaseX: studyHead.x + 28, maxCursorOffset: 240, runId }))) return;
+    if (!(await wait(180, runId))) return;
 
-    // 16. Job 1: Heading typed
-    schedule(() => {
-      setBuildStage(16);
-      const box0 = getBox('.cv-job:nth-child(1)', { x: 28, y: 995, w: 980, h: 105 });
-      set2Swarm({
-        elena: { x: box0.x, y: box0.y + 8, tool: 'R', role: 'Framing' },
-        varun: { x: box0.x + 30, y: box0.y + 12, tool: 'T', role: 'Typing' }
-      });
-      setActiveSelection({ x: box0.x, y: box0.y, w: box0.w, h: box0.h });
-      typeText('UI-UX Designer, UniEvent', (t) => {
-        setTypedJobs(prev => ({ ...prev, 0: t }));
-        setTypedTimeline(t);
-      }, 10, 16, 'varun', box0.x + 30, 260);
-    }, 7020);
+    // Left Column: B.Tech + JUET + Senior Secondary
+    const col1Box = getBox('.cv-two > ul:nth-child(1)', { x: 28, y: 1420, w: 490, h: 150 });
+    setBuildStage(28);
+    set2Swarm({
+      elena: { x: col1Box.x, y: col1Box.y, role: 'Framing' },
+      varun: { x: col1Box.x + 24, y: col1Box.y + 16, role: 'Typing' }
+    });
+    setActiveSelection({ x: col1Box.x, y: col1Box.y, w: col1Box.w, h: 75 });
+    if (!(await typeTextSmooth(STUDY_TEXTS[0], (t) => setTypedStudy((p) => ({ ...p, 0: t })), { charMs: 14, cursorBaseX: col1Box.x + 24, maxCursorOffset: 280, runId }))) return;
 
-    // 17. Job 1: Meta line
-    schedule(() => {
-      setBuildStage(17);
-      const box0 = getBox('.cv-job:nth-child(1)', { x: 28, y: 995, w: 980, h: 105 });
-      set2Swarm({
-        elena: { x: box0.x + box0.w - 140, y: box0.y + 12, tool: 'R', role: 'Framing' },
-        varun: { x: box0.x + 30, y: box0.y + 38, tool: 'T', role: 'Typing' }
-      });
-    }, 7460);
+    setBuildStage(29);
+    set2Swarm({
+      elena: { x: col1Box.x, y: col1Box.y + 34, role: 'Framing' },
+      sarah: { x: col1Box.x + 220, y: col1Box.y + 36, role: 'Pasting ⌘V' },
+      varun: { x: col1Box.x + 24, y: col1Box.y + 36, role: 'Typing' }
+    });
+    if (!(await typeTextSmooth(STUDY_TEXTS['0_sub'], (t) => setTypedStudy((p) => ({ ...p, '0_sub': t })), { charMs: 10, stepChars: 2, cursorBaseX: col1Box.x + 24, maxCursorOffset: 290, runId }))) return;
+    if (!(await wait(140, runId))) return;
 
-    // 18. Job 1: Bullet 1 typed
-    schedule(() => {
-      setBuildStage(18);
-      const box0 = getBox('.cv-job:nth-child(1)', { x: 28, y: 995, w: 980, h: 105 });
-      set2Swarm({
-        elena: { x: box0.x + 12, y: box0.y + 60, tool: 'R', role: 'Framing' },
-        varun: { x: box0.x + 40, y: box0.y + 62, tool: 'T', role: 'Typing' }
-      });
-      typeText('Designed campus event ticketing platform (EventFlow) from initial wireframes to high-fidelity clickable prototype.', (t) => {
-        setTypedJobBullets(prev => ({ ...prev, '0_0': t }));
-      }, 10, 6, 'varun', box0.x + 40, 420);
-    }, 7660);
+    setBuildStage(30);
+    set2Swarm({
+      elena: { x: col1Box.x, y: col1Box.y + 82, role: 'Framing' },
+      sarah: { x: col1Box.x + 190, y: col1Box.y + 94, role: 'Pasting ⌘V' },
+      varun: { x: col1Box.x + 24, y: col1Box.y + 94, role: 'Typing' }
+    });
+    setActiveSelection({ x: col1Box.x, y: col1Box.y + 80, w: col1Box.w, h: 65 });
+    if (!(await typeTextSmooth(STUDY_TEXTS[1], (t) => setTypedStudy((p) => ({ ...p, 1: t })), { charMs: 14, cursorBaseX: col1Box.x + 24, maxCursorOffset: 240, runId }))) return;
+    if (!(await wait(200, runId))) return;
 
-    // 19. Job 1: Bullet 2 line
-    schedule(() => {
-      setBuildStage(19);
-      const box0 = getBox('.cv-job:nth-child(1)', { x: 28, y: 995, w: 980, h: 105 });
-      set2Swarm({
-        elena: { x: box0.x + 12, y: box0.y + 84, tool: 'R', role: 'Framing' },
-        varun: { x: box0.x + 40, y: box0.y + 86, tool: 'T', role: 'Typing' }
-      });
-    }, 8420);
+    // Right Column: HACKeThor + CodeSrijan Organizer + Core Toolkit
+    const col2Box = getBox('.cv-two > ul:nth-child(2)', { x: 546, y: 1420, w: 490, h: 170 });
+    setBuildStage(31);
+    set2Swarm({
+      elena: { x: col2Box.x, y: col2Box.y, role: 'Framing' },
+      varun: { x: col2Box.x + 24, y: col2Box.y + 16, role: 'Typing' }
+    });
+    setActiveSelection({ x: col2Box.x, y: col2Box.y, w: col2Box.w, h: 65 });
+    if (!(await typeTextSmooth(STUDY_TEXTS[2], (t) => setTypedStudy((p) => ({ ...p, 2: t })), { charMs: 14, cursorBaseX: col2Box.x + 24, maxCursorOffset: 280, runId }))) return;
 
-    // 20. Job 2: Heading typed
-    schedule(() => {
-      setBuildStage(20);
-      const box1 = getBox('.cv-job:nth-child(2)', { x: 28, y: 1120, w: 980, h: 105 });
-      set2Swarm({
-        elena: { x: box1.x, y: box1.y + 8, tool: 'R', role: 'Framing' },
-        varun: { x: box1.x + 30, y: box1.y + 12, tool: 'T', role: 'Typing' }
-      });
-      setActiveSelection({ x: box1.x, y: box1.y, w: box1.w, h: box1.h });
-      typeText('Assistant Head of CODM Esports Operations', (t) => {
-        setTypedJobs(prev => ({ ...prev, 1: t }));
-      }, 10, 13, 'varun', box1.x + 30, 320);
-    }, 8700);
+    setBuildStage(32);
+    if (!(await typeTextSmooth(STUDY_TEXTS['2_sub'], (t) => setTypedStudy((p) => ({ ...p, '2_sub': t })), { charMs: 9, stepChars: 2, cursorBaseX: col2Box.x + 24, maxCursorOffset: 300, runId }))) return;
+    if (!(await wait(140, runId))) return;
 
-    // 21. Job 2: Assemble + Meta line
-    schedule(() => {
-      setBuildStage(21);
-      const box1 = getBox('.cv-job:nth-child(2)', { x: 28, y: 1120, w: 980, h: 105 });
-      set2Swarm({
-        elena: { x: box1.x + box1.w - 140, y: box1.y + 12, tool: 'R', role: 'Framing' },
-        varun: { x: box1.x + 30, y: box1.y + 38, tool: 'T', role: 'Typing' }
-      });
-    }, 9300);
+    setBuildStage(33);
+    set2Swarm({
+      elena: { x: col2Box.x, y: col2Box.y + 72, role: 'Framing' },
+      sarah: { x: col2Box.x + 240, y: col2Box.y + 82, role: 'Pasting ⌘V' },
+      varun: { x: col2Box.x + 24, y: col2Box.y + 82, role: 'Typing' }
+    });
+    setActiveSelection({ x: col2Box.x, y: col2Box.y + 72, w: col2Box.w, h: 58 });
+    if (!(await typeTextSmooth(STUDY_TEXTS[3], (t) => setTypedStudy((p) => ({ ...p, 3: t })), { charMs: 14, cursorBaseX: col2Box.x + 24, maxCursorOffset: 220, runId }))) return;
+    if (!(await wait(180, runId))) return;
 
-    // 22. Job 2: Bullet 1 typed
-    schedule(() => {
-      setBuildStage(22);
-      const box1 = getBox('.cv-job:nth-child(2)', { x: 28, y: 1120, w: 980, h: 105 });
-      set2Swarm({
-        elena: { x: box1.x + 12, y: box1.y + 60, tool: 'R', role: 'Framing' },
-        varun: { x: box1.x + 40, y: box1.y + 62, tool: 'T', role: 'Typing' }
-      });
-      typeText('Assisted in the planning and smooth execution of CODM tournaments and esports events.', (t) => {
-        setTypedJobBullets(prev => ({ ...prev, '1_0': t }));
-      }, 10, 7, 'varun', box1.x + 40, 380);
-    }, 9500);
-
-    // 23. Job 2: Bullet 2 line
-    schedule(() => {
-      setBuildStage(23);
-      const box1 = getBox('.cv-job:nth-child(2)', { x: 28, y: 1120, w: 980, h: 105 });
-      set2Swarm({
-        elena: { x: box1.x + 12, y: box1.y + 84, tool: 'R', role: 'Framing' },
-        varun: { x: box1.x + 40, y: box1.y + 86, tool: 'T', role: 'Typing' }
-      });
-    }, 10180);
-
-    // 24. Job 3: Heading typed
-    schedule(() => {
-      setBuildStage(24);
-      const box2 = getBox('.cv-job:nth-child(3)', { x: 28, y: 1245, w: 980, h: 95 });
-      set2Swarm({
-        elena: { x: box2.x, y: box2.y + 8, tool: 'R', role: 'Framing' },
-        varun: { x: box2.x + 30, y: box2.y + 12, tool: 'T', role: 'Typing' }
-      });
-      setActiveSelection({ x: box2.x, y: box2.y, w: box2.w, h: box2.h });
-      typeText('Operation internship', (t) => {
-        setTypedJobs(prev => ({ ...prev, 2: t }));
-      }, 10, 16, 'varun', box2.x + 30, 220);
-    }, 10440);
-
-    // 25. Job 3: Company + Meta line
-    schedule(() => {
-      setBuildStage(25);
-      const box2 = getBox('.cv-job:nth-child(3)', { x: 28, y: 1245, w: 980, h: 95 });
-      set2Swarm({
-        elena: { x: box2.x + box2.w - 140, y: box2.y + 12, tool: 'R', role: 'Framing' },
-        varun: { x: box2.x + 30, y: box2.y + 38, tool: 'T', role: 'Typing' }
-      });
-    }, 10820);
-
-    // 26. Job 3: Bullet 1 typed
-    schedule(() => {
-      setBuildStage(26);
-      const box2 = getBox('.cv-job:nth-child(3)', { x: 28, y: 1245, w: 980, h: 95 });
-      set2Swarm({
-        elena: { x: box2.x + 12, y: box2.y + 60, tool: 'R', role: 'Framing' },
-        varun: { x: box2.x + 40, y: box2.y + 62, tool: 'T', role: 'Typing' }
-      });
-      typeText('Operations support, brand identities, and conversion-focused SaaS landing pages for 10+ tech startups with a 95% client retention rate.', (t) => {
-        setTypedJobBullets(prev => ({ ...prev, '2_0': t }));
-      }, 10, 6, 'varun', box2.x + 40, 440);
-    }, 11020);
+    setBuildStage(34);
+    set2Swarm({
+      elena: { x: col2Box.x, y: col2Box.y + 132, role: 'Framing' },
+      sarah: { x: col2Box.x + 220, y: col2Box.y + 140, role: 'Pasting ⌘V' },
+      varun: { x: col2Box.x + 24, y: col2Box.y + 140, role: 'Typing' }
+    });
+    if (!(await typeTextSmooth(STUDY_TEXTS['4_sub'], (t) => setTypedStudy((p) => ({ ...p, '4_sub': t })), { charMs: 10, stepChars: 2, cursorBaseX: col2Box.x + 24, maxCursorOffset: 280, runId }))) return;
+    if (!(await wait(240, runId))) return;
 
     // =========================================================================
-    // SECTION 4: STUDY, AND THE REST (Stages 27 - 34) - Strictly One-by-One
+    // SECTION 5: THINGS I'VE MADE — Auto-scroll row-by-row, paste cards & type line-by-line
     // =========================================================================
-    // 27. Heading: Study, and the rest
-    schedule(() => {
-      setBuildStage(27);
-      const head = getBox('#cv-study', { x: 28, y: 1365, w: 320, h: 42 });
+    if (!(await followSelector('#cv-made', { alignRatio: 0.18, duration: 780, settleMs: 300 }, runId))) return;
+    setBuildStage(35);
+    const madeHead = getBox('#cv-made', { x: 28, y: 1620, w: 320, h: 42 });
+    set2Swarm({
+      elena: { x: madeHead.x, y: madeHead.y, role: 'Framing' },
+      varun: { x: madeHead.x + 28, y: madeHead.y + 12, role: 'Typing' }
+    });
+    setActiveSelection({ x: madeHead.x, y: madeHead.y, w: madeHead.w, h: madeHead.h });
+    if (!(await typeTextSmooth(SECTION_HEADINGS.made, (t) => setTypedSections((p) => ({ ...p, made: t })), { charMs: 22, cursorBaseX: madeHead.x + 28, maxCursorOffset: 240, runId }))) return;
+    if (!(await wait(200, runId))) return;
+
+    const projectConfigs = [
+      { idx: 0, frameStage: 36, descStage: 37, actStage: 38, sel: '.cv-made > li:nth-child(1)', titleOffsetX: 360, titleOffsetY: 34, descOffsetY: 84, scrollBefore: true, alignRatio: 0.24 },
+      { idx: 1, frameStage: 39, descStage: 40, actStage: 41, sel: '.cv-made > li:nth-child(2)', titleOffsetX: 22, titleOffsetY: 150, descOffsetY: 185, scrollBefore: true, alignRatio: 0.2 },
+      { idx: 2, frameStage: 42, descStage: 43, actStage: 44, sel: '.cv-made > li:nth-child(3)', titleOffsetX: 22, titleOffsetY: 150, descOffsetY: 185, scrollBefore: false },
+      { idx: 3, frameStage: 45, descStage: 46, actStage: 47, sel: '.cv-made > li:nth-child(4)', titleOffsetX: 22, titleOffsetY: 150, descOffsetY: 185, scrollBefore: false },
+      { idx: 4, frameStage: 48, descStage: 49, actStage: 50, sel: '.cv-made > li:nth-child(5)', titleOffsetX: 22, titleOffsetY: 150, descOffsetY: 185, scrollBefore: true, alignRatio: 0.24 },
+      { idx: 5, frameStage: 51, descStage: 52, actStage: 53, sel: '.cv-made > li:nth-child(6)', titleOffsetX: 22, titleOffsetY: 150, descOffsetY: 185, scrollBefore: false }
+    ];
+
+    for (const p of projectConfigs) {
+      if (p.scrollBefore) {
+        if (!(await followSelector(p.sel, { alignRatio: p.alignRatio || 0.22, duration: 760, settleMs: 260 }, runId))) return;
+      }
+
+      const pBox = getBox(p.sel, { x: 28, y: 1675, w: 320, h: 255 });
+      setBuildStage(p.frameStage);
       set2Swarm({
-        elena: { x: head.x, y: head.y, tool: 'R', role: 'Framing' },
-        varun: { x: head.x + 190, y: head.y + 12, tool: 'T', role: 'Typing' }
+        elena: { x: pBox.x, y: pBox.y, role: 'Framing' },
+        sarah: { x: pBox.x + Math.round(pBox.w * 0.45), y: pBox.y + 65, role: 'Pasting ⌘V' },
+        varun: { x: pBox.x + p.titleOffsetX, y: pBox.y + p.titleOffsetY, role: 'Typing' }
       });
-      setActiveSelection({ x: head.x, y: head.y, w: head.w, h: head.h });
-    }, 11920);
+      setActiveSelection({ x: pBox.x, y: pBox.y, w: pBox.w, h: pBox.h });
+      setActiveGuides([{ type: 'h', y: pBox.y, x1: pBox.x, x2: pBox.x + pBox.w }]);
 
-    // 28. Left Col Entry 1 (B.Tech)
-    schedule(() => {
-      setBuildStage(28);
-      const boxCol1 = getBox('.cv-two > ul:nth-child(1)', { x: 28, y: 1420, w: 490, h: 150 });
+      // Let card & thumbnail paste/settle smoothly before typing project title
+      if (!(await wait(260, runId))) return;
+      if (!(await typeTextSmooth(PROJECT_ITEMS[p.idx].title, (t) => setTypedProjects((prev) => ({ ...prev, [p.idx]: t })), { charMs: 16, cursorBaseX: pBox.x + p.titleOffsetX, maxCursorOffset: 220, runId }))) return;
+      if (!(await wait(110, runId))) return;
+
+      // Fast-type description
+      setBuildStage(p.descStage);
       set2Swarm({
-        elena: { x: boxCol1.x, y: boxCol1.y, tool: 'R', role: 'Framing' },
-        varun: { x: boxCol1.x + 24, y: boxCol1.y + 16, tool: 'T', role: 'Typing' }
+        elena: { x: pBox.x, y: pBox.y, role: 'Framing' },
+        varun: { x: pBox.x + p.titleOffsetX, y: pBox.y + p.descOffsetY, role: 'Typing' }
       });
-      setActiveSelection({ x: boxCol1.x, y: boxCol1.y, w: boxCol1.w, h: 75 });
-      typeText('B.Tech in Computer Science & Engineering', (t) => setTypedStudy(prev => ({ ...prev, 0: t })), 10, 12, 'varun', boxCol1.x + 24, 280);
-    }, 12120);
+      if (!(await wait(130, runId))) return;
+      if (!(await typeTextSmooth(PROJECT_ITEMS[p.idx].desc, (t) => setTypedProjectDescs((prev) => ({ ...prev, [p.idx]: t })), { charMs: 10, stepChars: 2, cursorBaseX: pBox.x + p.titleOffsetX, maxCursorOffset: 240, runId }))) return;
+      if (!(await wait(110, runId))) return;
 
-    // 29. Left Col Entry 1 Subline (JUET)
-    schedule(() => {
-      setBuildStage(29);
-    }, 12650);
-
-    // 30. Left Col Entry 2 (Senior Secondary)
-    schedule(() => {
-      setBuildStage(30);
-      const boxCol1 = getBox('.cv-two > ul:nth-child(1)', { x: 28, y: 1420, w: 490, h: 150 });
+      // Sarah pastes Figma button & tags smoothly
+      setBuildStage(p.actStage);
       set2Swarm({
-        elena: { x: boxCol1.x, y: boxCol1.y + 82, tool: 'R', role: 'Framing' },
-        varun: { x: boxCol1.x + 24, y: boxCol1.y + 94, tool: 'T', role: 'Typing' }
+        elena: { x: pBox.x + pBox.w - 16, y: pBox.y + pBox.h - 16, role: 'Framing' },
+        sarah: { x: pBox.x + p.titleOffsetX + 70, y: pBox.y + pBox.h - 36, role: 'Pasting Tags' },
+        varun: { x: pBox.x + p.titleOffsetX, y: pBox.y + pBox.descOffsetY, role: 'Done' }
       });
-      setActiveSelection({ x: boxCol1.x, y: boxCol1.y + 80, w: boxCol1.w, h: 65 });
-    }, 12880);
-
-    // 31. Right Col Entry 1 (HACKeThor)
-    schedule(() => {
-      setBuildStage(31);
-      const boxCol2 = getBox('.cv-two > ul:nth-child(2)', { x: 546, y: 1420, w: 490, h: 170 });
-      set2Swarm({
-        elena: { x: boxCol2.x, y: boxCol2.y, tool: 'R', role: 'Framing' },
-        varun: { x: boxCol2.x + 24, y: boxCol2.y + 16, tool: 'T', role: 'Typing' }
-      });
-      setActiveSelection({ x: boxCol2.x, y: boxCol2.y, w: boxCol2.w, h: 65 });
-      typeText('🥈 HACKeThor 1st Runner-Up (2nd Place)', (t) => setTypedStudy(prev => ({ ...prev, 1: t })), 10, 12, 'varun', boxCol2.x + 24, 280);
-    }, 13160);
-
-    // 32. Right Col Entry 1 Subline
-    schedule(() => {
-      setBuildStage(32);
-    }, 13680);
-
-    // 33. Right Col Entry 2 (CodeSrijan Organizer)
-    schedule(() => {
-      setBuildStage(33);
-      const boxCol2 = getBox('.cv-two > ul:nth-child(2)', { x: 546, y: 1420, w: 490, h: 170 });
-      set2Swarm({
-        elena: { x: boxCol2.x, y: boxCol2.y + 68, tool: 'R', role: 'Framing' },
-        varun: { x: boxCol2.x + 24, y: boxCol2.y + 80, tool: 'T', role: 'Typing' }
-      });
-    }, 13900);
-
-    // 34. Right Col Entry 3 (Core Toolkit)
-    schedule(() => {
-      setBuildStage(34);
-      const boxCol2 = getBox('.cv-two > ul:nth-child(2)', { x: 546, y: 1420, w: 490, h: 170 });
-      set2Swarm({
-        elena: { x: boxCol2.x, y: boxCol2.y + 125, tool: 'R', role: 'Framing' },
-        varun: { x: boxCol2.x + 24, y: boxCol2.y + 136, tool: 'T', role: 'Typing' }
-      });
-    }, 14160);
+      if (!(await wait(280, runId))) return;
+    }
 
     // =========================================================================
-    // SECTION 5: THINGS I'VE MADE (Stages 35 - 53) - STRICTLY 1 CARD AT A TIME
+    // SECTION 6: SAY HELLO & FOOTER
     // =========================================================================
-    // 35. Heading: Things I've made
-    schedule(() => {
-      setBuildStage(35);
-      setSectionsTriggered(prev => ({ ...prev, projects: true }));
-      const head = getBox('#cv-made', { x: 28, y: 1620, w: 320, h: 42 });
-      set2Swarm({
-        elena: { x: head.x, y: head.y, tool: 'R', role: 'Framing' },
-        varun: { x: head.x + 180, y: head.y + 12, tool: 'T', role: 'Typing' }
-      });
-      setActiveSelection({ x: head.x, y: head.y, w: head.w, h: head.h });
-    }, 14450);
+    if (!(await followSelector('.cv-contact', { alignRatio: 0.28, duration: 780, settleMs: 300 }, runId))) return;
+    setBuildStage(54);
+    const contactBox = getBox('.cv-contact', { x: 28, y: 2500, w: 980, h: 180 });
+    set2Swarm({
+      elena: { x: contactBox.x, y: contactBox.y, role: 'Framing' },
+      varun: { x: contactBox.x + 28, y: contactBox.y + 14, role: 'Typing' }
+    });
+    setActiveSelection({ x: contactBox.x, y: contactBox.y, w: contactBox.w, h: contactBox.h });
+    setActiveGuides([]);
+    if (!(await typeTextSmooth(SECTION_HEADINGS.contact, (t) => setTypedSections((p) => ({ ...p, contact: t })), { charMs: 24, cursorBaseX: contactBox.x + 28, maxCursorOffset: 180, runId }))) return;
+    if (!(await wait(160, runId))) return;
 
-    // --- Card 1: CodeSrijan Hackathon Portal (Stages 36, 37, 38) ---
-    schedule(() => {
-      setBuildStage(36);
-      const box = getBox('.cv-made > li:nth-child(1)', { x: 28, y: 1675, w: 980, h: 230 });
-      set2Swarm({
-        elena: { x: box.x, y: box.y, tool: 'R', role: 'Framing' },
-        varun: { x: box.x + 360, y: box.y + 34, tool: 'T', role: 'Typing' }
-      });
-      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h });
-      setActiveGuides([{ type: 'h', y: box.y, x1: box.x, x2: box.x + box.w }]);
-      typeText('CodeSrijan Hackathon Portal', (t) => setTypedProjects(prev => ({ ...prev, 0: t })), 10, 14, 'varun', box.x + 360, 260);
-    }, 14650);
+    // 55. Intro line fast-typed
+    setBuildStage(55);
+    set2Swarm({
+      elena: { x: contactBox.x, y: contactBox.y + 44, role: 'Framing' },
+      varun: { x: contactBox.x + 24, y: contactBox.y + 54, role: 'Typing' }
+    });
+    if (!(await wait(140, runId))) return;
+    if (!(await typeTextSmooth(CONTACT_INTRO_TEXT, setTypedContactIntro, { charMs: 11, stepChars: 2, cursorBaseX: contactBox.x + 24, maxCursorOffset: 340, runId }))) return;
+    if (!(await wait(140, runId))) return;
 
-    schedule(() => {
-      setBuildStage(37);
-      const box = getBox('.cv-made > li:nth-child(1)', { x: 28, y: 1675, w: 980, h: 230 });
-      set2Swarm({
-        elena: { x: box.x, y: box.y, tool: 'R', role: 'Framing' },
-        varun: { x: box.x + 360, y: box.y + 84, tool: 'T', role: 'Typing' }
-      });
-      typeText('Full-stack live hackathon platform designed for Jaypee University with team matchmaking & rubric evaluation.', (t) => setTypedProjectDescs(prev => ({ ...prev, 0: t })), 10, 6, 'varun', box.x + 360, 320);
-    }, 15080);
+    // 56. Email fast-typed letter-by-letter
+    setBuildStage(56);
+    const emailBox = getBox('.cv-email-line', { x: 28, y: 2580, w: 500, h: 48 });
+    set2Swarm({
+      elena: { x: emailBox.x, y: emailBox.y, role: 'Framing' },
+      varun: { x: emailBox.x + 24, y: emailBox.y + 18, role: 'Typing' }
+    });
+    if (!(await wait(140, runId))) return;
+    if (!(await typeTextSmooth(CONTACT_EMAIL_TEXT, setTypedEmail, { charMs: 18, cursorBaseX: emailBox.x + 24, maxCursorOffset: 300, runId }))) return;
+    if (!(await wait(150, runId))) return;
 
-    schedule(() => {
-      setBuildStage(38); // Buttons & tags reveal strictly AFTER description finishes
-    }, 15780);
+    // 57. Copy button pasted
+    setBuildStage(57);
+    set2Swarm({
+      elena: { x: emailBox.x + 400, y: emailBox.y + 12, role: 'Framing' },
+      sarah: { x: emailBox.x + 410, y: emailBox.y + 18, role: 'Pasting ⌘V' },
+      varun: { x: emailBox.x + 330, y: emailBox.y + 18, role: 'Done' }
+    });
+    if (!(await wait(240, runId))) return;
 
-    // --- Card 2: EventFlow Ticketing (Stages 39, 40, 41) ---
-    schedule(() => {
-      setBuildStage(39);
-      const box = getBox('.cv-made > li:nth-child(2)', { x: 28, y: 1930, w: 315, h: 255 });
-      set2Swarm({
-        elena: { x: box.x, y: box.y, tool: 'R', role: 'Framing' },
-        varun: { x: box.x + 22, y: box.y + 150, tool: 'T', role: 'Typing' }
-      });
-      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h });
-      setActiveGuides([{ type: 'h', y: box.y, x1: box.x, x2: box.x + box.w }]);
-      typeText('EventFlow Ticketing', (t) => setTypedProjects(prev => ({ ...prev, 1: t })), 10, 14, 'varun', box.x + 22, 200);
-    }, 16020);
+    // 58. Social links pasted
+    setBuildStage(58);
+    const cLinksBox = getBox('.cv-contact .cv-links', { x: 28, y: 2635, w: 360, h: 32 });
+    set2Swarm({
+      elena: { x: cLinksBox.x, y: cLinksBox.y, role: 'Framing' },
+      sarah: { x: cLinksBox.x + 110, y: cLinksBox.y + 10, role: 'Pasting ⌘V' },
+      varun: { x: cLinksBox.x + 24, y: cLinksBox.y + 10, role: 'Reviewing' }
+    });
+    if (!(await wait(280, runId))) return;
 
-    schedule(() => {
-      setBuildStage(40);
-      const box = getBox('.cv-made > li:nth-child(2)', { x: 28, y: 1930, w: 315, h: 255 });
-      set2Swarm({
-        elena: { x: box.x, y: box.y, tool: 'R', role: 'Framing' },
-        varun: { x: box.x + 22, y: box.y + 185, tool: 'T', role: 'Typing' }
-      });
-      typeText('Campus event discovery & instant booking platform with 30% reduced drop-off.', (t) => setTypedProjectDescs(prev => ({ ...prev, 1: t })), 10, 7, 'varun', box.x + 22, 230);
-    }, 16340);
-
-    schedule(() => {
-      setBuildStage(41);
-    }, 16940);
-
-    // --- Card 3: AI Interview Studio (Stages 42, 43, 44) ---
-    schedule(() => {
-      setBuildStage(42);
-      const box = getBox('.cv-made > li:nth-child(3)', { x: 365, y: 1930, w: 315, h: 255 });
-      set2Swarm({
-        elena: { x: box.x, y: box.y, tool: 'R', role: 'Framing' },
-        varun: { x: box.x + 22, y: box.y + 150, tool: 'T', role: 'Typing' }
-      });
-      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h });
-      setActiveGuides([{ type: 'h', y: box.y, x1: box.x, x2: box.x + box.w }]);
-      typeText('AI Interview Studio', (t) => setTypedProjects(prev => ({ ...prev, 2: t })), 10, 14, 'varun', box.x + 22, 200);
-    }, 17180);
-
-    schedule(() => {
-      setBuildStage(43);
-      const box = getBox('.cv-made > li:nth-child(3)', { x: 365, y: 1930, w: 315, h: 255 });
-      set2Swarm({
-        elena: { x: box.x, y: box.y, tool: 'R', role: 'Framing' },
-        varun: { x: box.x + 22, y: box.y + 185, tool: 'T', role: 'Typing' }
-      });
-      typeText('Interactive question generator and audio mock-interview coach UI in Figma.', (t) => setTypedProjectDescs(prev => ({ ...prev, 2: t })), 10, 7, 'varun', box.x + 22, 230);
-    }, 17500);
-
-    schedule(() => {
-      setBuildStage(44);
-    }, 18080);
-
-    // --- Card 4: Expensify Budget (Stages 45, 46, 47) ---
-    schedule(() => {
-      setBuildStage(45);
-      const box = getBox('.cv-made > li:nth-child(4)', { x: 702, y: 1930, w: 315, h: 255 });
-      set2Swarm({
-        elena: { x: box.x, y: box.y, tool: 'R', role: 'Framing' },
-        varun: { x: box.x + 22, y: box.y + 150, tool: 'T', role: 'Typing' }
-      });
-      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h });
-      setActiveGuides([{ type: 'h', y: box.y, x1: box.x, x2: box.x + box.w }]);
-      typeText('Expensify Budget', (t) => setTypedProjects(prev => ({ ...prev, 3: t })), 10, 14, 'varun', box.x + 22, 200);
-    }, 18320);
-
-    schedule(() => {
-      setBuildStage(46);
-      const box = getBox('.cv-made > li:nth-child(4)', { x: 702, y: 1930, w: 315, h: 255 });
-      set2Swarm({
-        elena: { x: box.x, y: box.y, tool: 'R', role: 'Framing' },
-        varun: { x: box.x + 22, y: box.y + 185, tool: 'T', role: 'Typing' }
-      });
-      typeText('Mobile personal finance app prototype with gesture-driven expense tagging.', (t) => setTypedProjectDescs(prev => ({ ...prev, 3: t })), 10, 7, 'varun', box.x + 22, 230);
-    }, 18600);
-
-    schedule(() => {
-      setBuildStage(47);
-    }, 19180);
-
-    // --- Card 5: Movie Tickets App (Stages 48, 49, 50) ---
-    schedule(() => {
-      setBuildStage(48);
-      const box = getBox('.cv-made > li:nth-child(5)', { x: 28, y: 2210, w: 315, h: 255 });
-      set2Swarm({
-        elena: { x: box.x, y: box.y, tool: 'R', role: 'Framing' },
-        varun: { x: box.x + 22, y: box.y + 150, tool: 'T', role: 'Typing' }
-      });
-      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h });
-      setActiveGuides([{ type: 'h', y: box.y, x1: box.x, x2: box.x + box.w }]);
-      typeText('Movie Tickets App', (t) => setTypedProjects(prev => ({ ...prev, 4: t })), 10, 14, 'varun', box.x + 22, 200);
-    }, 19420);
-
-    schedule(() => {
-      setBuildStage(49);
-      const box = getBox('.cv-made > li:nth-child(5)', { x: 28, y: 2210, w: 315, h: 255 });
-      set2Swarm({
-        elena: { x: box.x, y: box.y, tool: 'R', role: 'Framing' },
-        varun: { x: box.x + 22, y: box.y + 185, tool: 'T', role: 'Typing' }
-      });
-      typeText('Dynamic seat-selection matrix and trailer preview interaction flow.', (t) => setTypedProjectDescs(prev => ({ ...prev, 4: t })), 10, 7, 'varun', box.x + 22, 230);
-    }, 19720);
-
-    schedule(() => {
-      setBuildStage(50);
-    }, 20260);
-
-    // --- Card 6: SaaS Landing Pages (Stages 51, 52, 53) ---
-    schedule(() => {
-      setBuildStage(51);
-      const box = getBox('.cv-made > li:nth-child(6)', { x: 365, y: 2210, w: 315, h: 255 });
-      set2Swarm({
-        elena: { x: box.x, y: box.y, tool: 'R', role: 'Framing' },
-        varun: { x: box.x + 22, y: box.y + 150, tool: 'T', role: 'Typing' }
-      });
-      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h });
-      setActiveGuides([{ type: 'h', y: box.y, x1: box.x, x2: box.x + box.w }]);
-      typeText('SaaS Landing Pages', (t) => setTypedProjects(prev => ({ ...prev, 5: t })), 10, 14, 'varun', box.x + 22, 200);
-    }, 20500);
-
-    schedule(() => {
-      setBuildStage(52);
-      const box = getBox('.cv-made > li:nth-child(6)', { x: 365, y: 2210, w: 315, h: 255 });
-      set2Swarm({
-        elena: { x: box.x, y: box.y, tool: 'R', role: 'Framing' },
-        varun: { x: box.x + 22, y: box.y + 185, tool: 'T', role: 'Typing' }
-      });
-      typeText('High-converting responsive landing pages built for 10+ international tech startups.', (t) => setTypedProjectDescs(prev => ({ ...prev, 5: t })), 10, 7, 'varun', box.x + 22, 230);
-    }, 20800);
-
-    schedule(() => {
-      setBuildStage(53);
-    }, 21440);
-
-    // =========================================================================
-    // SECTION 6: SAY HELLO (Stages 54 - 58) - Built Line-by-Line ONLY AFTER Cards!
-    // =========================================================================
-    // 54. Section + Heading: Say hello
-    schedule(() => {
-      setBuildStage(54);
-      setSectionsTriggered(prev => ({ ...prev, contact: true }));
-      const box = getBox('.cv-contact', { x: 28, y: 2500, w: 980, h: 180 });
-      set2Swarm({
-        elena: { x: box.x, y: box.y, tool: 'R', role: 'Framing' },
-        varun: { x: box.x + 160, y: box.y + 14, tool: 'T', role: 'Typing' }
-      });
-      setActiveSelection({ x: box.x, y: box.y, w: box.w, h: box.h });
-      setActiveGuides([]);
-    }, 21740);
-
-    // 55. Intro line
-    schedule(() => {
-      setBuildStage(55);
-      const box = getBox('.cv-contact', { x: 28, y: 2500, w: 980, h: 180 });
-      set2Swarm({
-        elena: { x: box.x, y: box.y + 44, tool: 'R', role: 'Framing' },
-        varun: { x: box.x + 24, y: box.y + 52, tool: 'T', role: 'Typing' }
-      });
-    }, 21980);
-
-    // 56. Email typed letter-by-letter
-    schedule(() => {
-      setBuildStage(56);
-      const box = getBox('.cv-email-line', { x: 28, y: 2580, w: 500, h: 48 });
-      set2Swarm({
-        elena: { x: box.x, y: box.y, tool: 'R', role: 'Framing' },
-        varun: { x: box.x + 24, y: box.y + 18, tool: 'T', role: 'Typing' }
-      });
-      typeText('varun.sehgal02@gmail.com', setTypedEmail, 10, 18, 'varun', box.x + 24, 300);
-    }, 22220);
-
-    // 57. Copy button stamps in
-    schedule(() => {
-      setBuildStage(57);
-    }, 22720);
-
-    // 58. Social links reveal
-    schedule(() => {
-      setBuildStage(58);
-      const linksBox = getBox('.cv-contact .cv-links', { x: 28, y: 2635, w: 360, h: 32 });
-      set2Swarm({
-        elena: { x: linksBox.x, y: linksBox.y, tool: 'R', role: 'Framing' },
-        varun: { x: linksBox.x + 120, y: linksBox.y + 10, tool: 'T', role: 'Typing' }
-      });
-    }, 22940);
-
-    // =========================================================================
-    // SECTION 7: FOOTER & SWARM DISMISSAL (Stage 59+)
-    // =========================================================================
-    schedule(() => {
-      setBuildStage(59);
-      const footerBox = getBox('.cv-footer', { x: 28, y: 2700, w: 980, h: 64 });
-      set4Swarm({
-        elena: { x: footerBox.x + 120, y: footerBox.y + 18, tool: '✓', role: 'Framing' },
-        alex: { x: footerBox.x + 260, y: footerBox.y + 18, tool: '✓', role: 'Layout' },
-        sarah: { x: footerBox.x + 400, y: footerBox.y + 18, tool: '✓', role: 'Stamping' },
-        varun: { x: footerBox.x + 540, y: footerBox.y + 18, tool: '✓', role: 'Typing' }
-      });
-      setActiveSelection(null);
-      setActiveGuides([]);
-    }, 23200);
+    // 59. Footer & Calm Swarm Dismissal
+    if (!(await followSelector('.cv-footer', { alignRatio: 0.72, duration: 640, settleMs: 240 }, runId))) return;
+    setBuildStage(59);
+    const footerBox = getBox('.cv-footer', { x: 28, y: 2700, w: 980, h: 64 });
+    set4Swarm({
+      elena: { x: footerBox.x + 120, y: footerBox.y + 18, role: 'Done ✓' },
+      alex: { x: footerBox.x + 260, y: footerBox.y + 18, role: 'Done ✓' },
+      sarah: { x: footerBox.x + 400, y: footerBox.y + 18, role: 'Done ✓' },
+      varun: { x: footerBox.x + 540, y: footerBox.y + 18, role: 'Done ✓' }
+    });
+    setActiveSelection(null);
+    setActiveGuides([]);
+    if (!(await wait(520, runId))) return;
 
     // Smoothly glide & fade cursors out
-    schedule(() => {
-      const footerBox = getBox('.cv-footer', { x: 28, y: 2700, w: 980, h: 64 });
-      set4Swarm({
-        elena: { x: footerBox.x + 120, y: footerBox.y + 42, tool: '✓', role: 'Framing', opacity: 0 },
-        alex: { x: footerBox.x + 260, y: footerBox.y + 42, tool: '✓', role: 'Layout', opacity: 0 },
-        sarah: { x: footerBox.x + 400, y: footerBox.y + 42, tool: '✓', role: 'Stamping', opacity: 0 },
-        varun: { x: footerBox.x + 540, y: footerBox.y + 42, tool: '✓', role: 'Typing', opacity: 0 }
-      });
-    }, 23600);
+    set4Swarm({
+      elena: { x: footerBox.x + 120, y: footerBox.y + 42, role: 'Done ✓', opacity: 0 },
+      alex: { x: footerBox.x + 260, y: footerBox.y + 42, role: 'Done ✓', opacity: 0 },
+      sarah: { x: footerBox.x + 400, y: footerBox.y + 42, role: 'Done ✓', opacity: 0 },
+      varun: { x: footerBox.x + 540, y: footerBox.y + 42, role: 'Done ✓', opacity: 0 }
+    });
+    if (!(await wait(420, runId))) return;
 
-    // Final unmount of cursors & completion
-    schedule(() => {
-      setBuildStage(99);
-      setIsBuilding(false);
-      setActiveCursors([]);
-      setActiveSelection(null);
-      setActiveGuides([]);
-    }, 24000);
+    setBuildStage(99);
+    setIsBuilding(false);
+    setActiveCursors([]);
+    setActiveSelection(null);
+    setActiveGuides([]);
   };
 
-  // All sections are built strictly sequentially in buildTopSection() without out-of-order scroll triggers.
-
   const replayBuild = () => {
-    const isMobileOrTablet = deviceMode === 'tablet' || deviceMode === 'mobile' || (typeof window !== 'undefined' && (
-      window.innerWidth <= 1024 ||
-      /iPad|iPhone|iPod|Android/i.test(navigator.userAgent)
-    ));
+    const isMobileOrTablet =
+      deviceMode === 'tablet' ||
+      deviceMode === 'mobile' ||
+      (typeof window !== 'undefined' &&
+        (window.innerWidth <= 1024 || /iPad|iPhone|iPod|Android/i.test(navigator.userAgent)));
+
     if (isMobileOrTablet) {
       skipBuild();
       return;
     }
-    isReplayingRef.current = true;
-    buildTopSection();
+
+    buildRunIdRef.current += 1;
+    clearTimeouts();
     if (onScrollToTop) {
       onScrollToTop();
     }
-    setTimeout(() => {
-      isReplayingRef.current = false;
-    }, 750);
+    // Wait until viewport finishes panning back to top before starting
+    buildTopSection(onScrollToTop ? 520 : 120);
   };
 
   const skipBuild = () => {
+    buildRunIdRef.current += 1;
     clearTimeouts();
     setIsBuilding(false);
     setBuildStage(99);
     setTypedName('Varun Sehgal');
-    setTypedLede('I study and craft friction-free product experiences: tactile, beautiful, and fast.');
+    setTypedLede(HERO_LEDE_FULL);
+    setTypedNowLine(HERO_NOW_FULL);
     setTypedPolaroidCaption('Varun Sehgal, 2026 →');
     setTypedStat1('6+');
     setTypedStat2('200+');
     setTypedStat3('🥈 1st Runner-Up');
-    setTypedWork({ 0: 'Product Design & Systems', 1: 'Tactile Hi-Fi Prototyping', 2: 'Design Engineering' });
-    setTypedTimeline('UI-UX Designer, UniEvent');
+    setTypedSections(SECTION_HEADINGS);
+    setTypedWork({
+      0: WORK_CARDS[0].title,
+      1: WORK_CARDS[1].title,
+      2: WORK_CARDS[2].title
+    });
+    setTypedWorkDescs({
+      0: WORK_CARDS[0].desc,
+      1: WORK_CARDS[1].desc,
+      2: WORK_CARDS[2].desc
+    });
     setTypedJobs({
-      0: 'UI-UX Designer, UniEvent',
-      1: 'Assistant Head of CODM Esports Operations',
-      2: 'Operation internship'
+      0: JOBS_DATA[0].head,
+      1: JOBS_DATA[1].head,
+      2: JOBS_DATA[2].head
     });
     setTypedJobBullets({
-      '0_0': 'Designed campus event ticketing platform (EventFlow) from initial wireframes to high-fidelity clickable prototype.',
-      '1_0': 'Assisted in the planning and smooth execution of CODM tournaments and esports events.',
-      '2_0': 'Operations support, brand identities, and conversion-focused SaaS landing pages for 10+ tech startups with a 95% client retention rate.'
+      '0_0': JOBS_DATA[0].b1,
+      '1_0': JOBS_DATA[1].b1,
+      '2_0': JOBS_DATA[2].b1
     });
-    setTypedStudy({
-      0: 'B.Tech in Computer Science & Engineering',
-      1: '🥈 HACKeThor 1st Runner-Up (2nd Place)'
+    setTypedJobBullets2({
+      '0_1': JOBS_DATA[0].b2,
+      '1_1': JOBS_DATA[1].b2
     });
+    setTypedStudy(STUDY_TEXTS);
     setTypedProjects({
-      0: 'CodeSrijan Hackathon Portal',
-      1: 'EventFlow Ticketing',
-      2: 'AI Interview Studio',
-      3: 'Expensify Budget',
-      4: 'Movie Tickets App',
-      5: 'SaaS Landing Pages'
+      0: PROJECT_ITEMS[0].title,
+      1: PROJECT_ITEMS[1].title,
+      2: PROJECT_ITEMS[2].title,
+      3: PROJECT_ITEMS[3].title,
+      4: PROJECT_ITEMS[4].title,
+      5: PROJECT_ITEMS[5].title
     });
     setTypedProjectDescs({
-      0: 'Full-stack live hackathon platform designed for Jaypee University with team matchmaking & rubric evaluation.',
-      1: 'Campus event discovery & instant booking platform with 30% reduced drop-off.',
-      2: 'Interactive question generator and audio mock-interview coach UI in Figma.',
-      3: 'Mobile personal finance app prototype with gesture-driven expense tagging.',
-      4: 'Dynamic seat-selection matrix and trailer preview interaction flow.',
-      5: 'High-converting responsive landing pages built for 10+ international tech startups.'
+      0: PROJECT_ITEMS[0].desc,
+      1: PROJECT_ITEMS[1].desc,
+      2: PROJECT_ITEMS[2].desc,
+      3: PROJECT_ITEMS[3].desc,
+      4: PROJECT_ITEMS[4].desc,
+      5: PROJECT_ITEMS[5].desc
     });
-    setTypedEmail('varun.sehgal02@gmail.com');
+    setTypedContactIntro(CONTACT_INTRO_TEXT);
+    setTypedEmail(CONTACT_EMAIL_TEXT);
     setActiveCursors([]);
     setActiveSelection(null);
     setActiveGuides([]);
-    sectionsTriggeredRef.current = {
-      workOn: true,
-      timeline: true,
-      projects: true,
-      contact: true
-    };
-    setSectionsTriggered({
-      workOn: true,
-      timeline: true,
-      projects: true,
-      contact: true
-    });
   };
 
   useEffect(() => {
     if (isParentLoading) {
+      buildRunIdRef.current += 1;
       clearTimeouts();
       setIsBuilding(true);
       setBuildStage(0);
@@ -1006,22 +881,21 @@ const KittuResumeApp = ({
     }
 
     const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
-    const isMobileOrTablet = deviceMode === 'tablet' || deviceMode === 'mobile' || (typeof window !== 'undefined' && (
-      window.innerWidth <= 1024 ||
-      /iPad|iPhone|iPod|Android/i.test(navigator.userAgent)
-    ));
+    const isMobileOrTablet =
+      deviceMode === 'tablet' ||
+      deviceMode === 'mobile' ||
+      (typeof window !== 'undefined' &&
+        (window.innerWidth <= 1024 || /iPad|iPhone|iPod|Android/i.test(navigator.userAgent)));
+
     if ((searchParams && (searchParams.get('skip') === 'true' || searchParams.get('ready') === 'true')) || isMobileOrTablet) {
       skipBuild();
       return;
     }
 
-    // Always start collaborative swarm build when loaded/mounted
-    const timer = setTimeout(() => {
-      buildTopSection();
-    }, 100);
+    buildTopSection(140);
 
     return () => {
-      clearTimeout(timer);
+      buildRunIdRef.current += 1;
       clearTimeouts();
     };
   }, [isParentLoading]);
@@ -1031,7 +905,12 @@ const KittuResumeApp = ({
       {/* Top Header / Nav */}
       <div className="cv-top-bar">
         {onBack ? (
-          <button type="button" onClick={onBack} className="cv-back-link" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+          <button
+            type="button"
+            onClick={onBack}
+            className="cv-back-link"
+            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+          >
             <span>←</span> Back to Workspace
           </button>
         ) : (
@@ -1044,7 +923,7 @@ const KittuResumeApp = ({
             type="button"
             className="cv-replay-btn"
             onClick={isBuilding ? skipBuild : replayBuild}
-            title={isBuilding ? "Skip the build and view full notebook" : "Replay the collaborative crowd-of-cursors build animation"}
+            title={isBuilding ? 'Skip the build and view full notebook' : 'Replay the collaborative crowd-of-cursors build animation'}
           >
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M4 12a8 8 0 1 0 2.6-5.9M4 4v4.5h4.5" />
@@ -1067,7 +946,7 @@ const KittuResumeApp = ({
         {/* Collaborative Cursors Overlay when build is running */}
         {isBuilding && (
           <div className="cv-cursors" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 100 }}>
-            {/* Active Selection Box (Clean Figma vector frame, zero duplicate tags) */}
+            {/* Active Selection Box */}
             {activeSelection && (
               <div
                 className="cv-sel"
@@ -1079,7 +958,7 @@ const KittuResumeApp = ({
                   height: `${activeSelection.h}px`,
                   border: '1.5px solid #1ABCFE',
                   borderRadius: '4px',
-                  backgroundColor: 'rgba(26, 188, 254, 0.05)',
+                  backgroundColor: 'rgba(26, 188, 254, 0.045)',
                   opacity: 1,
                   pointerEvents: 'none'
                 }}
@@ -1099,31 +978,13 @@ const KittuResumeApp = ({
                   position: 'absolute',
                   ...(g.type === 'v'
                     ? { left: `${g.x}px`, top: `${g.y1}px`, width: '1px', height: `${g.y2 - g.y1}px`, borderLeft: '1.5px dashed #EC4899' }
-                    : { left: `${g.x1}px`, top: `${g.y}px`, height: '1px', width: `${g.x2 - g.x1}px`, borderTop: '1.5px dashed #EC4899' }
-                  ),
+                    : { left: `${g.x1}px`, top: `${g.y}px`, height: '1px', width: `${g.x2 - g.x1}px`, borderTop: '1.5px dashed #EC4899' }),
                   opacity: 0.85
                 }}
-              >
-                <span
-                  style={{
-                    position: 'absolute',
-                    top: '-18px',
-                    left: '8px',
-                    background: '#EC4899',
-                    color: '#ffffff',
-                    fontSize: '9.5px',
-                    fontWeight: '700',
-                    padding: '1px 5px',
-                    borderRadius: '3px',
-                    fontFamily: 'ui-monospace, monospace'
-                  }}
-                >
-                  {g.label}
-                </span>
-              </div>
+              />
             ))}
 
-            {/* Real-time Multiplayer Dashed Network Lines between the 4 Swarm Agents */}
+            {/* Dashed Collaboration Network Lines */}
             {activeCursors.length > 1 && (
               <svg
                 style={{
@@ -1135,25 +996,28 @@ const KittuResumeApp = ({
                   zIndex: 115
                 }}
               >
-                {activeCursors.map((c, i) => {
-                  const nextC = activeCursors[(i + 1) % activeCursors.length];
-                  return (
-                    <line
-                      key={`net-${c.id}-${nextC.id}`}
-                      x1={c.x + 4}
-                      y1={c.y + 4}
-                      x2={nextC.x + 4}
-                      y2={nextC.y + 4}
-                      stroke="rgba(162, 89, 255, 0.22)"
-                      strokeWidth="1.2"
-                      strokeDasharray="4 4"
-                    />
-                  );
-                })}
+                {activeCursors
+                  .filter((c) => Number.isFinite(c?.x) && Number.isFinite(c?.y))
+                  .map((c, i, arr) => {
+                    if (arr.length < 2) return null;
+                    const nextC = arr[(i + 1) % arr.length];
+                    return (
+                      <line
+                        key={`net-${c.id}-${nextC.id}`}
+                        x1={c.x + 4}
+                        y1={c.y + 4}
+                        x2={nextC.x + 4}
+                        y2={nextC.y + 4}
+                        stroke="rgba(162, 89, 255, 0.2)"
+                        strokeWidth="1.2"
+                        strokeDasharray="4 4"
+                      />
+                    );
+                  })}
               </svg>
             )}
 
-            {/* Active Collaborative Cursors (4 Swarm at once) */}
+            {/* Active Collaborative Cursors */}
             {activeCursors.map((c) => (
               <div
                 key={c.id}
@@ -1162,11 +1026,12 @@ const KittuResumeApp = ({
                   position: 'absolute',
                   transform: `translate3d(${c.x}px, ${c.y}px, 0)`,
                   opacity: c.opacity !== undefined ? c.opacity : 1,
-                  transition: 'transform 0.45s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.35s ease',
+                  transition: `transform ${c.transitionMs || 560}ms ${
+                    (c.transitionMs || 560) <= 200 ? 'linear' : 'cubic-bezier(0.22, 1, 0.36, 1)'
+                  }, opacity 0.38s ease`,
                   zIndex: 120
                 }}
               >
-                {/* SVG Pointer Arrow */}
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                   <path
                     d="M5.65376 12.3673H5.46026L5.31717 12.4976L0.500002 16.8829L0.500002 1.19841L11.7841 12.3673H5.65376Z"
@@ -1175,8 +1040,6 @@ const KittuResumeApp = ({
                     strokeWidth="1.5"
                   />
                 </svg>
-
-                {/* Single Role Tag (Strictly ONE tag per swarm agent) */}
                 <span
                   style={{
                     background: c.color,
@@ -1195,7 +1058,7 @@ const KittuResumeApp = ({
                     letterSpacing: '0.2px'
                   }}
                 >
-                  <span>{c.role || (c.id === 'varun' ? 'Typing' : c.id === 'sarah' ? 'Stamping' : c.id === 'alex' ? 'Layout' : 'Framing')}</span>
+                  <span>{c.role || (c.id === 'varun' ? 'Typing' : c.id === 'sarah' ? 'Pasting' : c.id === 'alex' ? 'Layout' : 'Framing')}</span>
                 </span>
               </div>
             ))}
@@ -1203,7 +1066,7 @@ const KittuResumeApp = ({
         )}
 
         <main className="cv-main-content">
-          {/* SECTION 1: HERO (Stages 0 - 7) */}
+          {/* SECTION 1: HERO */}
           <section className="cv-section cv-hero" aria-label="Varun Sehgal">
             <div className="cv-hero-text">
               <h1 className={`cv-name ${isBuilding && !typedName && buildStage < 1 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
@@ -1214,20 +1077,26 @@ const KittuResumeApp = ({
                 <p className={`cv-lede ${isBuilding && !typedLede && buildStage < 1 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                   {typedLede ? (
                     <>
-                      {typedLede}
-                      {isBuilding && buildStage < 2 && <span className="cv-typing-caret">|</span>}
+                      {renderHighlightedLede(typedLede)}
+                      {isBuilding && buildStage === 1 && <span className="cv-typing-caret">|</span>}
                     </>
-                  ) : (!isBuilding ? (
-                    <>
-                      I study and craft <span className="cv-hi">friction-free product experiences</span>: 
-                      how interaction models shape user psychology, and whether enterprise systems can be made fluid, beautiful, and tactile without losing execution speed.
-                    </>
-                  ) : '\u00A0')}
+                  ) : !isBuilding ? (
+                    renderHighlightedLede(HERO_LEDE_FULL)
+                  ) : (
+                    '\u00A0'
+                  )}
                 </p>
                 <p className={`cv-now-line ${isBuilding && buildStage < 2 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-                  UI-UX Designer at <strong>UniEvent</strong> &amp; Assistant Head of CODM Esports Operations at <strong>Assemble</strong>.
+                  {isBuilding ? (
+                    <>
+                      {renderFormattedNowLine(typedNowLine)}
+                      {buildStage === 2 && typedNowLine && <span className="cv-typing-caret">|</span>}
+                    </>
+                  ) : (
+                    renderFormattedNowLine(HERO_NOW_FULL)
+                  )}
                 </p>
-                <p className={`cv-links ${isBuilding && buildStage < 3 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                <p className={`cv-links ${isBuilding && buildStage < 3 ? 'cv-item-hidden' : 'cv-item-visible cv-stamp-pop'}`}>
                   <a href="mailto:varun.sehgal02@gmail.com">Email</a>
                   <a href="https://github.com/varunsehgal05" target="_blank" rel="noopener noreferrer">GitHub</a>
                   <a href="https://linkedin.com/in/varunsehgal02" target="_blank" rel="noopener noreferrer">LinkedIn</a>
@@ -1236,7 +1105,7 @@ const KittuResumeApp = ({
               </div>
             </div>
 
-            {/* Right side: Polaroid photo (Stage 4) */}
+            {/* Right side: Polaroid photo */}
             <div className="cv-side">
               <div className={`cv-polaroid ${isBuilding && buildStage < 4 ? 'cv-item-hidden' : 'cv-item-visible cv-stamp-pop'}`}>
                 <img
@@ -1251,7 +1120,7 @@ const KittuResumeApp = ({
               </div>
             </div>
 
-            {/* In Numbers Stats Row (3 Wob-Pills) - Sequentially stamped one by one (Stages 5, 6, 7) */}
+            {/* Stats Row */}
             <ul className="cv-stats" aria-label="In numbers">
               <li className={`cv-stat ${isBuilding && buildStage < 5 ? 'cv-item-hidden' : 'cv-item-visible cv-stamp-pop'}`}>
                 <strong>{typedStat1 || (!isBuilding ? '6+' : '\u00A0')}</strong>
@@ -1268,119 +1137,98 @@ const KittuResumeApp = ({
             </ul>
           </section>
 
-          {/* SECTION 2: WHAT I WORK ON (Stages 8 - 14) */}
+          {/* SECTION 2: WHAT I WORK ON */}
           <section className="cv-section" aria-labelledby="cv-work-on">
             <h2 id="cv-work-on" className={`cv-section-title ${isBuilding && buildStage < 8 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-              What I work on
+              {typedSections.workOn || (!isBuilding ? SECTION_HEADINGS.workOn : '\u00A0')}
+              {isBuilding && buildStage === 8 && typedSections.workOn && <span className="cv-typing-caret">|</span>}
             </h2>
             <div className="cv-threads">
-              <article className={`cv-thread cv-thread-0 ${isBuilding && buildStage < 9 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-                <h3>
-                  {typedWork[0] || (!isBuilding ? 'Product Design & Systems' : '\u00A0')}
-                  {isBuilding && buildStage === 9 && typedWork[0] && <span className="cv-typing-caret">|</span>}
-                </h3>
-                <p className={`${isBuilding && buildStage < 10 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-                  I build coherent, accessible token hierarchies from zero. Defining spacing scales, color palettes in OKLCH, typography rules, and micro-interactions that scale across web and mobile.
-                </p>
-              </article>
-              <article className={`cv-thread cv-thread-1 ${isBuilding && buildStage < 11 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-                <h3>
-                  {typedWork[1] || (!isBuilding ? 'Tactile Hi-Fi Prototyping' : '\u00A0')}
-                  {isBuilding && buildStage === 11 && typedWork[1] && <span className="cv-typing-caret">|</span>}
-                </h3>
-                <p className={`${isBuilding && buildStage < 12 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-                  Moving beyond static wireframes: crafting interactive state machines, physics-based springs, and clickable high-fidelity flows in Figma, Framer, and ProtoPie.
-                </p>
-              </article>
-              <article className={`cv-thread cv-thread-2 ${isBuilding && buildStage < 13 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-                <h3>
-                  {typedWork[2] || (!isBuilding ? 'Design Engineering' : '\u00A0')}
-                  {isBuilding && buildStage === 13 && typedWork[2] && <span className="cv-typing-caret">|</span>}
-                </h3>
-                <p className={`${isBuilding && buildStage < 14 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-                  Zero-friction handoff: transforming Figma variables and layouts into executable React, Next.js, and Tailwind CSS components with 60fps animations.
-                </p>
-              </article>
+              {WORK_CARDS.map((card, idx) => {
+                const cStage = 9 + idx * 2;
+                const dStage = 10 + idx * 2;
+                return (
+                  <article key={card.title} className={`cv-thread cv-thread-${idx} ${isBuilding && buildStage < cStage ? 'cv-item-hidden' : 'cv-item-visible cv-stamp-pop'}`}>
+                    <h3>
+                      {typedWork[idx] || (!isBuilding ? card.title : '\u00A0')}
+                      {isBuilding && buildStage === cStage && typedWork[idx] && <span className="cv-typing-caret">|</span>}
+                    </h3>
+                    <p className={`${isBuilding && buildStage < dStage ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                      {typedWorkDescs[idx] || (!isBuilding ? card.desc : '\u00A0')}
+                      {isBuilding && buildStage === dStage && typedWorkDescs[idx] && <span className="cv-typing-caret">|</span>}
+                    </p>
+                  </article>
+                );
+              })}
             </div>
           </section>
 
-          {/* SECTION 3: WHERE I'VE WORKED & SECTION 4: STUDY (Stages 15 - 34) */}
+          {/* SECTION 3: WHERE I'VE WORKED & SECTION 4: STUDY */}
           <div className="cv-timeline-wrap">
             <section className="cv-section" aria-labelledby="cv-work">
-              <h2 id="cv-work" className={`cv-section-title ${isBuilding && buildStage < 15 ? 'cv-item-hidden' : 'cv-item-visible'}`}>Where I've worked</h2>
+              <h2 id="cv-work" className={`cv-section-title ${isBuilding && buildStage < 15 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                {typedSections.work || (!isBuilding ? SECTION_HEADINGS.work : '\u00A0')}
+                {isBuilding && buildStage === 15 && typedSections.work && <span className="cv-typing-caret">|</span>}
+              </h2>
               <ol className="cv-timeline">
-                <li className={`cv-job ${isBuilding && buildStage < 16 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-                  <p className="cv-job-head">
-                    <strong>
-                      {typedJobs[0] || typedTimeline || (!isBuilding ? 'UI-UX Designer, UniEvent' : '\u00A0')}
-                      {isBuilding && buildStage === 16 && (typedJobs[0] || typedTimeline) && <span className="cv-typing-caret">|</span>}
-                    </strong>
-                  </p>
-                  <p className={`cv-job-meta ${isBuilding && buildStage < 17 ? 'cv-item-hidden' : 'cv-item-visible'}`}>Jul 2026 — Nov 2026 • 5 Mos, Punjab, India (Remote)</p>
-                  <ul className={`${isBuilding && buildStage < 18 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-                    <li className={`${isBuilding && buildStage < 18 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-                      {typedJobBullets['0_0'] || (!isBuilding ? 'Designed campus event ticketing platform (EventFlow) from initial wireframes to high-fidelity clickable prototype.' : '\u00A0')}
-                      {isBuilding && buildStage === 18 && typedJobBullets['0_0'] && <span className="cv-typing-caret">|</span>}
+                {JOBS_DATA.map((job, idx) => {
+                  const headStage = idx === 0 ? 16 : idx === 1 ? 20 : 24;
+                  const metaStage = idx === 0 ? 17 : idx === 1 ? 21 : 25;
+                  const b1Stage = idx === 0 ? 18 : idx === 1 ? 22 : 26;
+                  const b2Stage = idx === 0 ? 19 : idx === 1 ? 23 : 99;
+                  return (
+                    <li key={job.head} className={`cv-job ${isBuilding && buildStage < headStage ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                      <p className="cv-job-head">
+                        <strong>
+                          {typedJobs[idx] || (!isBuilding ? job.head : '\u00A0')}
+                          {isBuilding && buildStage === headStage && typedJobs[idx] && <span className="cv-typing-caret">|</span>}
+                        </strong>
+                        {job.suffix && (!isBuilding || buildStage >= metaStage ? job.suffix : '')}
+                      </p>
+                      <p className={`cv-job-meta ${isBuilding && buildStage < metaStage ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                        {job.meta}
+                      </p>
+                      <ul className={`${isBuilding && buildStage < b1Stage ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                        <li className={`${isBuilding && buildStage < b1Stage ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                          {typedJobBullets[`${idx}_0`] || (!isBuilding ? job.b1 : '\u00A0')}
+                          {isBuilding && buildStage === b1Stage && typedJobBullets[`${idx}_0`] && <span className="cv-typing-caret">|</span>}
+                        </li>
+                        {job.b2 && (
+                          <li className={`${isBuilding && buildStage < b2Stage ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                            {typedJobBullets2[`${idx}_1`] || (!isBuilding ? job.b2 : '\u00A0')}
+                            {isBuilding && buildStage === b2Stage && typedJobBullets2[`${idx}_1`] && <span className="cv-typing-caret">|</span>}
+                          </li>
+                        )}
+                      </ul>
                     </li>
-                    <li className={`${isBuilding && buildStage < 19 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-                      Slashed transaction drop-off by 30% across a 4-step booking workflow across 50+ reusable component variants.
-                    </li>
-                  </ul>
-                </li>
-
-                <li className={`cv-job ${isBuilding && buildStage < 20 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-                  <p className="cv-job-head">
-                    <strong>
-                      {typedJobs[1] || (!isBuilding ? 'Assistant Head of CODM Esports Operations' : '\u00A0')}
-                      {isBuilding && buildStage === 20 && typedJobs[1] && <span className="cv-typing-caret">|</span>}
-                    </strong>
-                    {!isBuilding || buildStage >= 21 ? ', Assemble' : ''}
-                  </p>
-                  <p className={`cv-job-meta ${isBuilding && buildStage < 21 ? 'cv-item-hidden' : 'cv-item-visible'}`}>Aug 2025 — Jan 2026 • 6 Mos, Bharatpur, Rajasthan, India (Remote)</p>
-                  <ul className={`${isBuilding && buildStage < 22 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-                    <li className={`${isBuilding && buildStage < 22 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-                      {typedJobBullets['1_0'] || (!isBuilding ? 'Assisted in the planning and smooth execution of CODM tournaments and esports events.' : '\u00A0')}
-                      {isBuilding && buildStage === 22 && typedJobBullets['1_0'] && <span className="cv-typing-caret">|</span>}
-                    </li>
-                    <li className={`${isBuilding && buildStage < 23 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-                      Designed collaborative creator workspace tools and interaction prototypes in Figma.
-                    </li>
-                  </ul>
-                </li>
-
-                <li className={`cv-job ${isBuilding && buildStage < 24 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-                  <p className="cv-job-head">
-                    <strong>
-                      {typedJobs[2] || (!isBuilding ? 'Operation internship' : '\u00A0')}
-                      {isBuilding && buildStage === 24 && typedJobs[2] && <span className="cv-typing-caret">|</span>}
-                    </strong>
-                    {!isBuilding || buildStage >= 25 ? ', Knaptix Ventures Private Limited' : ''}
-                  </p>
-                  <p className={`cv-job-meta ${isBuilding && buildStage < 25 ? 'cv-item-hidden' : 'cv-item-visible'}`}>Jun 2025 — Aug 2025 • 3 Mos, Pune District, Maharashtra, India (Remote)</p>
-                  <ul className={`${isBuilding && buildStage < 26 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-                    <li className={`${isBuilding && buildStage < 26 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-                      {typedJobBullets['2_0'] || (!isBuilding ? 'Operations support, brand identities, and conversion-focused SaaS landing pages for 10+ tech startups with a 95% client retention rate.' : '\u00A0')}
-                      {isBuilding && buildStage === 26 && typedJobBullets['2_0'] && <span className="cv-typing-caret">|</span>}
-                    </li>
-                  </ul>
-                </li>
+                  );
+                })}
               </ol>
             </section>
 
             <section className="cv-section" aria-labelledby="cv-study">
-              <h2 id="cv-study" className={`cv-section-title ${isBuilding && buildStage < 27 ? 'cv-item-hidden' : 'cv-item-visible'}`}>Study, and the rest</h2>
+              <h2 id="cv-study" className={`cv-section-title ${isBuilding && buildStage < 27 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                {typedSections.study || (!isBuilding ? SECTION_HEADINGS.study : '\u00A0')}
+                {isBuilding && buildStage === 27 && typedSections.study && <span className="cv-typing-caret">|</span>}
+              </h2>
               <div className="cv-two">
                 <ul className={`cv-plain ${isBuilding && buildStage < 28 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                   <li className={`cv-entry ${isBuilding && buildStage < 28 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                     <strong>
-                      {typedStudy[0] || (!isBuilding ? 'B.Tech in Computer Science & Engineering' : '\u00A0')}
+                      {typedStudy[0] || (!isBuilding ? STUDY_TEXTS[0] : '\u00A0')}
                       {isBuilding && buildStage === 28 && typedStudy[0] && <span className="cv-typing-caret">|</span>}
                     </strong>
-                    <span className={`${isBuilding && buildStage < 29 ? 'cv-item-hidden' : 'cv-item-visible'}`}>Jaypee University of Engineering &amp; Technology (JUET), Guna</span>
+                    <span className={`${isBuilding && buildStage < 29 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                      {typedStudy['0_sub'] || (!isBuilding ? STUDY_TEXTS['0_sub'] : '\u00A0')}
+                      {isBuilding && buildStage === 29 && typedStudy['0_sub'] && <span className="cv-typing-caret">|</span>}
+                    </span>
                     <span className={`cv-soft ${isBuilding && buildStage < 29 ? 'cv-item-hidden' : 'cv-item-visible'}`}>2023 — 2027</span>
                   </li>
                   <li className={`cv-entry ${isBuilding && buildStage < 30 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-                    <strong>Senior Secondary (Class XII)</strong>
+                    <strong>
+                      {typedStudy[1] || (!isBuilding ? STUDY_TEXTS[1] : '\u00A0')}
+                      {isBuilding && buildStage === 30 && typedStudy[1] && <span className="cv-typing-caret">|</span>}
+                    </strong>
                     <span>Central Board of Secondary Education</span>
                     <span className="cv-soft">PCM &amp; Computer Science</span>
                   </li>
@@ -1389,31 +1237,41 @@ const KittuResumeApp = ({
                 <ul className={`cv-plain ${isBuilding && buildStage < 31 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                   <li className={`cv-entry ${isBuilding && buildStage < 31 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
                     <strong>
-                      {typedStudy[1] || (!isBuilding ? '🥈 HACKeThor 1st Runner-Up (2nd Place)' : '\u00A0')}
-                      {isBuilding && buildStage === 31 && typedStudy[1] && <span className="cv-typing-caret">|</span>}
+                      {typedStudy[2] || (!isBuilding ? STUDY_TEXTS[2] : '\u00A0')}
+                      {isBuilding && buildStage === 31 && typedStudy[2] && <span className="cv-typing-caret">|</span>}
                     </strong>
-                    <span className={`${isBuilding && buildStage < 32 ? 'cv-item-hidden' : 'cv-item-visible'}`}>Awarded 1st Runner-Up (2nd Place) in National Level Hackathon organized by Unstop out of 500+ participants.</span>
+                    <span className={`${isBuilding && buildStage < 32 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                      {typedStudy['2_sub'] || (!isBuilding ? STUDY_TEXTS['2_sub'] : '\u00A0')}
+                      {isBuilding && buildStage === 32 && typedStudy['2_sub'] && <span className="cv-typing-caret">|</span>}
+                    </span>
                   </li>
                   <li className={`cv-entry ${isBuilding && buildStage < 33 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-                    <strong>CodeSrijan Organizer</strong>
-                    <span>Lead UI/UX Designer and Frontend architect for 200+ hackathon participants across 50+ universities.</span>
+                    <strong>
+                      {typedStudy[3] || (!isBuilding ? STUDY_TEXTS[3] : '\u00A0')}
+                      {isBuilding && buildStage === 33 && typedStudy[3] && <span className="cv-typing-caret">|</span>}
+                    </strong>
+                    <span>{STUDY_TEXTS['3_sub']}</span>
                   </li>
                   <li className={`cv-entry ${isBuilding && buildStage < 34 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-                    <strong>Core Toolkit</strong>
-                    <span className="cv-soft">Figma, Framer, FigJam, ProtoPie, Webflow, React, Next.js, Tailwind CSS, TypeScript.</span>
+                    <strong>{STUDY_TEXTS[4]}</strong>
+                    <span className="cv-soft">
+                      {typedStudy['4_sub'] || (!isBuilding ? STUDY_TEXTS['4_sub'] : '\u00A0')}
+                      {isBuilding && buildStage === 34 && typedStudy['4_sub'] && <span className="cv-typing-caret">|</span>}
+                    </span>
                   </li>
                 </ul>
               </div>
             </section>
           </div>
 
-          {/* SECTION 5: THINGS I'VE MADE - Strictly 1 Card at a time, Line-by-Line (Stages 35 - 53) */}
+          {/* SECTION 5: THINGS I'VE MADE */}
           <section className="cv-section" aria-labelledby="cv-made">
             <h2 id="cv-made" className={`cv-section-title ${isBuilding && buildStage < 35 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-              Things I've made
+              {typedSections.made || (!isBuilding ? SECTION_HEADINGS.made : '\u00A0')}
+              {isBuilding && buildStage === 35 && typedSections.made && <span className="cv-typing-caret">|</span>}
             </h2>
             <ul className="cv-made">
-              {/* Big Featured Card: CodeSrijan (Stages 36, 37, 38) */}
+              {/* Big Featured Card: CodeSrijan */}
               <li className={`cv-made-big ${isBuilding && buildStage < 36 ? 'cv-item-hidden' : 'cv-item-visible cv-stamp-pop'}`}>
                 <div className="cv-made-card">
                   <a
@@ -1438,15 +1296,15 @@ const KittuResumeApp = ({
                       className="cv-title-link"
                     >
                       <strong>
-                        {typedProjects[0] || (!isBuilding ? 'CodeSrijan Hackathon Portal' : '\u00A0')}
+                        {typedProjects[0] || (!isBuilding ? PROJECT_ITEMS[0].title : '\u00A0')}
                         {isBuilding && buildStage === 36 && typedProjects[0] && <span className="cv-typing-caret">|</span>}
                       </strong>
                     </a>
                     <span className={`${isBuilding && buildStage < 37 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-                      {typedProjectDescs[0] || (!isBuilding ? 'Full-stack live hackathon platform designed for Jaypee University with team matchmaking & rubric evaluation.' : '\u00A0')}
+                      {typedProjectDescs[0] || (!isBuilding ? PROJECT_ITEMS[0].desc : '\u00A0')}
                       {isBuilding && buildStage === 37 && typedProjectDescs[0] && <span className="cv-typing-caret">|</span>}
                     </span>
-                    <div className={`cv-card-actions ${isBuilding && buildStage < 38 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                    <div className={`cv-card-actions ${isBuilding && buildStage < 38 ? 'cv-item-hidden' : 'cv-item-visible cv-stamp-pop'}`}>
                       <a
                         href="https://www.figma.com/design/hCaNWKm2qTY2kQ0KOZRywa/M-1?node-id=40-2&t=vfPIBYY278lzphVq-1"
                         target="_blank"
@@ -1480,7 +1338,7 @@ const KittuResumeApp = ({
                 </div>
               </li>
 
-              {/* Card 2: EventFlow (Stages 39, 40, 41) */}
+              {/* Card 2: EventFlow */}
               <li className={`${isBuilding && buildStage < 39 ? 'cv-item-hidden' : 'cv-item-visible cv-stamp-pop'}`}>
                 <div className="cv-made-card">
                   <a
@@ -1503,15 +1361,15 @@ const KittuResumeApp = ({
                     className="cv-title-link"
                   >
                     <strong>
-                      {typedProjects[1] || (!isBuilding ? 'EventFlow Ticketing' : '\u00A0')}
+                      {typedProjects[1] || (!isBuilding ? PROJECT_ITEMS[1].title : '\u00A0')}
                       {isBuilding && buildStage === 39 && typedProjects[1] && <span className="cv-typing-caret">|</span>}
                     </strong>
                   </a>
                   <span className={`${isBuilding && buildStage < 40 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-                    {typedProjectDescs[1] || (!isBuilding ? 'Campus event discovery & instant booking platform with 30% reduced drop-off.' : '\u00A0')}
+                    {typedProjectDescs[1] || (!isBuilding ? PROJECT_ITEMS[1].desc : '\u00A0')}
                     {isBuilding && buildStage === 40 && typedProjectDescs[1] && <span className="cv-typing-caret">|</span>}
                   </span>
-                  <div className={`cv-card-actions ${isBuilding && buildStage < 41 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                  <div className={`cv-card-actions ${isBuilding && buildStage < 41 ? 'cv-item-hidden' : 'cv-item-visible cv-stamp-pop'}`}>
                     <a
                       href="https://www.figma.com/design/29nTBBWxZfoOKdFnOaQWbq/EventFlow?node-id=2-2&p=f&t=ucsh4jF84sBl50UA-0"
                       target="_blank"
@@ -1535,7 +1393,7 @@ const KittuResumeApp = ({
                 </div>
               </li>
 
-              {/* Card 3: AI Interview (Stages 42, 43, 44) */}
+              {/* Card 3: AI Interview */}
               <li className={`${isBuilding && buildStage < 42 ? 'cv-item-hidden' : 'cv-item-visible cv-stamp-pop'}`}>
                 <div className="cv-made-card">
                   <a
@@ -1558,15 +1416,15 @@ const KittuResumeApp = ({
                     className="cv-title-link"
                   >
                     <strong>
-                      {typedProjects[2] || (!isBuilding ? 'AI Interview Studio' : '\u00A0')}
+                      {typedProjects[2] || (!isBuilding ? PROJECT_ITEMS[2].title : '\u00A0')}
                       {isBuilding && buildStage === 42 && typedProjects[2] && <span className="cv-typing-caret">|</span>}
                     </strong>
                   </a>
                   <span className={`${isBuilding && buildStage < 43 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-                    {typedProjectDescs[2] || (!isBuilding ? 'Interactive question generator and audio mock-interview coach UI in Figma.' : '\u00A0')}
+                    {typedProjectDescs[2] || (!isBuilding ? PROJECT_ITEMS[2].desc : '\u00A0')}
                     {isBuilding && buildStage === 43 && typedProjectDescs[2] && <span className="cv-typing-caret">|</span>}
                   </span>
-                  <div className={`cv-card-actions ${isBuilding && buildStage < 44 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                  <div className={`cv-card-actions ${isBuilding && buildStage < 44 ? 'cv-item-hidden' : 'cv-item-visible cv-stamp-pop'}`}>
                     <a
                       href="https://www.figma.com/design/ezDh2NmBto6iv7xaQNs3Ha/AI-Interview?node-id=11-1842&t=siyh0b32g2XWrRNe-1"
                       target="_blank"
@@ -1589,7 +1447,7 @@ const KittuResumeApp = ({
                 </div>
               </li>
 
-              {/* Card 4: Expensify (Stages 45, 46, 47) */}
+              {/* Card 4: Expensify */}
               <li className={`${isBuilding && buildStage < 45 ? 'cv-item-hidden' : 'cv-item-visible cv-stamp-pop'}`}>
                 <div className="cv-made-card">
                   <a
@@ -1612,15 +1470,15 @@ const KittuResumeApp = ({
                     className="cv-title-link"
                   >
                     <strong>
-                      {typedProjects[3] || (!isBuilding ? 'Expensify Budget' : '\u00A0')}
+                      {typedProjects[3] || (!isBuilding ? PROJECT_ITEMS[3].title : '\u00A0')}
                       {isBuilding && buildStage === 45 && typedProjects[3] && <span className="cv-typing-caret">|</span>}
                     </strong>
                   </a>
                   <span className={`${isBuilding && buildStage < 46 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-                    {typedProjectDescs[3] || (!isBuilding ? 'Mobile personal finance app prototype with gesture-driven expense tagging.' : '\u00A0')}
+                    {typedProjectDescs[3] || (!isBuilding ? PROJECT_ITEMS[3].desc : '\u00A0')}
                     {isBuilding && buildStage === 46 && typedProjectDescs[3] && <span className="cv-typing-caret">|</span>}
                   </span>
-                  <div className={`cv-card-actions ${isBuilding && buildStage < 47 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                  <div className={`cv-card-actions ${isBuilding && buildStage < 47 ? 'cv-item-hidden' : 'cv-item-visible cv-stamp-pop'}`}>
                     <a
                       href="https://www.figma.com/design/3mw8XBHEZ3b8HKNNqcs6U2/Expensify---Budget-Tracker-App?node-id=135-318&t=gUJEMUlyDc8ERNeR-1"
                       target="_blank"
@@ -1644,7 +1502,7 @@ const KittuResumeApp = ({
                 </div>
               </li>
 
-              {/* Card 5: Movie Tickets (Stages 48, 49, 50) */}
+              {/* Card 5: Movie Tickets */}
               <li className={`${isBuilding && buildStage < 48 ? 'cv-item-hidden' : 'cv-item-visible cv-stamp-pop'}`}>
                 <div className="cv-made-card">
                   <a
@@ -1667,15 +1525,15 @@ const KittuResumeApp = ({
                     className="cv-title-link"
                   >
                     <strong>
-                      {typedProjects[4] || (!isBuilding ? 'Movie Tickets App' : '\u00A0')}
+                      {typedProjects[4] || (!isBuilding ? PROJECT_ITEMS[4].title : '\u00A0')}
                       {isBuilding && buildStage === 48 && typedProjects[4] && <span className="cv-typing-caret">|</span>}
                     </strong>
                   </a>
                   <span className={`${isBuilding && buildStage < 49 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-                    {typedProjectDescs[4] || (!isBuilding ? 'Dynamic seat-selection matrix and trailer preview interaction flow.' : '\u00A0')}
+                    {typedProjectDescs[4] || (!isBuilding ? PROJECT_ITEMS[4].desc : '\u00A0')}
                     {isBuilding && buildStage === 49 && typedProjectDescs[4] && <span className="cv-typing-caret">|</span>}
                   </span>
-                  <div className={`cv-card-actions ${isBuilding && buildStage < 50 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                  <div className={`cv-card-actions ${isBuilding && buildStage < 50 ? 'cv-item-hidden' : 'cv-item-visible cv-stamp-pop'}`}>
                     <a
                       href="https://www.figma.com/design/0cJQWX8qYssPfK4hmPtdVj/Movie-Ticket-Booking-App-Design?node-id=31-86&t=Jd933TVzkrlBb4MQ-1"
                       target="_blank"
@@ -1698,7 +1556,7 @@ const KittuResumeApp = ({
                 </div>
               </li>
 
-              {/* Card 6: SaaS Landing (Stages 51, 52, 53) */}
+              {/* Card 6: SaaS Landing */}
               <li className={`${isBuilding && buildStage < 51 ? 'cv-item-hidden' : 'cv-item-visible cv-stamp-pop'}`}>
                 <div className="cv-made-card">
                   <a
@@ -1721,15 +1579,15 @@ const KittuResumeApp = ({
                     className="cv-title-link"
                   >
                     <strong>
-                      {typedProjects[5] || (!isBuilding ? 'SaaS Landing Pages' : '\u00A0')}
+                      {typedProjects[5] || (!isBuilding ? PROJECT_ITEMS[5].title : '\u00A0')}
                       {isBuilding && buildStage === 51 && typedProjects[5] && <span className="cv-typing-caret">|</span>}
                     </strong>
                   </a>
                   <span className={`${isBuilding && buildStage < 52 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
-                    {typedProjectDescs[5] || (!isBuilding ? 'High-converting responsive landing pages built for 10+ international tech startups.' : '\u00A0')}
+                    {typedProjectDescs[5] || (!isBuilding ? PROJECT_ITEMS[5].desc : '\u00A0')}
                     {isBuilding && buildStage === 52 && typedProjectDescs[5] && <span className="cv-typing-caret">|</span>}
                   </span>
-                  <div className={`cv-card-actions ${isBuilding && buildStage < 53 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+                  <div className={`cv-card-actions ${isBuilding && buildStage < 53 ? 'cv-item-hidden' : 'cv-item-visible cv-stamp-pop'}`}>
                     <a
                       href="https://www.figma.com/design/WfUzGPYsE7UFYS9YaQp5v6/home-page?node-id=0-1&p=f&t=cA3tERTu8AuInovg-0"
                       target="_blank"
@@ -1754,20 +1612,26 @@ const KittuResumeApp = ({
             </ul>
           </section>
 
-          {/* SECTION 6: SAY HELLO (Stages 54 - 58) - Built Line-by-Line */}
+          {/* SECTION 6: SAY HELLO */}
           <section className={`cv-section cv-contact ${isBuilding && buildStage < 54 ? 'cv-item-hidden' : 'cv-item-visible'}`} aria-labelledby="cv-contact">
-            <h2 id="cv-contact" className={`cv-section-title ${isBuilding && buildStage < 54 ? 'cv-item-hidden' : 'cv-item-visible'}`}>Say hello</h2>
-            <p className={`${isBuilding && buildStage < 55 ? 'cv-item-hidden' : 'cv-item-visible'}`}>For product design roles, design systems, or collaboration, write to me:</p>
+            <h2 id="cv-contact" className={`cv-section-title ${isBuilding && buildStage < 54 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+              {typedSections.contact || (!isBuilding ? SECTION_HEADINGS.contact : '\u00A0')}
+              {isBuilding && buildStage === 54 && typedSections.contact && <span className="cv-typing-caret">|</span>}
+            </h2>
+            <p className={`${isBuilding && buildStage < 55 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+              {typedContactIntro || (!isBuilding ? CONTACT_INTRO_TEXT : '\u00A0')}
+              {isBuilding && buildStage === 55 && typedContactIntro && <span className="cv-typing-caret">|</span>}
+            </p>
             <p className={`cv-email-line ${isBuilding && buildStage < 56 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
               <a className="cv-email" href="mailto:varun.sehgal02@gmail.com">
-                {typedEmail || (!isBuilding ? 'varun.sehgal02@gmail.com' : '\u00A0')}
+                {typedEmail || (!isBuilding ? CONTACT_EMAIL_TEXT : '\u00A0')}
                 {isBuilding && buildStage === 56 && typedEmail && <span className="cv-typing-caret">|</span>}
               </a>
-              <button type="button" className={`cv-copy-btn ${isBuilding && buildStage < 57 ? 'cv-item-hidden' : 'cv-item-visible'}`} onClick={copyEmail}>
+              <button type="button" className={`cv-copy-btn ${isBuilding && buildStage < 57 ? 'cv-item-hidden' : 'cv-item-visible cv-stamp-pop'}`} onClick={copyEmail}>
                 {copied ? '✓ Copied!' : 'Copy'}
               </button>
             </p>
-            <p className={`cv-links ${isBuilding && buildStage < 58 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+            <p className={`cv-links ${isBuilding && buildStage < 58 ? 'cv-item-hidden' : 'cv-item-visible cv-stamp-pop'}`}>
               <a href="https://github.com/varunsehgal05" target="_blank" rel="noopener noreferrer">GitHub</a>
               <a href="https://linkedin.com/in/varunsehgal02" target="_blank" rel="noopener noreferrer">LinkedIn</a>
               <a href="https://varunsehgal.runs-on.dev" target="_blank" rel="noopener noreferrer">Portfolio Web</a>
@@ -1775,8 +1639,8 @@ const KittuResumeApp = ({
           </section>
         </main>
 
-        {/* FOOTER (Stage 59) */}
-        <footer className={`cv-footer ${isBuilding && buildStage < 59 ? 'cv-item-hidden' : 'cv-item-visible'}`}>
+        {/* FOOTER */}
+        <footer className={`cv-footer ${isBuilding && buildStage < 59 ? 'cv-item-hidden' : 'cv-item-visible cv-stamp-pop'}`}>
           <p>© 2026 Varun Sehgal. Built live, by a crowd of cursors.</p>
           <button type="button" className="cv-replay-btn cv-remake-btn" onClick={replayBuild} title="Remake the notebook from scratch">
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
