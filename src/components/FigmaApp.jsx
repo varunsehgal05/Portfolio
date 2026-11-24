@@ -624,7 +624,16 @@ const PAGE_LAYERS_MAP = {
 };
 
 const FigmaApp = ({ isInteracting, userName, onOpenApp, deviceMode = 'desktop' }) => {
-  const [activeTab, setActiveTab] = useState('home'); // Guaranteed to open to home page first
+  const [activeTab, setActiveTab] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const requestedTab = params.get('tab');
+      if (requestedTab && ['home', 'projects', 'experience', 'about', 'resume', 'process', 'plugins'].includes(requestedTab)) {
+        return requestedTab;
+      }
+    }
+    return 'home';
+  });
   const [showAssets, setShowAssets] = useState(false);
   const [colorMenuOpen, setColorMenuOpen] = useState(false);
   const [currentTheme, setCurrentTheme] = useState('default');
