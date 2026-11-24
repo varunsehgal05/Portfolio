@@ -9455,3 +9455,124 @@
 .moodboard-emoji-stamp:active {
   transform: scale(0.9);
 }
+
+/* ==========================================================================
+   FIGMA MOBILE-ONLY & TABLET / IPAD RESPONSIVE ENHANCEMENTS
+   ========================================================================== */
+
+/* Strictly remove right edit properties bar on mobile phones only (<= 768px or .mode-mobile) */
+@media (max-width: 768px) {
+  .lovable-properties-sidebar,
+  .nav-sidebar-toggle-btn {
+    display: none !important;
+    width: 0 !important;
+    max-width: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    overflow: hidden !important;
+  }
+
+  /* Compact top navigation on mobile phone */
+  .lovable-global-nav {
+    padding: 0 8px !important;
+    gap: 6px !important;
+    height: 44px !important;
+  }
+
+  .nav-brand-title {
+    display: none !important;
+  }
+
+  .nav-email-btn span {
+    display: none !important;
+  }
+
+  .nav-email-btn {
+    padding: 6px 8px !important;
+  }
+
+  .wireframe-toggle-btn span {
+    display: none !important;
+  }
+
+  .wireframe-toggle-btn {
+    padding: 6px 8px !important;
+  }
+
+  .canvas-zoom-pill .canvas-zoom-btn {
+    display: none !important;
+  }
+
+  .canvas-zoom-val-btn {
+    padding: 0 6px !important;
+    font-size: 11px !important;
+  }
+
+  /* Compact bottom navigation bar on mobile phone */
+  .lovable-workspace-bottom-nav {
+    bottom: 12px !important;
+    padding: 4px 6px !important;
+    gap: 4px !important;
+    border-radius: 12px !important;
+    max-width: 96% !important;
+  }
+
+  .nav-divider-stem,
+  .nav-secondary-group {
+    display: none !important;
+  }
+
+  .bottom-nav-item {
+    padding: 6px 8px !important;
+    font-size: 10px !important;
+    gap: 4px !important;
+    letter-spacing: 0.3px !important;
+  }
+
+  .bottom-nav-item span {
+    font-size: 10px !important;
+  }
+
+  .bottom-nav-icon-svg {
+    width: 15px !important;
+    height: 15px !important;
+  }
+}
+
+.mode-mobile .lovable-properties-sidebar,
+.mode-mobile .nav-sidebar-toggle-btn {
+  display: none !important;
+  width: 0 !important;
+  max-width: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  overflow: hidden !important;
+}
+
+.mode-mobile .nav-divider-stem,
+.mode-mobile .nav-secondary-group {
+  display: none !important;
+}
+
+/* Tablet / iPad responsive rules (769px to 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .lovable-properties-sidebar {
+    width: 220px !important;
+  }
+
+  .lovable-workspace-bottom-nav {
+    bottom: 16px !important;
+    padding: 5px 8px !important;
+  }
+
+  .bottom-nav-item {
+    padding: 6px 10px !important;
+    font-size: 10.5px !important;
+  }
+}

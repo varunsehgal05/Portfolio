@@ -867,8 +867,31 @@ const FigmaApp = ({ isInteracting, userName, onOpenApp, deviceMode = 'desktop' }
   const [activityFilter, setActiveFilter] = useState('All');
   const [experienceViewMode, setExperienceViewMode] = useState('zigzag'); // 'zigzag' | 'split'
 
-  // Right sidebar properties panel state
-  const [rightSidebarOpen, setRightSidebarOpen] = useState(true);
+  // Mobile / Tablet Viewport Detection
+  const [isMobilePhone, setIsMobilePhone] = useState(() => {
+    if (deviceMode === 'mobile') return true;
+    if (typeof window !== 'undefined') return window.innerWidth <= 768;
+    return false;
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobileNow = deviceMode === 'mobile' || (typeof window !== 'undefined' && window.innerWidth <= 768);
+      setIsMobilePhone(mobileNow);
+      if (mobileNow) {
+        setRightSidebarOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [deviceMode]);
+
+  // Right sidebar properties panel state: strictly false on mobile phones, toggleable on iPad & desktop
+  const [rightSidebarOpen, setRightSidebarOpen] = useState(() => {
+    if (deviceMode === 'mobile') return false;
+    if (typeof window !== 'undefined' && window.innerWidth <= 768) return false;
+    return true;
+  });
   const [propertiesTab, setPropertiesTab] = useState('design');
   const [inspectMode, setInspectMode] = useState('css');
   const [codeCopied, setCodeCopied] = useState(false);
@@ -1156,10 +1179,22 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
     }
   };
 
-  // Canvas zoom: 100% by default, and gracefully fits narrow stages for the 1080px Resume artboard so text never clips under sidebars
+  // Canvas zoom: 100% by default, and gracefully fits narrow stages for 1080px/1200px artboards so text never clips on mobile or iPad
   const calculateFitZoom = (tab, stageW) => {
-    if (tab === 'resume' && stageW > 0 && stageW < 1116) {
-      return Math.min(1, Math.max(0.72, Number(((stageW - 36) / 1080).toFixed(2))));
+    if (!stageW || stageW <= 0) return 1;
+    if (tab === 'resume') {
+      const artboardW = 1080;
+      if (stageW < artboardW + 36) {
+        return Math.min(1, Math.max(0.35, Number(((stageW - 24) / artboardW).toFixed(2))));
+      }
+      return 1;
+    }
+    if (tab === 'home') {
+      const artboardW = Number(nodeProps['root-canvas']?.w) || frameW || 1200;
+      if (stageW < artboardW + 36) {
+        return Math.min(1, Math.max(0.32, Number(((stageW - 24) / artboardW).toFixed(2))));
+      }
+      return 1;
     }
     return 1;
   };
@@ -1353,6 +1388,84 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
 
     window.addEventListener('mousemove', handleWindowMouseMove);
     window.addEventListener('mouseup', handleWindowMouseUp);
+  };
+
+  // Mobile / iPad Touch Gestures (Fluid Touch Panning & Multi-touch Pinch Zoom)
+  const touchStartRef = useRef({ pageX: 0, pageY: 0, panX: 0, panY: 0, dist: 0, initialZoom: 1 });
+  const isTouchDraggingRef = useRef(false);
+
+  const handleCanvasTouchStart = (e) => {
+    if (!e.touches || e.touches.length === 0) return;
+    if (
+      e.target.closest('input') ||
+      e.target.closest('textarea') ||
+      e.target.closest('select') ||
+      e.target.closest('button') ||
+      e.target.closest('a') ||
+      e.target.closest('.sticky-note-textarea') ||
+      e.target.closest('.lovable-workspace-bottom-nav') ||
+      e.target.closest('.lovable-sidebar') ||
+      e.target.closest('.lovable-properties-sidebar')
+    ) {
+      return;
+    }
+
+    isTouchDraggingRef.current = false;
+    if (e.touches.length === 1) {
+      touchStartRef.current = {
+        pageX: e.touches[0].pageX,
+        pageY: e.touches[0].pageY,
+        panX: panRef.current.x,
+        panY: panRef.current.y,
+        dist: 0,
+        initialZoom: zoom
+      };
+      setIsPanning(true);
+    } else if (e.touches.length === 2) {
+      const dx = e.touches[0].pageX - e.touches[1].pageX;
+      const dy = e.touches[0].pageY - e.touches[1].pageY;
+      const dist = Math.hypot(dx, dy);
+      touchStartRef.current = {
+        pageX: (e.touches[0].pageX + e.touches[1].pageX) / 2,
+        pageY: (e.touches[0].pageY + e.touches[1].pageY) / 2,
+        panX: panRef.current.x,
+        panY: panRef.current.y,
+        dist,
+        initialZoom: zoom
+      };
+      setIsPanning(true);
+    }
+  };
+
+  const handleCanvasTouchMove = (e) => {
+    if (!e.touches || e.touches.length === 0) return;
+    if (e.touches.length === 1) {
+      const dx = e.touches[0].pageX - touchStartRef.current.pageX;
+      const dy = e.touches[0].pageY - touchStartRef.current.pageY;
+      if (Math.hypot(dx, dy) > 4) {
+        isTouchDraggingRef.current = true;
+        resumeAutoScrollPauseUntilRef.current = Date.now() + 4000;
+        if (panRafRef.current) {
+          cancelAnimationFrame(panRafRef.current);
+          panRafRef.current = null;
+        }
+      }
+      const nextX = Math.round(touchStartRef.current.panX + dx);
+      const nextY = Math.round(touchStartRef.current.panY + dy);
+      setPan({ x: nextX, y: nextY });
+      panRef.current = { x: nextX, y: nextY };
+    } else if (e.touches.length === 2 && touchStartRef.current.dist > 0) {
+      const dx = e.touches[0].pageX - e.touches[1].pageX;
+      const dy = e.touches[0].pageY - e.touches[1].pageY;
+      const newDist = Math.hypot(dx, dy);
+      const scale = newDist / touchStartRef.current.dist;
+      const nextZoom = Math.min(2.5, Math.max(0.3, Number((touchStartRef.current.initialZoom * scale).toFixed(2))));
+      setZoom(nextZoom);
+    }
+  };
+
+  const handleCanvasTouchEnd = () => {
+    setIsPanning(false);
   };
 
   const handleCanvasMouseMove = () => {
@@ -1692,13 +1805,15 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
             <Share2 size={16} />
           </button>
 
-          <button
-            className={`nav-sidebar-toggle-btn ${rightSidebarOpen ? 'active' : ''}`}
-            onClick={() => setRightSidebarOpen(!rightSidebarOpen)}
-            title={rightSidebarOpen ? "Hide Properties Panel" : "Show Properties Panel"}
-          >
-            <Sidebar size={16} />
-          </button>
+          {!isMobilePhone && (
+            <button
+              className={`nav-sidebar-toggle-btn ${rightSidebarOpen ? 'active' : ''}`}
+              onClick={() => setRightSidebarOpen(!rightSidebarOpen)}
+              title={rightSidebarOpen ? "Hide Properties Panel" : "Show Properties Panel"}
+            >
+              <Sidebar size={16} />
+            </button>
+          )}
 
           <a
             href="https://www.linkedin.com/in/varunsehgal02"
@@ -1977,6 +2092,9 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
           className={`lovable-canvas-stage ${isPanning ? 'panning' : ''} ${activeTool === 'hand' || isSpacePressed ? 'tool-hand' : ''} ${isWireframeMode ? 'wireframe-mode-stage' : ''}`}
           onMouseDown={handleCanvasMouseDown}
           onWheel={handleCanvasWheel}
+          onTouchStart={handleCanvasTouchStart}
+          onTouchMove={handleCanvasTouchMove}
+          onTouchEnd={handleCanvasTouchEnd}
         >
           {/* Dot Grid Background */}
           <div
@@ -3174,8 +3292,8 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
           </div>
         </main>
 
-        {/* Right Sidebar ("Design / Prototype / Inspect" Inspector Panel) */}
-        {rightSidebarOpen && (
+        {/* Right Sidebar ("Design / Prototype / Inspect" Inspector Panel) - strictly excluded on mobile phones */}
+        {!isMobilePhone && rightSidebarOpen && (
           <aside className="lovable-properties-sidebar">
             {/* Inspector Top Tabs */}
             <div className="properties-top-header">

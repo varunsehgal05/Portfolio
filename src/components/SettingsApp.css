@@ -1418,3 +1418,58 @@
 [data-theme="light"] .spec-val {
   color: #0f172a !important;
 }
+
+/* ========================================================
+   RESPONSIVE MOBILE & IPAD / TABLET OPTIMIZATIONS FOR SETTINGS
+   ======================================================== */
+@media (max-width: 768px) {
+  .settings-container {
+    flex-direction: column !important;
+    overflow-y: auto !important;
+  }
+  .settings-sidebar {
+    width: 100% !important;
+    height: auto !important;
+    border-right: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    padding: 8px 10px !important;
+    flex-shrink: 0 !important;
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    gap: 4px !important;
+  }
+  .settings-user-card {
+    display: none !important;
+  }
+  .settings-nav-list {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 4px !important;
+    overflow-x: auto !important;
+  }
+  .settings-nav-item {
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+    white-space: nowrap !important;
+    border-radius: 8px !important;
+  }
+  .settings-content {
+    flex: 1 !important;
+    padding: 12px !important;
+    overflow-y: auto !important;
+  }
+  .appearance-theme-cards-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .settings-sidebar {
+    width: 180px !important;
+  }
+  .appearance-theme-cards-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}

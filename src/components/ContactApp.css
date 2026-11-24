@@ -644,18 +644,48 @@
   to { transform: rotate(360deg); }
 }
 
-/* Responsive adjustments */
-@media (max-width: 680px) {
+/* Responsive adjustments for mobile and iPad */
+@media (max-width: 768px) {
   .contact-mac-window {
     flex-direction: column;
+    overflow-y: auto;
   }
   .contact-sidebar {
     width: 100%;
     max-width: 100%;
     height: auto;
-    max-height: 200px;
+    max-height: 180px;
     border-right: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 12px;
+  }
+  .contact-channel-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .contact-channel-item {
+    flex: 1 1 140px;
+    padding: 8px;
+  }
+  .contact-main {
+    padding: 14px;
+    flex: 1;
+  }
+  .form-input, .form-textarea {
+    font-size: 16px !important; /* Prevents iOS auto-zoom on input focus */
+    min-height: 44px;
+  }
+  .submit-btn {
+    min-height: 44px;
+    width: 100%;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .contact-sidebar {
+    width: 240px;
   }
 }
 

@@ -3264,3 +3264,84 @@
   line-height: 1.5;
   margin: 0;
 }
+
+/* ========================================================
+   RESPONSIVE MOBILE & IPAD / TABLET OPTIMIZATIONS FOR VS CODE
+   ======================================================== */
+@media (max-width: 768px) {
+  .vscode-menu-bar {
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 4px;
+    gap: 2px;
+  }
+  .vscode-menu-bar::-webkit-scrollbar {
+    display: none;
+  }
+  .vscode-menu-btn {
+    padding: 2px 6px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .vscode-primary-sidebar {
+    position: absolute;
+    left: 44px;
+    top: 0;
+    bottom: 22px;
+    width: min(280px, calc(100% - 44px)) !important;
+    z-index: 40;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.7);
+  }
+  .vscode-activity-bar {
+    width: 44px;
+    flex-shrink: 0;
+  }
+  .activity-btn {
+    width: 36px;
+    height: 36px;
+  }
+  .vscode-editor-pane {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+  .tabs-bar {
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .tabs-bar::-webkit-scrollbar {
+    display: none;
+  }
+  .tab-item {
+    font-size: 11px;
+    padding: 4px 8px;
+    white-space: nowrap;
+  }
+  .editor-line {
+    font-size: 11.5px !important;
+  }
+  .line-number {
+    padding-right: 8px !important;
+    min-width: 28px !important;
+    font-size: 11px !important;
+  }
+  .terminal-dock {
+    max-height: 50% !important;
+  }
+  .vscode-status-bar {
+    overflow-x: auto;
+    font-size: 10.5px;
+    padding: 0 6px;
+  }
+}
+
+/* iPad / Tablet Layout Enhancements */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .vscode-primary-sidebar {
+    width: 210px !important;
+  }
+  .editor-line {
+    font-size: 12.5px;
+  }
+}

@@ -686,7 +686,7 @@
 /* ========================================================
    RESPONSIVE MOBILE & TABLET ADAPTATIONS FOR FINDER
    ======================================================== */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .finder-container {
     flex-direction: column;
   }
@@ -755,6 +755,18 @@
 
   .finder-hero-subtitle {
     font-size: 11.5px;
+  }
+}
+
+/* Tablet / iPad responsive rules (769px to 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .finder-projects-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 14px;
+    padding: 16px;
+  }
+  .finder-sidebar {
+    width: 180px !important;
   }
 }
 

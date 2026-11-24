@@ -1001,6 +1001,9 @@ export const VsCodeApp = () => {
     if (!fileName || !projectFiles[fileName]) return;
     setOpenTabs(prev => (prev.includes(fileName) ? prev : [...prev, fileName]));
     setActiveFile(fileName);
+    if (typeof window !== 'undefined' && window.innerWidth <= 768) {
+      setSidebarOpen(false);
+    }
   };
 
   // CodeSrijan Interactive Simulator State
@@ -1012,8 +1015,11 @@ export const VsCodeApp = () => {
   });
   const [teamMatcherTested, setTeamMatcherTested] = useState(false);
 
-  // Sidebar & Layout State
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  // Sidebar & Layout State: mobile phones default to collapsed so editor gets 100% full width
+  const [sidebarOpen, setSidebarOpen] = useState(() => {
+    if (typeof window !== 'undefined' && window.innerWidth <= 768) return false;
+    return true;
+  });
   const [activeActivity, setActiveActivity] = useState('explorer'); // 'explorer' | 'search' | 'git' | 'debug' | 'extensions' | 'agent'
   const [activeTopMenu, setActiveTopMenu] = useState(null); // 'file' | 'edit' | 'selection' | 'view' | 'go' | 'run' | 'terminal' | 'help'
 
