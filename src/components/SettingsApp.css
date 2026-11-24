@@ -34,7 +34,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%);
+  background: #0284c7;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -861,7 +861,7 @@
 
 .settings-toggle-btn.active {
   background: #0284c7;
-  box-shadow: 0 0 8px rgba(2, 132, 199, 0.4);
+  box-shadow: var(--shadow-sm);
 }
 
 .toggle-slider-knob {
@@ -891,12 +891,11 @@
 .about-architect-card {
   display: flex;
   gap: 20px;
-  background: linear-gradient(135deg, rgba(30, 41, 59, 0.45) 0%, rgba(15, 23, 42, 0.6) 100%);
+  background: var(--surface-card);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 22px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-md);
 }
 
 .architect-avatar-wrap {
@@ -912,7 +911,7 @@
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid #0284c7;
-  box-shadow: 0 0 16px rgba(2, 132, 199, 0.4);
+  box-shadow: var(--shadow-sm);
 }
 
 .architect-status-ring {
@@ -924,7 +923,6 @@
   border-radius: 50%;
   background: #22c55e;
   border: 2.5px solid #0f172a;
-  box-shadow: 0 0 8px #22c55e;
 }
 
 .architect-info-col {
@@ -1061,10 +1059,10 @@
 }
 
 .about-btn.coffee:hover {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  background: #d97706;
   color: #ffffff;
-  border-color: #f59e0b;
-  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+  border-color: #b45309;
+  box-shadow: var(--shadow-sm);
   transform: translateY(-1px);
 }
 
@@ -1233,7 +1231,7 @@
   border-color: #38bdf8;
   color: #ffffff;
   font-weight: 600;
-  box-shadow: 0 0 8px rgba(56, 189, 248, 0.35);
+  box-shadow: var(--shadow-sm);
 }
 
 .tech-detail-banner {
@@ -1271,8 +1269,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(90deg, rgba(168, 85, 247, 0.1) 0%, rgba(56, 189, 248, 0.1) 100%);
-  border: 1px solid rgba(168, 85, 247, 0.25);
+  background: var(--surface-card);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 10px;
   padding: 14px 18px;
   gap: 16px;

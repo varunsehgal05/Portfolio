@@ -415,7 +415,7 @@ export default function CodeSrijanPortal() {
           <span className="text-xs uppercase tracking-widest text-cyan-400 font-mono">
             ⚡ National Level Hackathon Ecosystem
           </span>
-          <h1 className="text-3xl font-extrabold bg-gradient-to-r from-white via-cyan-300 to-purple-400 bg-clip-text text-transparent mt-1">
+          <h1 className="text-3xl font-bold text-white mt-1 tracking-tight">
             Srijaning the Future: Code, Innovate, Conquer
           </h1>
           <p className="text-sm text-zinc-400 mt-2 max-w-xl">
@@ -468,7 +468,7 @@ export default function CodeSrijanPortal() {
             <h2 className="text-lg font-bold text-purple-400 flex items-center gap-2">
               <span>⚖️</span> Real-Time Rubric Scoring Matrix
             </h2>
-            <span className="text-sm font-bold bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full">
+            <span className="text-sm font-semibold bg-purple-500/15 border border-purple-500/30 text-purple-300 px-2.5 py-0.5 rounded-md">
               Score: {calculateTotalScore(rubric)} / 10.0
             </span>
           </div>

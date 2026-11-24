@@ -117,8 +117,8 @@
   height: 32px;
   border-radius: 50%;
   overflow: hidden;
-  border: 1.5px solid rgba(13, 153, 255, 0.5);
-  box-shadow: 0 0 10px rgba(13, 153, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   background: #2c2c2c;
   display: flex;
   align-items: center;
@@ -267,7 +267,7 @@
   font-size: 12px;
   font-weight: 700;
   text-decoration: none;
-  box-shadow: 0 0 12px rgba(var(--color-primary-rgb), 0.35);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
   transition: all 0.15s ease;
 }
 
@@ -959,7 +959,7 @@
 .cta-btn.primary {
   background: var(--color-primary);
   color: #ffffff;
-  box-shadow: 0 0 16px rgba(var(--color-primary-rgb), 0.35);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
 }
 
 .cta-btn.primary:hover {
@@ -1633,8 +1633,8 @@
   height: 90px;
   border-radius: 50%;
   overflow: hidden;
-  border: 2px solid var(--color-primary);
-  box-shadow: 0 0 20px rgba(var(--color-primary-rgb), 0.4);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
   background: #2c2c2c;
   display: flex;
   align-items: center;
@@ -3110,7 +3110,7 @@
   color: #0d99ff;
   background: #2c2c2c;
   transform: translate(-50%, -50%) scale(1.12);
-  box-shadow: 0 0 18px rgba(13, 153, 255, 0.35);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 /* The Activity/Experience Card */
@@ -4480,9 +4480,9 @@
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 1px;
-  padding: 5px 14px;
-  border-radius: 20px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5), 0 0 12px rgba(56, 189, 248, 0.25);
+  padding: 5px 12px;
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.08);
   z-index: 100;
   pointer-events: none;
   animation: fadeInDown 0.2s ease;
@@ -4493,7 +4493,6 @@
   height: 6px;
   border-radius: 50%;
   background: #38bdf8;
-  box-shadow: 0 0 6px #38bdf8;
 }
 
 /* Canvas Toolbar Wireframe Button */

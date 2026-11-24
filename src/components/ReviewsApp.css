@@ -138,19 +138,19 @@
   font-size: 12px;
   font-weight: 600;
   border-radius: 8px;
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-  color: #0b0f19;
-  border: 1px solid rgba(251, 191, 36, 0.4);
+  background: #d97706;
+  color: #ffffff;
+  border: 1px solid #b45309;
   cursor: pointer;
-  box-shadow: 0 2px 10px rgba(245, 158, 11, 0.22);
+  box-shadow: var(--shadow-sm);
   transition: all 0.18s ease;
   white-space: nowrap;
 }
 
 .reviews-cta-btn:hover {
-  filter: brightness(1.1);
+  background: #b45309;
   transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
+  box-shadow: var(--shadow-md);
 }
 
 .reviews-back-btn {
@@ -207,12 +207,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(180deg, rgba(26, 32, 46, 0.5) 0%, rgba(16, 21, 31, 0.6) 100%);
+  background: var(--surface-card);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
   padding: 10px 20px;
   flex-shrink: 0;
-  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.35);
+  box-shadow: var(--shadow-sm);
 }
 
 .hero-strip-metric {
@@ -284,13 +284,12 @@
   height: 6px;
   border-radius: 50%;
   background: #10b981;
-  box-shadow: 0 0 8px #10b981;
   animation: pulseDot 2s infinite ease-in-out;
 }
 
 @keyframes pulseDot {
   0%, 100% { transform: scale(0.9); opacity: 0.8; }
-  50% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 12px #34d399; }
+  50% { transform: scale(1.15); opacity: 1; }
 }
 
 .automod-shield {
@@ -313,7 +312,7 @@
 }
 
 .review-card {
-  background: linear-gradient(180deg, rgba(23, 29, 42, 0.6) 0%, rgba(14, 18, 27, 0.75) 100%);
+  background: var(--surface-card);
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 12px;
   padding: 14px 16px;
@@ -322,7 +321,7 @@
   justify-content: space-between;
   gap: 12px;
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-sm);
   position: relative;
   overflow: hidden;
 }
@@ -330,7 +329,7 @@
 .review-card:hover {
   border-color: rgba(245, 158, 11, 0.32);
   transform: translateY(-2px);
-  box-shadow: 0 10px 24px -4px rgba(0, 0, 0, 0.45), 0 0 18px -4px rgba(245, 158, 11, 0.12);
+  box-shadow: var(--shadow-md);
 }
 
 .review-card-top {
@@ -372,7 +371,7 @@
   justify-content: center;
   font-weight: 700;
   font-size: 15px;
-  background: linear-gradient(135deg, #6366f1, #a855f7);
+  background: #0284c7;
   color: #ffffff;
 }
 
@@ -523,11 +522,11 @@
 .form-card {
   width: 100%;
   max-width: 580px;
-  background: linear-gradient(180deg, rgba(24, 30, 44, 0.8) 0%, rgba(14, 18, 28, 0.9) 100%);
+  background: var(--surface-panel);
   border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 14px;
   padding: 22px 24px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow-lg);
 }
 
 .form-header {
@@ -728,7 +727,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  box-shadow: var(--shadow-md);
 }
 
 .form-success-message h4 {
@@ -798,16 +798,16 @@
   font-size: 12px;
   font-weight: 600;
   border-radius: 7px;
-  background: linear-gradient(135deg, #f59e0b, #d97706);
-  color: #0b0f19;
-  border: 1px solid rgba(251, 191, 36, 0.5);
+  background: #d97706;
+  color: #ffffff;
+  border: 1px solid #b45309;
   cursor: pointer;
-  box-shadow: 0 3px 12px rgba(245, 158, 11, 0.28);
+  box-shadow: var(--shadow-sm);
   transition: all 0.18s ease;
 }
 
 .submit-review-btn:hover:not(:disabled) {
-  filter: brightness(1.1);
+  background: #b45309;
   transform: translateY(-1px);
 }
 

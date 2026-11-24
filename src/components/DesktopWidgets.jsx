@@ -37,10 +37,10 @@ const DesktopWidgets = () => {
         </div>
         <div className="widget-content list-content">
           <ul>
-            <li>VarunOS v2.0</li>
-            <li>Personal AI Assistant</li>
-            <li>Interactive Portfolio</li>
-            <li>Making Impact 🚀</li>
+            <li>VarunOS Web Desktop v2.4</li>
+            <li>CodeSrijan 2025 Portal</li>
+            <li>Design Tokens &amp; Auto-Layout System</li>
+            <li>HAcKeThor Hackathon Solutions</li>
           </ul>
         </div>
       </div>

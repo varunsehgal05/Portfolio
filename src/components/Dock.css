@@ -205,9 +205,8 @@
 
 .dock-dot.active {
   background: #38bdf8;
-  box-shadow: 0 0 6px #38bdf8;
-  width: 5px;
-  height: 5px;
+  width: 4px;
+  height: 4px;
 }
 
 /* ========================================================
@@ -237,5 +236,4 @@
 
 [data-theme="light"] .dock-dot.active {
   background: #0284c7 !important;
-  box-shadow: 0 0 6px #0284c7 !important;
 }
