@@ -9512,18 +9512,35 @@
     font-size: 11px !important;
   }
 
-  /* Compact bottom navigation bar on mobile phone */
+  /* Compact and horizontally scrollable bottom nav on mobile phone */
   .lovable-workspace-bottom-nav {
     bottom: 12px !important;
     padding: 4px 6px !important;
     gap: 4px !important;
     border-radius: 12px !important;
     max-width: 96% !important;
+    overflow-x: auto !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  .lovable-workspace-bottom-nav::-webkit-scrollbar {
+    display: none !important;
   }
 
-  .nav-divider-stem,
+  .nav-primary-group,
   .nav-secondary-group {
-    display: none !important;
+    display: flex !important;
+    gap: 3px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .nav-divider-stem {
+    display: block !important;
+    width: 1px !important;
+    height: 16px !important;
+    background: rgba(255, 255, 255, 0.15) !important;
+    margin: 0 2px !important;
+    flex-shrink: 0 !important;
   }
 
   .bottom-nav-item {
@@ -9557,11 +9574,6 @@
   overflow: hidden !important;
 }
 
-.mode-mobile .nav-divider-stem,
-.mode-mobile .nav-secondary-group {
-  display: none !important;
-}
-
 /* Tablet / iPad responsive rules (769px to 1024px) */
 @media (min-width: 769px) and (max-width: 1024px) {
   .lovable-properties-sidebar {
@@ -9577,4 +9589,383 @@
     padding: 6px 10px !important;
     font-size: 10.5px !important;
   }
+}
+
+/* ==========================================================================
+   CREATIVE PROCESS & PLUGINS CANVAS VIEW STYLING (FIGMA/FIGJAM AESTHETIC)
+   ========================================================================== */
+
+/* 1. Canvas Stages */
+.process-canvas-stage,
+.plugins-canvas-stage {
+  position: relative;
+  width: 1200px;
+  height: 850px;
+  margin: 0 auto;
+  user-select: none;
+}
+
+/* 2. SVG Flow Connectors */
+.process-connectors-svg,
+.plugins-connectors-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* 3. Center Creative Hub Cards */
+.process-center-hub-card,
+.plugins-center-hub-card {
+  position: absolute;
+  left: 450px;
+  top: 170px;
+  width: 300px;
+  background: #181a20;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  z-index: 10;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+  cursor: pointer;
+}
+
+.process-center-hub-card:hover,
+.plugins-center-hub-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.85), 0 0 0 2px rgba(56, 189, 248, 0.4);
+}
+
+.hub-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.hub-card-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #38bdf8;
+  letter-spacing: 0.3px;
+}
+
+.hub-card-tag-icon {
+  font-size: 13px;
+}
+
+.hub-card-badge {
+  font-size: 8.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 2px 7px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.hub-graphic-container {
+  height: 120px;
+  background: radial-gradient(circle at center, rgba(56, 189, 248, 0.15) 0%, rgba(15, 23, 42, 0.8) 100%);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hub-radar-circle {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(56, 189, 248, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hub-radar-pulse {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1px solid rgba(56, 189, 248, 0.6);
+  animation: hubPulse 2.4s infinite cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes hubPulse {
+  0% { transform: scale(0.8); opacity: 0.8; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+
+.hub-center-symbol {
+  font-size: 24px;
+  filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.6));
+}
+
+.hub-plugin-hex {
+  position: relative;
+  width: 68px;
+  height: 68px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(236, 72, 153, 0.2));
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+}
+
+.hub-plugin-symbol {
+  font-size: 28px;
+}
+
+.hub-card-title {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #f8fafc;
+  margin: 0 0 4px 0;
+}
+
+.hub-card-sub {
+  font-size: 11.5px;
+  color: #94a3b8;
+  line-height: 1.4;
+  margin: 0 0 10px 0;
+}
+
+.hub-metrics-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.hub-metric-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #38bdf8;
+  box-shadow: 0 0 8px #38bdf8;
+}
+
+.hub-metric-dot.green {
+  background: #4ade80;
+  box-shadow: 0 0 8px #4ade80;
+}
+
+.hub-card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.hub-action-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.hub-action-btn.primary {
+  background: #38bdf8;
+  color: #042440;
+  border: none;
+}
+
+.hub-action-btn.primary:hover {
+  background: #7dd3fc;
+  transform: translateY(-1px);
+}
+
+.hub-action-btn.secondary {
+  background: rgba(255, 255, 255, 0.06);
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.hub-action-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+/* 4. Process Quality Gate Card */
+.process-quality-card {
+  position: absolute;
+  width: 295px;
+  background: #181a20;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+  z-index: 10;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.process-quality-card:hover {
+  transform: translateY(-4px) rotate(-1deg) scale(1.02) !important;
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(74, 222, 128, 0.4);
+}
+
+.quality-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.quality-gate-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.quality-score-badge {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #4ade80;
+  background: rgba(74, 222, 128, 0.12);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  padding: 2px 6px;
+  border-radius: 999px;
+}
+
+.quality-checklist-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.quality-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #cbd5e1;
+}
+
+.quality-item .check-icon {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  background: rgba(74, 222, 128, 0.2);
+  color: #4ade80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+/* 5. Process Terminal CI Card */
+.process-terminal-card {
+  position: absolute;
+  width: 300px;
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+  z-index: 10;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.process-terminal-card:hover {
+  transform: translateY(-4px) rotate(1.5deg) scale(1.02) !important;
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(168, 85, 247, 0.4);
+}
+
+.terminal-card-topbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.terminal-dots {
+  display: flex;
+  gap: 5px;
+}
+
+.terminal-dots .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.terminal-dots .dot.red { background: #ef4444; }
+.terminal-dots .dot.yellow { background: #eab308; }
+.terminal-dots .dot.green { background: #22c55e; }
+
+.terminal-title {
+  font-size: 11px;
+  font-family: monospace;
+  color: #94a3b8;
+}
+
+.terminal-card-body {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: 'SF Mono', Consolas, Menlo, monospace;
+  font-size: 10.5px;
+  line-height: 1.4;
+}
+
+.term-code-line {
+  color: #e2e8f0;
+}
+
+.term-code-line .term-prompt {
+  color: #38bdf8;
+  margin-right: 4px;
+}
+
+/* 6. Wireframe mode overrides for Process & Plugins stages */
+.wireframe-mode-stage .process-center-hub-card,
+.wireframe-mode-stage .plugins-center-hub-card,
+.wireframe-mode-stage .process-quality-card,
+.wireframe-mode-stage .process-terminal-card {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1.5px dashed #38bdf8 !important;
+  box-shadow: none !important;
+}
+
+.wireframe-mode-stage .hub-graphic-container {
+  background: transparent !important;
+  border: 1px dashed rgba(255, 255, 255, 0.2) !important;
 }
