@@ -250,12 +250,84 @@ const TrashApp = ({ onClose, onOpenApp }) => {
   const [isShredding, setIsShredding] = useState(false);
   const [bannerNotice, setBannerNotice] = useState(null);
 
-  // 1. Initial Mount: clean up any active timers or balloons
+  // Clippy Assistant & Auto-Close States
+  const [aiCountdown, setAiCountdown] = useState(6);
+  const [isAICountdownCancelled, setIsAICountdownCancelled] = useState(false);
+  const countdownTimerRef = useRef(null);
+
+  // 1. Initial Mount: Clippy welcomes user & auto-close countdown is initiated
   useEffect(() => {
+    playAIChime();
+    const msg = "It looks like you opened the Trash! 📎 You are not here to see my trash! 👀 You're here to explore my portfolio and hire me! Auto-closing in 6s...";
+    window.dispatchEvent(new CustomEvent('varunos-clippy-speak', {
+      detail: {
+        text: msg,
+        animation: "GetAttention",
+        highlightDuration: 6000,
+        hold: false,
+        actions: [
+          { label: "View Portfolio (Figma) →", primary: true, appId: "figma" },
+          { label: "View Resume", appId: "resume" }
+        ]
+      }
+    }));
     return () => {
+      if (countdownTimerRef.current) clearTimeout(countdownTimerRef.current);
       window.dispatchEvent(new CustomEvent('varunos-clippy-hide'));
     };
   }, []);
+
+  // 2. Auto-close countdown effect: ticks down from 6s to 0s, then redirects to portfolio
+  useEffect(() => {
+    if (isAICountdownCancelled) {
+      if (countdownTimerRef.current) clearTimeout(countdownTimerRef.current);
+      return;
+    }
+
+    if (aiCountdown <= 0) {
+      if (countdownTimerRef.current) clearTimeout(countdownTimerRef.current);
+      handleAutoClose();
+      return;
+    }
+
+    countdownTimerRef.current = setTimeout(() => {
+      setAiCountdown(prev => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+
+    return () => {
+      if (countdownTimerRef.current) clearTimeout(countdownTimerRef.current);
+    };
+  }, [aiCountdown, isAICountdownCancelled]);
+
+  const handleAutoClose = () => {
+    playAIChime();
+    window.dispatchEvent(new CustomEvent('varunos-clippy-speak', {
+      detail: {
+        text: "Closing Trash! Let's explore Varun's real work in Figma and Projects! 📎",
+        animation: "Explain",
+        highlightDuration: 4000,
+        hold: false
+      }
+    }));
+    if (onClose) {
+      onClose();
+    }
+    setTimeout(() => {
+      if (onOpenApp) {
+        onOpenApp('figma');
+      }
+    }, 300);
+  };
+
+  const cancelAICountdown = () => {
+    if (countdownTimerRef.current) clearTimeout(countdownTimerRef.current);
+    setIsAICountdownCancelled(true);
+  };
+
+  const resumeAICountdown = () => {
+    setIsAICountdownCancelled(false);
+    setAiCountdown(6);
+  };
 
   const filteredItems = items.filter(item => 
     item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -328,28 +400,22 @@ const TrashApp = ({ onClose, onOpenApp }) => {
   const handleItemDoubleClick = (item) => {
     setActivePreviewItem(item);
     playAIChime();
+    window.dispatchEvent(new CustomEvent('varunos-clippy-speak', {
+      detail: {
+        text: `Inspecting ${item.name}! 📎 You're here to explore my portfolio and hire me!`,
+        animation: "Explain",
+        highlightDuration: 6000,
+        hold: false,
+        actions: [
+          { label: "Open Portfolio (Figma) →", primary: true, appId: "figma" },
+          { label: "Open Resume", appId: "resume" }
+        ]
+      }
+    }));
   };
 
   // Clippy close sequence
-  const startClippyCloseSequence = () => {
-    playAIChime();
-    window.dispatchEvent(new CustomEvent('varunos-clippy-speak', {
-      detail: {
-        text: "Closing Trash! Let's explore Varun's real work in Figma and Projects! 📎",
-        animation: "Explain",
-        highlightDuration: 4000,
-        hold: false
-      }
-    }));
-    if (onClose) {
-      onClose();
-    }
-    setTimeout(() => {
-      if (onOpenApp) {
-        onOpenApp('figma');
-      }
-    }, 300);
-  };
+  const startClippyCloseSequence = handleAutoClose;
 
   const renderItemIcon = (type, color) => {
     switch (type) {
@@ -444,26 +510,6 @@ const TrashApp = ({ onClose, onOpenApp }) => {
 
         {/* Action Buttons */}
         <div className="trash-toolbar-right">
-          <button
-            type="button"
-            className="trash-action-btn clippy-close-btn"
-            onClick={startClippyCloseSequence}
-            title="Ask Clippy to close Trash"
-          >
-            <Paperclip size={13} className="text-amber-400" />
-            <span>Ask Clippy to Close</span>
-          </button>
-
-          <button
-            type="button"
-            className="trash-action-btn coffee-btn"
-            onClick={() => window.dispatchEvent(new CustomEvent('varunos-open-coffee-modal'))}
-            title="Buy Varun a Coffee / Donate via UPI"
-          >
-            <Coffee size={13} className="coffee-icon-gold" />
-            <span>Buy Me a Coffee</span>
-          </button>
-
           {items.length > 0 ? (
             <button
               type="button"
@@ -486,6 +532,49 @@ const TrashApp = ({ onClose, onOpenApp }) => {
           )}
         </div>
       </header>
+
+      {/* Clippy Takeover Auto-Close Countdown Bar */}
+      <div className="clippy-takeover-bar">
+        <div className="clippy-takeover-info">
+          <Paperclip size={13} className={!isAICountdownCancelled ? "text-amber-400 animate-bounce" : "text-zinc-500"} />
+          {!isAICountdownCancelled ? (
+            <span>
+              Clippy auto-closing Trash in <strong>{aiCountdown}s</strong> to redirect to portfolio...
+            </span>
+          ) : (
+            <span className="text-zinc-400">Auto-close paused. Take your time browsing!</span>
+          )}
+        </div>
+        <div className="clippy-takeover-btns">
+          {!isAICountdownCancelled ? (
+            <button
+              type="button"
+              className="clippy-pause-btn"
+              onClick={cancelAICountdown}
+              title="Pause auto-close countdown"
+            >
+              Keep Browsing
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="clippy-pause-btn"
+              onClick={resumeAICountdown}
+              title="Resume auto-close countdown"
+            >
+              Resume Auto-Close
+            </button>
+          )}
+          <button
+            type="button"
+            className="clippy-close-now-btn"
+            onClick={handleAutoClose}
+            title="Close Trash now and open Portfolio"
+          >
+            📎 Close Now
+          </button>
+        </div>
+      </div>
 
       {/* Temporary Notice Banner */}
       {bannerNotice && (
@@ -653,13 +742,56 @@ const TrashApp = ({ onClose, onOpenApp }) => {
                 <span className="modal-tag-pill" style={{ borderColor: activePreviewItem.tagColor, color: activePreviewItem.tagColor }}>
                   {activePreviewItem.tag}
                 </span>
+
+                {/* Sleek Auto-Close Countdown Pill */}
+                <div className="modal-autoclose-pill">
+                  <Paperclip size={12} className={!isAICountdownCancelled ? "text-amber-400 animate-bounce" : "text-zinc-500"} />
+                  {!isAICountdownCancelled ? (
+                    <span className="autoclose-text">
+                      Auto-closing in <strong>{aiCountdown}s</strong>
+                    </span>
+                  ) : (
+                    <span className="autoclose-text paused">Auto-close paused</span>
+                  )}
+                  {!isAICountdownCancelled ? (
+                    <button
+                      type="button"
+                      className="modal-autoclose-toggle"
+                      onClick={cancelAICountdown}
+                      title="Pause auto-close countdown"
+                    >
+                      Keep Open
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="modal-autoclose-toggle resume"
+                      onClick={resumeAICountdown}
+                      title="Resume auto-close countdown"
+                    >
+                      Resume
+                    </button>
+                  )}
+                </div>
               </div>
 
               <div className="modal-footer-right">
+                <button
+                  type="button"
+                  className="modal-clippy-now-btn"
+                  onClick={handleAutoClose}
+                  title="Close Trash with Clippy"
+                >
+                  <Paperclip size={12} />
+                  <span>Close Now</span>
+                </button>
                 <button 
                   type="button" 
                   className="modal-done-btn"
-                  onClick={() => setActivePreviewItem(null)}
+                  onClick={() => {
+                    cancelAICountdown();
+                    setActivePreviewItem(null);
+                  }}
                 >
                   Done
                 </button>
