@@ -86,8 +86,22 @@ function App() {
     return () => window.removeEventListener('varunos-user-change', handleUserChange);
   }, []);
 
-  const [isIdle, setIsIdle] = useState(false);
+  const [isIdle, setIsIdle] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const search = window.location.search;
+      const hash = window.location.hash;
+      return search.includes('screensaver=true') || search.includes('sleep=true') || hash.includes('screensaver') || hash.includes('sleep');
+    }
+    return false;
+  });
   const idleTimerRef = useRef(null);
+
+  // Listen for sleep / screensaver trigger events (e.g. from MenuBar Apple menu or shortcut)
+  useEffect(() => {
+    const handleSleep = () => setIsIdle(true);
+    window.addEventListener('varunos:sleep', handleSleep);
+    return () => window.removeEventListener('varunos:sleep', handleSleep);
+  }, []);
 
   const handleSwarmComplete = () => {
     setSwarmStage(5);
@@ -118,6 +132,7 @@ function App() {
     window.addEventListener('keydown', resetIdleTimer);
     window.addEventListener('click', resetIdleTimer);
     window.addEventListener('scroll', resetIdleTimer);
+    window.addEventListener('touchstart', resetIdleTimer);
 
     return () => {
       if (idleTimerRef.current) {
@@ -127,6 +142,7 @@ function App() {
       window.removeEventListener('keydown', resetIdleTimer);
       window.removeEventListener('click', resetIdleTimer);
       window.removeEventListener('scroll', resetIdleTimer);
+      window.removeEventListener('touchstart', resetIdleTimer);
     };
   }, []);
 

@@ -395,6 +395,17 @@ const MenuBar = ({
                 <span className="dropdown-shortcut">↗</span>
               </button>
               <div className="apple-dropdown-divider" />
+              <button 
+                className="apple-dropdown-item" 
+                onClick={() => {
+                  setActiveMenu(null);
+                  window.dispatchEvent(new CustomEvent('varunos:sleep'));
+                }}
+              >
+                <Moon size={14} className="dropdown-icon" />
+                <span>Sleep / Screensaver</span>
+                <span className="dropdown-shortcut">⌥⌘S</span>
+              </button>
               <button className="apple-dropdown-item" onClick={handleRestart}>
                 <Power size={14} className="dropdown-icon" />
                 <span>Restart & Reboot Workspace...</span>
