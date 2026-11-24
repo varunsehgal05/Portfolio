@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef, Suspense, lazy } from 'react';
 import Desktop from './components/Desktop';
 import ScreenSaver from './components/ScreenSaver';
+import SwarmRebuildOverlay from './components/SwarmRebuildOverlay';
 import './index.css';
 
-const SwarmRebuildOverlay = lazy(() => import('./components/SwarmRebuildOverlay'));
 const AdminPortal = lazy(() => import('./components/AdminPortal'));
 
 const IDLE_TIMEOUT = 180000; // 3 minutes
@@ -56,11 +56,15 @@ function App() {
       window.removeEventListener('keydown', handleShortcut);
     };
   }, []);
-  const isRebuildRequested = typeof window !== 'undefined' && Boolean(new URLSearchParams(window.location.search).get('rebuild'));
-  // Default to 'ready' for ultra-fast instant desktop rendering (<100ms FCP/LCP, 0 TBT, 100 Lighthouse performance);
-  // Swarm rebuild runs when ?rebuild=true is in URL or when user clicks 'Swarm Rebuild' in MenuBar
-  const [bootState, setBootState] = useState(() => isRebuildRequested ? 'swarm' : 'ready');
-  const [swarmStage, setSwarmStage] = useState(() => isRebuildRequested ? 0 : 5);
+  const isSkipRequested = typeof window !== 'undefined' && (
+    new URLSearchParams(window.location.search).get('skip') === 'true' ||
+    new URLSearchParams(window.location.search).get('ready') === 'true' ||
+    new URLSearchParams(window.location.search).get('norebuild') === 'true'
+  );
+  // Default to 'swarm' so on every reload/boot the swarm is active and dynamically builds the desktop environment;
+  // Can be bypassed with ?skip=true or ?ready=true
+  const [bootState, setBootState] = useState(() => isSkipRequested ? 'ready' : 'swarm');
+  const [swarmStage, setSwarmStage] = useState(() => isSkipRequested ? 5 : 0);
   const [rebuildKey, setRebuildKey] = useState(1);
   const [userName, setUserName] = useState(() => {
     try {
@@ -159,14 +163,12 @@ function App() {
 
       {/* 2. Swarm Rebuild Overlay Animation (on boot & replay) */}
       {bootState === 'swarm' && (
-        <Suspense fallback={null}>
-          <SwarmRebuildOverlay 
-            key={`rebuild-${rebuildKey}`}
-            userName={userName} 
-            onStageChange={setSwarmStage}
-            onComplete={handleSwarmComplete} 
-          />
-        </Suspense>
+        <SwarmRebuildOverlay 
+          key={`rebuild-${rebuildKey}`}
+          userName={userName} 
+          onStageChange={setSwarmStage}
+          onComplete={handleSwarmComplete} 
+        />
       )}
 
       {/* 3. Idle ScreenSaver */}
