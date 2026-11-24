@@ -1,7 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { 
-  Volume2, 
-  VolumeX, 
   Play, 
   Pause, 
   Calendar, 
@@ -338,7 +336,6 @@ const ScreenSaver = ({ isIdle, onWake }) => {
   const [isPlayingMusic, setIsPlayingMusic] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [fps, setFps] = useState(61);
   const containerRef = useRef(null);
   const hasAttemptedAutoplay = useRef(false);
   const enteredSleepTimeRef = useRef(0);
@@ -350,15 +347,6 @@ const ScreenSaver = ({ isIdle, onWake }) => {
     }, 1000);
     return () => clearInterval(interval);
   }, []);
-
-  // Frame FPS counter emulation (subtle oscillation between 60 and 62)
-  useEffect(() => {
-    if (!isIdle) return;
-    const fpsInterval = setInterval(() => {
-      setFps(60 + Math.floor(Math.random() * 3));
-    }, 2400);
-    return () => clearInterval(fpsInterval);
-  }, [isIdle]);
 
   // Connect Audio Engine State
   useEffect(() => {
@@ -502,45 +490,13 @@ const ScreenSaver = ({ isIdle, onWake }) => {
         </div>
 
         <div className="top-bar-center">
-          <span className="stat-pill sync-pill">100% Auto-save Synced</span>
           <span className="stat-pill vibecoder-pill">
             <Zap size={11} className="vibecoder-icon" />
             VIBECODER ENGINE
           </span>
-          <span className="stat-text hide-on-mobile">Canvas FPS: {fps}</span>
-          <button 
-            type="button" 
-            className={`stat-pill audio-pill-btn ${isPlayingMusic ? 'playing' : 'muted'}`}
-            onClick={toggleMusic}
-            title={isPlayingMusic ? 'Mute Lofi Music' : 'Play Lofi Music'}
-          >
-            {isPlayingMusic ? <Volume2 size={12} /> : <VolumeX size={12} />}
-            <span>Audio: {isPlayingMusic ? 'Live (Playing)' : 'Idle (Muted)'}</span>
-          </button>
-          <span className="stat-text hide-on-mobile hide-on-tablet">Tokens: 4,812 / 8k ctx</span>
         </div>
 
         <div className="top-bar-right">
-          {/* User Multi-Collaborator Avatars */}
-          <div className="collaborator-avatars">
-            <span className="collab-avatar vs" title="Varun Sehgal (Lead)">VS</span>
-            <span className="collab-avatar elena" title="Elena (Product)">E</span>
-            <span className="collab-avatar marcus" title="Marcus (Dev)">M</span>
-            <span className="collab-more">+4</span>
-          </div>
-
-          <button 
-            type="button" 
-            className="top-bar-btn live-state-btn"
-            onClick={(e) => {
-              e.stopPropagation();
-              toggleMusic(e);
-            }}
-          >
-            <Zap size={12} />
-            <span>Live State</span>
-          </button>
-
           <button 
             type="button" 
             className="top-bar-btn icon-btn"
