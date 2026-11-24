@@ -7,7 +7,6 @@ import {
   Calendar, 
   Maximize2, 
   Minimize2, 
-  Sparkles, 
   Headphones, 
   Zap, 
   Terminal,
@@ -15,8 +14,7 @@ import {
   PenTool,
   Type,
   Square,
-  MessageSquare,
-  GitCommit
+  MessageSquare
 } from 'lucide-react';
 import './ScreenSaver.css';
 
@@ -672,24 +670,16 @@ const ScreenSaver = ({ isIdle, onWake }) => {
           </button>
         </div>
 
-        {/* 4. BELOW-FRAME INSPECT TAGS & AUDIO CONTROLS */}
+        {/* 4. BELOW-FRAME MUSIC PILL (Cleaned per user request: only the music pill remains, no pause button) */}
         <div className="below-frame-container" onClick={(e) => e.stopPropagation()}>
-          {/* Attached Cursor & Inspect Pills */}
-          <div className="below-inspect-row">
-            <div className="inspect-pill blue">
-              <span className="inspect-dot blue"></span>
-              <span>border-radius: 16px | shadow: ambient-blue</span>
-            </div>
-            <div className="inspect-pill green">
-              <span className="inspect-dot green"></span>
-              <span>Marcus (Dev) &apos;AST synced 100%&apos;</span>
-            </div>
-          </div>
-
-          {/* Controls Row: Lo-Fi Music Player + GPU Status */}
           <div className="below-controls-row">
-            {/* Interactive Lo-Fi Audio Player Pill */}
-            <div className="lofi-player-pill">
+            {/* Ambient Lo-Fi Audio Pill */}
+            <div 
+              className="lofi-player-pill" 
+              onClick={nextTrack}
+              title="Click to cycle Lo-Fi track"
+              style={{ cursor: 'pointer' }}
+            >
               <Headphones size={13} className="lofi-headphone-icon" />
               
               {/* Visualizer Sound Wave Bars */}
@@ -700,42 +690,9 @@ const ScreenSaver = ({ isIdle, onWake }) => {
                 <span className={`sound-bar ${isPlayingMusic ? 'playing' : ''}`}></span>
               </div>
 
-              <span className="lofi-track-title" onClick={nextTrack} title="Click to change track">
+              <span className="lofi-track-title">
                 Track: {currentTrack.title}
               </span>
-
-              <button 
-                type="button" 
-                className="lofi-more-btn"
-                onClick={nextTrack}
-                title="Next Lofi Track"
-              >
-                ...
-              </button>
-
-              <button 
-                type="button" 
-                className={`lofi-play-btn ${isPlayingMusic ? 'is-playing' : ''}`}
-                onClick={toggleMusic}
-                title={isPlayingMusic ? 'Pause Lofi Music' : 'Play Lofi Music'}
-              >
-                {isPlayingMusic ? <Pause size={10} /> : <Play size={10} />}
-                <span>{isPlayingMusic ? 'PAUSE' : 'PLAY'}</span>
-              </button>
-            </div>
-
-            {/* GPU Acceleration Badge */}
-            <div className="gpu-stat-pill">
-              <Sparkles size={12} className="gpu-icon" />
-              <span>GPU Acceleration: Metal WebGL 2.0</span>
-            </div>
-          </div>
-
-          {/* Git Commit Hash Pill */}
-          <div className="below-commit-row">
-            <div className="commit-hash-pill">
-              <GitCommit size={12} className="commit-icon" />
-              <span>Commit: f7a90b4 (main)</span>
             </div>
           </div>
         </div>
