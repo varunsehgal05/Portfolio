@@ -176,8 +176,7 @@ const CERTIFICATIONS = [
     title: 'HAckeThor 1st Runner-Up (2nd Place)',
     issuer: 'Unstop',
     date: 'Apr 2025',
-    credentialId: 'd883bbf5-5d9f-43e9-a417-21a4f009f4ff',
-    link: 'https://unstop.com/competitions/hackethor',
+    link: 'https://www.linkedin.com/posts/pushkar-chaturvedi-a83778284_hackathon2025-codeconquerors-aiineducation-activity-7335535096017375236-DBk_',
     desc: 'Awarded 1st runner-up (2nd place) in national competitive hackathon for rapid UX prototyping, interactive user testing, and AI tool integration.'
   },
   {
@@ -309,8 +308,7 @@ const TIMELINE_ACTIVITY = [
     titleRest: 'awarded 2nd Place / 1st Runner-Up by Unstop',
     desc: 'Awarded 1st runner-up (2nd place) in national competitive hackathon demonstrating rapid UX prototyping, interactive user testing, and AI tool integration under high pressure.',
     award: '🥈 1st Runner-Up (2nd Place)',
-    credentialId: 'd883bbf5-5d9f-43e9-a417-21a4f009f4ff',
-    link: 'https://unstop.com/competitions/hackethor',
+    link: 'https://www.linkedin.com/posts/pushkar-chaturvedi-a83778284_hackathon2025-codeconquerors-aiineducation-activity-7335535096017375236-DBk_',
     actionLabel: 'Verify Credential'
   },
   {
@@ -2973,28 +2971,13 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                       className="figjam-action-chip"
                       onClick={(e) => {
                         e.stopPropagation();
-                        window.open('https://unstop.com', '_blank', 'noopener,noreferrer');
-                        showToast('Opening Unstop Credential Verification...');
+                        window.open('https://www.linkedin.com/posts/pushkar-chaturvedi-a83778284_hackathon2025-codeconquerors-aiineducation-activity-7335535096017375236-DBk_', '_blank', 'noopener,noreferrer');
+                        showToast('Opening Hackathon Post on LinkedIn...');
                       }}
-                      title="Verify Credential on Unstop"
+                      title="Verify Hackathon Post on LinkedIn"
                     >
                       <ExternalLink size={11} />
                       <span>Verify Credential</span>
-                    </button>
-                    <button
-                      type="button"
-                      className="figjam-action-chip"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (navigator.clipboard) {
-                          navigator.clipboard.writeText('d883bbf5-5d9f-43e9-a417-21a4f009f4ff');
-                        }
-                        showToast('Copied Credential ID: d883bbf5-5d9f-43e9-a417-21a4f009f4ff');
-                      }}
-                      title="Copy Credential ID"
-                    >
-                      <Copy size={11} />
-                      <span>Copy ID</span>
                     </button>
                   </div>
                   <div className="figjam-sticky-footer">

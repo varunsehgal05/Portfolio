@@ -25,9 +25,6 @@ import {
   Clock,
   Trophy,
   Award,
-  Copy,
-  Check,
-  ShieldCheck,
   Zap
 } from 'lucide-react';
 import './DeviceHomeScreen.css';
@@ -135,7 +132,6 @@ const DeviceHomeScreen = ({
   activeWallpaper = null
 }) => {
   const [time, setTime] = useState(new Date());
-  const [copiedId, setCopiedId] = useState(false);
   const [dynamicIslandExpanded, setDynamicIslandExpanded] = useState(false);
   const [cmsApps, setCmsApps] = useState(() => getLiveAppsConfig().appMap);
 
@@ -183,16 +179,6 @@ const DeviceHomeScreen = ({
       e.stopPropagation();
     }
     window.dispatchEvent(new CustomEvent('varunos:sleep'));
-  };
-
-  const handleCopyCredential = (e) => {
-    if (e) e.stopPropagation();
-    const credId = 'd883bbf5-5d9f-43e9-a417-21a49009f4ff';
-    if (navigator?.clipboard?.writeText) {
-      navigator.clipboard.writeText(credId);
-    }
-    setCopiedId(true);
-    setTimeout(() => setCopiedId(false), 2400);
   };
 
   const dockApps = mode === 'mobile' ? DOCK_APP_IDS.mobile : DOCK_APP_IDS.tablet;
@@ -442,26 +428,18 @@ const DeviceHomeScreen = ({
                     <Award size={12} />
                     <span>1st Runner-Up (2nd Place)</span>
                   </span>
-                  <span className="cred-pill-id">
-                    ID: d883bbf5-5d9f-43e9-a417-21a49009f4ff
-                  </span>
                 </div>
                 <div className="milestone-actions">
                   <button
                     className="milestone-btn primary"
-                    onClick={() => handleAppClick('finder')}
-                    title="View Verified Hackathon Credential"
+                    onClick={(e) => {
+                      if (e) e.stopPropagation();
+                      window.open('https://www.linkedin.com/posts/pushkar-chaturvedi-a83778284_hackathon2025-codeconquerors-aiineducation-activity-7335535096017375236-DBk_', '_blank', 'noopener,noreferrer');
+                    }}
+                    title="Open Hackathon Post on LinkedIn"
                   >
-                    <ShieldCheck size={13} />
+                    <ExternalLink size={13} />
                     <span>Verify Credential</span>
-                  </button>
-                  <button
-                    className={`milestone-btn ${copiedId ? 'copied' : ''}`}
-                    onClick={handleCopyCredential}
-                    title="Copy Credential ID"
-                  >
-                    {copiedId ? <Check size={13} color="#22c55e" /> : <Copy size={13} />}
-                    <span>{copiedId ? 'Copied ID ✓' : 'Copy ID'}</span>
                   </button>
                 </div>
               </div>
