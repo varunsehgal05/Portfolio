@@ -306,19 +306,84 @@ const KittuResumeApp = ({
       typeText('🥈 1st Runner-Up', setTypedStat3, 40, 25);
     }, 4500);
 
-    // 8. Top section complete! Cursors rest cleanly; no auto-triggering lower sections
+    // 8. Top section complete -> 4 Swarm agents smoothly finalize top frame
     schedule(() => {
       setBuildStage(7);
       setActiveSelection(null);
       setActiveGuides([]);
       const statBox = getBox('.cv-stats li:nth-child(2)', { x: 372, y: 460, w: 320, h: 85 });
       set4Swarm({
-        elena: { x: statBox.x - 60, y: statBox.y + statBox.h + 35, tool: '✓', role: 'Framing' },
-        alex: { x: statBox.x + 50, y: statBox.y + statBox.h + 35, tool: 'V', role: 'Layout' },
-        sarah: { x: statBox.x + 170, y: statBox.y + statBox.h + 35, tool: '❖', role: 'Stamping' },
-        varun: { x: statBox.x + 290, y: statBox.y + statBox.h + 35, tool: '↓', role: 'Typing' }
+        elena: { x: statBox.x - 60, y: statBox.y + statBox.h + 20, tool: '✓', role: 'Framing' },
+        alex: { x: statBox.x + 50, y: statBox.y + statBox.h + 20, tool: '✓', role: 'Layout' },
+        sarah: { x: statBox.x + 170, y: statBox.y + statBox.h + 20, tool: '✓', role: 'Stamping' },
+        varun: { x: statBox.x + 290, y: statBox.y + statBox.h + 20, tool: '✓', role: 'Typing' }
       });
-    }, 5300);
+    }, 5100);
+
+    // 8b. Swarm smoothly glides down and fades out
+    schedule(() => {
+      const statBox = getBox('.cv-stats li:nth-child(2)', { x: 372, y: 460, w: 320, h: 85 });
+      set4Swarm({
+        elena: { x: statBox.x - 60, y: statBox.y + statBox.h + 40, tool: '✓', role: 'Framing', opacity: 0 },
+        alex: { x: statBox.x + 50, y: statBox.y + statBox.h + 40, tool: '✓', role: 'Layout', opacity: 0 },
+        sarah: { x: statBox.x + 170, y: statBox.y + statBox.h + 40, tool: '✓', role: 'Stamping', opacity: 0 },
+        varun: { x: statBox.x + 290, y: statBox.y + statBox.h + 40, tool: '✓', role: 'Typing', opacity: 0 }
+      });
+    }, 5450);
+
+    // 9. Seamlessly populate and smoothly reveal all sections: eliminates giant blank space, dismisses swarm cursors cleanly
+    schedule(() => {
+      setTypedWork({ 0: 'Product Design & Systems', 1: 'Tactile Hi-Fi Prototyping', 2: 'Design Engineering' });
+      setTypedTimeline('UI-UX Designer, UniEvent');
+      setTypedJobs({
+        0: 'UI-UX Designer, UniEvent',
+        1: 'Assistant Head of CODM Esports Operations',
+        2: 'Operation internship'
+      });
+      setTypedJobBullets({
+        '0_0': 'Designed campus event ticketing platform (EventFlow) from initial wireframes to high-fidelity clickable prototype.',
+        '1_0': 'Assisted in the planning and smooth execution of CODM tournaments and esports events.',
+        '2_0': 'Operations support, brand identities, and conversion-focused SaaS landing pages for 10+ tech startups.'
+      });
+      setTypedStudy({
+        0: 'B.Tech in Computer Science & Engineering',
+        1: '🥈 HACKeThor 1st Runner-Up (2nd Place)'
+      });
+      setTypedProjects({
+        0: 'CodeSrijan Hackathon Portal',
+        1: 'EventFlow Ticketing',
+        2: 'AI Interview Studio',
+        3: 'Expensify Budget',
+        4: 'Movie Tickets App',
+        5: 'SaaS Landing Pages'
+      });
+      setTypedProjectDescs({
+        0: 'Full-stack live hackathon platform designed for Jaypee University with team matchmaking & rubric evaluation.',
+        1: 'Campus event discovery & instant booking platform with 30% reduced drop-off.',
+        2: 'AI-driven technical interviewing platform with speech synthesis & scoring.',
+        3: 'Personal finance & expense manager with real-time analytics & graphs.',
+        4: 'Cinema ticketing & seat reservation flow with micro-interactions.',
+        5: 'High-converting responsive landing pages built for 10+ tech startups.'
+      });
+      setTypedEmail('varun.sehgal02@gmail.com');
+      setSectionsTriggered({
+        workOn: true,
+        timeline: true,
+        projects: true,
+        contact: true
+      });
+      sectionsTriggeredRef.current = {
+        workOn: true,
+        timeline: true,
+        projects: true,
+        contact: true
+      };
+      setBuildStage(24);
+      setIsBuilding(false);
+      setActiveCursors([]); // Dismiss swarm cursors so they do not get stuck
+      setActiveSelection(null);
+      setActiveGuides([]);
+    }, 5800);
   };
 
   // Progressive section builders triggered dynamically on scroll
@@ -813,6 +878,12 @@ const KittuResumeApp = ({
       return;
     }
 
+    const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+    if (searchParams && (searchParams.get('skip') === 'true' || searchParams.get('ready') === 'true')) {
+      skipBuild();
+      return;
+    }
+
     // Always start collaborative swarm build when loaded/mounted
     const timer = setTimeout(() => {
       buildTopSection();
@@ -959,7 +1030,8 @@ const KittuResumeApp = ({
                 style={{
                   position: 'absolute',
                   transform: `translate3d(${c.x}px, ${c.y}px, 0)`,
-                  transition: 'transform 0.45s cubic-bezier(0.2, 0.9, 0.3, 1)',
+                  opacity: c.opacity !== undefined ? c.opacity : 1,
+                  transition: 'transform 0.45s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.35s ease',
                   zIndex: 120
                 }}
               >

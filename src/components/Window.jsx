@@ -619,19 +619,6 @@ const Window = ({
                 <span className="stage-dot" />
                 <span className="stage-title">{app.title || app.name}</span>
               </div>
-
-              <div className="ipad-stage-actions" data-no-drag>
-                <button
-                  className="ipad-stage-done-btn"
-                  onClick={handleClose}
-                  onMouseDown={(e) => e.stopPropagation()}
-                  onTouchStart={(e) => e.stopPropagation()}
-                  title="Close and return to iPad Home Screen"
-                  type="button"
-                >
-                  Done
-                </button>
-              </div>
             </div>
           ) : (
             /* macOS Desktop Style Titlebar */
