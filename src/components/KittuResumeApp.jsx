@@ -14,7 +14,8 @@ const KittuResumeApp = ({
   onScrollToTop,
   isParentLoading = false,
   canvasPan = { x: 0, y: 0 },
-  canvasZoom = 1
+  canvasZoom = 1,
+  deviceMode = 'desktop'
 }) => {
   const [copied, setCopied] = useState(false);
   const [isBuilding, setIsBuilding] = useState(true);
@@ -800,6 +801,14 @@ const KittuResumeApp = ({
   }, [canvasPan?.y, canvasZoom, isBuilding]);
 
   const replayBuild = () => {
+    const isMobileOrTablet = deviceMode === 'tablet' || deviceMode === 'mobile' || (typeof window !== 'undefined' && (
+      window.innerWidth <= 1024 ||
+      /iPad|iPhone|iPod|Android/i.test(navigator.userAgent)
+    ));
+    if (isMobileOrTablet) {
+      skipBuild();
+      return;
+    }
     isReplayingRef.current = true;
     buildTopSection();
     if (onScrollToTop) {
@@ -879,7 +888,11 @@ const KittuResumeApp = ({
     }
 
     const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
-    if (searchParams && (searchParams.get('skip') === 'true' || searchParams.get('ready') === 'true')) {
+    const isMobileOrTablet = deviceMode === 'tablet' || deviceMode === 'mobile' || (typeof window !== 'undefined' && (
+      window.innerWidth <= 1024 ||
+      /iPad|iPhone|iPod|Android/i.test(navigator.userAgent)
+    ));
+    if ((searchParams && (searchParams.get('skip') === 'true' || searchParams.get('ready') === 'true')) || isMobileOrTablet) {
       skipBuild();
       return;
     }

@@ -868,3 +868,13 @@
 .cv-footer p {
   font-size: 1.1rem;
 }
+
+@media (max-width: 1024px) {
+  .cv-cursor,
+  .cv-wire-guide {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+}

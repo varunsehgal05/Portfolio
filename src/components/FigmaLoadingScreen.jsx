@@ -51,7 +51,20 @@ const FigmaLoadingScreen = ({
     return () => clearTimeout(unmountTimer);
   }, []);
 
+  const isMobileOrTablet = typeof window !== 'undefined' && (
+    window.innerWidth <= 1024 ||
+    /iPad|iPhone|iPod|Android/i.test(navigator.userAgent)
+  );
+
   useEffect(() => {
+    if (isMobileOrTablet) {
+      completeLoading();
+    }
+  }, [isMobileOrTablet, completeLoading]);
+
+  useEffect(() => {
+    if (isMobileOrTablet) return;
+
     // Step transitions
     const step1 = setTimeout(() => setPhase(1), Math.min(220, duration * 0.3));
     const step2 = setTimeout(() => setPhase(2), Math.min(480, duration * 0.65));
@@ -84,7 +97,7 @@ const FigmaLoadingScreen = ({
     };
   }, [duration, completeLoading]);
 
-  if (isUnmounted) return null;
+  if (isUnmounted || isMobileOrTablet) return null;
 
   return (
     <div

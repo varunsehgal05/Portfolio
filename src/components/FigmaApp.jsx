@@ -622,7 +622,7 @@ const PAGE_LAYERS_MAP = {
   ]
 };
 
-const FigmaApp = ({ isInteracting, userName, onOpenApp }) => {
+const FigmaApp = ({ isInteracting, userName, onOpenApp, deviceMode = 'desktop' }) => {
   const [activeTab, setActiveTab] = useState('home'); // Guaranteed to open to home page first
   const [showAssets, setShowAssets] = useState(false);
   const [colorMenuOpen, setColorMenuOpen] = useState(false);
@@ -639,7 +639,14 @@ const FigmaApp = ({ isInteracting, userName, onOpenApp }) => {
   const [isWireframeMode, setIsWireframeMode] = useState(false);
   const [activeTool, setActiveTool] = useState('select'); // 'select' | 'hand'
   const [isSpacePressed, setIsSpacePressed] = useState(false);
-  const [isAppLoading, setIsAppLoading] = useState(true);
+  const [isAppLoading, setIsAppLoading] = useState(() => {
+    if (deviceMode === 'tablet' || deviceMode === 'mobile') return false;
+    if (typeof window !== 'undefined') {
+      const isMobileOrTablet = window.innerWidth <= 1024 || /iPad|iPhone|iPod|Android/i.test(navigator.userAgent);
+      if (isMobileOrTablet) return false;
+    }
+    return true;
+  });
   const startPanRef = useRef({ x: 0, y: 0 });
   const panRef = useRef({ x: 0, y: 0 });
   panRef.current = pan;
@@ -2995,6 +3002,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     canvasPan={pan}
                     canvasZoom={zoom}
                     onBack={() => setActiveTab('home')}
+                    deviceMode={deviceMode}
                     onScrollToTop={() => {
                       if (panRafRef.current) cancelAnimationFrame(panRafRef.current);
                       // Smoothly glide canvas pan back to top so user is dragged up to TOP-MID of notebook

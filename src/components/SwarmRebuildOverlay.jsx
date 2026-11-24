@@ -407,6 +407,13 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
   });
 
   useEffect(() => {
+    // If mounted on tablet/iPad/mobile, finish swarm immediately
+    if (typeof window !== 'undefined' && (window.innerWidth <= 1024 || /iPad|iPhone|iPod|Android/i.test(navigator.userAgent))) {
+      finishSwarm();
+    }
+  }, []);
+
+  useEffect(() => {
     const handleResize = () => {
       const newDims = { w: window.innerWidth, h: window.innerHeight };
       setDims(newDims);

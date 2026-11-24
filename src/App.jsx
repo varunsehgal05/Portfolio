@@ -120,11 +120,30 @@ function App() {
     new URLSearchParams(window.location.search).get('ready') === 'true' ||
     new URLSearchParams(window.location.search).get('norebuild') === 'true'
   );
-  // Default to 'swarm' so on every reload/boot the swarm is active and dynamically builds the desktop environment;
-  // Can be bypassed with ?skip=true or ?ready=true
-  const [bootState, setBootState] = useState(() => isSkipRequested ? 'ready' : 'swarm');
-  const [swarmStage, setSwarmStage] = useState(() => isSkipRequested ? 5 : 0);
+  const checkIsMobileOrTablet = () => {
+    if (typeof window === 'undefined') return false;
+    return window.innerWidth <= 1024 || /iPad|iPhone|iPod|Android/i.test(navigator.userAgent);
+  };
+  const isInitialMobileOrTablet = checkIsMobileOrTablet();
+  const shouldSkipSwarm = isSkipRequested || isInitialMobileOrTablet;
+
+  // Default to 'swarm' on desktop reload/boot so the swarm dynamically builds the desktop environment;
+  // Completely bypassed on iPad and mobile or with ?skip=true or ?ready=true
+  const [bootState, setBootState] = useState(() => shouldSkipSwarm ? 'ready' : 'swarm');
+  const [swarmStage, setSwarmStage] = useState(() => shouldSkipSwarm ? 5 : 0);
   const [rebuildKey, setRebuildKey] = useState(1);
+
+  // Auto-bypass swarm if window resized down to iPad/tablet/mobile viewport
+  useEffect(() => {
+    const handleResize = () => {
+      if (checkIsMobileOrTablet() && bootState === 'swarm') {
+        setBootState('ready');
+        setSwarmStage(5);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [bootState]);
   const [userName, setUserName] = useState(() => {
     try {
       return localStorage.getItem('varunos_user_name') || 'Varun';
@@ -198,6 +217,7 @@ function App() {
   };
 
   const handleReplaySwarm = () => {
+    if (checkIsMobileOrTablet()) return;
     setRebuildKey((k) => k + 1);
     setSwarmStage(0);
     setBootState('swarm');
@@ -257,8 +277,8 @@ function App() {
           isRebuilding={bootState === 'swarm'}
         />
 
-        {/* 2. Swarm Rebuild Overlay Animation (on boot & replay) */}
-        {bootState === 'swarm' && (
+        {/* 2. Swarm Rebuild Overlay Animation (on desktop boot & replay only - suppressed on iPad and mobile) */}
+        {bootState === 'swarm' && !checkIsMobileOrTablet() && (
           <SwarmRebuildOverlay 
             key={`rebuild-${rebuildKey}`}
             userName={userName} 

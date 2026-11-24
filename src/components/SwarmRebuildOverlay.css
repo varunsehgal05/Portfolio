@@ -836,3 +836,18 @@
 .swarm-hud-skip-btn:active {
   transform: translateY(0) scale(0.98);
 }
+
+@media (max-width: 1024px) {
+  .swarm-overlay-container,
+  .swarm-replica-agent,
+  .rebuild-cursor,
+  .swarm-ambient-grid,
+  .swarm-wireframe-canvas,
+  .swarm-status-pill,
+  .swarm-hud-bar {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+}

@@ -454,7 +454,7 @@ const Window = ({
       case 'finder':
         return <FinderApp onOpenApp={onOpenApp} isRebuilding={isRebuilding} />;
       case 'figma':
-        return <Suspense fallback={<div className="window-app-loading" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>Loading Figma Workspace...</div>}><FigmaApp isInteracting={isInteracting} userName={userName} onOpenApp={onOpenApp} /></Suspense>;
+        return <Suspense fallback={<div className="window-app-loading" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>Loading Figma Workspace...</div>}><FigmaApp isInteracting={isInteracting} userName={userName} onOpenApp={onOpenApp} deviceMode={deviceMode} /></Suspense>;
       case 'terminal':
         return <Suspense fallback={<div className="window-app-loading" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>Loading Terminal...</div>}><TerminalApp userName={userName} onOpenApp={onOpenApp} /></Suspense>;
       case 'settings':
