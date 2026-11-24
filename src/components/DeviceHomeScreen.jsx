@@ -159,7 +159,10 @@ const DeviceHomeScreen = ({
 
   // Immediate Sleep & Lo-Fi Screensaver Trigger
   const handleSleepTrigger = (e) => {
-    if (e) e.stopPropagation();
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     window.dispatchEvent(new CustomEvent('varunos:sleep'));
   };
 

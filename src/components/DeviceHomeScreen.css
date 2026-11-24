@@ -87,6 +87,11 @@
   font-size: 11px;
   font-weight: 600;
   cursor: pointer;
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 1002;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
   transition: all 0.18s ease;
 }
 
@@ -94,6 +99,11 @@
   background: rgba(255, 255, 255, 0.16);
   color: #38bdf8;
   border-color: rgba(56, 189, 248, 0.4);
+}
+
+.ipad-status-sleep-btn:active {
+  transform: scale(0.94);
+  background: rgba(255, 255, 255, 0.22);
 }
 
 .ipad-status-sleep-btn .sleep-icon {
@@ -277,6 +287,11 @@
   border-radius: 50%;
   color: #d8b4fe;
   cursor: pointer;
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 1002;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
   transition: all 0.18s ease;
   padding: 0;
 }
@@ -284,6 +299,11 @@
 .ios-status-sleep-btn:hover {
   background: rgba(255, 255, 255, 0.22);
   color: #ffffff;
+}
+
+.ios-status-sleep-btn:active {
+  transform: scale(0.92);
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .ios-signal-bars {

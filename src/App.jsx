@@ -157,14 +157,40 @@ function App() {
     }
     return false;
   });
+  const isIdleRef = useRef(isIdle);
+  isIdleRef.current = isIdle;
   const idleTimerRef = useRef(null);
+  const sleepGraceUntilRef = useRef(0);
 
-  // Listen for sleep / screensaver trigger events (e.g. from MenuBar Apple menu or shortcut)
+  // Listen for sleep / screensaver trigger events (e.g. from Lock button or MenuBar)
   useEffect(() => {
-    const handleSleep = () => setIsIdle(true);
+    const handleSleep = () => {
+      sleepGraceUntilRef.current = Date.now() + 800; // 800ms grace period to prevent triggering click/tap from waking immediately
+      if (idleTimerRef.current) {
+        clearTimeout(idleTimerRef.current);
+      }
+      isIdleRef.current = true;
+      setIsIdle(true);
+    };
+
     window.addEventListener('varunos:sleep', handleSleep);
     return () => window.removeEventListener('varunos:sleep', handleSleep);
   }, []);
+
+  const handleWakeFromSleep = () => {
+    if (Date.now() < sleepGraceUntilRef.current) {
+      return;
+    }
+    isIdleRef.current = false;
+    setIsIdle(false);
+    if (idleTimerRef.current) {
+      clearTimeout(idleTimerRef.current);
+    }
+    idleTimerRef.current = setTimeout(() => {
+      isIdleRef.current = true;
+      setIsIdle(true);
+    }, IDLE_TIMEOUT);
+  };
 
   const handleSwarmComplete = () => {
     setSwarmStage(5);
@@ -180,11 +206,21 @@ function App() {
   // Idle Detection
   useEffect(() => {
     const resetIdleTimer = () => {
+      // During sleep grace period, ignore all events to prevent immediate wake-up
+      if (Date.now() < sleepGraceUntilRef.current) {
+        return;
+      }
+      // If currently in screensaver/sleep, do NOT wake up on stray mousemove/scroll.
+      // Wake-up is managed exclusively by the ScreenSaver component's wake interaction.
+      if (isIdleRef.current) {
+        return;
+      }
+
       if (idleTimerRef.current) {
         clearTimeout(idleTimerRef.current);
       }
-      setIsIdle(false);
       idleTimerRef.current = setTimeout(() => {
+        isIdleRef.current = true;
         setIsIdle(true);
       }, IDLE_TIMEOUT);
     };
@@ -232,7 +268,7 @@ function App() {
         )}
 
         {/* 3. Idle ScreenSaver */}
-        <ScreenSaver isIdle={isIdle} onWake={() => setIsIdle(false)} />
+        <ScreenSaver isIdle={isIdle} onWake={handleWakeFromSleep} />
 
         {/* 4. Admin Portal (/varun_admin, #/varun_admin, or Ctrl+Alt+A) */}
         {isAdminRoute && (

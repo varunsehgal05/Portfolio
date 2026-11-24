@@ -343,6 +343,7 @@ const ScreenSaver = ({ isIdle, onWake }) => {
   const [fps, setFps] = useState(61);
   const containerRef = useRef(null);
   const hasAttemptedAutoplay = useRef(false);
+  const enteredSleepTimeRef = useRef(0);
 
   // Clock Ticker
   useEffect(() => {
@@ -371,6 +372,7 @@ const ScreenSaver = ({ isIdle, onWake }) => {
   // AUTO-PLAY LOFI MUSIC WHEN ENTERING SLEEP & STOP WHEN WAKING UP
   useEffect(() => {
     if (isIdle) {
+      enteredSleepTimeRef.current = Date.now();
       // Attempt auto-play when entering sleep
       const timer = setTimeout(() => {
         try {
@@ -394,7 +396,15 @@ const ScreenSaver = ({ isIdle, onWake }) => {
   }, [isIdle]);
 
   // Handle Wake Events: Keys, Clicks, or Taps on the background
-  const handleWake = useCallback(() => {
+  const handleWake = useCallback((e) => {
+    // Guard against immediate wake-up from the click/tap that triggered sleep (750ms debounce)
+    if (Date.now() - enteredSleepTimeRef.current < 750) {
+      if (e) {
+        e.stopPropagation();
+        e.preventDefault();
+      }
+      return;
+    }
     lofiEngine.stop();
     setIsPlayingMusic(false);
     onWake();
@@ -405,13 +415,13 @@ const ScreenSaver = ({ isIdle, onWake }) => {
 
     const handleKeyDown = (e) => {
       // Any key wakes up the screensaver
-      handleWake();
+      handleWake(e);
     };
 
-    // Delay slightly to prevent wake-up from the click that triggered sleep
+    // Delay slightly to prevent wake-up from the shortcut/key that triggered sleep
     const timeout = setTimeout(() => {
       window.addEventListener('keydown', handleKeyDown);
-    }, 150);
+    }, 400);
 
     return () => {
       clearTimeout(timeout);
@@ -478,7 +488,7 @@ const ScreenSaver = ({ isIdle, onWake }) => {
       ref={containerRef}
       className={`screensaver ${isIdle ? 'active' : ''}`}
       onClick={handleWake}
-      onTouchStart={handleWake}
+      onTouchEnd={handleWake}
       role="dialog"
       aria-modal="true"
       aria-label="Figma Screensaver Idle Mode"

@@ -395,7 +395,11 @@ const MenuBar = ({
               <div className="apple-dropdown-divider" />
               <button 
                 className="apple-dropdown-item" 
-                onClick={() => {
+                onClick={(e) => {
+                  if (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }
                   setActiveMenu(null);
                   window.dispatchEvent(new CustomEvent('varunos:sleep'));
                 }}
