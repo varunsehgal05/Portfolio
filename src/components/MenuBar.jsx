@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { format } from 'date-fns';
+import { isMobileOrTabletDevice } from '../utils/deviceDetection';
 import {
   Wifi,
   Battery,
@@ -229,6 +230,7 @@ const MenuBar = ({
 
   const handleTriggerSwarm = () => {
     setActiveMenu(null);
+    if (isMobileOrTabletDevice() || effectiveDeviceMode !== 'desktop') return;
     if (onReplaySwarm) {
       onReplaySwarm();
     }
@@ -363,12 +365,16 @@ const MenuBar = ({
                 <Sliders size={14} className="dropdown-icon" />
                 <span>System Settings...</span>
               </button>
-              <div className="apple-dropdown-divider" />
-              <button className="apple-dropdown-item primary-action" onClick={handleTriggerSwarm}>
-                <Sparkles size={14} className="dropdown-icon sparkle-icon" />
-                <span>Replay Swarm Rebuild</span>
-                <span className="dropdown-shortcut">⌘R</span>
-              </button>
+              {effectiveDeviceMode === 'desktop' && !isMobileOrTabletDevice() && (
+                <>
+                  <div className="apple-dropdown-divider" />
+                  <button className="apple-dropdown-item primary-action" onClick={handleTriggerSwarm}>
+                    <Sparkles size={14} className="dropdown-icon sparkle-icon" />
+                    <span>Replay Swarm Rebuild</span>
+                    <span className="dropdown-shortcut">⌘R</span>
+                  </button>
+                </>
+              )}
               <div className="apple-dropdown-divider" />
               <button
                 className="apple-dropdown-item coffee-action-item"
@@ -543,12 +549,16 @@ const MenuBar = ({
                 {currentTheme === 'light' ? <Moon size={14} className="dropdown-icon" /> : <Sun size={14} className="dropdown-icon" />}
                 <span>Toggle {currentTheme === 'light' ? 'Dark' : 'Light'} Mode</span>
               </button>
-              <div className="apple-dropdown-divider" />
-              <button className="apple-dropdown-item" onClick={handleTriggerSwarm}>
-                <Sparkles size={14} className="dropdown-icon sparkle-icon" />
-                <span>Re-run Swarm Physics</span>
-                <span className="dropdown-shortcut">⌘R</span>
-              </button>
+              {effectiveDeviceMode === 'desktop' && !isMobileOrTabletDevice() && (
+                <>
+                  <div className="apple-dropdown-divider" />
+                  <button className="apple-dropdown-item" onClick={handleTriggerSwarm}>
+                    <Sparkles size={14} className="dropdown-icon sparkle-icon" />
+                    <span>Re-run Swarm Physics</span>
+                    <span className="dropdown-shortcut">⌘R</span>
+                  </button>
+                </>
+              )}
               <button className="apple-dropdown-item" onClick={() => { setActiveMenu(null); handleToggleSwarmFollow(); }}>
                 <Sparkles size={14} className="dropdown-icon text-sky-400" />
                 <span>{isSwarmFollow ? "Turn Off Swarm Follow" : "Turn On Swarm Follow"}</span>
@@ -744,11 +754,13 @@ const MenuBar = ({
                 <span>Hardware & System Specs</span>
               </button>
 
-              <button className="apple-dropdown-item" onClick={handleTriggerSwarm}>
-                <Sparkles size={14} className="dropdown-icon sparkle-icon" />
-                <span>Replay Swarm Rebuild</span>
-                <span className="dropdown-shortcut">⌘R</span>
-              </button>
+              {effectiveDeviceMode === 'desktop' && !isMobileOrTabletDevice() && (
+                <button className="apple-dropdown-item" onClick={handleTriggerSwarm}>
+                  <Sparkles size={14} className="dropdown-icon sparkle-icon" />
+                  <span>Replay Swarm Rebuild</span>
+                  <span className="dropdown-shortcut">⌘R</span>
+                </button>
+              )}
 
               <div className="apple-dropdown-divider" />
 
@@ -842,16 +854,18 @@ const MenuBar = ({
           )}
         </div>
 
-        {/* Swarm Rebuild Trigger */}
-        <button
-          className="menu-swarm-replay-btn"
-          aria-label="Swarm Rebuild"
-          onClick={handleTriggerSwarm}
-          title="Replay Swarm Rebuild Animation"
-        >
-          <Sparkles size={12} />
-          <span>Swarm Rebuild</span>
-        </button>
+        {/* Swarm Rebuild Trigger - STRICTLY Laptop/Desktop Only (Removed for mobile and iPad) */}
+        {effectiveDeviceMode === 'desktop' && !isMobileOrTabletDevice() && (
+          <button
+            className="menu-swarm-replay-btn"
+            aria-label="Swarm Rebuild"
+            onClick={handleTriggerSwarm}
+            title="Replay Swarm Rebuild Animation"
+          >
+            <Sparkles size={12} />
+            <span>Swarm Rebuild</span>
+          </button>
+        )}
 
         {/* Quick Light/Dark Mode Switcher */}
         <button

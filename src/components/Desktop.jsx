@@ -7,6 +7,7 @@ import DeviceHomeScreen from './DeviceHomeScreen';
 import { portfolioApps, desktopIconIds } from '../config/apps';
 import { desktopWallpapers, getDeviceWallpaper } from '../config/wallpapers';
 import { getLiveAppsConfig } from '../utils/portfolioCMS';
+import { getEffectiveDeviceMode, isMobileOrTabletDevice } from '../utils/deviceDetection';
 import LiveMouseSwarm from './LiveMouseSwarm';
 import './Desktop.css';
 
@@ -79,8 +80,8 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Automatically switches to mobile (<=640px), tablet (<=1024px), or desktop (>1024px)
-  const effectiveDeviceMode = windowWidth <= 640 ? 'mobile' : (windowWidth <= 1024 ? 'tablet' : 'desktop');
+  // Automatically switches to mobile (<=640px or phone), tablet (<=1024px or iPad), or desktop (>1024px)
+  const effectiveDeviceMode = getEffectiveDeviceMode(windowWidth);
 
   useEffect(() => {
     if (isFullScreenActive) {
@@ -389,8 +390,9 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
     }
   };
 
-  // Replay Swarm Rebuild handler guaranteeing clean workspace & Finder is open
+  // Replay Swarm Rebuild handler guaranteeing clean workspace & Finder is open (desktop only)
   const handleInternalReplaySwarm = () => {
+    if (isMobileOrTabletDevice()) return;
     if (typeof window !== 'undefined') {
       window.__varunos_finder_step = 0;
       window.__varunos_sidebar_step = 0;

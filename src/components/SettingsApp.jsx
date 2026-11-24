@@ -11,6 +11,7 @@ import {
   Palette
 } from 'lucide-react';
 import { desktopWallpapers, terminalWallpapers } from '../config/wallpapers';
+import { isMobileOrTabletDevice } from '../utils/deviceDetection';
 import './SettingsApp.css';
 
 const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
@@ -578,22 +579,24 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
                 </button>
               </div>
 
-              {/* Option 2: Replay Reconstruction */}
-              <div className="settings-row">
-                <div className="settings-row-text">
-                  <span className="row-title">Replay Swarm Reconstruction</span>
-                  <span className="row-sub">Full 5-phase animation deconstructing and live-rebuilding the entire desktop</span>
+              {/* Option 2: Replay Reconstruction (Laptop / Desktop only) */}
+              {!isMobileOrTabletDevice() && (
+                <div className="settings-row">
+                  <div className="settings-row-text">
+                    <span className="row-title">Replay Swarm Reconstruction</span>
+                    <span className="row-sub">Full 5-phase animation deconstructing and live-rebuilding the entire desktop</span>
+                  </div>
+                  <button
+                    className="settings-action-btn primary"
+                    onClick={() => {
+                      if (onReplaySwarm) onReplaySwarm();
+                    }}
+                  >
+                    <RotateCcw size={13} />
+                    <span>Replay Now</span>
+                  </button>
                 </div>
-                <button
-                  className="settings-action-btn primary"
-                  onClick={() => {
-                    if (onReplaySwarm) onReplaySwarm();
-                  }}
-                >
-                  <RotateCcw size={13} />
-                  <span>Replay Now</span>
-                </button>
-              </div>
+              )}
 
               <div className="settings-row">
                 <div className="settings-row-text">

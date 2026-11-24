@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef, Suspense, lazy } from 'react';
 import Desktop from './components/Desktop';
 import ScreenSaver from './components/ScreenSaver';
 import SwarmRebuildOverlay from './components/SwarmRebuildOverlay';
+import DeviceLoadingScreen from './components/DeviceLoadingScreen';
+import { isMobileOrTabletDevice, getEffectiveDeviceMode } from './utils/deviceDetection';
 import './index.css';
 
 const AdminPortal = lazy(() => import('./components/AdminPortal'));
@@ -127,23 +129,26 @@ function App() {
     new URLSearchParams(window.location.search).get('ready') === 'true' ||
     new URLSearchParams(window.location.search).get('norebuild') === 'true'
   );
-  const checkIsMobileOrTablet = () => {
-    if (typeof window === 'undefined') return false;
-    return window.innerWidth <= 1024 || /iPad|iPhone|iPod|Android/i.test(navigator.userAgent);
-  };
-  const isInitialMobileOrTablet = checkIsMobileOrTablet();
-  const shouldSkipSwarm = isSkipRequested || isInitialMobileOrTablet;
+  const isInitialMobileOrTablet = isMobileOrTabletDevice();
 
-  // Default to 'swarm' on desktop reload/boot so the swarm dynamically builds the desktop environment;
-  // Completely bypassed on iPad and mobile or with ?skip=true or ?ready=true
-  const [bootState, setBootState] = useState(() => shouldSkipSwarm ? 'ready' : 'swarm');
-  const [swarmStage, setSwarmStage] = useState(() => shouldSkipSwarm ? 5 : 0);
+  // Swarm rebuild runs ONLY on laptop/desktop boot/refresh.
+  // On mobile & iPad, bootState starts as 'device-loading' showing the sleek iOS/iPadOS boot screen,
+  // completely bypassing the desktop swarm rebuild animation.
+  const [bootState, setBootState] = useState(() => {
+    if (isSkipRequested) return 'ready';
+    if (isInitialMobileOrTablet) return 'device-loading';
+    return 'swarm';
+  });
+  const [swarmStage, setSwarmStage] = useState(() => {
+    if (isSkipRequested || isInitialMobileOrTablet) return 5;
+    return 0;
+  });
   const [rebuildKey, setRebuildKey] = useState(1);
 
   // Auto-bypass swarm if window resized down to iPad/tablet/mobile viewport
   useEffect(() => {
     const handleResize = () => {
-      if (checkIsMobileOrTablet() && bootState === 'swarm') {
+      if (isMobileOrTabletDevice() && bootState === 'swarm') {
         setBootState('ready');
         setSwarmStage(5);
       }
@@ -224,7 +229,7 @@ function App() {
   };
 
   const handleReplaySwarm = () => {
-    if (checkIsMobileOrTablet()) return;
+    if (isMobileOrTabletDevice()) return;
     setRebuildKey((k) => k + 1);
     setSwarmStage(0);
     setBootState('swarm');
@@ -284,13 +289,21 @@ function App() {
           isRebuilding={bootState === 'swarm'}
         />
 
-        {/* 2. Swarm Rebuild Overlay Animation (on desktop boot & replay only - suppressed on iPad and mobile) */}
-        {bootState === 'swarm' && !checkIsMobileOrTablet() && (
+        {/* 2. Swarm Rebuild Overlay Animation (Strictly Laptop/Desktop boot & replay only - NEVER on iPad/mobile) */}
+        {bootState === 'swarm' && !isMobileOrTabletDevice() && (
           <SwarmRebuildOverlay 
             key={`rebuild-${rebuildKey}`}
             userName={userName} 
             onStageChange={setSwarmStage}
             onComplete={handleSwarmComplete} 
+          />
+        )}
+
+        {/* 2b. Mobile & iPad Dedicated Apple Boot & Loading Screen (Sleek progress bar on boot & refresh) */}
+        {bootState === 'device-loading' && (
+          <DeviceLoadingScreen
+            mode={getEffectiveDeviceMode()}
+            onLoaded={() => setBootState('ready')}
           />
         )}
 

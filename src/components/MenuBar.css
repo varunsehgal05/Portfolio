@@ -99,7 +99,7 @@
   color: #e0f2fe;
 }
 
-/* Menu Swarm Replay button */
+/* Menu Swarm Replay button - Laptop / Desktop only */
 .menu-swarm-replay-btn {
   display: flex;
   align-items: center;
@@ -113,6 +113,19 @@
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
+}
+
+/* Explicitly removed for mobile & iPad */
+@media (max-width: 1024px) {
+  .menu-swarm-replay-btn {
+    display: none !important;
+  }
+}
+
+.mode-mobile .menu-swarm-replay-btn,
+.mode-tablet .menu-swarm-replay-btn,
+.device-home-container .menu-swarm-replay-btn {
+  display: none !important;
 }
 
 .menu-swarm-replay-btn:hover {
