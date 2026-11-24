@@ -17,7 +17,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
       const p = new URLSearchParams(window.location.search);
       const app = p.get('app');
       if (app && portfolioApps[app]) return [app];
-    } catch {}
+    } catch { }
     return ['finder'];
   });
   const [minimizedWindows, setMinimizedWindows] = useState([]);
@@ -26,7 +26,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
       const p = new URLSearchParams(window.location.search);
       const app = p.get('app');
       if (app && portfolioApps[app]) return app;
-    } catch {}
+    } catch { }
     return 'finder';
   });
   const [maximizedWindows, setMaximizedWindows] = useState(() => {
@@ -34,7 +34,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
       const p = new URLSearchParams(window.location.search);
       const app = p.get('app');
       if (app && ['figma', 'vscode'].includes(app)) return [app];
-    } catch {}
+    } catch { }
     return [];
   });
   // Window Stacking Order: most recently focused window is always at the end
@@ -43,7 +43,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
       const p = new URLSearchParams(window.location.search);
       const app = p.get('app');
       if (app && portfolioApps[app]) return [app];
-    } catch {}
+    } catch { }
     return ['finder'];
   });
 
@@ -96,7 +96,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
     setDeviceModeOverride(mode);
     try {
       localStorage.setItem('varunos_device_mode', mode);
-    } catch {}
+    } catch { }
   };
 
   useEffect(() => {
@@ -235,7 +235,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
 
     try {
       localStorage.setItem('varunos_desktop_wallpaper', found.id);
-    } catch {}
+    } catch { }
 
     if (showToast) {
       setWallpaperToast(`Wallpaper: ${found.name}`);
@@ -468,19 +468,19 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
   const activeWallpaper = desktopWallpapers.find(w => w.id === activeWallpaperId) || desktopWallpapers[0];
 
   return (
-    <div 
+    <div
       className={`desktop mode-${effectiveDeviceMode} ${swarmStage < 5 ? 'desktop-in-rebuild' : ''}`}
     >
       {/* Smooth Wallpaper Switching Animated Backdrop (macOS Sequoia Crossfade, revealed in Stage 1) */}
       <div className={`desktop-wallpaper-viewport ${swarmStage < 5 ? (swarmStage >= 1 ? 'stage-revealed' : 'stage-hidden') : ''}`} aria-hidden="true">
         {prevWallpaper && (
-          <div 
+          <div
             key={`prev-wp-${prevWallpaper.id}`}
             className="desktop-wallpaper-layer outgoing"
             style={prevWallpaper.style}
           />
         )}
-        <div 
+        <div
           key={`curr-wp-${activeWallpaper.id}`}
           className={`desktop-wallpaper-layer ${isWpTransitioning ? 'incoming' : 'active'}`}
           style={activeWallpaper.style}
@@ -515,8 +515,8 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
       {/* Top MenuBar wrapper (macOS Desktop mode only, revealed in Stage 2) */}
       {effectiveDeviceMode === 'desktop' && (
         <div className={`desktop-menubar-wrap ${swarmStage < 5 ? (swarmStage >= 2 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
-          <MenuBar 
-            userName={userName} 
+          <MenuBar
+            userName={userName}
             onReplaySwarm={handleInternalReplaySwarm}
             openWindows={openWindows}
             minimizedWindows={minimizedWindows}
@@ -573,7 +573,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
             // During desktop swarm rebuild (stages 0-4), do not mount window so there is never a black screen
             if (isRebuilding && swarmStage < 5) return null;
             const stackRank = windowOrder.indexOf(appId);
-            const zIndex = activeWindow === appId 
+            const zIndex = activeWindow === appId
               ? 300 + (stackRank >= 0 ? stackRank : 0)
               : 20 + Math.max(0, stackRank) * 10;
 

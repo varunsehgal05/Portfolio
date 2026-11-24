@@ -519,19 +519,23 @@
 
 /* Syntax Tokens */
 .token-keyword {
-  color: #c586c0; /* Purple */
+  color: #c586c0;
+  /* Purple */
 }
 
 .token-string {
-  color: #ce9178; /* Warm orange / coral */
+  color: #ce9178;
+  /* Warm orange / coral */
 }
 
 .token-number {
-  color: #b5cea8; /* Pale green */
+  color: #b5cea8;
+  /* Pale green */
 }
 
 .token-comment {
-  color: #6a737d; /* Muted gray comment */
+  color: #6a737d;
+  /* Muted gray comment */
   font-style: italic;
 }
 
@@ -736,8 +740,15 @@
 }
 
 @keyframes blinkCursor {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
 }
 
 /* 5. Bottom Status Bar */
@@ -937,10 +948,13 @@
 }
 
 @keyframes webviewPulse {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(1);
     opacity: 0.9;
   }
+
   50% {
     transform: scale(1.4);
     opacity: 0.4;
@@ -2449,8 +2463,13 @@
 }
 
 @keyframes pulseNeonBtn {
-  0% { box-shadow: 0 0 6px rgba(34, 197, 94, 0.3); }
-  100% { box-shadow: 0 0 18px rgba(34, 197, 94, 0.8); }
+  0% {
+    box-shadow: 0 0 6px rgba(34, 197, 94, 0.3);
+  }
+
+  100% {
+    box-shadow: 0 0 18px rgba(34, 197, 94, 0.8);
+  }
 }
 
 /* Editor Laser Scanning Beam */
@@ -2473,10 +2492,23 @@
 }
 
 @keyframes laserScanDown {
-  0% { top: 0%; opacity: 0; }
-  15% { opacity: 1; }
-  85% { opacity: 1; }
-  100% { top: 100%; opacity: 0; }
+  0% {
+    top: 0%;
+    opacity: 0;
+  }
+
+  15% {
+    opacity: 1;
+  }
+
+  85% {
+    opacity: 1;
+  }
+
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
 }
 
 .vscode-run-pulse-overlay {
@@ -2487,8 +2519,13 @@
 }
 
 @keyframes pulseOverlay {
-  0% { opacity: 0.3; }
-  100% { opacity: 0.9; }
+  0% {
+    opacity: 0.3;
+  }
+
+  100% {
+    opacity: 0.9;
+  }
 }
 
 /* Breadcrumbs Running Status Badge */
@@ -2517,7 +2554,12 @@
 }
 
 @keyframes pingDot {
-  75%, 100% { transform: scale(2.2); opacity: 0; }
+
+  75%,
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
 }
 
 /* Terminal Dock Running Badge */
@@ -2546,8 +2588,15 @@
 }
 
 @keyframes pulseDot {
-  0% { transform: scale(0.8); opacity: 0.6; }
-  100% { transform: scale(1.2); opacity: 1; }
+  0% {
+    transform: scale(0.8);
+    opacity: 0.6;
+  }
+
+  100% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
 }
 
 /* Explorer Inline Creation Input */
@@ -2612,8 +2661,15 @@
 }
 
 @keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .sidebar-icon-btn.active {
@@ -3100,7 +3156,8 @@
   border-radius: 6px;
 }
 
-.profile-preview-footer, .manifesto-footer {
+.profile-preview-footer,
+.manifesto-footer {
   display: flex;
   justify-content: center;
   padding-top: 14px;
@@ -3214,5 +3271,3 @@
   line-height: 1.5;
   margin: 0;
 }
-
-

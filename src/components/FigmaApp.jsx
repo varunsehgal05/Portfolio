@@ -599,17 +599,7 @@ const PAGE_LAYERS_MAP = {
     { id: 'e-m8', title: 'Milestone: Freelance (10+ Startups)', type: 'component', indent: 2, visible: true, locked: false }
   ],
   about: [
-    { id: 'a-root', title: 'About_Whiteboard (FigJam Canvas)', type: 'frame', indent: 0, visible: true, locked: false },
-    { id: 'a-sec1', title: 'Phase 01: Ideation (Brainstorming Stickies)', type: 'group', indent: 1, visible: true, locked: false },
-    { id: 'a-stk-blue', title: 'Sticky: Idea (How might we...)', type: 'component', indent: 2, visible: true, locked: false },
-    { id: 'a-stk-orange', title: 'Sticky: Aesthetic (Dark Mode)', type: 'component', indent: 2, visible: true, locked: false },
-    { id: 'a-stk-purple', title: 'Sticky: Typography (Crisp Monospace)', type: 'component', indent: 2, visible: true, locked: false },
-    { id: 'a-svg1', title: 'Dashed_Bezier_Connector_1', type: 'vector', indent: 1, visible: true, locked: true },
-    { id: 'a-sec2', title: 'Phase 02: Architecture & Systems Flow', type: 'component', indent: 1, visible: true, locked: false },
-    { id: 'a-svg2', title: 'Dashed_Bezier_Connector_2', type: 'vector', indent: 1, visible: true, locked: true },
-    { id: 'a-sec3', title: 'Phase 03: Execution & AI Velocity', type: 'group', indent: 1, visible: true, locked: false },
-    { id: 'a-svg3', title: 'Dashed_Bezier_Connector_3', type: 'vector', indent: 1, visible: true, locked: true },
-    { id: 'a-sec4', title: 'Phase 04: Availability & CTA Action Bar', type: 'component', indent: 1, visible: true, locked: false }
+    { id: 'a-root', title: 'Infinite Canvas (Empty Stage)', type: 'frame', indent: 0, visible: true, locked: false }
   ],
   resume: [
     { id: 'r-root', title: 'Varun_Sehgal_Resume.pdf (Document)', type: 'frame', indent: 0, visible: true, locked: false },
@@ -620,20 +610,10 @@ const PAGE_LAYERS_MAP = {
     { id: 'r-hack', title: 'Section: Hackathons & Leadership', type: 'group', indent: 2, visible: true, locked: false }
   ],
   process: [
-    { id: 'p-root', title: 'Process_Methodology (FigJam Canvas)', type: 'frame', indent: 0, visible: true, locked: false },
-    { id: 'p-sec1', title: 'Problem Discovery (Tilted Cards)', type: 'group', indent: 1, visible: true, locked: false },
-    { id: 'p-svg1', title: 'Cyan_Dashed_Bezier_Connector_1', type: 'vector', indent: 1, visible: true, locked: true },
-    { id: 'p-sec2', title: 'User Flow (Flowchart Frame)', type: 'component', indent: 1, visible: true, locked: false },
-    { id: 'p-sec3', title: 'Design System & Tokens (Primitives)', type: 'group', indent: 1, visible: true, locked: false },
-    { id: 'p-svg2', title: 'Purple_Dashed_Bezier_Connector_2', type: 'vector', indent: 1, visible: true, locked: true },
-    { id: 'p-sec4', title: 'Validation & Prototype Impact (Metrics)', type: 'component', indent: 1, visible: true, locked: false }
+    { id: 'p-root', title: 'Infinite Canvas (Empty Stage)', type: 'frame', indent: 0, visible: true, locked: false }
   ],
   plugins: [
-    { id: 'pl-root', title: 'Figma_Community_Plugins (Gallery)', type: 'frame', indent: 0, visible: true, locked: false },
-    { id: 'pl-search', title: 'Search_Input & Category_Filters', type: 'component', indent: 1, visible: true, locked: false },
-    { id: 'pl-banner', title: 'Creative_Hero_Banner', type: 'frame', indent: 1, visible: true, locked: false },
-    { id: 'pl-grid', title: 'Plugins_Creative_Grid (8 Plugins)', type: 'group', indent: 1, visible: true, locked: false },
-    { id: 'pl-sim', title: 'Plugin_Simulator_Modal (Interactive)', type: 'component', indent: 1, visible: true, locked: false }
+    { id: 'pl-root', title: 'Infinite Canvas (Empty Stage)', type: 'frame', indent: 0, visible: true, locked: false }
   ]
 };
 
@@ -1154,10 +1134,11 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
       case 'home': return { width: Number(nodeProps['root-canvas']?.w) || frameW || 1200, height: 880 };
       case 'projects': return { width: Number(nodeProps['work-artboard']?.w) || 1380, height: 1180 };
       case 'experience': return { width: Number(nodeProps['exp-artboard']?.w) || 1240, height: 1400 };
-      case 'about': return { width: Number(nodeProps['about-artboard']?.w) || 1280, height: 820 };
       case 'resume': return { width: Number(nodeProps['resume-artboard']?.w) || 1080, height: 2600 };
-      case 'process': return { width: Number(nodeProps['process-artboard']?.w) || 1400, height: 960 };
-      case 'plugins': return { width: Number(nodeProps['plugins-artboard']?.w) || 1100, height: 880 };
+      case 'about':
+      case 'process':
+      case 'plugins':
+        return { width: 0, height: 0 };
       default: return { width: 1200, height: 880 };
     }
   };
@@ -1176,10 +1157,13 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
     const activeZoom = forcedZoom !== null ? forcedZoom : 1;
     setZoom(activeZoom);
 
-    // Exact mathematical horizontal center (Top-Mid)
-    const targetX = Math.round((stageW - dim.width * activeZoom) / 2);
-    // Top-Center vertical position: sits at comfortable top margin (36px)
-    const targetY = 36;
+    // Exact mathematical horizontal center (Top-Mid for artboards, clean 0,0 for infinite canvas tabs)
+    let targetX = 0;
+    let targetY = 0;
+    if (dim.width > 0) {
+      targetX = Math.round((stageW - dim.width * activeZoom) / 2);
+      targetY = 36;
+    }
 
     setPan({ x: targetX, y: targetY });
     panRef.current = { x: targetX, y: targetY };
@@ -2721,7 +2705,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
           )}
 
           {/* =========================================================================
-              VIEW 4: ABOUT (Infinite Designer Canvas & Blueprint)
+              VIEW 4: ABOUT (Empty Infinite Canvas)
               ========================================================================= */}
           {activeTab === 'about' && (
             <div
@@ -2731,49 +2715,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 transformOrigin: '0 0'
               }}
             >
-              <div className="view-content-wrapper" style={{ padding: '36px 0 140px', width: 'max-content' }}>
-                <div
-                  className={`figma-artboard-box about-blueprint-artboard figma-selectable-node ${selectedNodeId === 'about-artboard' ? 'is-selected' : ''}`}
-                  style={getNodeStyle('about-artboard', 1280, 820)}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleSelectNode('about-artboard', 'Varun_Sehgal_Identity Frame', 'Frame');
-                  }}
-                >
-                  <div className="figma-artboard-header-tag">
-                    <span className="artboard-hash">#</span>
-                    <span className="artboard-name">Varun_Sehgal_Identity.fig — Lead Product Designer &amp; Design Engineer</span>
-                    <span className="artboard-dims">[{nodeProps['about-artboard']?.w || 1280} × {nodeProps['about-artboard']?.h || 820}]</span>
-                  </div>
-
-                  {selectedNodeId === 'about-artboard' && (
-                    <div className="figma-selection-overlay">
-                      <div className="selection-tag">❖ Varun_Sehgal_Identity [1280×820]</div>
-                      <div className="selection-handle tl" /><div className="selection-handle tr" />
-                      <div className="selection-handle bl" /><div className="selection-handle br" />
-                    </div>
-                  )}
-
-                  {/* Top Bar with multiplayer cursor */}
-                  <div className="about-canvas-top-status">
-                    <div className="top-status-left">
-                      <span className="material-symbols-outlined text-[16px] text-sky-400">code</span>
-                      <span className="top-doc-title">Varun_Sehgal_Portfolio.fig / Identity Blueprint</span>
-                      <span className="top-version-badge">v2.4</span>
-                    </div>
-
-                    <div className="top-status-right">
-                      <div className="top-zoom-badge">{Math.round(zoom * 100)}%</div>
-                      <button className="top-share-btn" onClick={() => showToast('Share Link Copied!')}>Share</button>
-                    </div>
-                  </div>
-
-                  {/* Clean Infinite Canvas Stage (Full open workspace matching user specifications) */}
-                  <div className="about-clean-blueprint-canvas" style={{ minHeight: '620px', position: 'relative' }}>
-                    {/* Open infinite canvas stage ready for design exploration */}
-                  </div>
-                </div>
-              </div>
+              {/* Pure clean empty infinite canvas */}
             </div>
           )}
 
@@ -2853,7 +2795,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
           )}
 
           {/* =========================================================================
-              VIEW 6: PROCESS (FigJam Interactive Sprint Process Board - Image 2)
+              VIEW 6: PROCESS (Empty Infinite Canvas)
               ========================================================================= */}
           {activeTab === 'process' && (
             <div
@@ -2863,167 +2805,12 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 transformOrigin: '0 0'
               }}
             >
-              <div className="view-content-wrapper" style={{ padding: '36px 0 140px', width: 'max-content' }}>
-                {/* FigJam Process Board Canvas matching Image 2 */}
-                <div
-                  className={`figma-artboard-box figjam-process-artboard figma-selectable-node ${selectedNodeId === 'process-artboard' ? 'is-selected' : ''}`}
-                  style={getNodeStyle('process-artboard', 1400, 840)}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleSelectNode('process-artboard', 'FigJam Process Board', 'Frame');
-                  }}
-                >
-                  <div className="figma-artboard-header-tag">
-                    <span className="artboard-hash">#</span>
-                    <span className="artboard-name">Varun_Sehgal_Portfolio.fig — FigJam Process Board (Interactive Sprint)</span>
-                    <span className="artboard-dims">[{nodeProps['process-artboard']?.w || 1400} × {nodeProps['process-artboard']?.h || 840}]</span>
-                  </div>
-
-                  {selectedNodeId === 'process-artboard' && (
-                    <div className="figma-selection-overlay">
-                      <div className="selection-tag">❖ FigJam_Process_Sprint_04 [1400×840]</div>
-                      <div className="selection-handle tl" /><div className="selection-handle tr" />
-                      <div className="selection-handle bl" /><div className="selection-handle br" />
-                    </div>
-                  )}
-
-                  {/* Top Canvas Bar */}
-                  <div className="figjam-canvas-topbar">
-                    <div className="figjam-topbar-left">
-                      <div className="figjam-sprint-badge">
-                        <span className="sprint-status-dot" />
-                        <span className="sprint-title-text">Sprint 04: Omni-Checkout Friction Analysis</span>
-                        <span className="sprint-live-tag">Live Canvas</span>
-                      </div>
-                      <div className="sprint-subtext">Varun Sehgal / Staff Product Designer Canvas Room</div>
-                    </div>
-
-                    <div className="figjam-topbar-right">
-                      <button className="figjam-pill-control" onClick={() => showToast('Focus: Deep Elements')}>
-                        <span className="material-symbols-outlined text-[15px] text-sky-400">equalizer</span>
-                        <span>Focus: Deep Elements</span>
-                        <span className="inline-block w-2 h-2 rounded bg-sky-400/60 ml-0.5" />
-                      </button>
-
-                      <div className="figjam-pill-control timer">
-                        <span className="material-symbols-outlined text-[15px] text-amber-400">schedule</span>
-                        <span>12:18</span>
-                      </div>
-
-                      {/* Multiplayer Avatars */}
-                      <div className="figjam-avatar-stack">
-                        <div className="figjam-avatar av-1" title="Varun Sehgal">VS</div>
-                        <div className="figjam-avatar av-2" title="Elena Rostova (PM)">ER</div>
-                        <div className="figjam-avatar av-3" title="Marcus Vance">M1</div>
-                        <div className="figjam-avatar-counter">+4</div>
-                      </div>
-
-                      <button
-                        className="figjam-export-findings-btn"
-                        onClick={() => {
-                          handleExportFrame();
-                          showToast('Exporting Sprint 04 Telemetry Findings...');
-                        }}
-                      >
-                        <span className="material-symbols-outlined text-[15px]">file_upload</span>
-                        <span>Export Findings</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Center Hypothesis Frame Header */}
-                  <div className="figjam-hypothesis-header">
-                    <div className="hypothesis-tag-pill">
-                      <span className="material-symbols-outlined text-[14px]">search</span>
-                      <span>HYPOTHESIS FRAME 01</span>
-                    </div>
-                    <h1 className="hypothesis-main-title">
-                      Enterprise Multi-Seat Checkout Telemetry
-                    </h1>
-                    <p className="hypothesis-subtitle">
-                      Synthesizing 28 customer interviews, biometric engagement signals, and funnel analytics to diagnose a 34% terminal checkout bounce among SOC2 compliance officers.
-                    </p>
-                  </div>
-
-                  {/* FigJam Interactive Whiteboard Canvas Stage (Matching Image 2 - Clean Canvas) */}
-                  <div className="figjam-canvas-stage" style={{ position: 'relative', minHeight: '520px', padding: '20px 0 100px' }}>
-                    {/* Bottom Floating FigJam Toolbar */}
-                    <div className="figjam-floating-toolbar">
-                      <div className="toolbar-tools-group">
-                        <button
-                          className={`figjam-tool-btn ${processToolbarTool === 'select' ? 'active' : ''}`}
-                          onClick={() => {
-                            setProcessToolbarTool('select');
-                            showToast('Move Tool Selected');
-                          }}
-                          title="Select Tool"
-                        >
-                          <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor">
-                            <path d="M0 0L6 14L8.5 8.5L14 6L0 0Z" />
-                          </svg>
-                        </button>
-
-                        <button
-                          className={`figjam-tool-btn ${processToolbarTool === 'hand' ? 'active' : ''}`}
-                          onClick={() => {
-                            setProcessToolbarTool('hand');
-                            showToast('Hand Pan Tool');
-                          }}
-                          title="Pan Hand Tool"
-                        >
-                          <span className="material-symbols-outlined text-[16px]">pan_tool</span>
-                        </button>
-
-                        <button
-                          className={`figjam-tool-btn ${processToolbarTool === 'sticky' ? 'active' : ''}`}
-                          onClick={() => {
-                            setProcessToolbarTool('sticky');
-                            showToast('Click anywhere to place Sticky Note');
-                          }}
-                          title="Sticky Note Tool"
-                        >
-                          <span className="material-symbols-outlined text-[16px]">sticky_note_2</span>
-                        </button>
-
-                        <button
-                          className={`figjam-tool-btn ${processToolbarTool === 'connector' ? 'active' : ''}`}
-                          onClick={() => {
-                            setProcessToolbarTool('connector');
-                            showToast('Connector Tool Active');
-                          }}
-                          title="Connector Tool"
-                        >
-                          <span className="material-symbols-outlined text-[16px]">timeline</span>
-                        </button>
-                      </div>
-
-                      <div className="toolbar-divider" />
-
-                      {/* Emoji Reactions */}
-                      <div className="toolbar-reactions-group">
-                        <button className="figjam-emoji-btn" onClick={() => showToast('❤️ Reaction Added')} title="Love">❤️</button>
-                        <button className="figjam-emoji-btn" onClick={() => showToast('🔥 Reaction Added')} title="Fire">🔥</button>
-                        <button className="figjam-emoji-btn" onClick={() => showToast('🚀 Sprint Velocity!')} title="Rocket">🚀</button>
-                        <button className="figjam-emoji-btn" onClick={() => showToast('💬 Comment Stamp')} title="Comment">💬</button>
-                      </div>
-
-                      <div className="toolbar-divider" />
-
-                      {/* Zoom Controls */}
-                      <div className="toolbar-zoom-group">
-                        <button className="zoom-adjust-btn" onClick={handleZoomOut} title="Zoom Out">−</button>
-                        <span className="zoom-percentage-text">{Math.round(zoom * 100)}%</span>
-                        <button className="zoom-adjust-btn" onClick={handleZoomIn} title="Zoom In">+</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              {/* Pure clean empty infinite canvas */}
             </div>
           )}
 
           {/* =========================================================================
-              VIEW 7: PLUGINS (Creative Figma Community Marketplace - Image 3)
+              VIEW 7: PLUGINS (Empty Infinite Canvas)
               ========================================================================= */}
           {activeTab === 'plugins' && (
             <div
@@ -3033,180 +2820,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 transformOrigin: '0 0'
               }}
             >
-              <div className="view-content-wrapper" style={{ padding: '36px 0 140px', width: 'max-content' }}>
-                <div
-                  className={`figma-artboard-box plugins-ecosystem-artboard figma-selectable-node ${selectedNodeId === 'plugins-artboard' ? 'is-selected' : ''}`}
-                  style={getNodeStyle('plugins-artboard', 1100, 840)}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleSelectNode('plugins-artboard', 'Plugins Marketplace', 'Frame');
-                  }}
-                >
-                  <div className="figma-artboard-header-tag">
-                    <span className="artboard-hash">#</span>
-                    <span className="artboard-name">COMMUNITY + EXTENSIONS / Installed &amp; Discover</span>
-                    <span className="artboard-dims">[{nodeProps['plugins-artboard']?.w || 1100} × {nodeProps['plugins-artboard']?.h || 840}]</span>
-                  </div>
-
-                  {selectedNodeId === 'plugins-artboard' && (
-                    <div className="figma-selection-overlay">
-                      <div className="selection-tag">❖ Plugins [1100×840]</div>
-                      <div className="selection-handle tl" /><div className="selection-handle tr" />
-                      <div className="selection-handle bl" /><div className="selection-handle br" />
-                    </div>
-                  )}
-
-                  <div className="plugins-marketplace-view">
-                    <div className="plugins-market-header">
-                      <h1 className="plugins-market-title">Plugins</h1>
-                      <p className="plugins-market-desc">
-                        Supercharge your creative workflow with installed extensions. These tools seamlessly integrate into your workspace to automate tasks, source assets, and bridge development.
-                      </p>
-                    </div>
-
-                    {/* Search & Filter Bar matching Image 3 */}
-                    <div className="plugins-search-filter-row">
-                      <div className="plugins-search-box">
-                        <span className="material-symbols-outlined text-[16px] text-zinc-400">search</span>
-                        <input
-                          type="text"
-                          placeholder="Search plugins..."
-                          value={pluginSearch}
-                          onChange={(e) => setPluginSearch(e.target.value)}
-                        />
-                      </div>
-
-                      <div className="plugins-filter-toggles">
-                        <button
-                          type="button"
-                          className={`plugin-toggle-pill ${pluginFilter === 'installed' || pluginFilter === 'all' ? 'active' : ''}`}
-                          onClick={() => setPluginFilter('installed')}
-                        >
-                          <span className="material-symbols-outlined text-[14px]">check_circle</span>
-                          <span>Installed</span>
-                        </button>
-                        <button
-                          type="button"
-                          className={`plugin-toggle-pill ${pluginFilter === 'discover' ? 'active' : ''}`}
-                          onClick={() => {
-                            setPluginFilter('discover');
-                            showToast('Browsing Figma Community plugins catalog...');
-                          }}
-                        >
-                          <span>Discover</span>
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* 2x2 Grid matching Image 3 */}
-                    <div className="plugins-cards-2x2">
-                      {/* 1. Autoflow */}
-                      <div className="plugin-item-card">
-                        <div className="plugin-card-top">
-                          <div className="plugin-icon-container" style={{ background: '#7c2d12' }}>
-                            <span style={{ color: '#fb923c', fontSize: '20px' }}>〰</span>
-                          </div>
-                          <div className="plugin-name-badge">
-                            <h3 className="plugin-name-title">Autoflow</h3>
-                            <span className="plugin-tag-badge" style={{ background: 'rgba(251, 146, 60, 0.15)', color: '#fb923c' }}>Productivity</span>
-                          </div>
-                        </div>
-                        <p className="plugin-card-desc">
-                          Automatically draw flow arrows between frames. Select any two shapes or frames while holding shift, and a connector magically appears.
-                        </p>
-                        <div className="plugin-card-bottom">
-                          <span className="plugin-version-text">v2.1.4</span>
-                          <button
-                            type="button"
-                            className="plugin-run-btn"
-                            onClick={() => showToast('Running Autoflow v2.1.4... Connectors active!')}
-                          >
-                            <span>▶ Run</span>
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* 2. Figmotion */}
-                      <div className="plugin-item-card">
-                        <div className="plugin-card-top">
-                          <div className="plugin-icon-container" style={{ background: '#581c87' }}>
-                            <span style={{ color: '#c084fc', fontSize: '20px' }}>🌀</span>
-                          </div>
-                          <div className="plugin-name-badge">
-                            <h3 className="plugin-name-title">Figmotion</h3>
-                            <span className="plugin-tag-badge" style={{ background: 'rgba(192, 132, 252, 0.15)', color: '#c084fc' }}>Animation</span>
-                          </div>
-                        </div>
-                        <p className="plugin-card-desc">
-                          An animation tool built right in. Manage timelines, keyframes, and export complex micro-interactions directly to CSS or JSON.
-                        </p>
-                        <div className="plugin-card-bottom">
-                          <span className="plugin-version-text">v3.0.1</span>
-                          <button
-                            type="button"
-                            className="plugin-run-btn"
-                            onClick={() => showToast('Launching Figmotion Timeline Editor...')}
-                          >
-                            <span>▶ Run</span>
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* 3. Unsplash */}
-                      <div className="plugin-item-card">
-                        <div className="plugin-card-top">
-                          <div className="plugin-icon-container" style={{ background: '#27272a' }}>
-                            <span className="material-symbols-outlined text-[20px] text-zinc-300">image</span>
-                          </div>
-                          <div className="plugin-name-badge">
-                            <h3 className="plugin-name-title">Unsplash</h3>
-                            <span className="plugin-tag-badge" style={{ background: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8' }}>Assets</span>
-                          </div>
-                        </div>
-                        <p className="plugin-card-desc">
-                          Insert beautiful, high-quality images directly into your designs. Search the entire library without leaving the canvas.
-                        </p>
-                        <div className="plugin-card-bottom">
-                          <span className="plugin-version-text">v1.8.0</span>
-                          <button
-                            type="button"
-                            className="plugin-run-btn"
-                            onClick={() => showToast('Unsplash Media Picker opened!')}
-                          >
-                            <span>▶ Run</span>
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* 4. Iconify */}
-                      <div className="plugin-item-card">
-                        <div className="plugin-card-top">
-                          <div className="plugin-icon-container" style={{ background: '#0c4a6e' }}>
-                            <span className="material-symbols-outlined text-[20px] text-sky-400">sentiment_satisfied</span>
-                          </div>
-                          <div className="plugin-name-badge">
-                            <h3 className="plugin-name-title">Iconify</h3>
-                            <span className="plugin-tag-badge" style={{ background: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8' }}>Assets</span>
-                          </div>
-                        </div>
-                        <p className="plugin-card-desc">
-                          Import over 100,000 vector icons to your project. Includes Material Design, FontAwesome, Jam Icons, and more.
-                        </p>
-                        <div className="plugin-card-bottom">
-                          <span className="plugin-version-text">v2.4.2</span>
-                          <button
-                            type="button"
-                            className="plugin-run-btn"
-                            onClick={() => showToast('Iconify 100k Vector Library Ready!')}
-                          >
-                            <span>▶ Run</span>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              {/* Pure clean empty infinite canvas */}
             </div>
           )}
 
