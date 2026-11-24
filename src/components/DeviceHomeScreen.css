@@ -41,8 +41,8 @@
   height: 38px;
   padding: 0 20px;
   background: rgba(15, 20, 30, 0.65);
-  backdrop-filter: blur(24px) saturate(160%);
-  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   color: #f1f5f9;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
@@ -413,8 +413,8 @@
   right: 0;
   width: 195px;
   background: rgba(22, 27, 38, 0.96);
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 14px;
   padding: 6px;
@@ -504,8 +504,8 @@
 .ipad-today-widget {
   width: 100%;
   background: rgba(26, 32, 46, 0.68);
-  backdrop-filter: blur(28px) saturate(180%);
-  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 20px;
   padding: 16px 20px;
@@ -653,8 +653,8 @@
 /* iPad VibeCoder Telemetry & Live Clock Widget */
 .ipad-telemetry-widget {
   background: rgba(26, 32, 46, 0.68);
-  backdrop-filter: blur(28px) saturate(180%);
-  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 20px;
   padding: 16px 20px;
@@ -764,8 +764,8 @@
 /* Hackathon Win Milestone Card (Matching User Screenshot) */
 .ipad-milestone-widget {
   background: rgba(26, 32, 46, 0.68);
-  backdrop-filter: blur(28px) saturate(180%);
-  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 20px;
   padding: 16px 20px;
@@ -897,8 +897,8 @@
 /* iPad Specs & Tokens Architecture Widget */
 .ipad-specs-widget {
   background: rgba(26, 32, 46, 0.68);
-  backdrop-filter: blur(28px) saturate(180%);
-  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 20px;
   padding: 16px 20px;
@@ -1022,8 +1022,8 @@
   width: 100%;
   max-width: 380px;
   background: rgba(26, 32, 46, 0.72);
-  backdrop-filter: blur(28px) saturate(180%);
-  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 18px;
   padding: 12px 16px;
@@ -1308,8 +1308,8 @@
   gap: 7px;
   padding: 7px 18px;
   background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 20px;
   color: rgba(255, 255, 255, 0.85);
@@ -1351,8 +1351,8 @@
   display: flex;
   align-items: center;
   background: rgba(22, 27, 38, 0.72);
-  backdrop-filter: blur(32px) saturate(180%);
-  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.14);
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
 }

@@ -8,9 +8,9 @@ import { portfolioApps, desktopIconIds } from '../config/apps';
 import { desktopWallpapers, getDeviceWallpaper } from '../config/wallpapers';
 import { getLiveAppsConfig } from '../utils/portfolioCMS';
 import { getEffectiveDeviceMode, isMobileOrTabletDevice } from '../utils/deviceDetection';
-import LiveMouseSwarm from './LiveMouseSwarm';
 import './Desktop.css';
 
+const LiveMouseSwarm = lazy(() => import('./LiveMouseSwarm'));
 const PixelAssistant = lazy(() => import('./PixelAssistant'));
 
 const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, isRebuilding = false }) => {
@@ -20,6 +20,9 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
       const app = p.get('app');
       if (app && portfolioApps[app]) return [app];
     } catch { }
+    if (typeof window !== 'undefined' && isMobileOrTabletDevice()) {
+      return [];
+    }
     return ['finder'];
   });
   const [minimizedWindows, setMinimizedWindows] = useState([]);
@@ -29,6 +32,9 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
       const app = p.get('app');
       if (app && portfolioApps[app]) return app;
     } catch { }
+    if (typeof window !== 'undefined' && isMobileOrTabletDevice()) {
+      return null;
+    }
     return 'finder';
   });
   const [maximizedWindows, setMaximizedWindows] = useState(() => {
@@ -46,6 +52,9 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
       const app = p.get('app');
       if (app && portfolioApps[app]) return [app];
     } catch { }
+    if (typeof window !== 'undefined' && isMobileOrTabletDevice()) {
+      return [];
+    }
     return ['finder'];
   });
 
@@ -478,7 +487,9 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
 
       {/* Collaborative Swarm Live Mouse Flocking (5 Elite Collaborative Agents on Desktop when enabled) */}
       {effectiveDeviceMode === 'desktop' && (
-        <LiveMouseSwarm isEnabled={isSwarmFollowEnabled && !activeWindow && !isRebuilding} isRebuildActive={isRebuilding} agentCount={5} />
+        <Suspense fallback={null}>
+          <LiveMouseSwarm isEnabled={isSwarmFollowEnabled && !activeWindow && !isRebuilding} isRebuildActive={isRebuilding} agentCount={5} />
+        </Suspense>
       )}
 
       {/* iPadOS / iOS Home Screen & Status Bar View */}
@@ -606,4 +617,4 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
   );
 };
 
-export default Desktop;
+export default React.memo(Desktop);

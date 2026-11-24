@@ -160,7 +160,8 @@ const DeviceHomeScreen = ({
   const currentWallpaper = activeWallpaper || fallbackWallpaper;
 
   useEffect(() => {
-    const timer = setInterval(() => setTime(new Date()), 1000);
+    // Clock only displays hours & minutes - 10s tick eliminates 90% of idle re-renders
+    const timer = setInterval(() => setTime(new Date()), 10000);
     return () => clearInterval(timer);
   }, []);
 

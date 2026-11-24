@@ -555,11 +555,12 @@ const PixelAssistant = ({ isIdle, onOpenApp, hasOpenWindows }) => {
 
     const loadClippy = async () => {
       try {
-        const [{ initAgent }, { Clippy }] = await Promise.all([
+        const [{ initAgent }, clippyAgentModule] = await Promise.all([
           import("clippyjs"),
-          import("clippyjs/agents")
+          import("clippyjs/agents/clippy")
         ]);
-        const agent = await initAgent(Clippy);
+        const agentData = clippyAgentModule.default || clippyAgentModule.Clippy || clippyAgentModule;
+        const agent = await initAgent(agentData);
         if (!isMounted) {
           agent.dispose();
           return;

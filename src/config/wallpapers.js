@@ -5,7 +5,7 @@ export const ipadDefaultWallpaper = {
   thumbnail: '/wallpapers/ipad-dune-dark.jpg',
   style: {
     backgroundColor: '#090b10',
-    backgroundImage: 'url(/wallpapers/ipad-dune-dark.jpg)',
+    backgroundImage: 'radial-gradient(circle at 50% 40%, #151a24 0%, #090b10 80%), url(/wallpapers/ipad-dune-dark.jpg)',
     backgroundSize: 'cover',
     backgroundPosition: 'center center',
     backgroundRepeat: 'no-repeat'
@@ -19,7 +19,7 @@ export const mobileDefaultWallpaper = {
   thumbnail: '/wallpapers/ios-aurora-dark.jpg',
   style: {
     backgroundColor: '#000000',
-    backgroundImage: 'url(/wallpapers/ios-aurora-dark.jpg)',
+    backgroundImage: 'radial-gradient(ellipse at 50% 20%, #171b26 0%, #08090d 60%, #000000 100%), url(/wallpapers/ios-aurora-dark.jpg)',
     backgroundSize: 'cover',
     backgroundPosition: 'center center',
     backgroundRepeat: 'no-repeat'

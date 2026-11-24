@@ -3,10 +3,9 @@ import { Folder } from 'lucide-react';
 import './Window.css';
 import React, { useState, useEffect, useRef, Suspense, lazy } from 'react';
 import { createPortal } from 'react-dom';
-import ResumeApp from './ResumeApp';
-import FinderApp from './FinderApp';
-
 // Code split secondary apps to keep main chunk ultra-lean
+const FinderApp = lazy(() => import('./FinderApp'));
+const ResumeApp = lazy(() => import('./ResumeApp'));
 const FigmaApp = lazy(() => import('./FigmaApp'));
 const VsCodeApp = lazy(() => import('./VsCodeApp'));
 const ContactApp = lazy(() => import('./ContactApp'));
@@ -452,7 +451,7 @@ const Window = ({
   const renderContent = () => {
     switch (app.id) {
       case 'finder':
-        return <FinderApp onOpenApp={onOpenApp} isRebuilding={isRebuilding} />;
+        return <Suspense fallback={<div className="window-app-loading" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>Loading Workspace...</div>}><FinderApp onOpenApp={onOpenApp} isRebuilding={isRebuilding} /></Suspense>;
       case 'figma':
         return <Suspense fallback={<div className="window-app-loading" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>Loading Figma Workspace...</div>}><FigmaApp isInteracting={isInteracting} userName={userName} onOpenApp={onOpenApp} deviceMode={deviceMode} /></Suspense>;
       case 'terminal':
@@ -462,7 +461,7 @@ const Window = ({
       case 'vscode':
         return <Suspense fallback={<div className="window-app-loading" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>Loading VS Code...</div>}><VsCodeApp /></Suspense>;
       case 'resume':
-        return <ResumeApp />;
+        return <Suspense fallback={<div className="window-app-loading" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>Loading Resume...</div>}><ResumeApp /></Suspense>;
       case 'contact':
         return <Suspense fallback={<div className="window-app-loading" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>Loading Contact...</div>}><ContactApp /></Suspense>;
       case 'reviews':
