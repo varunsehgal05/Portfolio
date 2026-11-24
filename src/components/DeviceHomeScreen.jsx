@@ -28,9 +28,6 @@ import {
   Copy,
   Check,
   ShieldCheck,
-  Cpu,
-  Code2,
-  Terminal,
   Zap
 } from 'lucide-react';
 import './DeviceHomeScreen.css';
@@ -466,57 +463,6 @@ const DeviceHomeScreen = ({
                     {copiedId ? <Check size={13} color="#22c55e" /> : <Copy size={13} />}
                     <span>{copiedId ? 'Copied ID ✓' : 'Copy ID'}</span>
                   </button>
-                </div>
-              </div>
-
-              {/* Widget B: Engineering & Design Tokens Architecture */}
-              <div className="ipad-specs-widget">
-                <div className="specs-card-top">
-                  <span className="specs-tag-title">System Architecture</span>
-                  <span className="specs-os-badge">iPadOS 18.2</span>
-                </div>
-                <h3 className="specs-title">Design Engineering & Vibe Stack</h3>
-                <div className="specs-metrics-grid">
-                  <div className="spec-metric-item">
-                    <span className="metric-label">Design Tokens</span>
-                    <span className="metric-value">Figma Variables + CSS</span>
-                  </div>
-                  <div className="spec-metric-item">
-                    <span className="metric-label">Runtime</span>
-                    <span className="metric-value">React 19 + Framer Motion</span>
-                  </div>
-                  <div className="spec-metric-item">
-                    <span className="metric-label">Audio Synth</span>
-                    <span className="metric-value">Procedural Lo-Fi (78 BPM)</span>
-                  </div>
-                  <div className="spec-metric-item">
-                    <span className="metric-label">Agent Engine</span>
-                    <span className="metric-value">Antigravity Swarm v2.4</span>
-                  </div>
-                </div>
-                <div className="specs-footer">
-                  <span className="specs-status-chip">
-                    <span className="status-dot-pulse" />
-                    <span>All 10 Apps Sandboxed & Verified</span>
-                  </span>
-                  <div className="specs-quick-actions">
-                    <button
-                      className="specs-pill-btn"
-                      onClick={() => handleAppClick('terminal')}
-                      title="Launch Shell"
-                    >
-                      <Terminal size={12} />
-                      <span>Shell</span>
-                    </button>
-                    <button
-                      className="specs-pill-btn"
-                      onClick={() => handleAppClick('vscode')}
-                      title="Open Code"
-                    >
-                      <Code2 size={12} />
-                      <span>Code</span>
-                    </button>
-                  </div>
                 </div>
               </div>
             </div>
