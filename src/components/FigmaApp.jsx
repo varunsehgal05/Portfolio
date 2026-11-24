@@ -14,7 +14,9 @@ import {
   Mail, 
   Share2, 
   Grid3X3, 
-  Sidebar 
+  Sidebar,
+  ExternalLink,
+  Copy 
 } from 'lucide-react';
 import FirebaseImage from './FirebaseImage';
 import FigmaLoadingScreen from './FigmaLoadingScreen';
@@ -599,7 +601,10 @@ const PAGE_LAYERS_MAP = {
     { id: 'e-m8', title: 'Milestone: Freelance (10+ Startups)', type: 'component', indent: 2, visible: true, locked: false }
   ],
   about: [
-    { id: 'a-root', title: 'Infinite Canvas (Empty Stage)', type: 'frame', indent: 0, visible: true, locked: false }
+    { id: 'a-root', title: 'About Moodboard (Canvas Stage)', type: 'frame', indent: 0, visible: true, locked: false },
+    { id: 'a-photo', title: 'Center Photo Card (Varun Sehgal)', type: 'component', indent: 1, visible: true, locked: false },
+    { id: 'a-hack', title: 'Achievement: HAcKeThor 1st Runner-Up', type: 'component', indent: 1, visible: true, locked: false },
+    { id: 'a-stickies', title: 'Scattered About Notes (5 Cards)', type: 'group', indent: 1, visible: true, locked: false }
   ],
   resume: [
     { id: 'r-root', title: 'Varun_Sehgal_Resume.pdf (Document)', type: 'frame', indent: 0, visible: true, locked: false },
@@ -1135,7 +1140,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
       case 'projects': return { width: Number(nodeProps['work-artboard']?.w) || 1380, height: 1180 };
       case 'experience': return { width: Number(nodeProps['exp-artboard']?.w) || 1240, height: 1400 };
       case 'resume': return { width: Number(nodeProps['resume-artboard']?.w) || 1080, height: 2600 };
-      case 'about':
+      case 'about': return { width: 1200, height: 820 };
       case 'process':
       case 'plugins':
         return { width: 0, height: 0 };
@@ -2705,7 +2710,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
           )}
 
           {/* =========================================================================
-              VIEW 4: ABOUT (Empty Infinite Canvas)
+              VIEW 4: ABOUT (Infinite Canvas Moodboard: Center Photo + Scattered Notes)
               ========================================================================= */}
           {activeTab === 'about' && (
             <div
@@ -2715,7 +2720,266 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 transformOrigin: '0 0'
               }}
             >
-              {/* Pure clean empty infinite canvas */}
+              <div className="about-moodboard-stage">
+                {/* SVG curved dashed bezier line connectors connecting sticky notes to the center portrait */}
+                <svg className="about-connectors-svg" viewBox="0 0 1200 820" fill="none">
+                  <path d="M240,150 C340,180 400,240 450,280" stroke="rgba(56, 189, 248, 0.22)" strokeWidth="1.5" strokeDasharray="4 4" />
+                  <path d="M220,380 C320,370 380,350 450,330" stroke="rgba(245, 158, 11, 0.25)" strokeWidth="1.5" strokeDasharray="4 4" />
+                  <path d="M270,610 C350,560 400,480 460,420" stroke="rgba(74, 222, 128, 0.2)" strokeWidth="1.5" strokeDasharray="4 4" />
+                  <path d="M960,160 C860,190 800,240 750,280" stroke="rgba(253, 224, 71, 0.2)" strokeWidth="1.5" strokeDasharray="4 4" />
+                  <path d="M980,390 C880,380 810,360 750,340" stroke="rgba(192, 132, 252, 0.22)" strokeWidth="1.5" strokeDasharray="4 4" />
+                  <path d="M950,600 C860,560 800,480 740,420" stroke="rgba(244, 114, 182, 0.2)" strokeWidth="1.5" strokeDasharray="4 4" />
+                </svg>
+
+                {/* Center Photo Card: Varun's portrait card with washi tape & badge */}
+                <div
+                  className="about-center-photo-card"
+                  onClick={() => showToast('❖ Varun Sehgal · Lead Product Designer & Design Engineer')}
+                >
+                  <div className="moodboard-washi-tape cyan"></div>
+                  <div className="photo-card-header">
+                    <div className="photo-card-tag">
+                      <span className="photo-card-tag-icon">❖</span>
+                      <span>Varun Sehgal</span>
+                    </div>
+                    <span className="photo-card-badge">FIGMA CANVAS</span>
+                  </div>
+                  <div className="photo-card-img-wrap">
+                    <FirebaseImage
+                      storagePath="profile/varun.jpg"
+                      fallbackSrc="/varun.jpg"
+                      alt="Varun Sehgal"
+                      className="photo-card-img"
+                    />
+                  </div>
+                  <div className="photo-card-info">
+                    <span className="photo-card-name">Varun Sehgal</span>
+                    <span className="photo-card-role">Lead Product Designer &amp; Design Engineer</span>
+                    <div className="photo-card-status-pill">
+                      <span className="photo-status-dot"></span>
+                      <span>Crafting Products in Figma · Open for roles</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 1. Top-Left Note: Who I Am */}
+                <div
+                  className="about-sticky-card"
+                  style={{ top: '30px', left: '70px', width: '330px', transform: 'rotate(-3.5deg)' }}
+                  onClick={() => showToast('📌 Who I Am pinned note')}
+                >
+                  <div className="moodboard-washi-tape peach"></div>
+                  <div className="sticky-header-row">
+                    <div className="sticky-title">
+                      <span className="sticky-pin-icon">📍</span>
+                      <span>Who I Am</span>
+                    </div>
+                    <span className="sticky-category-tag">BIO</span>
+                  </div>
+                  <p className="sticky-body-text">
+                    Product Designer &amp; Design Engineer who bridges the gap between Figma vector systems and live production code. Obsessed with high-craft UI, micro-interactions, and AI velocity.
+                  </p>
+                  <div className="sticky-footer-row">
+                    <span className="sticky-tag-text">#craft #design-engineering</span>
+                    <div className="sticky-author-badge">
+                      <span className="sticky-author-avatar">VS</span>
+                      <span>Varun</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 2. Top-Right Note: Design Philosophy */}
+                <div
+                  className="about-sticky-card"
+                  style={{ top: '35px', left: '790px', width: '340px', transform: 'rotate(3deg)' }}
+                  onClick={() => showToast('📌 Design Philosophy note')}
+                >
+                  <div className="moodboard-washi-tape yellow"></div>
+                  <div className="sticky-header-row">
+                    <div className="sticky-title">
+                      <span className="sticky-pin-icon">💡</span>
+                      <span>Design Philosophy</span>
+                    </div>
+                    <span className="sticky-category-tag">MINDSET</span>
+                  </div>
+                  <p className="sticky-body-text">
+                    Function comes first, but delight is non-negotiable. Software shouldn&apos;t just solve problems — it should feel fast, responsive, and tactile like physical hardware.
+                  </p>
+                  <div className="sticky-footer-row">
+                    <span className="sticky-tag-text">#systematic-delight</span>
+                    <div className="sticky-author-badge">
+                      <span className="sticky-author-avatar">VS</span>
+                      <span>Varun</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 3. Middle-Left Achievement Card: HAcKeThor 1st Runner-Up (Exact Replica from User Screenshot) */}
+                <div
+                  className="about-hackathon-card"
+                  style={{ top: '275px', left: '25px', transform: 'rotate(-1deg)' }}
+                >
+                  <div className="moodboard-washi-tape cyan"></div>
+                  <div className="hackathon-top-row">
+                    <span className="hackathon-date">Apr 2025</span>
+                    <span className="hackathon-type-badge">Hackathon Win</span>
+                  </div>
+                  <h4 className="hackathon-title">
+                    HAcKeThor 1st Runner-Up (2nd Place) awarded 2nd Place / 1st Runner-Up by Unstop
+                  </h4>
+                  <p className="hackathon-desc">
+                    Awarded 1st runner-up (2nd place) in national competitive hackathon demonstrating rapid UX prototyping, interactive user testing, and AI tool integration under high pressure.
+                  </p>
+                  <div className="hackathon-pills-row">
+                    <span className="hackathon-gold-badge">
+                      🥇 1st Runner-Up (2nd Place)
+                    </span>
+                    <span className="hackathon-id-pill" title="d883bbf5-5d9f-43e9-a417-21a4f009f4ff">
+                      ID: d883bbf5-5d9f-43e9-a417-21a4f009f4ff
+                    </span>
+                  </div>
+                  <div className="hackathon-actions-row">
+                    <button
+                      type="button"
+                      className="hackathon-verify-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        window.open('https://unstop.com', '_blank', 'noopener,noreferrer');
+                        showToast('Opening Unstop Credential Verification...');
+                      }}
+                    >
+                      <ExternalLink size={12} />
+                      <span>Verify Credential</span>
+                    </button>
+                    <button
+                      type="button"
+                      className="hackathon-copy-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (navigator.clipboard) {
+                          navigator.clipboard.writeText('d883bbf5-5d9f-43e9-a417-21a4f009f4ff');
+                        }
+                        showToast('Copied Credential ID: d883bbf5-5d9f-43e9-a417-21a4f009f4ff');
+                      }}
+                    >
+                      <Copy size={12} />
+                      <span>Copy</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* 4. Middle-Right Note: Creative Toolkit */}
+                <div
+                  className="about-sticky-card"
+                  style={{ top: '290px', left: '800px', width: '350px', transform: 'rotate(2.5deg)' }}
+                  onClick={() => showToast('🎨 Creative Toolkit note')}
+                >
+                  <div className="moodboard-washi-tape purple"></div>
+                  <div className="sticky-header-row">
+                    <div className="sticky-title">
+                      <span className="sticky-pin-icon">🛠️</span>
+                      <span>Creative Toolkit</span>
+                    </div>
+                    <span className="sticky-category-tag">STACK</span>
+                  </div>
+                  <p className="sticky-body-text">
+                    Figma • FigJam • React 19 • Tailwind CSS • Framer Motion • Node.js • Cursor • Antigravity AI • Design Tokens &amp; Auto-Layout wizardry.
+                  </p>
+                  <div className="sticky-footer-row">
+                    <span className="sticky-tag-text">#tools #systems</span>
+                    <div className="sticky-author-badge">
+                      <span className="sticky-author-avatar">VS</span>
+                      <span>Varun</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 5. Bottom-Left Note: Vibe Coding & AI Velocity */}
+                <div
+                  className="about-sticky-card"
+                  style={{ top: '550px', left: '70px', width: '340px', transform: 'rotate(2deg)' }}
+                  onClick={() => showToast('⚡ Vibe Coding & AI Velocity note')}
+                >
+                  <div className="moodboard-washi-tape green"></div>
+                  <div className="sticky-header-row">
+                    <div className="sticky-title">
+                      <span className="sticky-pin-icon">⚡</span>
+                      <span>Vibe Coding &amp; AI</span>
+                    </div>
+                    <span className="sticky-category-tag">WORKFLOW</span>
+                  </div>
+                  <p className="sticky-body-text">
+                    Combining deep design sensibility with AI agent workflows. Building full-stack web applications and interactive OS simulations at the speed of thought.
+                  </p>
+                  <div className="sticky-footer-row">
+                    <span className="sticky-tag-text">#vibecoding #antigravity</span>
+                    <div className="sticky-author-badge">
+                      <span className="sticky-author-avatar">VS</span>
+                      <span>Varun</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 6. Bottom-Right Note: Beyond Design & Coffee */}
+                <div
+                  className="about-sticky-card"
+                  style={{ top: '535px', left: '780px', width: '350px', transform: 'rotate(-2.5deg)' }}
+                  onClick={() => showToast('☕ Beyond Design note')}
+                >
+                  <div className="moodboard-washi-tape pink"></div>
+                  <div className="sticky-header-row">
+                    <div className="sticky-title">
+                      <span className="sticky-pin-icon">☕</span>
+                      <span>Beyond Design</span>
+                    </div>
+                    <span className="sticky-category-tag">LIFE</span>
+                  </div>
+                  <p className="sticky-body-text">
+                    Fuelled by dark roast coffee, custom mechanical keyboards, ambient synth soundscapes, and obsessively tweaking border-radii until it feels frictionless.
+                  </p>
+                  <div className="sticky-footer-row">
+                    <span className="sticky-tag-text">#passions #coffee</span>
+                    <div className="sticky-author-badge">
+                      <span className="sticky-author-avatar">VS</span>
+                      <span>Varun</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Interactive Floating Emoji Stamps */}
+                <div
+                  className="moodboard-emoji-stamp"
+                  style={{ left: '420px', top: '150px' }}
+                  onClick={() => showToast('🔥 Varun: Stay curious and keep shipping!')}
+                  title="Fire Reaction"
+                >
+                  🔥
+                </div>
+                <div
+                  className="moodboard-emoji-stamp"
+                  style={{ left: '735px', top: '175px' }}
+                  onClick={() => showToast('❤️ Loved this moodboard!')}
+                  title="Heart Reaction"
+                >
+                  ❤️
+                </div>
+                <div
+                  className="moodboard-emoji-stamp"
+                  style={{ left: '415px', top: '480px' }}
+                  onClick={() => showToast('💡 Great design insight!')}
+                  title="Idea Reaction"
+                >
+                  💡
+                </div>
+                <div
+                  className="moodboard-emoji-stamp"
+                  style={{ left: '740px', top: '460px' }}
+                  onClick={() => showToast('⭐ Pinned to favorites!')}
+                  title="Star Reaction"
+                >
+                  ⭐
+                </div>
+              </div>
             </div>
           )}
 
