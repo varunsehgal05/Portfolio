@@ -9073,7 +9073,123 @@
   50% { opacity: 0.5; transform: scale(0.85); }
 }
 
-/* Scattered Sticky Note Cards (Styled with matching user screenshot palette #1c1e24) */
+/* ==========================================================================
+   FIGJAM AUTHENTIC STICKY NOTES (Replaces Dark Grey Boxes - Image 2 Match)
+   ========================================================================== */
+.figjam-sticky-note {
+  position: absolute;
+  width: 295px;
+  min-height: 205px;
+  border-radius: 4px;
+  padding: 20px 22px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 10px 25px -4px rgba(0, 0, 0, 0.5), 0 3px 8px -2px rgba(0, 0, 0, 0.3);
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease;
+  cursor: grab;
+  user-select: none;
+  z-index: 5;
+}
+
+.figjam-sticky-note:hover {
+  transform: translateY(-6px) scale(1.03) !important;
+  box-shadow: 0 20px 45px -4px rgba(0, 0, 0, 0.7), 0 6px 14px -2px rgba(0, 0, 0, 0.4);
+  z-index: 25;
+}
+
+.figjam-sticky-note:active {
+  cursor: grabbing;
+  transform: translateY(-2px) scale(1.01) !important;
+}
+
+.figjam-sticky-text {
+  font-size: 13.5px;
+  font-weight: 550;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  margin: 0;
+  white-space: pre-line;
+}
+
+.figjam-sticky-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+  padding-top: 10px;
+}
+
+.figjam-sticky-tag {
+  font-family: var(--font-mono, 'JetBrains Mono', 'SF Mono', monospace);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  opacity: 0.85;
+  text-transform: capitalize;
+}
+
+.figjam-sticky-icon {
+  font-size: 14px;
+  opacity: 0.85;
+  line-height: 1;
+}
+
+/* 1. Cyan (Idea) - Matching User Image 2 Reference */
+.figjam-sticky-note.cyan {
+  background: #00a2ff;
+  color: #042440;
+}
+.figjam-sticky-note.cyan .figjam-sticky-tag {
+  color: #042440;
+}
+
+/* 2. Orange / Coral (Aesthetic) - Matching User Image 2 Reference */
+.figjam-sticky-note.orange {
+  background: #ff5a22;
+  color: #380f00;
+}
+.figjam-sticky-note.orange .figjam-sticky-tag {
+  color: #380f00;
+}
+
+/* 3. Purple (Typography) - Matching User Image 2 Reference */
+.figjam-sticky-note.purple {
+  background: #7219d9;
+  color: #ffffff;
+}
+.figjam-sticky-note.purple .figjam-sticky-tag {
+  color: #ede9fe;
+}
+
+/* 4. Green (Workflow) */
+.figjam-sticky-note.green {
+  background: #10b981;
+  color: #043118;
+}
+.figjam-sticky-note.green .figjam-sticky-tag {
+  color: #043118;
+}
+
+/* 5. Yellow (Toolkit / Mindset) */
+.figjam-sticky-note.yellow {
+  background: #ffd21e;
+  color: #3a2400;
+}
+.figjam-sticky-note.yellow .figjam-sticky-tag {
+  color: #3a2400;
+}
+
+/* 6. Pink (Life / Passions) */
+.figjam-sticky-note.pink {
+  background: #f43f5e;
+  color: #ffffff;
+}
+.figjam-sticky-note.pink .figjam-sticky-tag {
+  color: #ffe4e6;
+}
+
+/* Scattered Sticky Note Cards (Legacy fallback support) */
 .about-sticky-card {
   position: absolute;
   background: #1a1d24;

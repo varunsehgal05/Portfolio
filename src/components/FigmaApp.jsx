@@ -2762,64 +2762,45 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   </div>
                 </div>
 
-                {/* 1. Top-Left Note: Who I Am */}
+                {/* 1. Top-Left Note: FigJam Cyan Sticky Note (Idea - Image 2 Match) */}
                 <div
-                  className="about-sticky-card"
-                  style={{ top: '30px', left: '70px', width: '330px', transform: 'rotate(-3.5deg)' }}
-                  onClick={() => showToast('📌 Who I Am pinned note')}
+                  className="figjam-sticky-note cyan"
+                  style={{ top: '25px', left: '65px', width: '310px', transform: 'rotate(-2.5deg)' }}
+                  onClick={() => showToast('📌 Idea: High-end web application architecture')}
                 >
-                  <div className="moodboard-washi-tape peach"></div>
-                  <div className="sticky-header-row">
-                    <div className="sticky-title">
-                      <span className="sticky-pin-icon">📍</span>
-                      <span>Who I Am</span>
-                    </div>
-                    <span className="sticky-category-tag">BIO</span>
-                  </div>
-                  <p className="sticky-body-text">
-                    Product Designer &amp; Design Engineer who bridges the gap between Figma vector systems and live production code. Obsessed with high-craft UI, micro-interactions, and AI velocity.
+                  <p className="figjam-sticky-text">
+                    How might we make the portfolio feel like a high-end application rather than a static document?
+                    {'\n\n'}
+                    Product Designer &amp; Design Engineer bridging Figma vector systems and live production code.
                   </p>
-                  <div className="sticky-footer-row">
-                    <span className="sticky-tag-text">#craft #design-engineering</span>
-                    <div className="sticky-author-badge">
-                      <span className="sticky-author-avatar">VS</span>
-                      <span>Varun</span>
-                    </div>
+                  <div className="figjam-sticky-footer">
+                    <span className="figjam-sticky-tag">Idea</span>
+                    <span className="figjam-sticky-icon">📌</span>
                   </div>
                 </div>
 
-                {/* 2. Top-Right Note: Design Philosophy */}
+                {/* 2. Top-Right Note: FigJam Orange Sticky Note (Aesthetic - Image 2 Match) */}
                 <div
-                  className="about-sticky-card"
-                  style={{ top: '35px', left: '790px', width: '340px', transform: 'rotate(3deg)' }}
-                  onClick={() => showToast('📌 Design Philosophy note')}
+                  className="figjam-sticky-note orange"
+                  style={{ top: '25px', left: '810px', width: '310px', transform: 'rotate(2.5deg)' }}
+                  onClick={() => showToast('🐾 Aesthetic: Dark mode tactile surfaces')}
                 >
-                  <div className="moodboard-washi-tape yellow"></div>
-                  <div className="sticky-header-row">
-                    <div className="sticky-title">
-                      <span className="sticky-pin-icon">💡</span>
-                      <span>Design Philosophy</span>
-                    </div>
-                    <span className="sticky-category-tag">MINDSET</span>
-                  </div>
-                  <p className="sticky-body-text">
-                    Function comes first, but delight is non-negotiable. Software shouldn&apos;t just solve problems — it should feel fast, responsive, and tactile like physical hardware.
+                  <p className="figjam-sticky-text">
+                    Focus heavily on dark mode aesthetics. Deep blacks, atmospheric blurs, and spectral accent colors.
+                    {'\n\n'}
+                    Software shouldn&apos;t just solve problems — it should feel fast and tactile like physical hardware.
                   </p>
-                  <div className="sticky-footer-row">
-                    <span className="sticky-tag-text">#systematic-delight</span>
-                    <div className="sticky-author-badge">
-                      <span className="sticky-author-avatar">VS</span>
-                      <span>Varun</span>
-                    </div>
+                  <div className="figjam-sticky-footer">
+                    <span className="figjam-sticky-tag">Aesthetic</span>
+                    <span className="figjam-sticky-icon">🐾</span>
                   </div>
                 </div>
 
-                {/* 3. Middle-Left Achievement Card: HAcKeThor 1st Runner-Up (Exact Replica from User Screenshot) */}
+                {/* 3. Middle-Left Achievement Card: HAcKeThor 1st Runner-Up (Official Credential) */}
                 <div
                   className="about-hackathon-card"
                   style={{ top: '275px', left: '25px', transform: 'rotate(-1deg)' }}
                 >
-                  <div className="moodboard-washi-tape cyan"></div>
                   <div className="hackathon-top-row">
                     <span className="hackathon-date">Apr 2025</span>
                     <span className="hackathon-type-badge">Hackathon Win</span>
@@ -2868,81 +2849,71 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   </div>
                 </div>
 
-                {/* 4. Middle-Right Note: Creative Toolkit */}
+                {/* 4. Middle-Right Note: FigJam Purple Sticky Note (Typography - Image 2 Match) */}
                 <div
-                  className="about-sticky-card"
-                  style={{ top: '290px', left: '800px', width: '350px', transform: 'rotate(2.5deg)' }}
-                  onClick={() => showToast('🎨 Creative Toolkit note')}
+                  className="figjam-sticky-note purple"
+                  style={{ top: '270px', left: '815px', width: '310px', transform: 'rotate(-2deg)' }}
+                  onClick={() => showToast('🔤 Typography: Crisp hierarchy & monospace tokens')}
                 >
-                  <div className="moodboard-washi-tape purple"></div>
-                  <div className="sticky-header-row">
-                    <div className="sticky-title">
-                      <span className="sticky-pin-icon">🛠️</span>
-                      <span>Creative Toolkit</span>
-                    </div>
-                    <span className="sticky-category-tag">STACK</span>
+                  <p className="figjam-sticky-text">
+                    Typography needs to be crisp. Use Monospace for technical details, Sans for body, Geist for headings.
+                    {'\n\n'}
+                    Zero generic AI patterns. Clean line-heights and intentional contrast ratios.
+                  </p>
+                  <div className="figjam-sticky-footer">
+                    <span className="figjam-sticky-tag">Typography</span>
+                    <span className="figjam-sticky-icon">Tt</span>
                   </div>
-                  <p className="sticky-body-text">
+                </div>
+
+                {/* 5. Bottom-Left Note: FigJam Green Sticky Note (Workflow) */}
+                <div
+                  className="figjam-sticky-note green"
+                  style={{ top: '550px', left: '65px', width: '315px', transform: 'rotate(2deg)' }}
+                  onClick={() => showToast('⚡ Workflow: Vibe coding & AI agent velocity')}
+                >
+                  <p className="figjam-sticky-text">
+                    Vibe Coding &amp; AI Velocity: Combining deep design sensibility with AI agent workflows.
+                    {'\n\n'}
+                    Building full-stack web applications and interactive OS simulations at the speed of thought.
+                  </p>
+                  <div className="figjam-sticky-footer">
+                    <span className="figjam-sticky-tag">Workflow</span>
+                    <span className="figjam-sticky-icon">⚡</span>
+                  </div>
+                </div>
+
+                {/* 6. Bottom-Right Note 1: FigJam Yellow Sticky Note (Toolkit) */}
+                <div
+                  className="figjam-sticky-note yellow"
+                  style={{ top: '525px', left: '775px', width: '270px', transform: 'rotate(-1.5deg)' }}
+                  onClick={() => showToast('🛠️ Toolkit: Design tokens & production systems')}
+                >
+                  <p className="figjam-sticky-text">
+                    Creative Toolkit:
+                    {'\n'}
                     Figma • FigJam • React 19 • Tailwind CSS • Framer Motion • Node.js • Cursor • Antigravity AI • Design Tokens &amp; Auto-Layout wizardry.
                   </p>
-                  <div className="sticky-footer-row">
-                    <span className="sticky-tag-text">#tools #systems</span>
-                    <div className="sticky-author-badge">
-                      <span className="sticky-author-avatar">VS</span>
-                      <span>Varun</span>
-                    </div>
+                  <div className="figjam-sticky-footer">
+                    <span className="figjam-sticky-tag">Toolkit</span>
+                    <span className="figjam-sticky-icon">🛠️</span>
                   </div>
                 </div>
 
-                {/* 5. Bottom-Left Note: Vibe Coding & AI Velocity */}
+                {/* 7. Bottom-Right Note 2: FigJam Pink Sticky Note (Life) */}
                 <div
-                  className="about-sticky-card"
-                  style={{ top: '550px', left: '70px', width: '340px', transform: 'rotate(2deg)' }}
-                  onClick={() => showToast('⚡ Vibe Coding & AI Velocity note')}
+                  className="figjam-sticky-note pink"
+                  style={{ top: '540px', left: '990px', width: '270px', transform: 'rotate(2.5deg)' }}
+                  onClick={() => showToast('☕ Life: Passions, dark roast coffee & mechanical keyboards')}
                 >
-                  <div className="moodboard-washi-tape green"></div>
-                  <div className="sticky-header-row">
-                    <div className="sticky-title">
-                      <span className="sticky-pin-icon">⚡</span>
-                      <span>Vibe Coding &amp; AI</span>
-                    </div>
-                    <span className="sticky-category-tag">WORKFLOW</span>
-                  </div>
-                  <p className="sticky-body-text">
-                    Combining deep design sensibility with AI agent workflows. Building full-stack web applications and interactive OS simulations at the speed of thought.
-                  </p>
-                  <div className="sticky-footer-row">
-                    <span className="sticky-tag-text">#vibecoding #antigravity</span>
-                    <div className="sticky-author-badge">
-                      <span className="sticky-author-avatar">VS</span>
-                      <span>Varun</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 6. Bottom-Right Note: Beyond Design & Coffee */}
-                <div
-                  className="about-sticky-card"
-                  style={{ top: '535px', left: '780px', width: '350px', transform: 'rotate(-2.5deg)' }}
-                  onClick={() => showToast('☕ Beyond Design note')}
-                >
-                  <div className="moodboard-washi-tape pink"></div>
-                  <div className="sticky-header-row">
-                    <div className="sticky-title">
-                      <span className="sticky-pin-icon">☕</span>
-                      <span>Beyond Design</span>
-                    </div>
-                    <span className="sticky-category-tag">LIFE</span>
-                  </div>
-                  <p className="sticky-body-text">
+                  <p className="figjam-sticky-text">
+                    Beyond Design:
+                    {'\n'}
                     Fuelled by dark roast coffee, custom mechanical keyboards, ambient synth soundscapes, and obsessively tweaking border-radii until it feels frictionless.
                   </p>
-                  <div className="sticky-footer-row">
-                    <span className="sticky-tag-text">#passions #coffee</span>
-                    <div className="sticky-author-badge">
-                      <span className="sticky-author-avatar">VS</span>
-                      <span>Varun</span>
-                    </div>
+                  <div className="figjam-sticky-footer">
+                    <span className="figjam-sticky-tag">Life</span>
+                    <span className="figjam-sticky-icon">☕</span>
                   </div>
                 </div>
 
