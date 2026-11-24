@@ -1,10 +1,85 @@
 /**
  * VarunOS Portfolio CMS (Content Management System)
- * Central persistent store for profile, projects, experience, and system settings.
+ * Central persistent store for profile, projects, experience, desktop/dock apps,
+ * Render & Vercel deployment links/hooks, and system settings.
  * Updates in AdminPortal automatically dispatch 'varunos-cms-updated' to update the live site.
  */
+import { portfolioApps, desktopIconIds as defaultDesktopIconIds } from '../config/apps';
 
 const CMS_STORAGE_KEY = 'varunos_cms_data';
+
+const DEFAULT_APPS_LIST = [
+  {
+    ...portfolioApps.finder,
+    subtitle: 'Projects & Work',
+    showOnDesktop: defaultDesktopIconIds.includes('finder'),
+    showInDock: true,
+    showOnDevice: true
+  },
+  {
+    ...portfolioApps.figma,
+    subtitle: 'Design Workspace',
+    showOnDesktop: defaultDesktopIconIds.includes('figma'),
+    showInDock: true,
+    showOnDevice: true
+  },
+  {
+    ...portfolioApps.vscode,
+    subtitle: 'Web IDE & Code',
+    showOnDesktop: defaultDesktopIconIds.includes('vscode'),
+    showInDock: true,
+    showOnDevice: true
+  },
+  {
+    ...portfolioApps.terminal,
+    subtitle: 'Zsh Shell',
+    showOnDesktop: defaultDesktopIconIds.includes('terminal'),
+    showInDock: true,
+    showOnDevice: true
+  },
+  {
+    ...portfolioApps.resume,
+    subtitle: 'Interactive CV',
+    showOnDesktop: defaultDesktopIconIds.includes('resume'),
+    showInDock: true,
+    showOnDevice: true
+  },
+  {
+    ...portfolioApps.contact,
+    subtitle: 'Get in Touch',
+    showOnDesktop: defaultDesktopIconIds.includes('contact'),
+    showInDock: true,
+    showOnDevice: true
+  },
+  {
+    ...portfolioApps.reviews,
+    subtitle: 'Testimonials',
+    showOnDesktop: defaultDesktopIconIds.includes('reviews'),
+    showInDock: true,
+    showOnDevice: true
+  },
+  {
+    ...portfolioApps.coffee,
+    subtitle: 'Support Varun',
+    showOnDesktop: defaultDesktopIconIds.includes('coffee'),
+    showInDock: true,
+    showOnDevice: true
+  },
+  {
+    ...portfolioApps.settings,
+    subtitle: 'Customization',
+    showOnDesktop: defaultDesktopIconIds.includes('settings'),
+    showInDock: true,
+    showOnDevice: true
+  },
+  {
+    ...portfolioApps.trash,
+    subtitle: 'Recycle Bin',
+    showOnDesktop: defaultDesktopIconIds.includes('trash'),
+    showInDock: true,
+    showOnDevice: true
+  }
+];
 
 export const DEFAULT_CMS_DATA = {
   profile: {
@@ -101,12 +176,41 @@ export const DEFAULT_CMS_DATA = {
       tags: ['Figma', 'React', 'Freelance', 'High-Fidelity Wireframes']
     }
   ],
+  apps: DEFAULT_APPS_LIST,
+  deployments: {
+    githubRepo: 'https://github.com/varunsehgal05/Portfolio',
+    branch: 'main',
+    vercelProjectName: 'portfolio-site',
+    vercelProjectId: 'prj_e3VkjvJggGFUjGMuWXVHSIuVxiBJ',
+    vercelUrl: 'https://portfolio-site-varunsehgal05.vercel.app',
+    vercelDeployHook: '',
+    lastVercelDeploy: '',
+    renderServiceName: 'Portfolio (Static Site)',
+    renderUrl: 'https://portfolio-varun.onrender.com',
+    renderDeployHook: '',
+    lastRenderDeploy: ''
+  },
   system: {
     authorName: 'Varun Sehgal',
     themeMode: 'dark',
     defaultWallpaper: 'default',
     soundEnabled: true
   }
+};
+
+const mergeAppsList = (savedApps) => {
+  if (!Array.isArray(savedApps) || savedApps.length === 0) {
+    return DEFAULT_APPS_LIST.map((a) => ({ ...a }));
+  }
+  const byId = new Map(savedApps.map((a) => [a.id, a]));
+  const merged = savedApps.map((saved) => {
+    const def = DEFAULT_APPS_LIST.find((d) => d.id === saved.id) || {};
+    return { ...def, ...saved };
+  });
+  for (const def of DEFAULT_APPS_LIST) {
+    if (!byId.has(def.id)) merged.push({ ...def });
+  }
+  return merged;
 };
 
 /**
@@ -121,12 +225,34 @@ export const getCMSData = () => {
       profile: { ...DEFAULT_CMS_DATA.profile, ...(parsed.profile || {}) },
       projects: Array.isArray(parsed.projects) ? parsed.projects : DEFAULT_CMS_DATA.projects,
       experiences: Array.isArray(parsed.experiences) ? parsed.experiences : DEFAULT_CMS_DATA.experiences,
+      apps: mergeAppsList(parsed.apps),
+      deployments: { ...DEFAULT_CMS_DATA.deployments, ...(parsed.deployments || {}) },
       system: { ...DEFAULT_CMS_DATA.system, ...(parsed.system || {}) }
     };
   } catch (err) {
     console.error('Failed to load CMS data:', err);
     return DEFAULT_CMS_DATA;
   }
+};
+
+/**
+ * Return merged portfolioApps dictionary & ordered desktop/dock lists from live CMS
+ */
+export const getLiveAppsConfig = () => {
+  const { apps } = getCMSData();
+  const appMap = { ...portfolioApps };
+  const desktopIds = [];
+  const dockIds = [];
+  const deviceIds = [];
+
+  for (const item of apps) {
+    appMap[item.id] = { ...(portfolioApps[item.id] || {}), ...item };
+    if (item.showOnDesktop) desktopIds.push(item.id);
+    if (item.showInDock !== false) dockIds.push(item.id);
+    if (item.showOnDevice !== false) deviceIds.push(item.id);
+  }
+
+  return { apps, appMap, desktopIds, dockIds, deviceIds };
 };
 
 /**
@@ -139,10 +265,12 @@ export const saveCMSData = (newData) => {
       ...current,
       ...newData,
       profile: { ...current.profile, ...(newData.profile || {}) },
+      deployments: { ...current.deployments, ...(newData.deployments || {}) },
       system: { ...current.system, ...(newData.system || {}) }
     };
     if (newData.projects) updated.projects = newData.projects;
     if (newData.experiences) updated.experiences = newData.experiences;
+    if (newData.apps) updated.apps = newData.apps;
 
     localStorage.setItem(CMS_STORAGE_KEY, JSON.stringify(updated));
     window.dispatchEvent(new CustomEvent('varunos-cms-updated', { detail: updated }));

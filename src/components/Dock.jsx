@@ -8,6 +8,7 @@ import {
   Coffee,
   Star
 } from 'lucide-react';
+import { getLiveAppsConfig } from '../utils/portfolioCMS';
 import './Dock.css';
 
 const FigmaLogo = () => (
@@ -113,6 +114,23 @@ const Dock = ({
 }) => {
   const [mouseX, setMouseX] = useState(null);
   const [bouncingApp, setBouncingApp] = useState(null);
+  const [cmsApps, setCmsApps] = useState(() => getLiveAppsConfig().appMap);
+
+  useEffect(() => {
+    const syncApps = () => setCmsApps(getLiveAppsConfig().appMap);
+    window.addEventListener('varunos-cms-updated', syncApps);
+    return () => window.removeEventListener('varunos-cms-updated', syncApps);
+  }, []);
+
+  const visibleDockItems = DOCK_ITEMS.filter((item) => {
+    if (item.isSeparator) return true;
+    const cfg = cmsApps[item.id];
+    return !cfg || cfg.showInDock !== false;
+  }).map((item) => {
+    if (item.isSeparator) return item;
+    const cfg = cmsApps[item.id];
+    return cfg ? { ...item, name: cfg.name || item.name } : item;
+  });
   // Dock is permanently visible unless an app is currently open in full screen
   const [isDockVisible, setIsDockVisible] = useState(!isFullScreenActive);
   const isHoveringRef = useRef(false);
@@ -249,7 +267,7 @@ const Dock = ({
         >
           {(() => {
             let appCounter = 0;
-            return DOCK_ITEMS.map((item, idx) => {
+            return visibleDockItems.map((item, idx) => {
               if (item.isSeparator) {
                 const isSepRevealed = stampedDockCount >= 7;
                 return (

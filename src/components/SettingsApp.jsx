@@ -602,6 +602,21 @@ const SettingsApp = ({ userName = 'Guest', onReplaySwarm }) => {
                 </div>
                 <span className="settings-badge">Califa Swarm Active</span>
               </div>
+
+              {/* Option 3: Admin Portal Launcher */}
+              <div className="settings-row">
+                <div className="settings-row-text">
+                  <span className="row-title">Admin Portal &amp; Cloud CMS</span>
+                  <span className="row-sub">Edit apps, projects, profile, reviews &amp; Vercel/Render deploy hooks (/varun_admin or Ctrl+Alt+A)</span>
+                </div>
+                <button
+                  type="button"
+                  className="settings-action-btn"
+                  onClick={() => window.dispatchEvent(new CustomEvent('varunos-open-admin'))}
+                >
+                  <span>Open Admin Portal</span>
+                </button>
+              </div>
             </div>
           </div>
         )}

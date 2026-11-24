@@ -6,6 +6,7 @@ import Dock from './Dock';
 import DeviceHomeScreen from './DeviceHomeScreen';
 import { portfolioApps, desktopIconIds } from '../config/apps';
 import { desktopWallpapers, getDeviceWallpaper } from '../config/wallpapers';
+import { getLiveAppsConfig } from '../utils/portfolioCMS';
 import LiveMouseSwarm from './LiveMouseSwarm';
 import './Desktop.css';
 
@@ -434,7 +435,15 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
     }
   }, [isRebuilding, swarmStage]);
 
-  const displayedIcons = desktopIconIds || ['figma', 'vscode', 'resume', 'contact', 'coffee', 'trash'];
+  const [liveAppsConfig, setLiveAppsConfig] = useState(() => getLiveAppsConfig());
+  useEffect(() => {
+    const syncApps = () => setLiveAppsConfig(getLiveAppsConfig());
+    window.addEventListener('varunos-cms-updated', syncApps);
+    return () => window.removeEventListener('varunos-cms-updated', syncApps);
+  }, []);
+
+  const livePortfolioApps = liveAppsConfig.appMap || portfolioApps;
+  const displayedIcons = liveAppsConfig.desktopIds.length > 0 ? liveAppsConfig.desktopIds : (desktopIconIds || ['figma', 'vscode', 'resume', 'contact', 'coffee', 'trash']);
   const activeWallpaper = getDeviceWallpaper(activeWallpaperId, effectiveDeviceMode);
 
   return (
@@ -490,7 +499,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
             openWindows={openWindows}
             minimizedWindows={minimizedWindows}
             activeWindow={activeWindow}
-            portfolioApps={portfolioApps}
+            portfolioApps={livePortfolioApps}
             onOpenApp={openApp}
             onCloseApp={closeApp}
             onFocusApp={focusApp}
@@ -510,7 +519,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
         {effectiveDeviceMode === 'desktop' && (
           <div className={`desktop-icons ${isRebuilding ? (swarmStage >= 3 || stampedIconCount > 0 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
             {displayedIcons.map((id, index) => {
-              const app = portfolioApps[id];
+              const app = livePortfolioApps[id];
               if (!app) return null;
               const isRevealed = !isRebuilding ? true : (swarmStage >= 4 ? true : index < stampedIconCount);
               return (
@@ -536,7 +545,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
         {/* Windows Layer (revealed in Stage 5 as real window is assembled & finalized) */}
         <div className={`desktop-windows-layer ${isRebuilding ? (swarmStage >= 5 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
           {openWindows.map((appId) => {
-            const app = portfolioApps[appId] || { id: appId, name: appId };
+            const app = livePortfolioApps[appId] || { id: appId, name: appId };
             // During desktop swarm rebuild (stages 0-4), do not mount window so there is never a black screen
             if (isRebuilding && swarmStage < 5) return null;
             const stackRank = windowOrder.indexOf(appId);

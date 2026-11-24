@@ -109,10 +109,17 @@ function App() {
     };
     window.addEventListener('keydown', handleShortcut);
 
+    const handleOpenAdmin = () => {
+      setIsAdminRoute(true);
+      window.history.pushState(null, '', '/varun_admin');
+    };
+    window.addEventListener('varunos-open-admin', handleOpenAdmin);
+
     return () => {
       window.removeEventListener('popstate', handleRouteChange);
       window.removeEventListener('hashchange', handleRouteChange);
       window.removeEventListener('keydown', handleShortcut);
+      window.removeEventListener('varunos-open-admin', handleOpenAdmin);
     };
   }, []);
   const isSkipRequested = typeof window !== 'undefined' && (

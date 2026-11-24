@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getDeviceWallpaper } from '../config/wallpapers';
+import { getLiveAppsConfig } from '../utils/portfolioCMS';
 import {
   Wifi,
   Battery,
@@ -139,6 +140,21 @@ const DeviceHomeScreen = ({
   const [time, setTime] = useState(new Date());
   const [copiedId, setCopiedId] = useState(false);
   const [dynamicIslandExpanded, setDynamicIslandExpanded] = useState(false);
+  const [cmsApps, setCmsApps] = useState(() => getLiveAppsConfig().appMap);
+
+  useEffect(() => {
+    const syncApps = () => setCmsApps(getLiveAppsConfig().appMap);
+    window.addEventListener('varunos-cms-updated', syncApps);
+    return () => window.removeEventListener('varunos-cms-updated', syncApps);
+  }, []);
+
+  const resolvedDeviceApps = DEVICE_APPS.filter((app) => {
+    const cfg = cmsApps[app.id];
+    return !cfg || cfg.showOnDevice !== false;
+  }).map((app) => {
+    const cfg = cmsApps[app.id];
+    return cfg ? { ...app, name: cfg.name || app.name, subtitle: cfg.subtitle || app.subtitle } : app;
+  });
 
   const fallbackWallpaper = getDeviceWallpaper('default', mode);
   const currentWallpaper = activeWallpaper || fallbackWallpaper;
@@ -384,7 +400,7 @@ const DeviceHomeScreen = ({
 
             {/* APP ICONS GRID */}
             <section className="device-app-grid grid-tablet" aria-label="Apps Grid">
-              {DEVICE_APPS.map((app) => {
+              {resolvedDeviceApps.map((app) => {
                 const Icon = app.icon;
                 const isOpen = openWindows.includes(app.id);
                 const isActive = activeWindow === app.id;
@@ -537,7 +553,7 @@ const DeviceHomeScreen = ({
 
             {/* Mobile App Grid */}
             <section className="device-app-grid grid-mobile" aria-label="Apps Grid">
-              {DEVICE_APPS.map((app) => {
+              {resolvedDeviceApps.map((app) => {
                 const Icon = app.icon;
                 const isOpen = openWindows.includes(app.id);
                 const isActive = activeWindow === app.id;

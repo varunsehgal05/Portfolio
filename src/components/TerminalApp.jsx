@@ -73,7 +73,7 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
     setTintLevel(level);
     try {
       localStorage.setItem('varunos_terminal_tint_val', level);
-    } catch {}
+    } catch { }
   };
 
   // Active terminal wallpaper state (persists in localStorage)
@@ -92,16 +92,16 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
   const getWpStyle = (wpId, tint) => {
     const wp = terminalWallpapers.find(w => w.id === wpId) || terminalWallpapers[0];
     if (!wp.image) return wp.bgStyle || { backgroundColor: '#0d1117' };
-    
+
     // Calibrated tint opacities:
     // vivid (0.42 / 0.54) - crystal clear artwork with dark contrast scrim so text is sharp & readable!
     // balanced (0.62 / 0.74) - deep contrast for intense coding
-    const [topAlpha, bottomAlpha] = tint === 'vivid' 
-      ? ['0.42', '0.54'] 
-      : tint === 'balanced' 
-      ? ['0.62', '0.74'] 
-      : ['0.80', '0.88'];
-      
+    const [topAlpha, bottomAlpha] = tint === 'vivid'
+      ? ['0.42', '0.54']
+      : tint === 'balanced'
+        ? ['0.62', '0.74']
+        : ['0.80', '0.88'];
+
     return {
       backgroundImage: `linear-gradient(rgba(0, 0, 0, ${topAlpha}), rgba(0, 0, 0, ${bottomAlpha})), url(${wp.image})`,
       backgroundSize: 'cover',
@@ -164,7 +164,7 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
     setActiveWallpaperId(found.id);
     try {
       localStorage.setItem('varunos_terminal_wallpaper', found.id);
-    } catch {}
+    } catch { }
     window.dispatchEvent(new CustomEvent('varunos-set-terminal-wallpaper', { detail: { id: found.id } }));
   };
 
@@ -348,6 +348,18 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
         setHistory([...newHistory, `user: ${userName || 'Guest'} (collaborator session @ ttys001)`, '']);
         break;
 
+      case 'admin':
+        setHistory([
+          ...newHistory,
+          '🔐 Launching VarunOS Admin Portal (/varun_admin)...',
+          '   Shortcuts: /varun_admin · ?admin=true · Ctrl+Alt+A',
+          ''
+        ]);
+        setTimeout(() => {
+          window.dispatchEvent(new CustomEvent('varunos-open-admin'));
+        }, 250);
+        break;
+
       case 'date':
         setHistory([...newHistory, new Date().toString(), '']);
         break;
@@ -438,20 +450,20 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
   const currentWpStyle = getWpStyle(activeWallpaperId, tintLevel);
 
   return (
-    <div 
-      className="terminal-wrapper" 
+    <div
+      className="terminal-wrapper"
       onClick={handleContainerClick}
     >
       {/* Animated Terminal Wallpaper Backdrop Layers (macOS Sequoia Crossfade) */}
       <div className="terminal-wallpaper-viewport" aria-hidden="true">
         {prevWpStyle && (
-          <div 
+          <div
             key="terminal-wp-outgoing"
             className="terminal-backdrop-layer outgoing"
             style={prevWpStyle}
           />
         )}
-        <div 
+        <div
           key={`terminal-wp-${activeWallpaperId}-${tintLevel}`}
           className={`terminal-backdrop-layer ${isWpTransitioning ? 'incoming' : 'active'}`}
           style={currentWpStyle}
@@ -585,10 +597,10 @@ const TerminalApp = ({ userName = 'Guest', onOpenApp }) => {
             const isHeader = line.startsWith('┌') || line.startsWith('└') || line.startsWith('═') || line.startsWith('🚀') || line.startsWith('🛠️') || line.startsWith('💼') || line.startsWith('📬') || line.startsWith('⚡') || line.startsWith('👤') || line.startsWith('🖼️');
             const isSuccess = line.startsWith('✅');
             const isError = line.includes('command not found') || line.includes('No such file') || line.includes('unknown theme');
-            
+
             return (
-              <div 
-                key={idx} 
+              <div
+                key={idx}
                 className={`terminal-line ${isPrompt ? 'prompt-line' : ''} ${isHeader ? 'header-line' : ''} ${isSuccess ? 'success-line' : ''} ${isError ? 'error-line' : ''}`}
               >
                 {line}
