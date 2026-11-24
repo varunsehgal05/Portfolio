@@ -922,11 +922,8 @@ export const VsCodeApp = () => {
   const [activeFile, setActiveFile] = useState('README.md');
   const [openTabs, setOpenTabs] = useState([
     'README.md',
-    'Live Preview: CodeSrijan',
     'AboutMe.tsx',
-    'varunos-portfolio.tsx',
-    'vibecoding-manifesto.md',
-    'test.js'
+    'Live Preview: CodeSrijan'
   ]);
   const [editorViewMode, setEditorViewMode] = useState('preview'); // 'preview' | 'code'
   const [copiedToast, setCopiedToast] = useState(false);
@@ -2095,7 +2092,7 @@ export const VsCodeApp = () => {
 
                       {/* Custom dynamically added files */}
                       {Object.keys(projectFiles).filter(k =>
-                        !['Live Preview: CodeSrijan', 'codesrijan/page.tsx', 'varunos-portfolio.tsx', 'AboutMe.tsx', 'TerminalApp.jsx', 'FinderApp.css', 'animations.ts', 'formatters.ts', 'cn.ts', 'useTheme.ts', 'useSwarm.ts', 'tools-and-stack.ts', 'portfolio.config.ts', 'test.js', 'app.js', 'vibecoding-manifesto.md', 'Varun_Sehgal_Resume_Updated.tex', 'package.json'].includes(k)
+                        !['README.md', 'Live Preview: CodeSrijan', 'codesrijan/page.tsx', 'varunos-portfolio.tsx', 'AboutMe.tsx', 'TerminalApp.jsx', 'FinderApp.css', 'animations.ts', 'formatters.ts', 'cn.ts', 'useTheme.ts', 'useSwarm.ts', 'tools-and-stack.ts', 'portfolio.config.ts', 'test.js', 'app.js', 'vibecoding-manifesto.md', 'Varun_Sehgal_Resume_Updated.tex', 'package.json'].includes(k)
                       ).map(k => renderTreeItem(k, '16px'))}
                     </div>
                   )}
@@ -2770,16 +2767,8 @@ export const VsCodeApp = () => {
                 </div>
               </div>
             ) : (
-              <div className="vscode-code-viewport" style={{ position: 'relative' }}>
-                {/* Real-time Code Running Laser Scanning Beam Animation */}
-                {isRunning && (
-                  <div className="vscode-run-laser-container">
-                    <div className="vscode-run-laser" />
-                    <div className="vscode-run-pulse-overlay" />
-                  </div>
-                )}
-
-                {/* File Context & Explanation Banner — Solves UX confusion */}
+              <div className="vscode-code-area-wrapper">
+                {/* File Context & Explanation Banner — Spans full width across top */}
                 <div className="file-context-banner">
                   <div className="file-context-left">
                     <span className="file-badge-chip">{getFileBadge(currentFile.name)}</span>
@@ -2827,121 +2816,141 @@ export const VsCodeApp = () => {
                   </div>
                 </div>
 
-                {/* Visual Preview Mode for README, AboutMe, or Manifesto */}
-                {editorViewMode === 'preview' && canTogglePreview(currentFile.name) ? (
-                  <div className="editor-visual-preview-container">
-                    {currentFile.name === 'README.md' && (
-                      <div className="readme-preview-content">
-                        <div className="readme-hero-box">
-                          <div className="readme-hero-tag">
-                            <Sparkles size={12} className="text-amber-400" />
-                            <span>PORTFOLIO WORKSPACE GUIDE · START HERE</span>
+                <div className="vscode-code-viewport" style={{ position: 'relative' }}>
+                  {/* Real-time Code Running Laser Scanning Beam Animation */}
+                  {isRunning && (
+                    <div className="vscode-run-laser-container">
+                      <div className="vscode-run-laser" />
+                      <div className="vscode-run-pulse-overlay" />
+                    </div>
+                  )}
+
+                  {/* Visual Preview Mode for README, AboutMe, or Manifesto */}
+                  {editorViewMode === 'preview' && canTogglePreview(currentFile.name) ? (
+                    <div className="editor-visual-preview-container">
+                      {currentFile.name === 'README.md' && (
+                        <div className="readme-preview-content">
+                          <div className="readme-hero-box">
+                            <div className="readme-hero-tag">
+                              <Sparkles size={12} className="text-amber-400" />
+                              <span>PORTFOLIO WORKSPACE GUIDE · START HERE</span>
+                            </div>
+                            <h1 className="readme-hero-title">Varun Sehgal — UI/UX Designer &amp; Design Engineer</h1>
+                            <p className="readme-hero-subtitle">
+                              Specialized in crafting friction-free product experiences: tactile micro-interactions in Figma and executable Next.js, React &amp; Tailwind CSS code.
+                            </p>
+                            <div className="readme-quick-stats">
+                              <div className="readme-stat-pill">
+                                <span className="stat-num">3+</span>
+                                <span className="stat-text">Years Experience</span>
+                              </div>
+                              <div className="readme-stat-pill">
+                                <span className="stat-num">200+</span>
+                                <span className="stat-text">Hackers Hosted</span>
+                              </div>
+                              <div className="readme-stat-pill">
+                                <span className="stat-num">10x</span>
+                                <span className="stat-text">Shipping Velocity</span>
+                              </div>
+                            </div>
                           </div>
-                          <h1 className="readme-hero-title">Varun Sehgal — UI/UX Designer &amp; Design Engineer</h1>
-                          <p className="readme-hero-subtitle">
-                            Specialized in crafting friction-free product experiences: tactile micro-interactions in Figma and executable Next.js, React &amp; Tailwind CSS code.
-                          </p>
-                          <div className="readme-quick-stats">
-                            <div className="readme-stat-pill">
-                              <span className="stat-num">3+</span>
-                              <span className="stat-text">Years Experience</span>
+
+                          <div className="readme-cards-heading">
+                            <Compass size={14} className="text-sky-400" />
+                            <span>Interactive Project Guide — What to See in This Workspace</span>
+                          </div>
+
+                          <div className="readme-grid">
+                            <div
+                              className="readme-nav-card"
+                              onClick={() => handleOpenFile('Live Preview: CodeSrijan')}
+                            >
+                              <div className="nav-card-header">
+                                <span className="nav-card-icon text-emerald-400">🌐</span>
+                                <span className="nav-card-status">LIVE APP</span>
+                              </div>
+                              <h3 className="nav-card-title">CodeSrijan Hackathon Portal</h3>
+                              <p className="nav-card-desc">
+                                Production national hackathon platform with real-time multi-judge rubric scoring and solo hacker matchmaking.
+                              </p>
+                              <div className="nav-card-footer">
+                                <span>Open Live Webview →</span>
+                              </div>
                             </div>
-                            <div className="readme-stat-pill">
-                              <span className="stat-num">200+</span>
-                              <span className="stat-text">Hackers Hosted</span>
+
+                            <div
+                              className="readme-nav-card"
+                              onClick={() => {
+                                handleOpenFile('AboutMe.tsx');
+                                setEditorViewMode('preview');
+                              }}
+                            >
+                              <div className="nav-card-header">
+                                <span className="nav-card-icon text-sky-400">👤</span>
+                                <span className="nav-card-status text-sky-400">PROFILE</span>
+                              </div>
+                              <h3 className="nav-card-title">Developer &amp; Designer Bio</h3>
+                              <p className="nav-card-desc">
+                                Explore Varun's UI/UX leadership at UniEvent &amp; Assemble Esports, education at JUET, and core design tokens.
+                              </p>
+                              <div className="nav-card-footer">
+                                <span>View Profile Card →</span>
+                              </div>
                             </div>
-                            <div className="readme-stat-pill">
-                              <span className="stat-num">10x</span>
-                              <span className="stat-text">Shipping Velocity</span>
+
+                            <div
+                              className="readme-nav-card"
+                              onClick={() => {
+                                handleOpenFile('vibecoding-manifesto.md');
+                                setEditorViewMode('preview');
+                              }}
+                            >
+                              <div className="nav-card-header">
+                                <span className="nav-card-icon text-amber-400">⚡</span>
+                                <span className="nav-card-status text-amber-400">PHILOSOPHY</span>
+                              </div>
+                              <h3 className="nav-card-title">The Vibecoding Manifesto</h3>
+                              <p className="nav-card-desc">
+                                How atomic Figma design tokens combined with agentic AI enable rapid 3-week production cycles with 0 technical debt.
+                              </p>
+                              <div className="nav-card-footer">
+                                <span>Read Manifesto →</span>
+                              </div>
                             </div>
+
+                            <div
+                              className="readme-nav-card"
+                              onClick={() => {
+                                handleOpenFile('test.js');
+                                setEditorViewMode('code');
+                              }}
+                            >
+                              <div className="nav-card-header">
+                                <span className="nav-card-icon text-purple-400">▶</span>
+                                <span className="nav-card-status text-purple-400">RUNNABLE</span>
+                              </div>
+                              <h3 className="nav-card-title">Interactive JS Sandbox</h3>
+                              <p className="nav-card-desc">
+                                Live sandbox script. Click to open and press "Run Code" above to execute real JavaScript directly in the browser!
+                              </p>
+                              <div className="nav-card-footer">
+                                <span>Launch Sandbox →</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="readme-preview-footer">
+                            <button
+                              type="button"
+                              className="toggle-to-code-btn"
+                              onClick={() => setEditorViewMode('code')}
+                            >
+                              <Code size={12} />
+                              <span>Inspect Raw Markdown Source (README.md)</span>
+                            </button>
                           </div>
                         </div>
-
-                        <div className="readme-cards-heading">
-                          <Compass size={14} className="text-sky-400" />
-                          <span>Interactive Project Guide — What to See in This Workspace</span>
-                        </div>
-
-                        <div className="readme-grid">
-                          <div
-                            className="readme-nav-card"
-                            onClick={() => handleOpenFile('Live Preview: CodeSrijan')}
-                          >
-                            <div className="nav-card-header">
-                              <span className="nav-card-icon text-emerald-400">🌐</span>
-                              <span className="nav-card-status">LIVE APP</span>
-                            </div>
-                            <h3 className="nav-card-title">CodeSrijan Hackathon Portal</h3>
-                            <p className="nav-card-desc">
-                              Production national hackathon platform with real-time multi-judge rubric scoring and solo hacker matchmaking.
-                            </p>
-                            <div className="nav-card-footer">
-                              <span>Open Live Webview →</span>
-                            </div>
-                          </div>
-
-                          <div
-                            className="readme-nav-card"
-                            onClick={() => {
-                              handleOpenFile('AboutMe.tsx');
-                              setEditorViewMode('preview');
-                            }}
-                          >
-                            <div className="nav-card-header">
-                              <span className="nav-card-icon text-sky-400">👤</span>
-                              <span className="nav-card-status text-sky-400">PROFILE</span>
-                            </div>
-                            <h3 className="nav-card-title">Developer &amp; Designer Bio</h3>
-                            <p className="nav-card-desc">
-                              Explore Varun's UI/UX leadership at UniEvent &amp; Assemble Esports, education at JUET, and core design tokens.
-                            </p>
-                            <div className="nav-card-footer">
-                              <span>View Profile Card →</span>
-                            </div>
-                          </div>
-
-                          <div
-                            className="readme-nav-card"
-                            onClick={() => {
-                              handleOpenFile('vibecoding-manifesto.md');
-                              setEditorViewMode('preview');
-                            }}
-                          >
-                            <div className="nav-card-header">
-                              <span className="nav-card-icon text-amber-400">⚡</span>
-                              <span className="nav-card-status text-amber-400">PHILOSOPHY</span>
-                            </div>
-                            <h3 className="nav-card-title">The Vibecoding Manifesto</h3>
-                            <p className="nav-card-desc">
-                              How atomic Figma design tokens combined with agentic AI enable rapid 3-week production cycles with 0 technical debt.
-                            </p>
-                            <div className="nav-card-footer">
-                              <span>Read Manifesto →</span>
-                            </div>
-                          </div>
-
-                          <div
-                            className="readme-nav-card"
-                            onClick={() => {
-                              handleOpenFile('test.js');
-                              setEditorViewMode('code');
-                            }}
-                          >
-                            <div className="nav-card-header">
-                              <span className="nav-card-icon text-purple-400">▶</span>
-                              <span className="nav-card-status text-purple-400">RUNNABLE</span>
-                            </div>
-                            <h3 className="nav-card-title">Interactive JS Sandbox</h3>
-                            <p className="nav-card-desc">
-                              Live sandbox script. Click to open and press "Run Code" above to execute real JavaScript directly in the browser!
-                            </p>
-                            <div className="nav-card-footer">
-                              <span>Launch Sandbox →</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
+                      )}
 
                     {currentFile.name === 'AboutMe.tsx' && (
                       <div className="profile-preview-card">
@@ -3108,7 +3117,8 @@ export const VsCodeApp = () => {
                   </div>
                 )}
               </div>
-            )
+            </div>
+          )
           ) : (
             <div className="vscode-empty-viewport">
               <div className="empty-watermark-icon-wrap">
