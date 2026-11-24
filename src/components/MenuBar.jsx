@@ -29,9 +29,7 @@ import {
   Compass,
   Mail,
   Minimize2,
-  Maximize2,
-  Tablet,
-  Smartphone
+  Maximize2
 } from 'lucide-react';
 import './MenuBar.css';
 
@@ -836,84 +834,6 @@ const MenuBar = ({
                   );
                 })}
               </div>
-            </div>
-          )}
-        </div>
-
-        {/* Device Mode Switcher (Mac / iPad / iPhone / Auto) */}
-        <div className="menu-item-wrapper device-mode-menu-wrapper">
-          <button
-            className={`menu-icon-btn device-mode-btn ${activeMenu === 'device' ? 'active' : ''}`}
-            onClick={() => toggleMenu('device')}
-            title={`Device Viewport: ${deviceModeOverride.toUpperCase()} (Active: ${effectiveDeviceMode})`}
-            aria-label="Switch Device Format"
-          >
-            {effectiveDeviceMode === 'mobile' ? (
-              <Smartphone size={13} className="text-sky-400" />
-            ) : effectiveDeviceMode === 'tablet' ? (
-              <Tablet size={13} className="text-purple-400" />
-            ) : (
-              <Laptop size={13} className="text-emerald-400" />
-            )}
-            <span className="device-mode-label" style={{ fontSize: '11px', fontWeight: '600', marginLeft: '3px' }}>
-              {effectiveDeviceMode === 'mobile' ? 'iPhone' : effectiveDeviceMode === 'tablet' ? 'iPad' : 'Mac'}
-            </span>
-          </button>
-          {activeMenu === 'device' && (
-            <div className="apple-dropdown-menu right-aligned device-popup" style={{ width: '220px', padding: '6px' }}>
-              <div className="sound-popup-header" style={{ padding: '4px 8px', fontSize: '11px', fontWeight: '700', color: '#94a3b8' }}>
-                <span>DEVICE VIEWPORT</span>
-                <span className="sound-vol-label" style={{ textTransform: 'capitalize' }}>{effectiveDeviceMode}</span>
-              </div>
-              <div className="apple-dropdown-divider" />
-              <button
-                type="button"
-                className={`apple-dropdown-item ${deviceModeOverride === 'auto' ? 'font-semibold text-cyan-400' : ''}`}
-                onClick={() => {
-                  if (onSetDeviceMode) onSetDeviceMode('auto');
-                  setActiveMenu(null);
-                }}
-              >
-                <Compass size={13} className="mr-2" />
-                <span>Auto (Screen Responsive)</span>
-                {deviceModeOverride === 'auto' && <Check size={12} className="ml-auto text-cyan-400" />}
-              </button>
-              <button
-                type="button"
-                className={`apple-dropdown-item ${deviceModeOverride === 'desktop' ? 'font-semibold text-cyan-400' : ''}`}
-                onClick={() => {
-                  if (onSetDeviceMode) onSetDeviceMode('desktop');
-                  setActiveMenu(null);
-                }}
-              >
-                <Laptop size={13} className="mr-2" />
-                <span>Mac (macOS Sequoia)</span>
-                {deviceModeOverride === 'desktop' && <Check size={12} className="ml-auto text-cyan-400" />}
-              </button>
-              <button
-                type="button"
-                className={`apple-dropdown-item ${deviceModeOverride === 'tablet' ? 'font-semibold text-cyan-400' : ''}`}
-                onClick={() => {
-                  if (onSetDeviceMode) onSetDeviceMode('tablet');
-                  setActiveMenu(null);
-                }}
-              >
-                <Tablet size={13} className="mr-2" />
-                <span>iPad (iPadOS Format)</span>
-                {deviceModeOverride === 'tablet' && <Check size={12} className="ml-auto text-cyan-400" />}
-              </button>
-              <button
-                type="button"
-                className={`apple-dropdown-item ${deviceModeOverride === 'mobile' ? 'font-semibold text-cyan-400' : ''}`}
-                onClick={() => {
-                  if (onSetDeviceMode) onSetDeviceMode('mobile');
-                  setActiveMenu(null);
-                }}
-              >
-                <Smartphone size={13} className="mr-2" />
-                <span>iPhone (iOS Format)</span>
-                {deviceModeOverride === 'mobile' && <Check size={12} className="ml-auto text-cyan-400" />}
-              </button>
             </div>
           )}
         </div>

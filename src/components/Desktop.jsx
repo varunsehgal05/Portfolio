@@ -69,18 +69,8 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
     !minimizedWindows.includes(activeWindow)
   );
 
-  // Responsive Device Modes (macOS Sequoia desktop vs iPadOS tablet vs iOS mobile)
+  // Responsive Device Modes: 100% Automatic based on screen viewport
   const [windowWidth, setWindowWidth] = useState(() => (typeof window !== 'undefined' ? window.innerWidth : 1200));
-  const [deviceModeOverride, setDeviceModeOverride] = useState(() => {
-    try {
-      const p = new URLSearchParams(window.location.search);
-      const m = p.get('mode');
-      if (['desktop', 'tablet', 'mobile'].includes(m)) return m;
-      return localStorage.getItem('varunos_device_mode') || 'auto';
-    } catch {
-      return 'auto';
-    }
-  });
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -88,16 +78,8 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const effectiveDeviceMode = deviceModeOverride !== 'auto'
-    ? deviceModeOverride
-    : (windowWidth <= 640 ? 'mobile' : (windowWidth <= 1024 ? 'tablet' : 'desktop'));
-
-  const handleSetDeviceMode = (mode) => {
-    setDeviceModeOverride(mode);
-    try {
-      localStorage.setItem('varunos_device_mode', mode);
-    } catch { }
-  };
+  // Automatically switches to mobile (<=640px), tablet (<=1024px), or desktop (>1024px)
+  const effectiveDeviceMode = windowWidth <= 640 ? 'mobile' : (windowWidth <= 1024 ? 'tablet' : 'desktop');
 
   useEffect(() => {
     if (isFullScreenActive) {
@@ -507,8 +489,6 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
           openWindows={openWindows}
           activeWindow={activeWindow}
           onOpenApp={openApp}
-          deviceModeOverride={deviceModeOverride}
-          onSetDeviceMode={handleSetDeviceMode}
         />
       )}
 
@@ -531,9 +511,7 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
             onMinimizeAll={minimizeAll}
             onRestoreAll={restoreAll}
             onCloseAll={closeAll}
-            deviceModeOverride={deviceModeOverride}
             effectiveDeviceMode={effectiveDeviceMode}
-            onSetDeviceMode={handleSetDeviceMode}
           />
         </div>
       )}

@@ -171,52 +171,6 @@ const DeviceHomeScreen = ({
                 <div className="ipad-battery-fill" style={{ width: '98%' }} />
               </div>
             </div>
-
-            {/* Quick Device Switcher Pill */}
-            <div className="device-switcher-pill-wrap">
-              <button
-                className="device-switcher-pill"
-                onClick={() => setShowDeviceMenu(prev => !prev)}
-                title="Switch Device View"
-              >
-                <Tablet size={13} />
-                <span>iPad</span>
-                <ChevronDown size={11} />
-              </button>
-              {showDeviceMenu && (
-                <div className="device-switcher-dropdown">
-                  <div className="switcher-header">Preview Mode</div>
-                  <button
-                    className={`switcher-opt ${deviceModeOverride === 'auto' ? 'active' : ''}`}
-                    onClick={() => { onSetDeviceMode('auto'); setShowDeviceMenu(false); }}
-                  >
-                    <Compass size={13} />
-                    <span>Auto (Responsive)</span>
-                  </button>
-                  <button
-                    className={`switcher-opt ${deviceModeOverride === 'desktop' ? 'active' : ''}`}
-                    onClick={() => { onSetDeviceMode('desktop'); setShowDeviceMenu(false); }}
-                  >
-                    <Laptop size={13} />
-                    <span>Mac (Desktop Sequoia)</span>
-                  </button>
-                  <button
-                    className={`switcher-opt ${deviceModeOverride === 'tablet' ? 'active' : ''}`}
-                    onClick={() => { onSetDeviceMode('tablet'); setShowDeviceMenu(false); }}
-                  >
-                    <Tablet size={13} />
-                    <span>iPad (iPadOS Format)</span>
-                  </button>
-                  <button
-                    className={`switcher-opt ${deviceModeOverride === 'mobile' ? 'active' : ''}`}
-                    onClick={() => { onSetDeviceMode('mobile'); setShowDeviceMenu(false); }}
-                  >
-                    <Smartphone size={13} />
-                    <span>iPhone (iOS Format)</span>
-                  </button>
-                </div>
-              )}
-            </div>
           </div>
         </header>
       ) : (
@@ -262,50 +216,6 @@ const DeviceHomeScreen = ({
             <Wifi size={13} className="ios-status-icon" />
             <div className="ios-battery-pill" title="Battery: 96%">
               <div className="ios-battery-fill" style={{ width: '96%' }} />
-            </div>
-
-            {/* Quick Switcher */}
-            <div className="device-switcher-pill-wrap">
-              <button
-                className="device-switcher-pill compact"
-                onClick={() => setShowDeviceMenu(prev => !prev)}
-                title="Switch Device"
-              >
-                <Smartphone size={12} />
-              </button>
-              {showDeviceMenu && (
-                <div className="device-switcher-dropdown right-aligned">
-                  <div className="switcher-header">Preview Mode</div>
-                  <button
-                    className={`switcher-opt ${deviceModeOverride === 'auto' ? 'active' : ''}`}
-                    onClick={() => { onSetDeviceMode('auto'); setShowDeviceMenu(false); }}
-                  >
-                    <Compass size={13} />
-                    <span>Auto (Responsive)</span>
-                  </button>
-                  <button
-                    className={`switcher-opt ${deviceModeOverride === 'desktop' ? 'active' : ''}`}
-                    onClick={() => { onSetDeviceMode('desktop'); setShowDeviceMenu(false); }}
-                  >
-                    <Laptop size={13} />
-                    <span>Mac (Desktop)</span>
-                  </button>
-                  <button
-                    className={`switcher-opt ${deviceModeOverride === 'tablet' ? 'active' : ''}`}
-                    onClick={() => { onSetDeviceMode('tablet'); setShowDeviceMenu(false); }}
-                  >
-                    <Tablet size={13} />
-                    <span>iPad (Tablet)</span>
-                  </button>
-                  <button
-                    className={`switcher-opt ${deviceModeOverride === 'mobile' ? 'active' : ''}`}
-                    onClick={() => { onSetDeviceMode('mobile'); setShowDeviceMenu(false); }}
-                  >
-                    <Smartphone size={13} />
-                    <span>iPhone (Mobile)</span>
-                  </button>
-                </div>
-              )}
             </div>
           </div>
         </header>
