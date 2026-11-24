@@ -1867,200 +1867,200 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
         {/* Left Sidebar ("Layers", "Pages" & "Assets") - strictly excluded on mobile phones */}
         {!isMobilePhone && (
           <aside className="lovable-sidebar">
-          <div className="sidebar-header">
-            <h2 className="sidebar-heading">Varun_Sehgal_Portfolio</h2>
-            <p className="sidebar-sub">PAGE: {activeTab.toUpperCase()}</p>
-          </div>
+            <div className="sidebar-header">
+              <h2 className="sidebar-heading">Varun_Sehgal_Portfolio</h2>
+              <p className="sidebar-sub">PAGE: {activeTab.toUpperCase()}</p>
+            </div>
 
-          {/* Sidebar Mode Tabs */}
-          <div className="sidebar-tabs-row">
-            <button
-              type="button"
-              className={`sidebar-tab-btn ${sidebarTab === 'layers' ? 'active' : ''}`}
-              onClick={() => setSidebarTab('layers')}
-              title="Page Layers Tree"
-            >
-              Layers
-            </button>
-            <button
-              type="button"
-              className={`sidebar-tab-btn ${sidebarTab === 'pages' ? 'active' : ''}`}
-              onClick={() => setSidebarTab('pages')}
-              title="All Pages in Portfolio"
-            >
-              Pages
-            </button>
-            <button
-              type="button"
-              className={`sidebar-tab-btn ${sidebarTab === 'assets' ? 'active' : ''}`}
-              onClick={() => setSidebarTab('assets')}
-              title="Design System Assets & Themes"
-            >
-              Assets
-            </button>
-          </div>
+            {/* Sidebar Mode Tabs */}
+            <div className="sidebar-tabs-row">
+              <button
+                type="button"
+                className={`sidebar-tab-btn ${sidebarTab === 'layers' ? 'active' : ''}`}
+                onClick={() => setSidebarTab('layers')}
+                title="Page Layers Tree"
+              >
+                Layers
+              </button>
+              <button
+                type="button"
+                className={`sidebar-tab-btn ${sidebarTab === 'pages' ? 'active' : ''}`}
+                onClick={() => setSidebarTab('pages')}
+                title="All Pages in Portfolio"
+              >
+                Pages
+              </button>
+              <button
+                type="button"
+                className={`sidebar-tab-btn ${sidebarTab === 'assets' ? 'active' : ''}`}
+                onClick={() => setSidebarTab('assets')}
+                title="Design System Assets & Themes"
+              >
+                Assets
+              </button>
+            </div>
 
-          <div className="sidebar-nav-list">
-            {/* 1. PAGES TAB */}
-            {sidebarTab === 'pages' && (
-              <div className="sidebar-pages-list">
-                {PAGES_LIST.map(p => (
-                  <div
-                    key={p.id}
-                    className={`sidebar-page-item ${activeTab === p.id ? 'active' : ''}`}
-                    onClick={() => {
-                      setActiveTab(p.id);
-                      showToast(`Navigated to ${p.title}`);
-                    }}
-                  >
-                    <span className="sidebar-page-num">{p.num}</span>
-                    <span className="material-symbols-outlined text-[15px]">{p.icon}</span>
-                    <span>{p.title}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* 2. LAYERS TAB (Dynamic to active page) */}
-            {sidebarTab === 'layers' && (
-              <div className="sidebar-layers-tree">
-                {currentLayers.map(layer => {
-                  const isVisible = layerVisibilityMap[layer.id] !== false;
-                  const isLocked = !!layerLockMap[layer.id];
-                  const isSelected = selectedLayerId === layer.id;
-
-                  const getLayerIcon = (type) => {
-                    switch (type) {
-                      case 'frame': return 'crop_free';
-                      case 'component': return 'widgets';
-                      case 'text': return 'text_fields';
-                      case 'image': return 'image';
-                      case 'vector': return 'alt_route';
-                      default: return 'layers';
-                    }
-                  };
-
-                  return (
+            <div className="sidebar-nav-list">
+              {/* 1. PAGES TAB */}
+              {sidebarTab === 'pages' && (
+                <div className="sidebar-pages-list">
+                  {PAGES_LIST.map(p => (
                     <div
-                      key={layer.id}
-                      className={`sidebar-layer-row layer-indent-${layer.indent} ${isSelected ? 'selected' : ''}`}
+                      key={p.id}
+                      className={`sidebar-page-item ${activeTab === p.id ? 'active' : ''}`}
                       onClick={() => {
-                        setSelectedLayerId(layer.id);
-                        showToast(`Selected: ${layer.title}`);
+                        setActiveTab(p.id);
+                        showToast(`Navigated to ${p.title}`);
                       }}
                     >
-                      <span className="material-symbols-outlined layer-icon">
-                        {getLayerIcon(layer.type)}
-                      </span>
-                      <span className="layer-title">{layer.title}</span>
-
-                      <div className="layer-actions">
-                        <button
-                          type="button"
-                          className="layer-mini-btn"
-                          onClick={(e) => toggleLayerLock(layer.id, e)}
-                          title={isLocked ? "Unlock Layer" : "Lock Layer"}
-                        >
-                          <span className="material-symbols-outlined text-[12px]">
-                            {isLocked ? 'lock' : 'lock_open'}
-                          </span>
-                        </button>
-                        <button
-                          type="button"
-                          className="layer-mini-btn"
-                          onClick={(e) => toggleLayerVisibility(layer.id, e)}
-                          title={isVisible ? "Hide Layer" : "Show Layer"}
-                        >
-                          <span className="material-symbols-outlined text-[12px]">
-                            {isVisible ? 'visibility' : 'visibility_off'}
-                          </span>
-                        </button>
-                      </div>
+                      <span className="sidebar-page-num">{p.num}</span>
+                      <span className="material-symbols-outlined text-[15px]">{p.icon}</span>
+                      <span>{p.title}</span>
                     </div>
-                  );
-                })}
-              </div>
-            )}
-
-            {/* 3. ASSETS TAB */}
-            {sidebarTab === 'assets' && (
-              <div className="p-3 flex flex-col gap-3">
-                <span className="text-[11px] font-bold text-zinc-400">DESIGN SYSTEM THEMES</span>
-                <div className="flex flex-col gap-2">
-                  <button onClick={() => changeTheme('default')} className="drawer-theme-btn">
-                    <span className="theme-dot default"></span>
-                    <span>Default Dark</span>
-                  </button>
-                  <button onClick={() => changeTheme('cyberpunk')} className="drawer-theme-btn">
-                    <span className="theme-dot cyberpunk"></span>
-                    <span>Cyberpunk</span>
-                  </button>
-                  <button onClick={() => changeTheme('ocean')} className="drawer-theme-btn">
-                    <span className="theme-dot ocean"></span>
-                    <span>Ocean Breeze</span>
-                  </button>
-                  <button onClick={() => changeTheme('monochrome')} className="drawer-theme-btn">
-                    <span className="theme-dot monochrome"></span>
-                    <span>Monochrome</span>
-                  </button>
+                  ))}
                 </div>
-              </div>
-            )}
+              )}
 
-            <div className="sidebar-section-title">QUICK JUMP FIGMA FILES</div>
-            <a
-              href="https://www.figma.com/design/ezDh2NmBto6iv7xaQNs3Ha/AI-Interview?node-id=11-1842&t=siyh0b32g2XWrRNe-1"
-              target="_blank"
-              rel="noreferrer"
-              className="sidebar-file-link"
-            >
-              <span className="material-symbols-outlined text-[14px]">smart_toy</span>
-              <span>AI Interview</span>
-            </a>
-            <a
-              href="https://www.figma.com/design/0cJQWX8qYssPfK4hmPtdVj/Movie-Ticket-Booking-App-Design?node-id=31-86&t=Jd933TVzkrlBb4MQ-1"
-              target="_blank"
-              rel="noreferrer"
-              className="sidebar-file-link"
-            >
-              <span className="material-symbols-outlined text-[14px]">confirmation_number</span>
-              <span>Movie Tickets</span>
-            </a>
-            <a
-              href="https://www.figma.com/design/3mw8XBHEZ3b8HKNNqcs6U2/Expensify---Budget-Tracker-App?node-id=135-318&t=gUJEMUlyDc8ERNeR-1"
-              target="_blank"
-              rel="noreferrer"
-              className="sidebar-file-link"
-            >
-              <span className="material-symbols-outlined text-[14px]">account_balance_wallet</span>
-              <span>Expensify</span>
-            </a>
-            <a
-              href="https://www.figma.com/design/hCaNWKm2qTY2kQ0KOZRywa/M-1?node-id=40-2&t=vfPIBYY278lzphVq-1"
-              target="_blank"
-              rel="noreferrer"
-              className="sidebar-file-link"
-            >
-              <span className="material-symbols-outlined text-[14px]">diversity_3</span>
-              <span>CodeSrijan</span>
-            </a>
-          </div>
+              {/* 2. LAYERS TAB (Dynamic to active page) */}
+              {sidebarTab === 'layers' && (
+                <div className="sidebar-layers-tree">
+                  {currentLayers.map(layer => {
+                    const isVisible = layerVisibilityMap[layer.id] !== false;
+                    const isLocked = !!layerLockMap[layer.id];
+                    const isSelected = selectedLayerId === layer.id;
 
-          <div className="sidebar-footer">
-            <a
-              href="/Varun_Sehgal_Resume_Updated.pdf"
-              download="Varun_Sehgal_Resume.pdf"
-              className="sidebar-download-btn"
-            >
-              <span className="material-symbols-outlined text-[16px]">download</span>
-              <span>Download Resume</span>
-            </a>
-          </div>
-        </aside>
-      )}
+                    const getLayerIcon = (type) => {
+                      switch (type) {
+                        case 'frame': return 'crop_free';
+                        case 'component': return 'widgets';
+                        case 'text': return 'text_fields';
+                        case 'image': return 'image';
+                        case 'vector': return 'alt_route';
+                        default: return 'layers';
+                      }
+                    };
 
-      {/* Assets Slide-out Drawer */}
-      {showAssets && !isMobilePhone && (
+                    return (
+                      <div
+                        key={layer.id}
+                        className={`sidebar-layer-row layer-indent-${layer.indent} ${isSelected ? 'selected' : ''}`}
+                        onClick={() => {
+                          setSelectedLayerId(layer.id);
+                          showToast(`Selected: ${layer.title}`);
+                        }}
+                      >
+                        <span className="material-symbols-outlined layer-icon">
+                          {getLayerIcon(layer.type)}
+                        </span>
+                        <span className="layer-title">{layer.title}</span>
+
+                        <div className="layer-actions">
+                          <button
+                            type="button"
+                            className="layer-mini-btn"
+                            onClick={(e) => toggleLayerLock(layer.id, e)}
+                            title={isLocked ? "Unlock Layer" : "Lock Layer"}
+                          >
+                            <span className="material-symbols-outlined text-[12px]">
+                              {isLocked ? 'lock' : 'lock_open'}
+                            </span>
+                          </button>
+                          <button
+                            type="button"
+                            className="layer-mini-btn"
+                            onClick={(e) => toggleLayerVisibility(layer.id, e)}
+                            title={isVisible ? "Hide Layer" : "Show Layer"}
+                          >
+                            <span className="material-symbols-outlined text-[12px]">
+                              {isVisible ? 'visibility' : 'visibility_off'}
+                            </span>
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* 3. ASSETS TAB */}
+              {sidebarTab === 'assets' && (
+                <div className="p-3 flex flex-col gap-3">
+                  <span className="text-[11px] font-bold text-zinc-400">DESIGN SYSTEM THEMES</span>
+                  <div className="flex flex-col gap-2">
+                    <button onClick={() => changeTheme('default')} className="drawer-theme-btn">
+                      <span className="theme-dot default"></span>
+                      <span>Default Dark</span>
+                    </button>
+                    <button onClick={() => changeTheme('cyberpunk')} className="drawer-theme-btn">
+                      <span className="theme-dot cyberpunk"></span>
+                      <span>Cyberpunk</span>
+                    </button>
+                    <button onClick={() => changeTheme('ocean')} className="drawer-theme-btn">
+                      <span className="theme-dot ocean"></span>
+                      <span>Ocean Breeze</span>
+                    </button>
+                    <button onClick={() => changeTheme('monochrome')} className="drawer-theme-btn">
+                      <span className="theme-dot monochrome"></span>
+                      <span>Monochrome</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              <div className="sidebar-section-title">QUICK JUMP FIGMA FILES</div>
+              <a
+                href="https://www.figma.com/design/ezDh2NmBto6iv7xaQNs3Ha/AI-Interview?node-id=11-1842&t=siyh0b32g2XWrRNe-1"
+                target="_blank"
+                rel="noreferrer"
+                className="sidebar-file-link"
+              >
+                <span className="material-symbols-outlined text-[14px]">smart_toy</span>
+                <span>AI Interview</span>
+              </a>
+              <a
+                href="https://www.figma.com/design/0cJQWX8qYssPfK4hmPtdVj/Movie-Ticket-Booking-App-Design?node-id=31-86&t=Jd933TVzkrlBb4MQ-1"
+                target="_blank"
+                rel="noreferrer"
+                className="sidebar-file-link"
+              >
+                <span className="material-symbols-outlined text-[14px]">confirmation_number</span>
+                <span>Movie Tickets</span>
+              </a>
+              <a
+                href="https://www.figma.com/design/3mw8XBHEZ3b8HKNNqcs6U2/Expensify---Budget-Tracker-App?node-id=135-318&t=gUJEMUlyDc8ERNeR-1"
+                target="_blank"
+                rel="noreferrer"
+                className="sidebar-file-link"
+              >
+                <span className="material-symbols-outlined text-[14px]">account_balance_wallet</span>
+                <span>Expensify</span>
+              </a>
+              <a
+                href="https://www.figma.com/design/hCaNWKm2qTY2kQ0KOZRywa/M-1?node-id=40-2&t=vfPIBYY278lzphVq-1"
+                target="_blank"
+                rel="noreferrer"
+                className="sidebar-file-link"
+              >
+                <span className="material-symbols-outlined text-[14px]">diversity_3</span>
+                <span>CodeSrijan</span>
+              </a>
+            </div>
+
+            <div className="sidebar-footer">
+              <a
+                href="/Varun_Sehgal_Resume_Updated.pdf"
+                download="Varun_Sehgal_Resume.pdf"
+                className="sidebar-download-btn"
+              >
+                <span className="material-symbols-outlined text-[16px]">download</span>
+                <span>Download Resume</span>
+              </a>
+            </div>
+          </aside>
+        )}
+
+        {/* Assets Slide-out Drawer */}
+        {showAssets && !isMobilePhone && (
           <div className="lovable-assets-drawer">
             <div className="drawer-header">
               <h3>Design Assets</h3>
@@ -2873,12 +2873,18 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
               <div className="about-moodboard-stage">
                 {/* SVG curved dashed bezier line connectors connecting sticky notes to the center portrait */}
                 <svg className="about-connectors-svg" viewBox="0 0 1200 820" fill="none">
-                  <path d="M240,150 C340,180 400,240 450,280" stroke="rgba(56, 189, 248, 0.22)" strokeWidth="1.5" strokeDasharray="4 4" />
-                  <path d="M220,380 C320,370 380,350 450,330" stroke="rgba(245, 158, 11, 0.25)" strokeWidth="1.5" strokeDasharray="4 4" />
-                  <path d="M270,610 C350,560 400,480 460,420" stroke="rgba(74, 222, 128, 0.2)" strokeWidth="1.5" strokeDasharray="4 4" />
-                  <path d="M960,160 C860,190 800,240 750,280" stroke="rgba(253, 224, 71, 0.2)" strokeWidth="1.5" strokeDasharray="4 4" />
-                  <path d="M980,390 C880,380 810,360 750,340" stroke="rgba(192, 132, 252, 0.22)" strokeWidth="1.5" strokeDasharray="4 4" />
-                  <path d="M950,600 C860,560 800,480 740,420" stroke="rgba(244, 114, 182, 0.2)" strokeWidth="1.5" strokeDasharray="4 4" />
+                  {/* Left Top: Idea (Cyan) to Center */}
+                  <path d="M230,135 C330,165 390,230 450,270" stroke="rgba(0, 162, 255, 0.3)" strokeWidth="2" strokeDasharray="5 5" />
+                  {/* Left Middle: Hackathon Win (Amber) to Center */}
+                  <path d="M225,385 C325,385 390,360 450,340" stroke="rgba(245, 158, 11, 0.35)" strokeWidth="2" strokeDasharray="5 5" />
+                  {/* Left Bottom: Workflow (Green) to Center */}
+                  <path d="M230,640 C330,590 390,500 450,430" stroke="rgba(16, 185, 129, 0.3)" strokeWidth="2" strokeDasharray="5 5" />
+                  {/* Right Top: Aesthetic (Orange) to Center */}
+                  <path d="M970,135 C870,165 810,230 750,270" stroke="rgba(255, 90, 34, 0.3)" strokeWidth="2" strokeDasharray="5 5" />
+                  {/* Right Middle: Typography (Purple) to Center */}
+                  <path d="M970,385 C870,385 810,360 750,340" stroke="rgba(114, 25, 217, 0.3)" strokeWidth="2" strokeDasharray="5 5" />
+                  {/* Right Bottom: Toolkit & Craft (Yellow) to Center */}
+                  <path d="M970,640 C870,590 810,500 750,430" stroke="rgba(255, 210, 30, 0.3)" strokeWidth="2" strokeDasharray="5 5" />
                 </svg>
 
                 {/* Center Photo Card: Varun's portrait card with washi tape & badge */}
@@ -2915,7 +2921,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 {/* 1. Top-Left Note: FigJam Cyan Sticky Note (Idea - Image 2 Match) */}
                 <div
                   className="figjam-sticky-note cyan"
-                  style={{ top: '25px', left: '65px', width: '310px', transform: 'rotate(-2.5deg)' }}
+                  style={{ top: '25px', left: '65px', width: '315px', transform: 'rotate(-2.5deg)' }}
                   onClick={() => showToast('📌 Idea: High-end web application architecture')}
                 >
                   <p className="figjam-sticky-text">
@@ -2932,7 +2938,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 {/* 2. Top-Right Note: FigJam Orange Sticky Note (Aesthetic - Image 2 Match) */}
                 <div
                   className="figjam-sticky-note orange"
-                  style={{ top: '25px', left: '810px', width: '310px', transform: 'rotate(2.5deg)' }}
+                  style={{ top: '25px', left: '810px', width: '315px', transform: 'rotate(2.5deg)' }}
                   onClick={() => showToast('🐾 Aesthetic: Dark mode tactile surfaces')}
                 >
                   <p className="figjam-sticky-text">
@@ -2946,45 +2952,38 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   </div>
                 </div>
 
-                {/* 3. Middle-Left Achievement Card: HAcKeThor 1st Runner-Up (Official Credential) */}
+                {/* 3. Middle-Left Note: FigJam Amber Sticky Note (Hackathon Win - Converted to FigJam Notepad) */}
                 <div
-                  className="about-hackathon-card"
-                  style={{ top: '275px', left: '25px', transform: 'rotate(-1deg)' }}
+                  className="figjam-sticky-note amber"
+                  style={{ top: '275px', left: '60px', width: '325px', transform: 'rotate(1deg)' }}
+                  onClick={() => showToast('🏆 HAcKeThor 1st Runner-Up (2nd Place) · Awarded by Unstop')}
                 >
-                  <div className="hackathon-top-row">
-                    <span className="hackathon-date">Apr 2025</span>
-                    <span className="hackathon-type-badge">Hackathon Win</span>
+                  <div className="figjam-sticky-header-row">
+                    <span className="figjam-note-date">Apr 2025</span>
+                    <span className="figjam-win-badge">🥇 2nd Place</span>
                   </div>
-                  <h4 className="hackathon-title">
-                    HAcKeThor 1st Runner-Up (2nd Place) awarded 2nd Place / 1st Runner-Up by Unstop
-                  </h4>
-                  <p className="hackathon-desc">
-                    Awarded 1st runner-up (2nd place) in national competitive hackathon demonstrating rapid UX prototyping, interactive user testing, and AI tool integration under high pressure.
+                  <p className="figjam-sticky-text">
+                    <strong>HAcKeThor · 1st Runner-Up (2nd Place)</strong>
+                    {'\n\n'}
+                    Awarded 1st runner-up in national competitive hackathon by Unstop across 200+ teams. Rapid UX prototyping, interactive user testing, and AI tool integration under high pressure.
                   </p>
-                  <div className="hackathon-pills-row">
-                    <span className="hackathon-gold-badge">
-                      🥇 1st Runner-Up (2nd Place)
-                    </span>
-                    <span className="hackathon-id-pill" title="d883bbf5-5d9f-43e9-a417-21a4f009f4ff">
-                      ID: d883bbf5-5d9f-43e9-a417-21a4f009f4ff
-                    </span>
-                  </div>
-                  <div className="hackathon-actions-row">
+                  <div className="figjam-sticky-actions">
                     <button
                       type="button"
-                      className="hackathon-verify-btn"
+                      className="figjam-action-chip"
                       onClick={(e) => {
                         e.stopPropagation();
                         window.open('https://unstop.com', '_blank', 'noopener,noreferrer');
                         showToast('Opening Unstop Credential Verification...');
                       }}
+                      title="Verify Credential on Unstop"
                     >
-                      <ExternalLink size={12} />
+                      <ExternalLink size={11} />
                       <span>Verify Credential</span>
                     </button>
                     <button
                       type="button"
-                      className="hackathon-copy-btn"
+                      className="figjam-action-chip"
                       onClick={(e) => {
                         e.stopPropagation();
                         if (navigator.clipboard) {
@@ -2992,17 +2991,22 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                         }
                         showToast('Copied Credential ID: d883bbf5-5d9f-43e9-a417-21a4f009f4ff');
                       }}
+                      title="Copy Credential ID"
                     >
-                      <Copy size={12} />
-                      <span>Copy</span>
+                      <Copy size={11} />
+                      <span>Copy ID</span>
                     </button>
+                  </div>
+                  <div className="figjam-sticky-footer">
+                    <span className="figjam-sticky-tag">Hackathon Win</span>
+                    <span className="figjam-sticky-icon">🏆</span>
                   </div>
                 </div>
 
                 {/* 4. Middle-Right Note: FigJam Purple Sticky Note (Typography - Image 2 Match) */}
                 <div
                   className="figjam-sticky-note purple"
-                  style={{ top: '270px', left: '815px', width: '310px', transform: 'rotate(-2deg)' }}
+                  style={{ top: '275px', left: '810px', width: '315px', transform: 'rotate(-2deg)' }}
                   onClick={() => showToast('🔤 Typography: Crisp hierarchy & monospace tokens')}
                 >
                   <p className="figjam-sticky-text">
@@ -3019,7 +3023,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 {/* 5. Bottom-Left Note: FigJam Green Sticky Note (Workflow) */}
                 <div
                   className="figjam-sticky-note green"
-                  style={{ top: '550px', left: '65px', width: '315px', transform: 'rotate(2deg)' }}
+                  style={{ top: '535px', left: '65px', width: '315px', transform: 'rotate(2deg)' }}
                   onClick={() => showToast('⚡ Workflow: Vibe coding & AI agent velocity')}
                 >
                   <p className="figjam-sticky-text">
@@ -3033,37 +3037,24 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   </div>
                 </div>
 
-                {/* 6. Bottom-Right Note 1: FigJam Yellow Sticky Note (Toolkit) */}
+                {/* 6. Bottom-Right Note: FigJam Yellow Sticky Note (Creative Toolkit & Craft - Zero Overlap) */}
                 <div
                   className="figjam-sticky-note yellow"
-                  style={{ top: '525px', left: '775px', width: '270px', transform: 'rotate(-1.5deg)' }}
-                  onClick={() => showToast('🛠️ Toolkit: Design tokens & production systems')}
+                  style={{ top: '535px', left: '810px', width: '320px', transform: 'rotate(-1.5deg)' }}
+                  onClick={() => showToast('🛠️ Toolkit & Craft: Design tokens & production systems')}
                 >
                   <p className="figjam-sticky-text">
-                    Creative Toolkit:
+                    <strong>Creative Toolkit &amp; Systems:</strong>
                     {'\n'}
-                    Figma • FigJam • React 19 • Tailwind CSS • Framer Motion • Node.js • Cursor • Antigravity AI • Design Tokens &amp; Auto-Layout wizardry.
+                    Figma · FigJam · React 19 · Tailwind CSS · Framer Motion · Node.js · Cursor · Antigravity AI · Design Tokens &amp; Auto-Layout wizardry.
+                    {'\n\n'}
+                    <strong>Beyond Design:</strong>
+                    {'\n'}
+                    Fuelled by dark roast coffee, custom mechanical keyboards, ambient synth soundscapes, and obsessively perfecting micro-interactions.
                   </p>
                   <div className="figjam-sticky-footer">
-                    <span className="figjam-sticky-tag">Toolkit</span>
+                    <span className="figjam-sticky-tag">Toolkit &amp; Craft</span>
                     <span className="figjam-sticky-icon">🛠️</span>
-                  </div>
-                </div>
-
-                {/* 7. Bottom-Right Note 2: FigJam Pink Sticky Note (Life) */}
-                <div
-                  className="figjam-sticky-note pink"
-                  style={{ top: '540px', left: '990px', width: '270px', transform: 'rotate(2.5deg)' }}
-                  onClick={() => showToast('☕ Life: Passions, dark roast coffee & mechanical keyboards')}
-                >
-                  <p className="figjam-sticky-text">
-                    Beyond Design:
-                    {'\n'}
-                    Fuelled by dark roast coffee, custom mechanical keyboards, ambient synth soundscapes, and obsessively tweaking border-radii until it feels frictionless.
-                  </p>
-                  <div className="figjam-sticky-footer">
-                    <span className="figjam-sticky-tag">Life</span>
-                    <span className="figjam-sticky-icon">☕</span>
                   </div>
                 </div>
 
@@ -3250,17 +3241,21 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 {/* SVG dynamic curved bezier flow lines linking the pipeline steps to the center hub */}
                 <svg className="process-connectors-svg" viewBox="0 0 1200 850" fill="none">
                   {/* Phase 1 to Center */}
-                  <path d="M220,160 C320,180 390,240 450,280" stroke="rgba(56, 189, 248, 0.35)" strokeWidth="2" strokeDasharray="5 5" />
-                  {/* Phase 2 to Center */}
-                  <path d="M980,160 C880,190 810,240 750,280" stroke="rgba(249, 115, 22, 0.35)" strokeWidth="2" strokeDasharray="5 5" />
+                  <path d="M230,135 C330,165 390,230 450,270" stroke="rgba(56, 189, 248, 0.4)" strokeWidth="2" strokeDasharray="5 5" />
+                  {/* Quality Gate to Center */}
+                  <path d="M225,385 C325,385 390,360 450,340" stroke="rgba(74, 222, 128, 0.4)" strokeWidth="2" strokeDasharray="5 5" />
                   {/* Phase 3 to Center */}
-                  <path d="M220,620 C320,570 390,480 450,380" stroke="rgba(168, 85, 247, 0.35)" strokeWidth="2" strokeDasharray="5 5" />
+                  <path d="M230,640 C330,590 390,500 450,430" stroke="rgba(168, 85, 247, 0.4)" strokeWidth="2" strokeDasharray="5 5" />
+                  {/* Phase 2 to Center */}
+                  <path d="M970,135 C870,165 810,230 750,270" stroke="rgba(249, 115, 22, 0.4)" strokeWidth="2" strokeDasharray="5 5" />
+                  {/* Terminal to Center */}
+                  <path d="M975,385 C875,385 810,360 750,340" stroke="rgba(234, 179, 8, 0.4)" strokeWidth="2" strokeDasharray="5 5" />
                   {/* Phase 4 to Center */}
-                  <path d="M980,620 C880,570 810,480 750,380" stroke="rgba(34, 197, 94, 0.35)" strokeWidth="2" strokeDasharray="5 5" />
+                  <path d="M970,640 C870,590 810,500 750,430" stroke="rgba(34, 197, 94, 0.4)" strokeWidth="2" strokeDasharray="5 5" />
                   {/* Horizontal Flow Line between Phase 1 and Phase 2 */}
-                  <path d="M375,120 Q600,60 810,120" stroke="rgba(255, 255, 255, 0.12)" strokeWidth="1.5" strokeDasharray="3 3" />
+                  <path d="M380,135 Q600,65 810,135" stroke="rgba(255, 255, 255, 0.16)" strokeWidth="1.5" strokeDasharray="4 4" />
                   {/* Horizontal Flow Line between Phase 3 and Phase 4 */}
-                  <path d="M380,680 Q600,740 810,680" stroke="rgba(255, 255, 255, 0.12)" strokeWidth="1.5" strokeDasharray="3 3" />
+                  <path d="M380,640 Q600,715 810,640" stroke="rgba(255, 255, 255, 0.16)" strokeWidth="1.5" strokeDasharray="4 4" />
                 </svg>
 
                 {/* Central Creative Hub: The Design Engineering Execution Station */}
@@ -3325,7 +3320,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 {/* Phase 01: Discover & Deconstruct (Cyan Sticky Note) */}
                 <div
                   className="figjam-sticky-note cyan"
-                  style={{ top: '25px', left: '65px', width: '310px', transform: 'rotate(-2.5deg)' }}
+                  style={{ top: '25px', left: '65px', width: '315px', transform: 'rotate(-2.5deg)' }}
                   onClick={() => showToast('🔍 Phase 01: Discover & Deconstruct · Problem Space Defined')}
                 >
                   <p className="figjam-sticky-text">
@@ -3344,7 +3339,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 {/* Phase 02: Design Tokens & Systems (Orange Sticky Note) */}
                 <div
                   className="figjam-sticky-note orange"
-                  style={{ top: '25px', left: '810px', width: '310px', transform: 'rotate(2.5deg)' }}
+                  style={{ top: '25px', left: '810px', width: '315px', transform: 'rotate(2.5deg)' }}
                   onClick={() => showToast('📐 Phase 02: Vector Systems & OKLCH Tokens · Variables Live')}
                 >
                   <p className="figjam-sticky-text">
@@ -3360,48 +3355,10 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   </div>
                 </div>
 
-                {/* Phase 03: Tactile Motion & Haptic Physics (Purple Sticky Note) */}
-                <div
-                  className="figjam-sticky-note purple"
-                  style={{ top: '550px', left: '65px', width: '315px', transform: 'rotate(-2deg)' }}
-                  onClick={() => showToast('🎬 Phase 03: Motion & Haptics · 60fps GPU Hardware Acceleration')}
-                >
-                  <p className="figjam-sticky-text">
-                    <strong>Phase 03: Motion &amp; Spring Physics</strong>
-                    {'\n\n'}
-                    Hardware-accelerated Framer Motion springs (stiffness: 320, damping: 28), Web Audio haptics, and zero-latency drag physics.
-                    {'\n\n'}
-                    If an interaction doesn’t feel tactile and responsive to the finger, it isn’t finished.
-                  </p>
-                  <div className="figjam-sticky-footer">
-                    <span className="figjam-sticky-tag">Phase 03 · Motion</span>
-                    <span className="figjam-sticky-icon">🎬</span>
-                  </div>
-                </div>
-
-                {/* Phase 04: Vibe Coding & Production Ship (Green Sticky Note) */}
-                <div
-                  className="figjam-sticky-note green"
-                  style={{ top: '540px', left: '810px', width: '315px', transform: 'rotate(2deg)' }}
-                  onClick={() => showToast('🚀 Phase 04: Production Ship · Live on Edge & Vercel')}
-                >
-                  <p className="figjam-sticky-text">
-                    <strong>Phase 04: Vibe Coding &amp; Production</strong>
-                    {'\n\n'}
-                    Translating vector geometry into clean React 19, Tailwind CSS, and Next.js.
-                    {'\n\n'}
-                    WCAG AAA accessible DOM, zero CLS layout shifts, and automated multi-cloud deployment to Vercel and Render.
-                  </p>
-                  <div className="figjam-sticky-footer">
-                    <span className="figjam-sticky-tag">Phase 04 · Ship</span>
-                    <span className="figjam-sticky-icon">🚀</span>
-                  </div>
-                </div>
-
                 {/* Middle-Left Artifact: Quality Gate Radar Card */}
                 <div
                   className="process-quality-card"
-                  style={{ top: '280px', left: '35px', transform: 'rotate(-1deg)' }}
+                  style={{ top: '275px', left: '60px', width: '325px', transform: 'rotate(-1deg)' }}
                   onClick={() => showToast('✓ Quality Checklist: 100% Passing Score across all 4 gates')}
                 >
                   <div className="moodboard-washi-tape green"></div>
@@ -3432,7 +3389,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 {/* Middle-Right Artifact: Terminal Ship Stamp Card */}
                 <div
                   className="process-terminal-card"
-                  style={{ top: '280px', left: '820px', transform: 'rotate(1.5deg)' }}
+                  style={{ top: '275px', left: '810px', width: '325px', transform: 'rotate(1.5deg)' }}
                   onClick={() => showToast('⚡ Terminal Pipeline: CI/CD Pipeline Synced')}
                 >
                   <div className="moodboard-washi-tape purple"></div>
@@ -3450,6 +3407,44 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                     <div className="term-code-line"><span className="term-prompt">$</span> vercel deploy --prod --yes</div>
                     <div className="term-code-line text-sky-400">⚡ Deployed to 18 global edge zones</div>
                     <div className="term-code-line text-amber-300">★ Ready: varunsehgal.runs-on.dev</div>
+                  </div>
+                </div>
+
+                {/* Phase 03: Tactile Motion & Haptic Physics (Purple Sticky Note) */}
+                <div
+                  className="figjam-sticky-note purple"
+                  style={{ top: '535px', left: '65px', width: '315px', transform: 'rotate(-2deg)' }}
+                  onClick={() => showToast('🎬 Phase 03: Motion & Haptics · 60fps GPU Hardware Acceleration')}
+                >
+                  <p className="figjam-sticky-text">
+                    <strong>Phase 03: Motion &amp; Spring Physics</strong>
+                    {'\n\n'}
+                    Hardware-accelerated Framer Motion springs (stiffness: 320, damping: 28), Web Audio haptics, and zero-latency drag physics.
+                    {'\n\n'}
+                    If an interaction doesn’t feel tactile and responsive to the finger, it isn’t finished.
+                  </p>
+                  <div className="figjam-sticky-footer">
+                    <span className="figjam-sticky-tag">Phase 03 · Motion</span>
+                    <span className="figjam-sticky-icon">🎬</span>
+                  </div>
+                </div>
+
+                {/* Phase 04: Vibe Coding & Production Ship (Green Sticky Note) */}
+                <div
+                  className="figjam-sticky-note green"
+                  style={{ top: '535px', left: '810px', width: '315px', transform: 'rotate(2deg)' }}
+                  onClick={() => showToast('🚀 Phase 04: Production Ship · Live on Edge & Vercel')}
+                >
+                  <p className="figjam-sticky-text">
+                    <strong>Phase 04: Vibe Coding &amp; Production</strong>
+                    {'\n\n'}
+                    Translating vector geometry into clean React 19, Tailwind CSS, and Next.js.
+                    {'\n\n'}
+                    WCAG AAA accessible DOM, zero CLS layout shifts, and automated multi-cloud deployment to Vercel and Render.
+                  </p>
+                  <div className="figjam-sticky-footer">
+                    <span className="figjam-sticky-tag">Phase 04 · Ship</span>
+                    <span className="figjam-sticky-icon">🚀</span>
                   </div>
                 </div>
 
@@ -3476,12 +3471,18 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
               <div className="plugins-canvas-stage">
                 {/* SVG dynamic curved bezier flow lines linking plugins to the center studio */}
                 <svg className="plugins-connectors-svg" viewBox="0 0 1200 850" fill="none">
-                  <path d="M220,160 C320,180 390,240 450,280" stroke="rgba(250, 204, 21, 0.35)" strokeWidth="2" strokeDasharray="5 5" />
-                  <path d="M980,160 C880,190 810,240 750,280" stroke="rgba(45, 212, 191, 0.35)" strokeWidth="2" strokeDasharray="5 5" />
-                  <path d="M200,420 C320,400 380,360 450,330" stroke="rgba(244, 63, 94, 0.35)" strokeWidth="2" strokeDasharray="5 5" />
-                  <path d="M1000,420 C880,400 820,360 750,330" stroke="rgba(74, 222, 128, 0.35)" strokeWidth="2" strokeDasharray="5 5" />
-                  <path d="M340,660 C400,580 420,480 460,400" stroke="rgba(168, 85, 247, 0.35)" strokeWidth="2" strokeDasharray="5 5" />
-                  <path d="M840,660 C780,580 760,480 740,400" stroke="rgba(251, 146, 60, 0.35)" strokeWidth="2" strokeDasharray="5 5" />
+                  {/* TokenFlow (Yellow) to Center */}
+                  <path d="M230,135 C330,165 390,230 450,270" stroke="rgba(250, 204, 21, 0.4)" strokeWidth="2" strokeDasharray="5 5" />
+                  {/* AutoGrid (Pink) to Center */}
+                  <path d="M225,385 C325,385 390,360 450,340" stroke="rgba(244, 63, 94, 0.4)" strokeWidth="2" strokeDasharray="5 5" />
+                  {/* SpeedExport (Purple) to Center */}
+                  <path d="M230,640 C330,590 390,500 450,430" stroke="rgba(168, 85, 247, 0.4)" strokeWidth="2" strokeDasharray="5 5" />
+                  {/* IconBridge (Cyan) to Center */}
+                  <path d="M970,135 C870,165 810,230 750,270" stroke="rgba(45, 212, 191, 0.4)" strokeWidth="2" strokeDasharray="5 5" />
+                  {/* AI CopySwarm (Green) to Center */}
+                  <path d="M975,385 C875,385 810,360 750,340" stroke="rgba(74, 222, 128, 0.4)" strokeWidth="2" strokeDasharray="5 5" />
+                  {/* ShaderCaustics (Orange) to Center */}
+                  <path d="M970,640 C870,590 810,500 750,430" stroke="rgba(251, 146, 60, 0.4)" strokeWidth="2" strokeDasharray="5 5" />
                 </svg>
 
                 {/* Central Creative Hub: The Plugin Studio Lab Card */}
@@ -3544,7 +3545,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 {/* 1. Plugin 1: TokenFlow (Yellow Sticky Note) */}
                 <div
                   className="figjam-sticky-note yellow"
-                  style={{ top: '25px', left: '65px', width: '310px', transform: 'rotate(-2.5deg)' }}
+                  style={{ top: '25px', left: '65px', width: '315px', transform: 'rotate(-2.5deg)' }}
                   onClick={() => showToast('🎨 TokenFlow: Figma Variables exported to Tailwind CSS')}
                 >
                   <p className="figjam-sticky-text">
@@ -3563,7 +3564,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 {/* 2. Plugin 2: IconBridge (Cyan / Teal Sticky Note) */}
                 <div
                   className="figjam-sticky-note cyan"
-                  style={{ top: '25px', left: '810px', width: '310px', transform: 'rotate(2.5deg)' }}
+                  style={{ top: '25px', left: '810px', width: '315px', transform: 'rotate(2.5deg)' }}
                   onClick={() => showToast('⚡ IconBridge: 100,000+ vector icons ready for canvas insertion')}
                 >
                   <p className="figjam-sticky-text">
@@ -3582,7 +3583,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 {/* 3. Plugin 3: AutoGrid Wizard (Pink Sticky Note) */}
                 <div
                   className="figjam-sticky-note pink"
-                  style={{ top: '280px', left: '35px', width: '320px', transform: 'rotate(-1.5deg)' }}
+                  style={{ top: '275px', left: '60px', width: '325px', transform: 'rotate(-1deg)' }}
                   onClick={() => showToast('📐 AutoGrid Wizard: Mathematical bento layout generated')}
                 >
                   <p className="figjam-sticky-text">
@@ -3601,7 +3602,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 {/* 4. Plugin 4: AI CopySwarm (Green Sticky Note) */}
                 <div
                   className="figjam-sticky-note green"
-                  style={{ top: '280px', left: '820px', width: '315px', transform: 'rotate(1.5deg)' }}
+                  style={{ top: '275px', left: '810px', width: '325px', transform: 'rotate(1deg)' }}
                   onClick={() => showToast('🤖 AI CopySwarm: Contextual SaaS microcopy generated')}
                 >
                   <p className="figjam-sticky-text">
@@ -3620,7 +3621,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 {/* 5. Plugin 5: SpeedExport WebP/AVIF (Purple Sticky Note) */}
                 <div
                   className="figjam-sticky-note purple"
-                  style={{ top: '550px', left: '150px', width: '350px', transform: 'rotate(-2deg)' }}
+                  style={{ top: '535px', left: '65px', width: '315px', transform: 'rotate(2deg)' }}
                   onClick={() => showToast('📦 SpeedExport: Automated WebP & SVG minification pipeline')}
                 >
                   <p className="figjam-sticky-text">
@@ -3639,7 +3640,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                 {/* 6. Plugin 6: ShaderCaustics Preview (Orange Sticky Note) */}
                 <div
                   className="figjam-sticky-note orange"
-                  style={{ top: '540px', left: '680px', width: '360px', transform: 'rotate(2deg)' }}
+                  style={{ top: '535px', left: '810px', width: '315px', transform: 'rotate(-2deg)' }}
                   onClick={() => showToast('🔮 ShaderCaustics: WebGL procedural shader preview active')}
                 >
                   <p className="figjam-sticky-text">
