@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, Suspense, lazy } from 'react';
 import Desktop from './components/Desktop';
-import DeviceLoadingScreen from './components/DeviceLoadingScreen';
-import { isMobileOrTabletDevice, getEffectiveDeviceMode } from './utils/deviceDetection';
+import { isMobileOrTabletDevice } from './utils/deviceDetection';
 import './index.css';
 
 const ScreenSaver = lazy(() => import('./components/ScreenSaver'));
@@ -136,11 +135,10 @@ function App() {
   const isInitialMobileOrTablet = isMobileOrTabletDevice();
 
   // Swarm rebuild runs ONLY on laptop/desktop boot/refresh.
-  // On mobile & iPad, bootState starts as 'device-loading' showing the sleek iOS/iPadOS boot screen,
-  // completely bypassing the desktop swarm rebuild animation.
+  // On mobile & iPad, boot directly into ready state with zero delay.
   const [bootState, setBootState] = useState(() => {
     if (isSkipRequested) return 'ready';
-    if (isInitialMobileOrTablet) return 'device-loading';
+    if (isInitialMobileOrTablet) return 'ready';
     return 'swarm';
   });
   const [swarmStage, setSwarmStage] = useState(() => {
@@ -184,15 +182,28 @@ function App() {
     return () => window.removeEventListener('varunos-user-change', handleUserChange);
   }, []);
 
-  const [isIdle, setIsIdle] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const search = window.location.search;
-      const hash = window.location.hash;
-      return search.includes('screensaver=true') || search.includes('sleep=true') || hash.includes('screensaver') || hash.includes('sleep');
+  // Clean up any stale ?screensaver=true / ?sleep=true / #screensaver from the URL immediately on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined' && (
+      window.location.search.includes('screensaver') ||
+      window.location.search.includes('sleep') ||
+      window.location.hash.includes('screensaver') ||
+      window.location.hash.includes('sleep')
+    )) {
+      try {
+        const url = new URL(window.location.href);
+        url.searchParams.delete('screensaver');
+        url.searchParams.delete('sleep');
+        const cleanHash = url.hash.replace(/#?(screensaver|sleep)/gi, '');
+        const newUrl = url.pathname + (url.searchParams.toString() ? `?${url.searchParams.toString()}` : '') + cleanHash;
+        window.history.replaceState(null, '', newUrl || '/');
+      } catch {}
     }
-    return false;
-  });
-  const isIdleRef = useRef(isIdle);
+  }, []);
+
+  // Idle state (starts as false on fresh load/refresh; triggered only after IDLE_TIMEOUT or explicit sleep event)
+  const [isIdle, setIsIdle] = useState(false);
+  const isIdleRef = useRef(false);
   isIdleRef.current = isIdle;
   const idleTimerRef = useRef(null);
   const sleepGraceUntilRef = useRef(0);
@@ -218,6 +229,24 @@ function App() {
     }
     isIdleRef.current = false;
     setIsIdle(false);
+
+    // Ensure URL has no lingering screensaver query or hash
+    if (typeof window !== 'undefined' && (
+      window.location.search.includes('screensaver') ||
+      window.location.search.includes('sleep') ||
+      window.location.hash.includes('screensaver') ||
+      window.location.hash.includes('sleep')
+    )) {
+      try {
+        const url = new URL(window.location.href);
+        url.searchParams.delete('screensaver');
+        url.searchParams.delete('sleep');
+        const cleanHash = url.hash.replace(/#?(screensaver|sleep)/gi, '');
+        const newUrl = url.pathname + (url.searchParams.toString() ? `?${url.searchParams.toString()}` : '') + cleanHash;
+        window.history.replaceState(null, '', newUrl || '/');
+      } catch {}
+    }
+
     if (idleTimerRef.current) {
       clearTimeout(idleTimerRef.current);
     }
@@ -305,13 +334,6 @@ function App() {
           </Suspense>
         )}
 
-        {/* 2b. Mobile & iPad Dedicated Apple Boot & Loading Screen (Sleek progress bar on boot & refresh) */}
-        {bootState === 'device-loading' && (
-          <DeviceLoadingScreen
-            mode={getEffectiveDeviceMode()}
-            onLoaded={() => setBootState('ready')}
-          />
-        )}
 
         {/* 3. Idle ScreenSaver (Lazy mounted strictly when idle to keep main thread ultra-lean) */}
         {isIdle && (
