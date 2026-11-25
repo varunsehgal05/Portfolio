@@ -470,6 +470,13 @@
   display: grid;
 }
 
+/* While building, keep cards and polaroids level so selection boxes and swarm cursors align with 100% precision */
+.cv-container.is-building .cv-made-card,
+.cv-container.is-building .cv-thread,
+.cv-container.is-building .cv-polaroid {
+  transform: none !important;
+}
+
 .cv-made-card {
   box-sizing: border-box;
   border: 2.5px solid var(--rule);

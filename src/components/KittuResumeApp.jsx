@@ -470,8 +470,9 @@ const KittuResumeApp = ({
       { cardStage: 13, descStage: 14, idx: 2, sel: '.cv-thread-2' }
     ];
     for (const c of cardStages) {
-      const cBox = getBox(c.sel, { x: 28 + c.idx * 344, y: 710, w: 320, h: 195 });
       setBuildStage(c.cardStage);
+      await wait(30, runId);
+      let cBox = getBox(c.sel, { x: 28 + c.idx * 344, y: 710, w: 320, h: 195 });
       set2Swarm({
         elena: { x: cBox.x, y: cBox.y, role: 'Framing' },
         sarah: { x: cBox.x + cBox.w - 36, y: cBox.y + 24, role: 'Pasting ⌘V' },
@@ -484,6 +485,9 @@ const KittuResumeApp = ({
       if (!(await wait(120, runId))) return;
 
       setBuildStage(c.descStage);
+      await wait(30, runId);
+      cBox = getBox(c.sel, cBox);
+      setActiveSelection({ x: cBox.x, y: cBox.y, w: cBox.w, h: cBox.h });
       set2Swarm({
         elena: { x: cBox.x + cBox.w - 16, y: cBox.y + cBox.h - 16, role: 'Framing' },
         varun: { x: cBox.x + 24, y: cBox.y + 84, role: 'Typing' }
@@ -665,10 +669,15 @@ const KittuResumeApp = ({
         if (!(await followSelector(p.sel, { alignRatio: p.alignRatio || 0.22, duration: 760, settleMs: 260 }, runId))) return;
       }
 
-      const pBox = getBox(p.sel, { x: 28, y: 1675, w: 320, h: 255 });
+      const cardSel = `${p.sel} .cv-made-card`;
+
+      // 1. Reveal frame & thumbnail
       setBuildStage(p.frameStage);
+      await wait(40, runId);
+      let pBox = getBox(cardSel, getBox(p.sel, { x: 28, y: 1675, w: 320, h: 255 }));
+
       set2Swarm({
-        elena: { x: pBox.x, y: pBox.y, role: 'Framing' },
+        elena: { x: pBox.x - 4, y: pBox.y - 4, role: 'Framing' },
         sarah: { x: pBox.x + Math.round(pBox.w * 0.45), y: pBox.y + 65, role: 'Pasting ⌘V' },
         varun: { x: pBox.x + p.titleOffsetX, y: pBox.y + p.titleOffsetY, role: 'Typing' }
       });
@@ -676,26 +685,40 @@ const KittuResumeApp = ({
       setActiveGuides([{ type: 'h', y: pBox.y, x1: pBox.x, x2: pBox.x + pBox.w }]);
 
       // Let card & thumbnail paste/settle smoothly before typing project title
-      if (!(await wait(260, runId))) return;
+      if (!(await wait(240, runId))) return;
       if (!(await typeTextSmooth(PROJECT_ITEMS[p.idx].title, (t) => setTypedProjects((prev) => ({ ...prev, [p.idx]: t })), { charMs: 16, cursorBaseX: pBox.x + p.titleOffsetX, maxCursorOffset: 220, runId }))) return;
-      if (!(await wait(110, runId))) return;
+      if (!(await wait(100, runId))) return;
 
-      // Fast-type description
+      // 2. Fast-type description & dynamically adapt selection height
       setBuildStage(p.descStage);
+      await wait(40, runId);
+      pBox = getBox(cardSel, getBox(p.sel, pBox));
+      setActiveSelection({ x: pBox.x, y: pBox.y, w: pBox.w, h: pBox.h });
+
       set2Swarm({
-        elena: { x: pBox.x, y: pBox.y, role: 'Framing' },
+        elena: { x: pBox.x + pBox.w - 12, y: pBox.y + pBox.h - 12, role: 'Framing' },
         varun: { x: pBox.x + p.titleOffsetX, y: pBox.y + p.descOffsetY, role: 'Typing' }
       });
-      if (!(await wait(130, runId))) return;
-      if (!(await typeTextSmooth(PROJECT_ITEMS[p.idx].desc, (t) => setTypedProjectDescs((prev) => ({ ...prev, [p.idx]: t })), { charMs: 10, stepChars: 2, cursorBaseX: pBox.x + p.titleOffsetX, maxCursorOffset: 240, runId }))) return;
       if (!(await wait(110, runId))) return;
+      if (!(await typeTextSmooth(PROJECT_ITEMS[p.idx].desc, (t) => setTypedProjectDescs((prev) => ({ ...prev, [p.idx]: t })), { charMs: 10, stepChars: 2, cursorBaseX: pBox.x + p.titleOffsetX, maxCursorOffset: 240, runId }))) return;
+      if (!(await wait(100, runId))) return;
 
-      // Sarah pastes Figma button & tags smoothly
+      // 3. Sarah pastes Figma button & tags smoothly with full measured card height
       setBuildStage(p.actStage);
+      await wait(50, runId);
+      pBox = getBox(cardSel, getBox(p.sel, pBox));
+      setActiveSelection({ x: pBox.x, y: pBox.y, w: pBox.w, h: pBox.h });
+      setActiveGuides([]);
+
+      const isBigCard = p.idx === 0;
       set2Swarm({
-        elena: { x: pBox.x + pBox.w - 16, y: pBox.y + pBox.h - 16, role: 'Framing' },
-        sarah: { x: pBox.x + p.titleOffsetX + 70, y: pBox.y + pBox.h - 36, role: 'Pasting Tags' },
-        varun: { x: pBox.x + p.titleOffsetX, y: pBox.y + pBox.descOffsetY, role: 'Done' }
+        elena: { x: pBox.x + pBox.w + 4, y: pBox.y + pBox.h + 4, role: 'Framing' },
+        sarah: {
+          x: isBigCard ? pBox.x + p.titleOffsetX + 160 : pBox.x + pBox.w - 32,
+          y: pBox.y + pBox.h - 16,
+          role: 'Pasting Tags'
+        },
+        varun: { x: pBox.x + p.titleOffsetX, y: pBox.y + p.titleOffsetY, role: 'Done ✓' }
       });
       if (!(await wait(280, runId))) return;
     }
@@ -983,39 +1006,6 @@ const KittuResumeApp = ({
                 }}
               />
             ))}
-
-            {/* Dashed Collaboration Network Lines */}
-            {activeCursors.length > 1 && (
-              <svg
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  width: '100%',
-                  height: '100%',
-                  pointerEvents: 'none',
-                  zIndex: 115
-                }}
-              >
-                {activeCursors
-                  .filter((c) => Number.isFinite(c?.x) && Number.isFinite(c?.y))
-                  .map((c, i, arr) => {
-                    if (arr.length < 2) return null;
-                    const nextC = arr[(i + 1) % arr.length];
-                    return (
-                      <line
-                        key={`net-${c.id}-${nextC.id}`}
-                        x1={c.x + 4}
-                        y1={c.y + 4}
-                        x2={nextC.x + 4}
-                        y2={nextC.y + 4}
-                        stroke="rgba(162, 89, 255, 0.2)"
-                        strokeWidth="1.2"
-                        strokeDasharray="4 4"
-                      />
-                    );
-                  })}
-              </svg>
-            )}
 
             {/* Active Collaborative Cursors */}
             {activeCursors.map((c) => (
