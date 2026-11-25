@@ -6,7 +6,6 @@ import {
   Maximize2, 
   Minimize2, 
   Headphones, 
-  Zap, 
   Terminal,
   Layers,
   PenTool,
@@ -487,13 +486,6 @@ const ScreenSaver = ({ isIdle, onWake }) => {
           <span className="top-bar-divider">/</span>
           <span className="top-bar-sub">Screensaver_Idle_v4.2</span>
           <span className="top-bar-live-dot" title="Live Figma Canvas"></span>
-        </div>
-
-        <div className="top-bar-center">
-          <span className="stat-pill vibecoder-pill">
-            <Zap size={11} className="vibecoder-icon" />
-            VIBECODER ENGINE
-          </span>
         </div>
 
         <div className="top-bar-right">
