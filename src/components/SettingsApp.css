@@ -1475,9 +1475,40 @@
   }
 }
 
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (min-width: 641px) and (max-width: 1024px) {
   .settings-sidebar {
-    width: 180px !important;
+    width: 200px !important;
+  }
+  .settings-nav-item {
+    font-size: 13.5px !important;
+    padding: 8px 12px !important;
+  }
+  .settings-title {
+    font-size: 18px !important;
+  }
+  .settings-section-title {
+    font-size: 16px !important;
+  }
+  .settings-card-title {
+    font-size: 15px !important;
+  }
+  .settings-card-desc {
+    font-size: 13px !important;
+  }
+  .setting-label {
+    font-size: 14px !important;
+  }
+  .setting-sublabel {
+    font-size: 12.5px !important;
+  }
+  .wallpaper-card-name {
+    font-size: 13px !important;
+  }
+  .agent-card-title {
+    font-size: 14.5px !important;
+  }
+  .agent-card-role {
+    font-size: 12.5px !important;
   }
   .appearance-theme-cards-grid {
     grid-template-columns: repeat(3, 1fr) !important;

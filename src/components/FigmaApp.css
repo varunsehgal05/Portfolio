@@ -9641,20 +9641,133 @@
   overflow: hidden !important;
 }
 
-/* Tablet / iPad responsive rules (769px to 1024px) */
-@media (min-width: 769px) and (max-width: 1024px) {
+/* Tablet / iPad responsive rules (up to 1024px) */
+@media (max-width: 1024px) {
   .lovable-properties-sidebar {
     width: 220px !important;
   }
 
   .lovable-workspace-bottom-nav {
     bottom: 16px !important;
-    padding: 5px 8px !important;
+    padding: 6px 12px !important;
   }
 
   .bottom-nav-item {
-    padding: 6px 10px !important;
-    font-size: 10.5px !important;
+    padding: 7px 12px !important;
+    font-size: 13px !important;
+    gap: 6px !important;
+  }
+
+  .bottom-nav-item span {
+    font-size: 13px !important;
+  }
+
+  /* iPad Canvas Typography & Scaling */
+  .hero-main-title {
+    font-size: 34px !important;
+    line-height: 1.25 !important;
+  }
+
+  .hero-tagline {
+    font-size: 16px !important;
+  }
+
+  .cta-btn {
+    font-size: 14.5px !important;
+    padding: 10px 18px !important;
+  }
+
+  .now-card-header {
+    font-size: 15px !important;
+  }
+
+  .now-card-list li,
+  .now-card-list li div {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+  }
+
+  .section-title-header h2 {
+    font-size: 24px !important;
+  }
+
+  .section-title-header p {
+    font-size: 14px !important;
+  }
+
+  .project-name {
+    font-size: 17px !important;
+  }
+
+  .project-desc {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+  }
+
+  .project-cat,
+  .project-metric-stat {
+    font-size: 12.5px !important;
+  }
+
+  .project-tag-pill {
+    font-size: 12px !important;
+    padding: 3px 8px !important;
+  }
+
+  .open-in-figma-link {
+    font-size: 14px !important;
+  }
+
+  /* About / Moodboard / Process / Plugins */
+  .figjam-sticky-text {
+    font-size: 14.5px !important;
+    line-height: 1.5 !important;
+  }
+
+  .figjam-action-chip {
+    font-size: 12.5px !important;
+    padding: 5px 10px !important;
+  }
+
+  .figjam-sticky-tag {
+    font-size: 12px !important;
+  }
+
+  .timeline-step-title,
+  .plugin-card-title {
+    font-size: 16px !important;
+  }
+
+  .timeline-step-desc,
+  .plugin-card-desc {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+  }
+
+  .plugin-tag {
+    font-size: 12px !important;
+  }
+
+  .properties-header-title {
+    font-size: 13.5px !important;
+  }
+
+  .prop-section-title {
+    font-size: 12.5px !important;
+  }
+
+  .prop-label,
+  .prop-value {
+    font-size: 12.5px !important;
+  }
+
+  .layer-name {
+    font-size: 13px !important;
+  }
+
+  .top-nav-tool-btn,
+  .canvas-zoom-val-btn {
+    font-size: 13px !important;
   }
 }
 

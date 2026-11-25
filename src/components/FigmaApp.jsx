@@ -1189,17 +1189,20 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
   // Canvas zoom: 100% by default, and gracefully fits narrow stages for 1080px/1200px artboards so text never clips on mobile or iPad
   const calculateFitZoom = (tab, stageW) => {
     if (!stageW || stageW <= 0) return 1;
+    const isTablet = typeof window !== 'undefined' && (window.innerWidth <= 1024 || /iPad|Tablet/i.test(navigator.userAgent));
+    // On iPad / tablet, avoid tiny microscopic 55% scaling; clamp zoom to at least 0.85 so typography is clear and readable
+    const minZoom = isTablet ? 0.85 : 0.6;
     if (tab === 'resume') {
       const artboardW = 1080;
       if (stageW < artboardW + 36) {
-        return Math.min(1, Math.max(0.35, Number(((stageW - 24) / artboardW).toFixed(2))));
+        return Math.min(1, Math.max(minZoom, Number(((stageW - 24) / artboardW).toFixed(2))));
       }
       return 1;
     }
     if (tab === 'home' || tab === 'about' || tab === 'process' || tab === 'plugins') {
       const artboardW = tab === 'home' ? (Number(nodeProps['root-canvas']?.w) || frameW || 1200) : 1200;
       if (stageW < artboardW + 36) {
-        return Math.min(1, Math.max(0.32, Number(((stageW - 24) / artboardW).toFixed(2))));
+        return Math.min(1, Math.max(minZoom, Number(((stageW - 24) / artboardW).toFixed(2))));
       }
       return 1;
     }
@@ -1219,7 +1222,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
     let targetX = 0;
     let targetY = 0;
     if (dim.width > 0) {
-      targetX = Math.round((stageW - dim.width * activeZoom) / 2);
+      targetX = Math.max(16, Math.round((stageW - dim.width * activeZoom) / 2));
       targetY = 36;
     }
 

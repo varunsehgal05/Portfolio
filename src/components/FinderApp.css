@@ -820,14 +820,57 @@
   height: 0 !important;
 }
 
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (min-width: 641px) and (max-width: 1024px) {
   .finder-projects-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 14px;
+    gap: 16px;
     padding: 16px;
   }
   .finder-sidebar {
-    width: 180px !important;
+    width: 200px !important;
+  }
+  .finder-nav-item {
+    font-size: 13px !important;
+    padding: 7px 14px !important;
+  }
+  .finder-hero-title {
+    font-size: 20px !important;
+  }
+  .finder-hero-subtitle {
+    font-size: 14px !important;
+  }
+  .finder-card-title {
+    font-size: 16px !important;
+  }
+  .finder-card-desc {
+    font-size: 13.5px !important;
+    line-height: 1.5 !important;
+  }
+  .finder-card-cat {
+    font-size: 12px !important;
+  }
+  .finder-card-tag {
+    font-size: 11.5px !important;
+    padding: 3px 8px !important;
+  }
+  .finder-path-pill {
+    font-size: 12.5px !important;
+  }
+  .finder-search-input {
+    font-size: 13px !important;
+  }
+  .finder-table-head {
+    font-size: 12.5px !important;
+  }
+  .finder-table-row {
+    font-size: 13.5px !important;
+  }
+  .finder-status-bar {
+    font-size: 12.5px !important;
+  }
+  .btn-table-open {
+    font-size: 12px !important;
+    padding: 4px 10px !important;
   }
 }
 

@@ -3365,12 +3365,58 @@
   }
 }
 
-/* iPad / Tablet Layout Enhancements */
-@media (min-width: 769px) and (max-width: 1024px) {
+/* iPad / Tablet Layout & Typography Enhancements */
+@media (min-width: 641px) and (max-width: 1024px) {
   .vscode-primary-sidebar {
-    width: 210px !important;
+    width: 220px !important;
   }
   .editor-line {
-    font-size: 12.5px;
+    font-size: 14px !important;
+    line-height: 22px !important;
+  }
+  .line-number {
+    font-size: 13px !important;
+    min-width: 32px !important;
+  }
+  .tab-item,
+  .editor-tab-item {
+    font-size: 13px !important;
+    padding: 6px 12px !important;
+  }
+  .tree-item-label,
+  .tree-item-file {
+    font-size: 13px !important;
+  }
+  .vscode-menu-btn {
+    font-size: 12.5px !important;
+    padding: 4px 8px !important;
+  }
+  .terminal-content,
+  .terminal-line {
+    font-size: 13.5px !important;
+    line-height: 1.55 !important;
+  }
+  .vscode-status-bar {
+    font-size: 12px !important;
+    height: 26px !important;
+  }
+  .readme-title {
+    font-size: 24px !important;
+  }
+  .readme-desc {
+    font-size: 14.5px !important;
+    line-height: 1.55 !important;
+  }
+  .readme-nav-title {
+    font-size: 15px !important;
+  }
+  .readme-nav-desc {
+    font-size: 13px !important;
+  }
+  .challenge-title {
+    font-size: 16px !important;
+  }
+  .challenge-desc {
+    font-size: 13.5px !important;
   }
 }

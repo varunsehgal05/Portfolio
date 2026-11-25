@@ -294,6 +294,23 @@ body {
 }
 
 /* ========================================================
+   iPAD & TABLET TYPOGRAPHY SYSTEM (Retina Display Legibility)
+   ======================================================== */
+@media (min-width: 641px) and (max-width: 1024px) {
+  :root {
+    --ipad-font-scale: 1.12;
+  }
+}
+
+.mode-tablet {
+  -webkit-text-size-adjust: 100%;
+}
+
+.mode-tablet .window-title-text {
+  font-size: 13.5px !important;
+}
+
+/* ========================================================
    LIGHT MODE THEME ENGINE [data-theme="light"]
    macOS-inspired clean frosted light aesthetics
    ======================================================== */

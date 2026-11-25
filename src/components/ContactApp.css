@@ -683,9 +683,28 @@
   }
 }
 
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (min-width: 641px) and (max-width: 1024px) {
   .contact-sidebar {
     width: 240px;
+  }
+  .form-input, .form-textarea {
+    font-size: 14.5px !important;
+  }
+  .form-label {
+    font-size: 13px !important;
+  }
+  .submit-btn {
+    font-size: 14.5px !important;
+    padding: 10px 18px !important;
+  }
+  .contact-channel-item {
+    font-size: 13.5px !important;
+  }
+  .profile-name {
+    font-size: 17px !important;
+  }
+  .profile-title {
+    font-size: 13.5px !important;
   }
 }
 
