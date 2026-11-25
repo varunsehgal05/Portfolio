@@ -251,7 +251,7 @@ const interpolateArc = (x1, y1, x2, y2, progress, arcDeviation = 0, overshoot = 
 
 const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) => {
   const [statusMessage, setStatusMessage] = useState('Initializing swarm agents...');
-  const [speedMultiplier, setSpeedMultiplier] = useState(1.35); // Calibrated brisk & smooth 1.35x default
+  const [speedMultiplier, setSpeedMultiplier] = useState(1.55); // Brisk 1.55x speed for snappy loading
   const [isMuted, setIsMuted] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [completeBanner, setCompleteBanner] = useState(false);
@@ -266,7 +266,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
   const stageRef = useRef(-1);
   const dimsRef = useRef({ w: typeof window !== 'undefined' ? window.innerWidth : 1440, h: typeof window !== 'undefined' ? window.innerHeight : 900 });
   const isPausedRef = useRef(false);
-  const speedMultiplierRef = useRef(1.35);
+  const speedMultiplierRef = useRef(1.55);
   const userNameRef = useRef(userName);
   const lastTypeTimeRef = useRef(0);
   const lastTimeRef = useRef(Date.now());
@@ -464,7 +464,7 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
   };
 
   const handleToggleSpeed = () => {
-    setSpeedMultiplier((prev) => (prev >= 1.8 ? 1.35 : 2));
+    setSpeedMultiplier((prev) => (prev >= 1.9 ? 1.55 : 2.2));
   };
 
   const handleTogglePause = () => {
@@ -2709,9 +2709,9 @@ const SwarmRebuildOverlay = ({ userName = 'Guest', onStageChange, onComplete }) 
             type="button"
             className="swarm-blueprint-speed-btn"
             onClick={handleToggleSpeed}
-            title="Toggle playback speed (1.35x / 2.0x)"
+            title="Toggle playback speed (1.55x / 2.2x)"
           >
-            ⚡ {speedMultiplier >= 1.8 ? '2.0x' : '1.35x'}
+            ⚡ {speedMultiplier >= 1.9 ? '2.2x' : '1.55x'}
           </button>
           <button
             type="button"
