@@ -219,6 +219,22 @@ const KittuResumeApp = ({
     return { x, y, w, h };
   };
 
+  // Measure real-time DOM position of the active typing caret relative to .cv-container
+  const getCaretPos = () => {
+    if (!containerRef.current) return null;
+    const container = containerRef.current.querySelector('.cv-container') || containerRef.current;
+    const caret = container.querySelector('.cv-typing-caret');
+    if (!caret) return null;
+    const z = Number.isFinite(canvasZoom) && canvasZoom > 0 ? canvasZoom : 1;
+    const cRect = container.getBoundingClientRect();
+    const r = caret.getBoundingClientRect();
+    if (r.width === 0 && r.height === 0) return null;
+    return {
+      x: Math.round((r.left - cRect.left) / z),
+      y: Math.round((r.top - cRect.top) / z)
+    };
+  };
+
   // Smoothly pan the outer Figma viewport so the active card/line never builds off-screen
   const followSelector = async (selector, opts = {}, runId) => {
     if (runId !== buildRunIdRef.current || !containerRef.current) return false;
@@ -269,7 +285,7 @@ const KittuResumeApp = ({
     setActiveCursors(list);
   };
 
-  // Time-exact 60fps fast-typing helper with fluid cursor glide (zero setTimeout drift)
+  // Time-exact 60fps fast-typing helper with fluid cursor tracking that follows the REAL typing caret
   const typeTextSmooth = (
     str,
     setter,
@@ -277,8 +293,10 @@ const KittuResumeApp = ({
       charMs = 6,
       cursorId = 'varun',
       cursorBaseX = null,
+      cursorBaseY = null,
       maxCursorOffset = 340,
       maxDurationMs = 340,
+      selectionSelector = null,
       runId
     }
   ) =>
@@ -313,22 +331,73 @@ const KittuResumeApp = ({
           setter(str.slice(0, charCount));
         }
 
-        if (cursorId && cursorBaseX !== null && (now - lastCursorTick >= 30 || progress >= 1)) {
+        if (cursorId && (now - lastCursorTick >= 25 || progress >= 1)) {
           lastCursorTick = now;
-          const offset = Math.round(Math.min(charCount * 9.5, maxCursorOffset) * (0.35 + 0.65 * progress));
-          setActiveCursors((prev) =>
-            prev.map((c) =>
-              c.id === cursorId
-                ? { ...c, x: cursorBaseX + offset, transitionMs: 45 }
-                : c
-            )
-          );
+
+          // Query the exact real-time position of the typing caret in the DOM
+          const caretPos = getCaretPos();
+          if (caretPos) {
+            setActiveCursors((prev) =>
+              prev.map((c) =>
+                c.id === cursorId
+                  ? { ...c, x: caretPos.x + 2, y: caretPos.y + 2, transitionMs: 30 }
+                  : c
+              )
+            );
+          } else if (cursorBaseX !== null) {
+            const offset = Math.round(Math.min(charCount * 9.5, maxCursorOffset) * (0.35 + 0.65 * progress));
+            setActiveCursors((prev) =>
+              prev.map((c) =>
+                c.id === cursorId
+                  ? { ...c, x: cursorBaseX + offset, y: cursorBaseY !== null ? cursorBaseY : c.y, transitionMs: 40 }
+                  : c
+              )
+            );
+          }
+
+          // Continuously sync activeSelection if text causes card/box to expand in height
+          if (selectionSelector && containerRef.current) {
+            const updatedBox = getBox(selectionSelector, null);
+            if (updatedBox) {
+              setActiveSelection({ x: updatedBox.x, y: updatedBox.y, w: updatedBox.w, h: updatedBox.h });
+              // Also keep framing cursor (Elena) anchored to the bottom right of the selection box!
+              setActiveCursors((prev) =>
+                prev.map((c) =>
+                  c.id === 'elena' && c.role === 'Framing'
+                    ? {
+                        ...c,
+                        x: updatedBox.x > 700 ? updatedBox.x + updatedBox.w - 24 : updatedBox.x + updatedBox.w - 12,
+                        y: updatedBox.y + updatedBox.h - 12,
+                        transitionMs: 35
+                      }
+                    : c
+                )
+              );
+            }
+          }
         }
 
         if (progress < 1) {
           buildRafRef.current = requestAnimationFrame(stepFrame);
         } else {
           buildRafRef.current = null;
+          // Final sync of caret and selection upon completion
+          const finalCaret = getCaretPos();
+          if (finalCaret && cursorId) {
+            setActiveCursors((prev) =>
+              prev.map((c) =>
+                c.id === cursorId
+                  ? { ...c, x: finalCaret.x + 2, y: finalCaret.y + 2, transitionMs: 30 }
+                  : c
+              )
+            );
+          }
+          if (selectionSelector && containerRef.current) {
+            const finalBox = getBox(selectionSelector, null);
+            if (finalBox) {
+              setActiveSelection({ x: finalBox.x, y: finalBox.y, w: finalBox.w, h: finalBox.h });
+            }
+          }
           resolve(true);
         }
       };
@@ -383,7 +452,7 @@ const KittuResumeApp = ({
     if (!(await wait(240, runId))) return;
 
     // 0b. Type "Varun Sehgal"
-    if (!(await typeTextSmooth('Varun Sehgal', setTypedName, { charMs: 28, cursorBaseX: nameBox.x + 32, maxCursorOffset: 240, runId }))) return;
+    if (!(await typeTextSmooth('Varun Sehgal', setTypedName, { charMs: 28, cursorBaseX: nameBox.x + 32, cursorBaseY: nameBox.y + 20, selectionSelector: '.cv-name', maxCursorOffset: 240, runId }))) return;
     if (!(await wait(160, runId))) return;
 
     // 1. Lede paragraph fast & smooth typing
@@ -398,7 +467,7 @@ const KittuResumeApp = ({
     setActiveSelection({ x: ledeBox.x, y: ledeBox.y, w: ledeBox.w, h: ledeBox.h });
     setActiveGuides([{ type: 'v', x: ledeBox.x + ledeBox.w, y1: ledeBox.y, y2: ledeBox.y + ledeBox.h }]);
     if (!(await wait(200, runId))) return;
-    if (!(await typeTextSmooth(HERO_LEDE_FULL, setTypedLede, { charMs: 11, stepChars: 2, cursorBaseX: ledeBox.x + 20, maxCursorOffset: 380, runId }))) return;
+    if (!(await typeTextSmooth(HERO_LEDE_FULL, setTypedLede, { charMs: 11, stepChars: 2, cursorBaseX: ledeBox.x + 20, cursorBaseY: ledeBox.y + 20, selectionSelector: '.cv-lede', maxCursorOffset: 380, runId }))) return;
     if (!(await wait(160, runId))) return;
 
     // 2. Hero "Now" line — fast type
@@ -412,7 +481,7 @@ const KittuResumeApp = ({
     });
     setActiveSelection({ x: nowBox.x, y: nowBox.y, w: nowBox.w, h: nowBox.h });
     if (!(await wait(160, runId))) return;
-    if (!(await typeTextSmooth(HERO_NOW_FULL, setTypedNowLine, { charMs: 12, stepChars: 2, cursorBaseX: nowBox.x + 24, maxCursorOffset: 340, runId }))) return;
+    if (!(await typeTextSmooth(HERO_NOW_FULL, setTypedNowLine, { charMs: 12, stepChars: 2, cursorBaseX: nowBox.x + 24, cursorBaseY: nowBox.y + 12, selectionSelector: '.cv-now-line', maxCursorOffset: 340, runId }))) return;
     if (!(await wait(150, runId))) return;
 
     // 3. Social Links — Sarah smoothly pastes links strip
@@ -486,30 +555,49 @@ const KittuResumeApp = ({
     ];
     for (const c of cardStages) {
       setBuildStage(c.cardStage);
-      await wait(30, runId);
-      let cBox = getBox(c.sel, { x: 28 + c.idx * 344, y: 710, w: 320, h: 195 });
+      await wait(35, runId);
+      let cBox = getBox(c.sel, { x: 28 + c.idx * 348, y: 710, w: 326, h: 195 });
       set2Swarm({
         elena: { x: cBox.x, y: cBox.y, role: 'Framing' },
-        sarah: { x: cBox.x + cBox.w - 36, y: cBox.y + 24, role: 'Pasting ⌘V' },
+        sarah: { x: cBox.x + Math.round(cBox.w / 2), y: cBox.y + 36, role: 'Pasting ⌘V' },
         varun: { x: cBox.x + 24, y: cBox.y + 28, role: 'Typing' }
       });
       setActiveSelection({ x: cBox.x, y: cBox.y, w: cBox.w, h: cBox.h });
       setActiveGuides([]);
-      if (!(await wait(230, runId))) return;
-      if (!(await typeTextSmooth(WORK_CARDS[c.idx].title, (t) => setTypedWork((p) => ({ ...p, [c.idx]: t })), { charMs: 18, cursorBaseX: cBox.x + 24, maxCursorOffset: 220, runId }))) return;
-      if (!(await wait(120, runId))) return;
+      if (!(await wait(180, runId))) return;
+      if (!(await typeTextSmooth(WORK_CARDS[c.idx].title, (t) => setTypedWork((p) => ({ ...p, [c.idx]: t })), {
+        charMs: 18,
+        cursorBaseX: cBox.x + 24,
+        cursorBaseY: cBox.y + 28,
+        selectionSelector: c.sel,
+        maxCursorOffset: 220,
+        runId
+      }))) return;
+      if (!(await wait(100, runId))) return;
 
       setBuildStage(c.descStage);
-      await wait(30, runId);
+      await wait(35, runId);
       cBox = getBox(c.sel, cBox);
       setActiveSelection({ x: cBox.x, y: cBox.y, w: cBox.w, h: cBox.h });
       set2Swarm({
-        elena: { x: cBox.x + cBox.w - 16, y: cBox.y + cBox.h - 16, role: 'Framing' },
-        varun: { x: cBox.x + 24, y: cBox.y + 84, role: 'Typing' }
+        elena: {
+          x: c.idx === 2 ? cBox.x + cBox.w - 24 : cBox.x + cBox.w - 12,
+          y: cBox.y + cBox.h - 12,
+          role: 'Framing'
+        },
+        varun: { x: cBox.x + 24, y: cBox.y + 76, role: 'Typing' }
       });
-      if (!(await wait(140, runId))) return;
-      if (!(await typeTextSmooth(WORK_CARDS[c.idx].desc, (t) => setTypedWorkDescs((p) => ({ ...p, [c.idx]: t })), { charMs: 10, stepChars: 2, cursorBaseX: cBox.x + 24, maxCursorOffset: 240, runId }))) return;
-      if (!(await wait(220, runId))) return;
+      if (!(await wait(120, runId))) return;
+      if (!(await typeTextSmooth(WORK_CARDS[c.idx].desc, (t) => setTypedWorkDescs((p) => ({ ...p, [c.idx]: t })), {
+        charMs: 10,
+        stepChars: 2,
+        cursorBaseX: cBox.x + 24,
+        cursorBaseY: cBox.y + 76,
+        selectionSelector: c.sel,
+        maxCursorOffset: 260,
+        runId
+      }))) return;
+      if (!(await wait(160, runId))) return;
     }
 
     // =========================================================================
@@ -545,7 +633,7 @@ const KittuResumeApp = ({
       });
       setActiveSelection({ x: jBox.x, y: jBox.y, w: jBox.w, h: jBox.h });
       if (!(await wait(160, runId))) return;
-      if (!(await typeTextSmooth(data.head, (t) => setTypedJobs((p) => ({ ...p, [j.idx]: t })), { charMs: 16, cursorBaseX: jBox.x + 28, maxCursorOffset: 320, runId }))) return;
+      if (!(await typeTextSmooth(data.head, (t) => setTypedJobs((p) => ({ ...p, [j.idx]: t })), { charMs: 16, cursorBaseX: jBox.x + 28, cursorBaseY: jBox.y + 12, selectionSelector: j.sel, maxCursorOffset: 320, runId }))) return;
 
       // Meta + Company pasted cleanly
       setBuildStage(j.metaStage);
@@ -563,7 +651,7 @@ const KittuResumeApp = ({
         varun: { x: jBox.x + 40, y: jBox.y + 62, role: 'Typing' }
       });
       if (!(await wait(140, runId))) return;
-      if (!(await typeTextSmooth(data.b1, (t) => setTypedJobBullets((p) => ({ ...p, [`${j.idx}_0`]: t })), { charMs: 10, stepChars: 2, cursorBaseX: jBox.x + 40, maxCursorOffset: 420, runId }))) return;
+      if (!(await typeTextSmooth(data.b1, (t) => setTypedJobBullets((p) => ({ ...p, [`${j.idx}_0`]: t })), { charMs: 10, stepChars: 2, cursorBaseX: jBox.x + 40, cursorBaseY: jBox.y + 62, selectionSelector: j.sel, maxCursorOffset: 420, runId }))) return;
 
       // Bullet 2 fast-typed (if present)
       if (j.b2Stage && data.b2) {
@@ -574,7 +662,7 @@ const KittuResumeApp = ({
           varun: { x: jBox.x + 40, y: jBox.y + 86, role: 'Typing' }
         });
         if (!(await wait(130, runId))) return;
-        if (!(await typeTextSmooth(data.b2, (t) => setTypedJobBullets2((p) => ({ ...p, [`${j.idx}_1`]: t })), { charMs: 10, stepChars: 2, cursorBaseX: jBox.x + 40, maxCursorOffset: 420, runId }))) return;
+        if (!(await typeTextSmooth(data.b2, (t) => setTypedJobBullets2((p) => ({ ...p, [`${j.idx}_1`]: t })), { charMs: 10, stepChars: 2, cursorBaseX: jBox.x + 40, cursorBaseY: jBox.y + 86, selectionSelector: j.sel, maxCursorOffset: 420, runId }))) return;
       }
 
       if (!(await wait(220, runId))) return;
@@ -701,7 +789,7 @@ const KittuResumeApp = ({
 
       // Let card & thumbnail paste/settle smoothly before typing project title
       if (!(await wait(240, runId))) return;
-      if (!(await typeTextSmooth(PROJECT_ITEMS[p.idx].title, (t) => setTypedProjects((prev) => ({ ...prev, [p.idx]: t })), { charMs: 16, cursorBaseX: pBox.x + p.titleOffsetX, maxCursorOffset: 220, runId }))) return;
+      if (!(await typeTextSmooth(PROJECT_ITEMS[p.idx].title, (t) => setTypedProjects((prev) => ({ ...prev, [p.idx]: t })), { charMs: 16, cursorBaseX: pBox.x + p.titleOffsetX, cursorBaseY: pBox.y + p.titleOffsetY, selectionSelector: cardSel, maxCursorOffset: 220, runId }))) return;
       if (!(await wait(100, runId))) return;
 
       // 2. Fast-type description & dynamically adapt selection height
@@ -715,7 +803,7 @@ const KittuResumeApp = ({
         varun: { x: pBox.x + p.titleOffsetX, y: pBox.y + p.descOffsetY, role: 'Typing' }
       });
       if (!(await wait(110, runId))) return;
-      if (!(await typeTextSmooth(PROJECT_ITEMS[p.idx].desc, (t) => setTypedProjectDescs((prev) => ({ ...prev, [p.idx]: t })), { charMs: 10, stepChars: 2, cursorBaseX: pBox.x + p.titleOffsetX, maxCursorOffset: 240, runId }))) return;
+      if (!(await typeTextSmooth(PROJECT_ITEMS[p.idx].desc, (t) => setTypedProjectDescs((prev) => ({ ...prev, [p.idx]: t })), { charMs: 10, stepChars: 2, cursorBaseX: pBox.x + p.titleOffsetX, cursorBaseY: pBox.y + p.descOffsetY, selectionSelector: cardSel, maxCursorOffset: 240, runId }))) return;
       if (!(await wait(100, runId))) return;
 
       // 3. Sarah pastes Figma button & tags smoothly with full measured card height
@@ -727,7 +815,7 @@ const KittuResumeApp = ({
 
       const isBigCard = p.idx === 0;
       set2Swarm({
-        elena: { x: pBox.x + pBox.w + 4, y: pBox.y + pBox.h + 4, role: 'Framing' },
+        elena: { x: pBox.x + pBox.w - 12, y: pBox.y + pBox.h - 12, role: 'Framing' },
         sarah: {
           x: isBigCard ? pBox.x + p.titleOffsetX + 160 : pBox.x + pBox.w - 32,
           y: pBox.y + pBox.h - 16,
@@ -1039,50 +1127,58 @@ const KittuResumeApp = ({
             ))}
 
             {/* Active Collaborative Cursors */}
-            {activeCursors.map((c) => (
-              <div
-                key={c.id}
-                className="cv-cursor"
-                style={{
-                  position: 'absolute',
-                  transform: `translate3d(${c.x}px, ${c.y}px, 0)`,
-                  opacity: c.opacity !== undefined ? c.opacity : 1,
-                  transition: `transform ${c.transitionMs || 560}ms ${
-                    (c.transitionMs || 560) <= 200 ? 'linear' : 'cubic-bezier(0.22, 1, 0.36, 1)'
-                  }, opacity 0.38s ease`,
-                  zIndex: 120
-                }}
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M5.65376 12.3673H5.46026L5.31717 12.4976L0.500002 16.8829L0.500002 1.19841L11.7841 12.3673H5.65376Z"
-                    fill={c.color}
-                    stroke="#ffffff"
-                    strokeWidth="1.5"
-                  />
-                </svg>
-                <span
+            {activeCursors.map((c) => {
+              const isNearRightEdge = c.x > 880;
+              return (
+                <div
+                  key={c.id}
+                  className="cv-cursor"
                   style={{
-                    background: c.color,
-                    color: '#ffffff',
-                    fontFamily: '-apple-system, BlinkMacSystemFont, "Inter", sans-serif',
-                    fontSize: '9.5px',
-                    fontWeight: '600',
-                    padding: '2px 7px',
-                    borderRadius: '3px',
-                    marginLeft: '8px',
-                    marginTop: '-2px',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    boxShadow: '0 2px 6px rgba(0,0,0,0.22)',
-                    whiteSpace: 'nowrap',
-                    letterSpacing: '0.2px'
+                    position: 'absolute',
+                    transform: `translate3d(${c.x}px, ${c.y}px, 0)`,
+                    opacity: c.opacity !== undefined ? c.opacity : 1,
+                    transition: `transform ${c.transitionMs || 140}ms ${
+                      (c.transitionMs || 140) <= 200 ? 'linear' : 'cubic-bezier(0.22, 1, 0.36, 1)'
+                    }, opacity 0.38s ease`,
+                    zIndex: 120,
+                    display: 'flex',
+                    flexDirection: isNearRightEdge ? 'row-reverse' : 'row',
+                    alignItems: 'flex-start',
+                    pointerEvents: 'none'
                   }}
                 >
-                  <span>{c.role || (c.id === 'varun' ? 'Typing' : c.id === 'sarah' ? 'Pasting' : c.id === 'alex' ? 'Layout' : 'Framing')}</span>
-                </span>
-              </div>
-            ))}
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M5.65376 12.3673H5.46026L5.31717 12.4976L0.500002 16.8829L0.500002 1.19841L11.7841 12.3673H5.65376Z"
+                      fill={c.color}
+                      stroke="#ffffff"
+                      strokeWidth="1.5"
+                    />
+                  </svg>
+                  <span
+                    style={{
+                      background: c.color,
+                      color: '#ffffff',
+                      fontFamily: '-apple-system, BlinkMacSystemFont, "Inter", sans-serif',
+                      fontSize: '9.5px',
+                      fontWeight: '600',
+                      padding: '2px 7px',
+                      borderRadius: '3px',
+                      marginLeft: isNearRightEdge ? '0px' : '8px',
+                      marginRight: isNearRightEdge ? '8px' : '0px',
+                      marginTop: '-2px',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      boxShadow: '0 2px 6px rgba(0,0,0,0.22)',
+                      whiteSpace: 'nowrap',
+                      letterSpacing: '0.2px'
+                    }}
+                  >
+                    <span>{c.role || (c.id === 'varun' ? 'Typing' : c.id === 'sarah' ? 'Pasting' : c.id === 'alex' ? 'Layout' : 'Framing')}</span>
+                  </span>
+                </div>
+              );
+            })}
           </div>
         )}
 

@@ -477,6 +477,22 @@
   transform: none !important;
 }
 
+.cv-container.is-building .cv-stamp-pop {
+  animation: cvBuildingStampFade 0.16s ease both !important;
+  transform: none !important;
+}
+
+@keyframes cvBuildingStampFade {
+  0% {
+    opacity: 0;
+    transform: none !important;
+  }
+  100% {
+    opacity: 1;
+    transform: none !important;
+  }
+}
+
 .cv-made-card {
   box-sizing: border-box;
   border: 2.5px solid var(--rule);
