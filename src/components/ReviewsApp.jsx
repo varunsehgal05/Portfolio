@@ -16,9 +16,6 @@ import {
   Building2,
   Check,
   Search,
-  Trophy,
-  Zap,
-  Palette,
   ThumbsUp
 } from 'lucide-react';
 
@@ -239,15 +236,18 @@ const ReviewsApp = ({ onClose }) => {
       {/* Sleek Ultra-Glass macOS Toolbar Header */}
       <header className="reviews-header">
         <div className="reviews-header-left">
-          <div className="reviews-title-badge">
-            <span className="badge-pulse-glow" />
-            <span className="badge-star-icon">★</span>
-            <span className="badge-text">Varun Sehgal</span>
-          </div>
           <div className="reviews-title-wrap">
-            <h1 className="reviews-title">Recommendations &amp; Peer Reviews</h1>
+            <div className="reviews-title-row">
+              <h1 className="reviews-title">Recommendations</h1>
+              <span className="reviews-rating-pill">
+                <Star size={11} color="#f59e0b" fill="#f59e0b" />
+                <span>{avgRating}</span>
+                <span className="pill-dot">•</span>
+                <span>{reviews.length} Verified</span>
+              </span>
+            </div>
             <p className="reviews-subtitle">
-              Verified feedback from industry teammates, hackathon partners &amp; design leads
+              Feedback from hackathon teammates, design leads &amp; founders
             </p>
           </div>
         </div>
@@ -259,15 +259,15 @@ const ReviewsApp = ({ onClose }) => {
               onClick={() => setActiveTab('add')}
               title="Add a new recommendation for Varun Sehgal"
             >
-              <MessageSquarePlus size={15} />
-              <span>Drop a Review</span>
+              <MessageSquarePlus size={14} />
+              <span>Write a Review</span>
             </button>
           ) : (
             <button 
               className="reviews-back-btn"
               onClick={() => setActiveTab('list')}
             >
-              <X size={15} />
+              <X size={14} />
               <span>Back to Reviews</span>
             </button>
           )}
@@ -278,92 +278,32 @@ const ReviewsApp = ({ onClose }) => {
       <div className="reviews-content-wrapper">
         {activeTab === 'list' ? (
           <>
-            {/* Apple / Linear Grade Hero Social Proof Strip */}
-            <section className="reviews-hero-strip">
-              <div className="hero-strip-metric">
-                <div className="metric-primary-value">
-                  <span className="metric-big-num">{avgRating}</span>
-                  <div className="metric-stars-glow">
-                    {[1, 2, 3, 4, 5].map(s => (
-                      <Star key={s} size={14} color="#f59e0b" fill="#f59e0b" />
-                    ))}
-                  </div>
-                </div>
-                <span className="metric-label">100% 5-Star Peer Rating</span>
-              </div>
-
-              <div className="hero-strip-divider" />
-
-              <div className="hero-strip-metric">
-                <div className="metric-primary-value">
-                  <span className="metric-big-num">{reviews.length}</span>
-                  <span className="metric-tag-pill green">
-                    <CheckCircle2 size={11} /> 100% Recommended
-                  </span>
-                </div>
-                <span className="metric-label">Verified Endorsements</span>
-              </div>
-
-              <div className="hero-strip-divider" />
-
-              <div className="hero-strip-metric">
-                <div className="metric-primary-value">
-                  <span className="metric-accent-badge">
-                    <Trophy size={13} color="#f59e0b" />
-                    <span>1st Runner-Up</span>
-                  </span>
-                </div>
-                <span className="metric-label">HACKeThor National Winner</span>
-              </div>
-
-              <div className="hero-strip-divider" />
-
-              <div className="hero-strip-metric automod-strip-cell">
-                <div className="automod-pill-live">
-                  <span className="automod-pulse-dot" />
-                  <ShieldCheck size={14} className="automod-shield" />
-                  <span className="automod-pill-title">AutoMod Active</span>
-                </div>
-                <span className="metric-label">Multilingual Safety Filter</span>
-              </div>
-            </section>
-
-            {/* Filter & Search Bar */}
+            {/* Minimal Filter & Search Bar */}
             <div className="reviews-filter-bar">
               <div className="filter-chips-row">
                 <button 
                   className={`filter-chip ${categoryFilter === 'all' ? 'active' : ''}`}
                   onClick={() => setCategoryFilter('all')}
                 >
-                  <span>All Reviews ({reviews.length})</span>
+                  <span>All ({reviews.length})</span>
                 </button>
                 <button 
                   className={`filter-chip ${categoryFilter === 'hackathon' ? 'active' : ''}`}
                   onClick={() => setCategoryFilter('hackathon')}
                 >
-                  <Trophy size={12} />
                   <span>Hackathons</span>
                 </button>
                 <button 
                   className={`filter-chip ${categoryFilter === 'saas' ? 'active' : ''}`}
                   onClick={() => setCategoryFilter('saas')}
                 >
-                  <Zap size={12} />
-                  <span>SaaS &amp; Startups</span>
+                  <span>SaaS</span>
                 </button>
                 <button 
                   className={`filter-chip ${categoryFilter === 'design' ? 'active' : ''}`}
                   onClick={() => setCategoryFilter('design')}
                 >
-                  <Palette size={12} />
                   <span>Design Systems</span>
-                </button>
-                <button 
-                  className={`filter-chip ${categoryFilter === '5stars' ? 'active' : ''}`}
-                  onClick={() => setCategoryFilter('5stars')}
-                >
-                  <Star size={12} color="#f59e0b" fill="#f59e0b" />
-                  <span>5 Stars</span>
                 </button>
               </div>
 
@@ -371,7 +311,7 @@ const ReviewsApp = ({ onClose }) => {
                 <Search size={13} className="search-icon" />
                 <input 
                   type="text"
-                  placeholder="Search reviews, roles, keywords..."
+                  placeholder="Search reviews..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="search-input"
@@ -389,12 +329,12 @@ const ReviewsApp = ({ onClose }) => {
               </div>
             </div>
 
-            {/* Reviews Bento Grid */}
+            {/* Reviews Grid */}
             {filteredReviews.length === 0 ? (
               <div className="reviews-empty-state">
-                <Quote size={32} style={{ opacity: 0.3 }} />
-                <h3>No matching recommendations found</h3>
-                <p>Try resetting the category filter or searching for another keyword.</p>
+                <Quote size={28} style={{ opacity: 0.25 }} />
+                <h3>No recommendations found</h3>
+                <p>Try searching for another keyword or clearing the filter.</p>
                 <button 
                   className="reset-filter-btn"
                   onClick={() => { setCategoryFilter('all'); setSearchQuery(''); }}
@@ -408,30 +348,26 @@ const ReviewsApp = ({ onClose }) => {
                   const highlight = getReviewHighlight(rev);
                   return (
                     <article key={rev.id} className="review-card">
-                      {/* Stylized background quote watermark */}
-                      <span className="card-watermark-quote" aria-hidden="true">“</span>
-
-                      {/* Top Header: Highlight Milestone & Star Rating */}
+                      {/* Top Header: Context Tag & Rating */}
                       <div className="card-header-meta">
-                        <div className={`card-highlight-pill ${highlight.badgeClass}`}>
-                          <span className="highlight-icon">{highlight.icon}</span>
-                          <span className="highlight-label">{highlight.label}</span>
-                          <span className="highlight-metric-divider">•</span>
-                          <span className="highlight-metric">{highlight.metric}</span>
-                        </div>
+                        {highlight.label && (
+                          <span className="card-context-tag">
+                            {highlight.label}
+                          </span>
+                        )}
 
                         <div className="review-rating-block">
                           <div className="card-stars-row">
                             {[1, 2, 3, 4, 5].map(s => (
                               <Star 
                                 key={s} 
-                                size={13} 
+                                size={12} 
                                 color={s <= rev.rating ? "#f59e0b" : "#334155"} 
                                 fill={s <= rev.rating ? "#f59e0b" : "transparent"} 
                               />
                             ))}
                           </div>
-                          <span className="review-date">{rev.date}</span>
+                          <span className="review-date">• {rev.date}</span>
                         </div>
                       </div>
 
@@ -440,7 +376,7 @@ const ReviewsApp = ({ onClose }) => {
                         <p className="review-text">"{rev.text}"</p>
                       </div>
 
-                      {/* Reviewer Profile & Verification Footer */}
+                      {/* Reviewer Profile Footer */}
                       <div className="review-card-footer">
                         <div className="reviewer-info">
                           <div className="reviewer-avatar">
@@ -456,10 +392,7 @@ const ReviewsApp = ({ onClose }) => {
                             <div className="reviewer-name-row">
                               <h4 className="reviewer-name">{rev.name}</h4>
                               {rev.verified && (
-                                <span className="verified-pill" title="Verified Professional Endorsement">
-                                  <span className="verified-dot" />
-                                  <span>Verified</span>
-                                </span>
+                                <CheckCircle2 size={13} className="verified-icon" title="Verified Endorsement" />
                               )}
                             </div>
                             <p className="reviewer-role">
@@ -469,30 +402,19 @@ const ReviewsApp = ({ onClose }) => {
                           </div>
                         </div>
 
-                        <div className="card-footer-actions">
-                          {rev.linkedIn ? (
-                            <a 
-                              href={rev.linkedIn.startsWith('http') ? rev.linkedIn : `https://${rev.linkedIn}`} 
-                              target="_blank" 
-                              rel="noopener noreferrer" 
-                              className="linkedin-badge"
-                              title={`View ${rev.name}'s LinkedIn Profile`}
-                            >
-                              <LinkedInIcon size={12} color="#0a66c2" />
-                              <span>LinkedIn</span>
-                              <ExternalLink size={10} className="link-arrow" />
-                            </a>
-                          ) : (
-                            <span className="community-badge">Peer Review</span>
-                          )}
-
-                          {rev.email && (
-                            <span className="email-domain-tag" title={`Verified via ${rev.email}`}>
-                              <Building2 size={11} style={{ opacity: 0.6 }} />
-                              <span>{rev.email.split('@')[1] ? `@${rev.email.split('@')[1]}` : 'verified'}</span>
-                            </span>
-                          )}
-                        </div>
+                        {rev.linkedIn && (
+                          <a 
+                            href={rev.linkedIn.startsWith('http') ? rev.linkedIn : `https://${rev.linkedIn}`} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="clean-linkedin-link"
+                            title={`View ${rev.name}'s LinkedIn Profile`}
+                          >
+                            <LinkedInIcon size={12} color="#94a3b8" />
+                            <span>LinkedIn</span>
+                            <ExternalLink size={10} className="link-arrow" />
+                          </a>
+                        )}
                       </div>
                     </article>
                   );
