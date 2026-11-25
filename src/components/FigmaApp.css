@@ -9579,16 +9579,33 @@
     font-size: 11px !important;
   }
 
+  /* Position floating zoom HUD above the bottom nav on mobile so it NEVER overlays */
+  .figma-floating-zoom-hud {
+    bottom: 64px !important;
+    right: 12px !important;
+    padding: 3px 6px !important;
+    gap: 3px !important;
+    border-radius: 8px !important;
+    background: rgba(18, 22, 31, 0.94) !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6) !important;
+    z-index: 101 !important;
+    transform: scale(0.92);
+    transform-origin: bottom right;
+  }
+
   /* Compact and horizontally scrollable bottom nav on mobile phone */
   .lovable-workspace-bottom-nav {
-    bottom: 12px !important;
+    bottom: 10px !important;
     padding: 4px 6px !important;
-    gap: 4px !important;
-    border-radius: 12px !important;
-    max-width: 96% !important;
+    gap: 3px !important;
+    border-radius: 14px !important;
+    max-width: calc(100vw - 20px) !important;
+    width: auto !important;
     overflow-x: auto !important;
     scrollbar-width: none !important;
     -webkit-overflow-scrolling: touch !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.12) !important;
+    z-index: 100 !important;
   }
   .lovable-workspace-bottom-nav::-webkit-scrollbar {
     display: none !important;
@@ -9597,7 +9614,7 @@
   .nav-primary-group,
   .nav-secondary-group {
     display: flex !important;
-    gap: 3px !important;
+    gap: 2px !important;
     flex-shrink: 0 !important;
   }
 
@@ -9611,19 +9628,101 @@
   }
 
   .bottom-nav-item {
-    padding: 6px 8px !important;
-    font-size: 10px !important;
+    padding: 6px 9px !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
     gap: 4px !important;
-    letter-spacing: 0.3px !important;
+    letter-spacing: 0.2px !important;
+    white-space: nowrap !important;
+    border-radius: 8px !important;
   }
 
   .bottom-nav-item span {
-    font-size: 10px !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
   }
 
   .bottom-nav-icon-svg {
-    width: 15px !important;
-    height: 15px !important;
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  /* Mobile Phone Canvas Typography & Card Scaling */
+  .hero-main-title {
+    font-size: 42px !important;
+    line-height: 1.25 !important;
+  }
+
+  .hero-tagline {
+    font-size: 18px !important;
+    line-height: 1.45 !important;
+  }
+
+  .cta-btn {
+    font-size: 15.5px !important;
+    padding: 11px 18px !important;
+  }
+
+  .now-card-header {
+    font-size: 17px !important;
+  }
+
+  .now-card-list li,
+  .now-card-list li div {
+    font-size: 15px !important;
+    line-height: 1.55 !important;
+  }
+
+  .section-title-header h2 {
+    font-size: 26px !important;
+  }
+
+  .section-title-header p {
+    font-size: 15px !important;
+  }
+
+  .project-name {
+    font-size: 19px !important;
+  }
+
+  .project-desc {
+    font-size: 15px !important;
+    line-height: 1.55 !important;
+  }
+
+  .project-cat,
+  .project-metric-stat {
+    font-size: 13.5px !important;
+  }
+
+  .project-tag-pill {
+    font-size: 13px !important;
+    padding: 3px 9px !important;
+  }
+
+  .open-in-figma-link {
+    font-size: 15px !important;
+  }
+
+  .figjam-sticky-text {
+    font-size: 16px !important;
+    line-height: 1.55 !important;
+  }
+
+  .figjam-action-chip {
+    font-size: 13.5px !important;
+    padding: 6px 12px !important;
+  }
+
+  .timeline-step-title,
+  .plugin-card-title {
+    font-size: 18px !important;
+  }
+
+  .timeline-step-desc,
+  .plugin-card-desc {
+    font-size: 15px !important;
+    line-height: 1.55 !important;
   }
 }
 

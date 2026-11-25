@@ -1189,9 +1189,10 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
   // Canvas zoom: 100% by default, and gracefully fits narrow stages for 1080px/1200px artboards so text never clips on mobile or iPad
   const calculateFitZoom = (tab, stageW) => {
     if (!stageW || stageW <= 0) return 1;
+    const isMobile = typeof window !== 'undefined' && (window.innerWidth <= 640 || /iPhone|Android.*Mobile/i.test(navigator.userAgent));
     const isTablet = typeof window !== 'undefined' && (window.innerWidth <= 1024 || /iPad|Tablet/i.test(navigator.userAgent));
-    // On iPad / tablet, avoid tiny microscopic 55% scaling; clamp zoom to at least 0.85 so typography is clear and readable
-    const minZoom = isTablet ? 0.85 : 0.6;
+    // On Mobile phone, clamp zoom to at least 0.70 so typography is clear and bold; on iPad clamp to 0.85
+    const minZoom = isMobile ? 0.70 : (isTablet ? 0.85 : 0.6);
     if (tab === 'resume') {
       const artboardW = 1080;
       if (stageW < artboardW + 36) {

@@ -798,11 +798,15 @@
   }
 
   .finder-hero-title {
-    font-size: 16px;
+    font-size: 19px;
   }
 
   .finder-hero-subtitle {
-    font-size: 11.5px;
+    font-size: 13.5px;
+  }
+
+  .finder-nav-item {
+    font-size: 13px !important;
   }
 }
 
