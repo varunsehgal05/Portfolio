@@ -332,6 +332,9 @@ const ScreenSaver = ({ isIdle, onWake }) => {
   const [time, setTime] = useState(new Date());
   const [isPlayingMusic, setIsPlayingMusic] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+  const [isExiting, setIsExiting] = useState(false);
+  const isExitingRef = useRef(false);
+  const exitTimerRef = useRef(null);
   const containerRef = useRef(null);
   const hasAttemptedAutoplay = useRef(false);
   const enteredSleepTimeRef = useRef(0);
@@ -387,10 +390,27 @@ const ScreenSaver = ({ isIdle, onWake }) => {
       }
       return;
     }
-    lofiEngine.stop();
+    if (isExitingRef.current) return;
+    isExitingRef.current = true;
+    setIsExiting(true);
+
+    try {
+      lofiEngine.stop();
+    } catch { }
     setIsPlayingMusic(false);
-    onWake();
+
+    if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
+    // Smooth 380ms wake-up animation before unmounting
+    exitTimerRef.current = setTimeout(() => {
+      onWake();
+    }, 380);
   }, [onWake]);
+
+  useEffect(() => {
+    return () => {
+      if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     if (!isIdle) return;
@@ -456,7 +476,7 @@ const ScreenSaver = ({ isIdle, onWake }) => {
   return (
     <div 
       ref={containerRef}
-      className={`screensaver ${isIdle ? 'active' : ''}`}
+      className={`screensaver ${isIdle ? 'active' : ''} ${isExiting ? 'screensaver-exiting' : 'screensaver-entering'}`}
       onClick={handleWake}
       onTouchEnd={handleWake}
       role="dialog"

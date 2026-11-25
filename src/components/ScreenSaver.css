@@ -35,6 +35,208 @@
 }
 
 /* =============================================================================
+   SCREENSAVER SLEEP & WAKE TRANSITION ANIMATIONS (ON / OFF)
+   ============================================================================= */
+
+/* 1. TURNING ON (ENTERING SLEEP MODE) */
+.screensaver.active.screensaver-entering {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+  animation: screensaverBackdropEnter 0.52s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes screensaverBackdropEnter {
+  0% {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+    transform: scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    backdrop-filter: blur(20px);
+    transform: scale(1);
+  }
+}
+
+.screensaver.active.screensaver-entering .screensaver-hero-frame {
+  animation: screensaverHeroFrameEnter 0.58s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes screensaverHeroFrameEnter {
+  0% {
+    opacity: 0;
+    transform: scale(0.91) translateY(24px);
+    filter: blur(8px);
+  }
+  65% {
+    opacity: 1;
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0px);
+  }
+}
+
+.screensaver.active.screensaver-entering .screensaver-top-bar {
+  animation: screensaverTopBarEnter 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes screensaverTopBarEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.screensaver.active.screensaver-entering .screensaver-bottom-dock {
+  animation: screensaverDockEnter 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes screensaverDockEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.screensaver.active.screensaver-entering .below-frame-container {
+  animation: screensaverBelowFrameEnter 0.54s cubic-bezier(0.16, 1, 0.3, 1) 0.06s backwards;
+}
+
+@keyframes screensaverBelowFrameEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.screensaver.active.screensaver-entering .floating-code-annotation,
+.screensaver.active.screensaver-entering .screensaver-ambient-vector-svg {
+  animation: screensaverAmbientEnter 0.7s ease-out 0.08s backwards;
+}
+
+@keyframes screensaverAmbientEnter {
+  0% {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 2. TURNING OFF (WAKING UP / EXITING SLEEP MODE) */
+.screensaver.screensaver-exiting {
+  animation: screensaverBackdropExit 0.38s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
+  pointer-events: none !important;
+}
+
+@keyframes screensaverBackdropExit {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.04);
+    filter: blur(12px);
+  }
+}
+
+.screensaver.screensaver-exiting .screensaver-hero-frame {
+  animation: screensaverHeroFrameExit 0.36s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
+}
+
+@keyframes screensaverHeroFrameExit {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.93) translateY(-18px);
+    filter: blur(8px);
+  }
+}
+
+.screensaver.screensaver-exiting .screensaver-top-bar {
+  animation: screensaverTopBarExit 0.32s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+}
+
+@keyframes screensaverTopBarExit {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+}
+
+.screensaver.screensaver-exiting .screensaver-bottom-dock {
+  animation: screensaverDockExit 0.32s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+}
+
+@keyframes screensaverDockExit {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+}
+
+.screensaver.screensaver-exiting .below-frame-container {
+  animation: screensaverBelowFrameExit 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+}
+
+@keyframes screensaverBelowFrameExit {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+.screensaver.screensaver-exiting .floating-code-annotation,
+.screensaver.screensaver-exiting .screensaver-ambient-vector-svg {
+  animation: screensaverAmbientExit 0.25s ease-out forwards !important;
+}
+
+@keyframes screensaverAmbientExit {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* =============================================================================
    1. TOP STATUS BAR (Header)
    ============================================================================= */
 .screensaver-top-bar {
