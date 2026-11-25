@@ -119,7 +119,7 @@ const getAIResponse = (query) => {
       appName: "Resume App",
       actionText: "Open Resume App",
       suggestions: ["Show me skills", "What projects has Varun built?", "Why hire Varun?"],
-      animation: "Writing"
+      animation: "Explain"
     };
   }
 
@@ -315,6 +315,14 @@ const fetchGeminiAssistantResponse = async (userPrompt, chatHistory = []) => {
   }
 };
 
+const CLIPPY_IDLE_ANIMATIONS = [
+  'LookLeft', 'LookRight', 'LookUp', 'LookDown',
+  'LookUpRight', 'LookDownRight', 'LookUpLeft', 'LookDownLeft',
+  'IdleSideToSide', 'IdleEyeBrowRaise', 'IdleHeadScratch',
+  'IdleFingerTap', 'Idle1_1', 'Wave', 'CheckingSomething',
+  'Thinking', 'GetAttention', 'RestPose'
+];
+
 const PixelAssistant = ({ isIdle, onOpenApp, hasOpenWindows, deviceMode = 'desktop' }) => {
   const agentRef = useRef(null);
   const isFirstMount = useRef(true);
@@ -333,6 +341,7 @@ const PixelAssistant = ({ isIdle, onOpenApp, hasOpenWindows, deviceMode = 'deskt
   const [inputText, setInputText] = useState("");
   const [messages, setMessages] = useState([]);
   const [isThinking, setIsThinking] = useState(false);
+  const isThinkingRef = useRef(false);
   const [isHighlighted, setIsHighlighted] = useState(false);
   const [clippyActions, setClippyActions] = useState(null);
   const highlightTimerRef = useRef(null);
@@ -524,6 +533,7 @@ const PixelAssistant = ({ isIdle, onOpenApp, hasOpenWindows, deviceMode = 'deskt
     setMessages(updatedMessages);
     setInputText("");
     setIsThinking(true);
+    isThinkingRef.current = true;
 
     // Trigger Clippy's animation
     if (agentRef.current) {
@@ -538,12 +548,14 @@ const PixelAssistant = ({ isIdle, onOpenApp, hasOpenWindows, deviceMode = 'deskt
       const aiMsgId = `ai-${Date.now()}`;
       setMessages(prev => [...prev, { id: aiMsgId, role: 'assistant', data: result }]);
       setIsThinking(false);
+      isThinkingRef.current = false;
 
       if (agentRef.current) {
         if (result.animation) {
           agentRef.current.play(result.animation);
         } else {
-          agentRef.current.animate();
+          const anim = CLIPPY_IDLE_ANIMATIONS[Math.floor(Math.random() * CLIPPY_IDLE_ANIMATIONS.length)];
+          agentRef.current.play(anim);
         }
       }
     } catch (err) {
@@ -552,12 +564,14 @@ const PixelAssistant = ({ isIdle, onOpenApp, hasOpenWindows, deviceMode = 'deskt
       const aiMsgId = `ai-${Date.now()}`;
       setMessages(prev => [...prev, { id: aiMsgId, role: 'assistant', data: fallbackResult }]);
       setIsThinking(false);
+      isThinkingRef.current = false;
 
       if (agentRef.current) {
         if (fallbackResult.animation) {
           agentRef.current.play(fallbackResult.animation);
         } else {
-          agentRef.current.animate();
+          const anim = CLIPPY_IDLE_ANIMATIONS[Math.floor(Math.random() * CLIPPY_IDLE_ANIMATIONS.length)];
+          agentRef.current.play(anim);
         }
       }
     }
@@ -565,6 +579,8 @@ const PixelAssistant = ({ isIdle, onOpenApp, hasOpenWindows, deviceMode = 'deskt
 
   useEffect(() => {
     let hintInterval = null;
+    let animWatchdog = null;
+    let idleTimer = null;
     let isMounted = true;
 
     // Clean up any rogue clippy elements left in body
@@ -653,9 +669,58 @@ const PixelAssistant = ({ isIdle, onOpenApp, hasOpenWindows, deviceMode = 'deskt
           enforcePosition();
         }
 
+        let lastAnimTime = Date.now();
+
+        // Continuous animation runner: ensures Clippy is always lively and moving
+        const playNextContinuousIdle = () => {
+          if (!isMounted || !agentRef.current || isThinkingRef.current) return;
+          // Don't interrupt if Clippy is actively force-speaking (e.g. TrashApp event)
+          if (isForceVisibleRef.current) return;
+
+          const anim = CLIPPY_IDLE_ANIMATIONS[Math.floor(Math.random() * CLIPPY_IDLE_ANIMATIONS.length)];
+          try {
+            lastAnimTime = Date.now();
+            agentRef.current.play(anim);
+          } catch { }
+        };
+
+        const scheduleContinuousIdle = (delayMs = 1200) => {
+          if (!isMounted) return;
+          if (idleTimer) clearTimeout(idleTimer);
+          idleTimer = setTimeout(() => {
+            playNextContinuousIdle();
+          }, delayMs);
+        };
+
+        // Override _onIdleComplete to chain next animation when an animation finishes
+        const origOnIdleComplete = agent._onIdleComplete;
+        agent._onIdleComplete = function (name, state) {
+          origOnIdleComplete?.call(this, name, state);
+          scheduleContinuousIdle(800 + Math.random() * 1200);
+        };
+
+        // Override _onQueueEmpty so Clippy never sits on a static frame when the queue ends
+        const origOnQueueEmpty = agent._onQueueEmpty;
+        agent._onQueueEmpty = function () {
+          origOnQueueEmpty?.call(this);
+          scheduleContinuousIdle(600 + Math.random() * 1000);
+        };
+
+        // Watchdog heartbeat: if Clippy ever becomes idle or paused for > 3.5s, trigger next motion
+        animWatchdog = setInterval(() => {
+          if (!isMounted || !agentRef.current || isThinkingRef.current || isForceVisibleRef.current) return;
+          const timeSinceLast = Date.now() - lastAnimTime;
+          if (timeSinceLast > 3500) {
+            playNextContinuousIdle();
+          }
+        }, 3000);
+
         setTimeout(() => {
           if (!isMounted) return;
-          if (document.body.classList.contains('has-open-window') || document.body.classList.contains('has-fullscreen-window')) return;
+          if (document.body.classList.contains('has-open-window') || document.body.classList.contains('has-fullscreen-window')) {
+            agent.play("Greeting");
+            return;
+          }
           agent.play("Greeting");
           agent.speak("Click me to ask anything about Varun! 💬");
         }, 1200);
@@ -665,15 +730,14 @@ const PixelAssistant = ({ isIdle, onOpenApp, hasOpenWindows, deviceMode = 'deskt
             document.body.classList.contains('is-idle') || 
             document.body.classList.contains('has-open-window') || 
             document.body.classList.contains('has-fullscreen-window') || 
-            isChatOpenRef.current
+            isChatOpenRef.current ||
+            isThinkingRef.current ||
+            isForceVisibleRef.current
           ) return;
-          if (Math.random() > 0.5) {
-            agent.animate();
-          } else {
-            agent.play("GetAttention");
-            agent.speak(HINTS[Math.floor(Math.random() * HINTS.length)]);
-          }
-        }, 25000);
+
+          agent.play("GetAttention");
+          agent.speak(HINTS[Math.floor(Math.random() * HINTS.length)]);
+        }, 30000);
 
       } catch (err) {
         console.error("Failed to load Clippy", err);
@@ -684,6 +748,8 @@ const PixelAssistant = ({ isIdle, onOpenApp, hasOpenWindows, deviceMode = 'deskt
 
     return () => {
       isMounted = false;
+      if (idleTimer) clearTimeout(idleTimer);
+      if (animWatchdog) clearInterval(animWatchdog);
       if (hintInterval) clearInterval(hintInterval);
       if (agentRef.current) {
         agentRef.current.hide();
