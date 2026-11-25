@@ -17,7 +17,9 @@ import {
   Sidebar,
   ExternalLink,
   Copy,
-  Sparkles
+  Sparkles,
+  Layers,
+  Palette
 } from 'lucide-react';
 import FirebaseImage from './FirebaseImage';
 import FigmaLoadingScreen from './FigmaLoadingScreen';
@@ -3245,61 +3247,97 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                   <path d="M380,640 Q600,715 810,640" stroke="rgba(255, 255, 255, 0.16)" strokeWidth="1.5" strokeDasharray="4 4" />
                 </svg>
 
-                {/* Central Creative Hub: The Design Engineering Execution Station */}
+                {/* Central Creative Hub: Product Design & Systems Core */}
                 <div
                   className="process-center-hub-card"
-                  onClick={() => showToast('❖ Execution Framework · The 4-Phase Double Diamond & Vibe-Coding Loop')}
+                  onClick={() => showToast('❖ Product Design Studio · Design Tokens, Component Architecture & Human-Centered UX')}
                 >
                   <div className="moodboard-washi-tape cyan"></div>
                   <div className="hub-card-header">
                     <div className="hub-card-tag">
                       <span className="hub-card-tag-icon">❖</span>
-                      <span>Execution Framework</span>
+                      <span>Product Design Studio</span>
                     </div>
-                    <span className="hub-card-badge">DOUBLE DIAMOND + VIBE-CODE</span>
+                    <span className="hub-card-badge designer-badge">DESIGN SYSTEMS • UI/UX CRAFT</span>
                   </div>
 
-                  <div className="hub-graphic-container">
-                    <div className="hub-radar-circle">
-                      <div className="hub-radar-pulse"></div>
-                      <span className="hub-center-symbol">⚡</span>
+                  <div className="hub-graphic-container designer-hub-canvas">
+                    {/* Vector Bezier Spline & Figma Pen Tool Handles */}
+                    <svg className="designer-vector-svg" viewBox="0 0 268 62" fill="none">
+                      <defs>
+                        <linearGradient id="designerSplineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stopColor="#0D99FF" />
+                          <stop offset="50%" stopColor="#8B5CF6" />
+                          <stop offset="100%" stopColor="#EC4899" />
+                        </linearGradient>
+                        <linearGradient id="curveGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stopColor="rgba(13, 153, 255, 0.35)" />
+                          <stop offset="100%" stopColor="rgba(236, 72, 153, 0.35)" />
+                        </linearGradient>
+                      </defs>
+                      {/* Tangent control handle guidelines (Figma Vector Pen) */}
+                      <line x1="26" y1="46" x2="72" y2="14" stroke="rgba(13, 153, 255, 0.5)" strokeWidth="1" strokeDasharray="3 2" />
+                      <line x1="242" y1="46" x2="196" y2="14" stroke="rgba(236, 72, 153, 0.5)" strokeWidth="1" strokeDasharray="3 2" />
+                      {/* Ambient curve glow */}
+                      <path d="M 26,46 C 72,14 196,14 242,46" stroke="url(#curveGlow)" strokeWidth="7" strokeLinecap="round" opacity="0.6" />
+                      {/* Main Cubic Spline */}
+                      <path d="M 26,46 C 72,14 196,14 242,46" stroke="url(#designerSplineGrad)" strokeWidth="2.5" strokeLinecap="round" />
+                      {/* Tangent handle points */}
+                      <circle cx="72" cy="14" r="3.5" fill="#0D99FF" stroke="#0F172A" strokeWidth="1.5" />
+                      <circle cx="196" cy="14" r="3.5" fill="#EC4899" stroke="#0F172A" strokeWidth="1.5" />
+                      {/* Diamond Anchor Points */}
+                      <rect x="21" y="41" width="10" height="10" rx="2" fill="#FFFFFF" stroke="#0D99FF" strokeWidth="1.5" transform="rotate(45 26 46)" />
+                      <rect x="237" y="41" width="10" height="10" rx="2" fill="#FFFFFF" stroke="#EC4899" strokeWidth="1.5" transform="rotate(45 242 46)" />
+                      {/* Center Apex Handle */}
+                      <circle cx="134" cy="22" r="4.5" fill="none" stroke="#8B5CF6" strokeWidth="1.5" />
+                      <circle cx="134" cy="22" r="2" fill="#8B5CF6" />
+                    </svg>
+
+                    {/* Designer Token Swatches Row */}
+                    <div className="designer-tokens-row">
+                      <span className="token-swatch" style={{ background: '#0D99FF' }} title="--color-primary (#0D99FF)"></span>
+                      <span className="token-swatch" style={{ background: '#8B5CF6' }} title="--color-accent (#8B5CF6)"></span>
+                      <span className="token-swatch" style={{ background: '#EC4899' }} title="--color-brand (#EC4899)"></span>
+                      <span className="token-swatch" style={{ background: '#10B981' }} title="--color-success (#10B981)"></span>
+                      <span className="token-swatch" style={{ background: '#F59E0B' }} title="--color-warning (#F59E0B)"></span>
+                      <span className="token-spec-tag">Inter Display • 8pt Grid</span>
                     </div>
                   </div>
 
                   <div className="hub-card-info">
-                    <h3 className="hub-card-title">Design Engineering Pipeline</h3>
-                    <p className="hub-card-sub">From Ambiguous Problem Space to 60fps Shipped Code</p>
+                    <h3 className="hub-card-title">Design System &amp; Product Craft</h3>
+                    <p className="hub-card-sub">Architecting multi-brand design tokens, scalable component libraries &amp; 60fps micro-interactions.</p>
                     <div className="hub-metrics-pill">
-                      <span className="hub-metric-dot"></span>
-                      <span>4 Agile Cycles • 0s Drift • 100% Type-Safe</span>
+                      <span className="hub-metric-dot figma-blue"></span>
+                      <span>120+ Components • OKLCH Tokens • WCAG AAA</span>
                     </div>
                   </div>
 
                   <div className="hub-card-actions">
                     <button
                       type="button"
-                      className="hub-action-btn primary"
+                      className="hub-action-btn primary designer-btn"
                       onClick={(e) => {
                         e.stopPropagation();
-                        showToast('🚀 Running Pipeline Audit: All 4 phases operational at 60fps');
+                        showToast('❖ Design System: 120+ modular Figma components with interactive variants & auto-layout');
                       }}
                     >
-                      <Sparkles size={13} />
-                      <span>Audit Workflow</span>
+                      <Layers size={13} />
+                      <span>Component Spec</span>
                     </button>
                     <button
                       type="button"
-                      className="hub-action-btn secondary"
+                      className="hub-action-btn secondary designer-btn"
                       onClick={(e) => {
                         e.stopPropagation();
                         if (navigator.clipboard) {
-                          navigator.clipboard.writeText('Figma Tokens ➔ Framer Motion ➔ Next.js 19 ➔ Vercel Edge');
+                          navigator.clipboard.writeText('Figma Variables ➔ Design Tokens ➔ Framer Motion ➔ 60fps UX');
                         }
-                        showToast('Copied Pipeline Chain to Clipboard!');
+                        showToast('Copied Design System Tokens Pipeline!');
                       }}
                     >
-                      <Copy size={13} />
-                      <span>Copy Stack</span>
+                      <Palette size={13} />
+                      <span>Design Tokens</span>
                     </button>
                   </div>
                 </div>
@@ -3500,32 +3538,6 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                       <span className="hub-metric-dot green"></span>
                       <span>6 Active Plugins • 4.9★ Community Rating</span>
                     </div>
-                  </div>
-
-                  <div className="hub-card-actions">
-                    <button
-                      type="button"
-                      className="hub-action-btn primary"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        window.open('https://www.figma.com/community', '_blank', 'noopener,noreferrer');
-                        showToast('Opening Figma Community Marketplace...');
-                      }}
-                    >
-                      <ExternalLink size={13} />
-                      <span>Figma Community</span>
-                    </button>
-                    <button
-                      type="button"
-                      className="hub-action-btn secondary"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        showToast('✨ All 6 plugins verified compatible with Figma Variables v2.5');
-                      }}
-                    >
-                      <Sparkles size={13} />
-                      <span>Verify API</span>
-                    </button>
                   </div>
                 </div>
 

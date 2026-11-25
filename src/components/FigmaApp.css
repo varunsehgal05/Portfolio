@@ -10096,6 +10096,108 @@
   color: #ffffff;
 }
 
+/* 3.1 Designer Studio Canvas Preview & Tokens */
+.designer-hub-canvas {
+  height: 124px;
+  background: 
+    radial-gradient(circle at 50% 20%, rgba(13, 153, 255, 0.12) 0%, transparent 70%),
+    radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px) 0 0 / 10px 10px,
+    #0c1017;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px 8px 10px;
+  margin-bottom: 14px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1), inset 0 0 24px rgba(0, 0, 0, 0.5);
+}
+
+.designer-vector-svg {
+  width: 100%;
+  height: 62px;
+  filter: drop-shadow(0 2px 8px rgba(13, 153, 255, 0.3));
+}
+
+.designer-tokens-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+}
+
+.token-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+  transition: transform 0.15s ease;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.token-swatch:hover {
+  transform: scale(1.3);
+  border-color: #ffffff;
+}
+
+.token-spec-tag {
+  margin-left: auto;
+  font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  color: #94a3b8;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.hub-metric-dot.figma-blue {
+  background: #0D99FF;
+  box-shadow: 0 0 8px #0D99FF;
+}
+
+.hub-card-badge.designer-badge {
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+  border-color: rgba(56, 189, 248, 0.25);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.hub-action-btn.designer-btn.primary {
+  background: linear-gradient(135deg, #0D99FF, #6366F1);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(13, 153, 255, 0.35);
+  border: none;
+}
+
+.hub-action-btn.designer-btn.primary:hover {
+  background: linear-gradient(135deg, #2563EB, #4F46E5);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(13, 153, 255, 0.45);
+}
+
+.hub-action-btn.designer-btn.secondary {
+  background: rgba(255, 255, 255, 0.05);
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.hub-action-btn.designer-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
 /* 4. Process Quality Gate Card */
 .process-quality-card {
   position: absolute;
