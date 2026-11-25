@@ -9,7 +9,7 @@ import './FigmaLoadingScreen.css';
  */
 const FigmaLoadingScreen = ({
   fileName = 'Varun_Sehgal_Portfolio.fig',
-  duration = 750,
+  duration = 600,
   onLoaded
 }) => {
   const [phase, setPhase] = useState(0);
@@ -66,9 +66,9 @@ const FigmaLoadingScreen = ({
     if (isMobileOrTablet) return;
 
     // Step transitions
-    const step1 = setTimeout(() => setPhase(1), Math.min(220, duration * 0.3));
-    const step2 = setTimeout(() => setPhase(2), Math.min(480, duration * 0.65));
-    const step3 = setTimeout(() => setPhase(3), Math.min(680, duration * 0.9));
+    const step1 = setTimeout(() => setPhase(1), Math.min(180, duration * 0.3));
+    const step2 = setTimeout(() => setPhase(2), Math.min(380, duration * 0.65));
+    const step3 = setTimeout(() => setPhase(3), Math.min(540, duration * 0.9));
 
     // Finish fade out
     const fadeTimer = setTimeout(() => {

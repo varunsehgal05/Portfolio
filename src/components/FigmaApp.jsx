@@ -1593,7 +1593,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
       {isAppLoading && (
         <FigmaLoadingScreen
           fileName="Varun_Sehgal_Portfolio.fig"
-          duration={750}
+          duration={600}
           onLoaded={() => {
             setIsAppLoading(false);
             centerCanvasView(activeTab, 1);
