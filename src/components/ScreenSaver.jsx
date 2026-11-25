@@ -3,8 +3,6 @@ import {
   Play, 
   Pause, 
   Calendar, 
-  Maximize2, 
-  Minimize2, 
   Headphones, 
   Terminal,
   Layers,
@@ -334,7 +332,6 @@ const ScreenSaver = ({ isIdle, onWake }) => {
   const [time, setTime] = useState(new Date());
   const [isPlayingMusic, setIsPlayingMusic] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const containerRef = useRef(null);
   const hasAttemptedAutoplay = useRef(false);
   const enteredSleepTimeRef = useRef(0);
@@ -434,18 +431,6 @@ const ScreenSaver = ({ isIdle, onWake }) => {
     lofiEngine.tempo = LOFI_TRACKS[nextIdx].bpm === 128 ? 80 : LOFI_TRACKS[nextIdx].bpm;
   };
 
-  // Toggle Fullscreen (Does NOT wake up screensaver)
-  const toggleFullscreen = (e) => {
-    if (e) e.stopPropagation();
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch(() => {});
-      setIsFullscreen(true);
-    } else {
-      document.exitFullscreen().catch(() => {});
-      setIsFullscreen(false);
-    }
-  };
-
   // Date & Time formatting
   const timeHours = time.toLocaleTimeString('en-US', {
     hour: 'numeric',
@@ -488,16 +473,7 @@ const ScreenSaver = ({ isIdle, onWake }) => {
           <span className="top-bar-live-dot" title="Live Figma Canvas"></span>
         </div>
 
-        <div className="top-bar-right">
-          <button 
-            type="button" 
-            className="top-bar-btn icon-btn"
-            onClick={toggleFullscreen}
-            title={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
-          >
-            {isFullscreen ? <Minimize2 size={13} /> : <Maximize2 size={13} />}
-          </button>
-        </div>
+        {/* Top-Right Option Removed for Minimal Clean UI */}
       </header>
 
       {/* 2. BACKGROUND CANVAS CODE ANNOTATIONS & BEZIER VECTORS */}
