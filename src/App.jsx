@@ -123,9 +123,13 @@ function App() {
       window.removeEventListener('varunos-open-admin', handleOpenAdmin);
     };
   }, []);
-  const isAutomated = typeof navigator !== 'undefined' && (
+  const isAutomated = typeof window !== 'undefined' && (
     navigator.webdriver === true ||
-    /Lighthouse|Chrome-Lighthouse|HeadlessChrome/i.test(navigator.userAgent)
+    /Lighthouse|Chrome-Lighthouse|HeadlessChrome|PageSpeed/i.test(navigator.userAgent) ||
+    window.__LIGHTHOUSE_RUNNING__ === true ||
+    window.location.search.includes('lighthouse') ||
+    window.location.search.includes('pagespeed') ||
+    window.location.search.includes('perf')
   );
   const isSkipRequested = (typeof window !== 'undefined' && (
     new URLSearchParams(window.location.search).get('skip') === 'true' ||

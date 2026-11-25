@@ -87,6 +87,50 @@ const PORTFOLIO_ROLES = [
   }
 ];
 
+const ClockWidget = React.memo(({ activeMenu, toggleMenu }) => {
+  const [time, setTime] = useState(() => new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="menu-item-wrapper">
+      <span
+        className={`menu-time ${activeMenu === 'calendar' ? 'active' : ''}`}
+        role="button"
+        tabIndex={0}
+        aria-label={format(time, 'EEE MMM d  h:mm a')}
+        onClick={() => toggleMenu('calendar')}
+        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleMenu('calendar'); }}
+        title="Click to view Date & Calendar"
+      >
+        {format(time, 'EEE MMM d  h:mm a')}
+      </span>
+      {activeMenu === 'calendar' && (
+        <div className="apple-dropdown-menu right-aligned calendar-popup">
+          <div className="calendar-popup-header">
+            <CalendarIcon size={14} className="text-sky-400" />
+            <strong>{format(time, 'MMMM yyyy')}</strong>
+          </div>
+          <div className="calendar-day-headline">
+            {format(time, 'EEEE, MMMM d, yyyy')}
+          </div>
+          <div className="calendar-clock-digital">
+            {format(time, 'h:mm:ss a')}
+          </div>
+          <div className="apple-dropdown-divider" />
+          <div className="calendar-event-item">
+            <span className="event-dot" />
+            <span>VarunOS Portfolio Showcase • Active</span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+});
+
 const MenuBar = ({
   userName = 'Guest',
   onReplaySwarm,
@@ -107,7 +151,6 @@ const MenuBar = ({
   effectiveDeviceMode = 'desktop',
   onSetDeviceMode
 }) => {
-  const [time, setTime] = useState(new Date());
   const [activeMenu, setActiveMenu] = useState(null); // 'apple', 'file', 'edit', 'view', 'window', 'help', 'wifi', 'battery', 'sound', 'calendar', 'user'
   const [volume, setVolume] = useState(85);
   const [isMuted, setIsMuted] = useState(false);
@@ -175,11 +218,6 @@ const MenuBar = ({
   };
 
   const menuBarRef = useRef(null);
-
-  useEffect(() => {
-    const timer = setInterval(() => setTime(new Date()), 1000);
-    return () => clearInterval(timer);
-  }, []);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -982,39 +1020,8 @@ const MenuBar = ({
           )}
         </div>
 
-        {/* Interactive Clock & Calendar */}
-        <div className="menu-item-wrapper">
-          <span
-            className={`menu-time ${activeMenu === 'calendar' ? 'active' : ''}`}
-            role="button"
-            tabIndex={0}
-            aria-label={format(time, 'EEE MMM d  h:mm a')}
-            onClick={() => toggleMenu('calendar')}
-            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleMenu('calendar'); }}
-            title="Click to view Date & Calendar"
-          >
-            {format(time, 'EEE MMM d  h:mm a')}
-          </span>
-          {activeMenu === 'calendar' && (
-            <div className="apple-dropdown-menu right-aligned calendar-popup">
-              <div className="calendar-popup-header">
-                <CalendarIcon size={14} className="text-sky-400" />
-                <strong>{format(time, 'MMMM yyyy')}</strong>
-              </div>
-              <div className="calendar-day-headline">
-                {format(time, 'EEEE, MMMM d, yyyy')}
-              </div>
-              <div className="calendar-clock-digital">
-                {format(time, 'h:mm:ss a')}
-              </div>
-              <div className="apple-dropdown-divider" />
-              <div className="calendar-event-item">
-                <span className="event-dot" />
-                <span>VarunOS Portfolio Showcase • Active</span>
-              </div>
-            </div>
-          )}
-        </div>
+        {/* Interactive Clock & Calendar (Isolated memoized component to avoid re-rendering entire MenuBar every second) */}
+        <ClockWidget activeMenu={activeMenu} toggleMenu={toggleMenu} />
       </div>
 
       {/* About VarunOS Modal Dialog (macOS Sequoia Style) */}

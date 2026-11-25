@@ -2,10 +2,10 @@ export const ipadDefaultWallpaper = {
   id: 'sonoma',
   name: 'macOS Sonoma',
   tag: 'macOS 14',
-  thumbnail: '/wallpapers/macos-sonoma.jpg',
+  thumbnail: '/wallpapers/macos-sonoma.webp',
   style: {
     backgroundColor: '#0a0d14',
-    backgroundImage: 'url(/wallpapers/macos-sonoma.jpg)',
+    backgroundImage: 'url(/wallpapers/macos-sonoma.webp)',
     backgroundSize: 'cover',
     backgroundPosition: 'center center',
     backgroundRepeat: 'no-repeat'
@@ -16,10 +16,10 @@ export const mobileDefaultWallpaper = {
   id: 'ventura',
   name: 'macOS Ventura',
   tag: 'macOS 13',
-  thumbnail: '/wallpapers/macos-ventura.jpg',
+  thumbnail: '/wallpapers/macos-ventura.webp',
   style: {
     backgroundColor: '#070a14',
-    backgroundImage: 'url(/wallpapers/macos-ventura.jpg)',
+    backgroundImage: 'url(/wallpapers/macos-ventura.webp)',
     backgroundSize: 'cover',
     backgroundPosition: 'center center',
     backgroundRepeat: 'no-repeat'
@@ -52,10 +52,10 @@ export const desktopWallpapers = [
     id: 'default',
     name: 'macOS Sequoia',
     tag: 'macOS 15',
-    thumbnail: '/wallpapers/macos-sequoia.jpg',
+    thumbnail: '/wallpapers/macos-sequoia.webp',
     style: {
       backgroundColor: '#090c10',
-      backgroundImage: 'url(/wallpapers/macos-sequoia.jpg)',
+      backgroundImage: 'url(/wallpapers/macos-sequoia.webp)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat'
@@ -67,10 +67,10 @@ export const desktopWallpapers = [
     id: 'roxy-calendar',
     name: 'Roxy Ifrita (Teal Calendar)',
     tag: 'Anime Aesthetic',
-    thumbnail: '/wallpapers/roxy-calendar.jpg',
+    thumbnail: '/wallpapers/roxy-calendar.webp',
     style: {
       backgroundColor: '#0c1b1e',
-      backgroundImage: 'url(/wallpapers/roxy-calendar.jpg)',
+      backgroundImage: 'url(/wallpapers/roxy-calendar.webp)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat'
@@ -80,10 +80,10 @@ export const desktopWallpapers = [
     id: 'cyberpunk-girl',
     name: 'Cyberpunk Neon Girl',
     tag: 'Cyberpunk Red',
-    thumbnail: '/wallpapers/cyberpunk-girl.jpg',
+    thumbnail: '/wallpapers/cyberpunk-girl.webp',
     style: {
       backgroundColor: '#1a0408',
-      backgroundImage: 'url(/wallpapers/cyberpunk-girl.jpg)',
+      backgroundImage: 'url(/wallpapers/cyberpunk-girl.webp)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat'
@@ -93,10 +93,10 @@ export const desktopWallpapers = [
     id: 'batman-red',
     name: 'The Batman (Crimson)',
     tag: 'Dark Knight',
-    thumbnail: '/wallpapers/batman-red.jpg',
+    thumbnail: '/wallpapers/batman-red.webp',
     style: {
       backgroundColor: '#120205',
-      backgroundImage: 'url(/wallpapers/batman-red.jpg)',
+      backgroundImage: 'url(/wallpapers/batman-red.webp)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat'
@@ -106,10 +106,10 @@ export const desktopWallpapers = [
     id: 'anime-room',
     name: 'Anime Room Selfie',
     tag: 'Cozy Manga',
-    thumbnail: '/wallpapers/anime-room.jpg',
+    thumbnail: '/wallpapers/anime-room.webp',
     style: {
       backgroundColor: '#1f1525',
-      backgroundImage: 'url(/wallpapers/anime-room.jpg)',
+      backgroundImage: 'url(/wallpapers/anime-room.webp)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat'
@@ -119,10 +119,10 @@ export const desktopWallpapers = [
     id: 'minecraft-cat',
     name: 'Minecraft Cat Sunset',
     tag: 'Pixel Sunset',
-    thumbnail: '/wallpapers/minecraft-cat.jpg',
+    thumbnail: '/wallpapers/minecraft-cat.webp',
     style: {
       backgroundColor: '#2b1429',
-      backgroundImage: 'url(/wallpapers/minecraft-cat.jpg)',
+      backgroundImage: 'url(/wallpapers/minecraft-cat.webp)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat'
@@ -132,10 +132,10 @@ export const desktopWallpapers = [
     id: 'monterey',
     name: 'macOS Monterey',
     tag: 'macOS 12',
-    thumbnail: '/wallpapers/macos-monterey.jpg',
+    thumbnail: '/wallpapers/macos-monterey.webp',
     style: {
       backgroundColor: '#130e26',
-      backgroundImage: 'url(/wallpapers/macos-monterey.jpg)',
+      backgroundImage: 'url(/wallpapers/macos-monterey.webp)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat'
@@ -145,10 +145,10 @@ export const desktopWallpapers = [
     id: 'bigsur',
     name: 'macOS Big Sur',
     tag: 'macOS 11',
-    thumbnail: '/wallpapers/macos-bigsur.jpg',
+    thumbnail: '/wallpapers/macos-bigsur.webp',
     style: {
       backgroundColor: '#080d1a',
-      backgroundImage: 'url(/wallpapers/macos-bigsur.jpg)',
+      backgroundImage: 'url(/wallpapers/macos-bigsur.webp)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat'
@@ -158,10 +158,10 @@ export const desktopWallpapers = [
     id: 'mojave',
     name: 'macOS Mojave (Night Dunes)',
     tag: 'macOS 10.14',
-    thumbnail: '/wallpapers/macos-mojave.jpg',
+    thumbnail: '/wallpapers/macos-mojave.webp',
     style: {
       backgroundColor: '#05070f',
-      backgroundImage: 'url(/wallpapers/macos-mojave.jpg)',
+      backgroundImage: 'url(/wallpapers/macos-mojave.webp)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat'
@@ -183,10 +183,10 @@ export const terminalWallpapers = [
     id: 'roxy-calendar',
     name: 'Roxy Ifrita (Teal Calendar)',
     tag: 'Anime Aesthetic',
-    image: '/wallpapers/roxy-calendar.jpg',
+    image: '/wallpapers/roxy-calendar.webp',
     overlayColor: 'rgba(10, 15, 24, 0.35)',
     bgStyle: {
-      backgroundImage: 'linear-gradient(rgba(10, 15, 24, 0.35), rgba(10, 15, 24, 0.45)), url(/wallpapers/roxy-calendar.jpg)',
+      backgroundImage: 'linear-gradient(rgba(10, 15, 24, 0.35), rgba(10, 15, 24, 0.45)), url(/wallpapers/roxy-calendar.webp)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
@@ -197,10 +197,10 @@ export const terminalWallpapers = [
     id: 'cyberpunk-girl',
     name: 'Cyberpunk Neon Girl',
     tag: 'Cyberpunk Red',
-    image: '/wallpapers/cyberpunk-girl.jpg',
+    image: '/wallpapers/cyberpunk-girl.webp',
     overlayColor: 'rgba(15, 5, 8, 0.35)',
     bgStyle: {
-      backgroundImage: 'linear-gradient(rgba(15, 5, 8, 0.35), rgba(15, 5, 8, 0.45)), url(/wallpapers/cyberpunk-girl.jpg)',
+      backgroundImage: 'linear-gradient(rgba(15, 5, 8, 0.35), rgba(15, 5, 8, 0.45)), url(/wallpapers/cyberpunk-girl.webp)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
@@ -211,10 +211,10 @@ export const terminalWallpapers = [
     id: 'batman-red',
     name: 'The Batman (Crimson)',
     tag: 'Dark Knight',
-    image: '/wallpapers/batman-red.jpg',
+    image: '/wallpapers/batman-red.webp',
     overlayColor: 'rgba(12, 2, 5, 0.35)',
     bgStyle: {
-      backgroundImage: 'linear-gradient(rgba(12, 2, 5, 0.35), rgba(12, 2, 5, 0.45)), url(/wallpapers/batman-red.jpg)',
+      backgroundImage: 'linear-gradient(rgba(12, 2, 5, 0.35), rgba(12, 2, 5, 0.45)), url(/wallpapers/batman-red.webp)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
@@ -225,10 +225,10 @@ export const terminalWallpapers = [
     id: 'anime-room',
     name: 'Anime Room Selfie',
     tag: 'Cozy Manga',
-    image: '/wallpapers/anime-room.jpg',
+    image: '/wallpapers/anime-room.webp',
     overlayColor: 'rgba(15, 10, 20, 0.35)',
     bgStyle: {
-      backgroundImage: 'linear-gradient(rgba(15, 10, 20, 0.35), rgba(15, 10, 20, 0.45)), url(/wallpapers/anime-room.jpg)',
+      backgroundImage: 'linear-gradient(rgba(15, 10, 20, 0.35), rgba(15, 10, 20, 0.45)), url(/wallpapers/anime-room.webp)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
@@ -239,10 +239,10 @@ export const terminalWallpapers = [
     id: 'minecraft-cat',
     name: 'Minecraft Cat Sunset',
     tag: 'Pixel Sunset',
-    image: '/wallpapers/minecraft-cat.jpg',
+    image: '/wallpapers/minecraft-cat.webp',
     overlayColor: 'rgba(20, 10, 22, 0.35)',
     bgStyle: {
-      backgroundImage: 'linear-gradient(rgba(20, 10, 22, 0.35), rgba(20, 10, 22, 0.45)), url(/wallpapers/minecraft-cat.jpg)',
+      backgroundImage: 'linear-gradient(rgba(20, 10, 22, 0.35), rgba(20, 10, 22, 0.45)), url(/wallpapers/minecraft-cat.webp)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
@@ -253,10 +253,10 @@ export const terminalWallpapers = [
     id: 'monterey',
     name: 'macOS Monterey',
     tag: 'macOS 12',
-    image: '/wallpapers/macos-monterey.jpg',
+    image: '/wallpapers/macos-monterey.webp',
     overlayColor: 'rgba(13, 17, 23, 0.45)',
     bgStyle: {
-      backgroundImage: 'linear-gradient(rgba(13, 17, 23, 0.45), rgba(13, 17, 23, 0.55)), url(/wallpapers/macos-monterey.jpg)',
+      backgroundImage: 'linear-gradient(rgba(13, 17, 23, 0.45), rgba(13, 17, 23, 0.55)), url(/wallpapers/macos-monterey.webp)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
@@ -267,10 +267,10 @@ export const terminalWallpapers = [
     id: 'sequoia',
     name: 'macOS Sequoia',
     tag: 'macOS 15',
-    image: '/wallpapers/macos-sequoia.jpg',
+    image: '/wallpapers/macos-sequoia.webp',
     overlayColor: 'rgba(9, 12, 16, 0.45)',
     bgStyle: {
-      backgroundImage: 'linear-gradient(rgba(9, 12, 16, 0.45), rgba(9, 12, 16, 0.55)), url(/wallpapers/macos-sequoia.jpg)',
+      backgroundImage: 'linear-gradient(rgba(9, 12, 16, 0.45), rgba(9, 12, 16, 0.55)), url(/wallpapers/macos-sequoia.webp)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
@@ -281,10 +281,10 @@ export const terminalWallpapers = [
     id: 'sonoma',
     name: 'macOS Sonoma',
     tag: 'macOS 14',
-    image: '/wallpapers/macos-sonoma.jpg',
+    image: '/wallpapers/macos-sonoma.webp',
     overlayColor: 'rgba(10, 13, 20, 0.45)',
     bgStyle: {
-      backgroundImage: 'linear-gradient(rgba(10, 13, 20, 0.45), rgba(10, 13, 20, 0.55)), url(/wallpapers/macos-sonoma.jpg)',
+      backgroundImage: 'linear-gradient(rgba(10, 13, 20, 0.45), rgba(10, 13, 20, 0.55)), url(/wallpapers/macos-sonoma.webp)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',

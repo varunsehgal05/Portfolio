@@ -60,7 +60,7 @@ const ALL_PROJECTS = [
     category: 'Vibecoded Site',
     badge: '⚡ Vibecoded Live Site',
     metric: '⚡ Vibecoded Live Site • 800+ Attendees',
-    image: '/figma_CodeSrijan.png',
+    image: '/figma_CodeSrijan.webp',
     desc: 'National hackathon portal vibecoded & engineered by Varun Sehgal for Jaypee University. Features registration, team matching, and live rubrics.',
     tags: ['Vibecoded', 'Next.js', 'Vercel Live', 'Hackathon'],
     link: 'http://codesrijan-nine.vercel.app/',
@@ -74,7 +74,7 @@ const ALL_PROJECTS = [
     category: 'Figma Design',
     badge: '❖ Figma Design System',
     metric: '4-Step Checkout • 30% Less Dropoff',
-    image: '/figma_EventFlow.png',
+    image: '/figma_EventFlow.webp',
     desc: 'Campus event ticketing & management platform streamlining booking workflows with 30% reduced drop-off.',
     tags: ['SaaS', 'Figma', 'Event Platform'],
     link: 'https://www.figma.com/design/29nTBBWxZfoOKdFnOaQWbq/EventFlow?node-id=2-2&p=f&t=ucsh4jF84sBl50UA-0',
@@ -86,7 +86,7 @@ const ALL_PROJECTS = [
     category: 'SaaS / Web',
     badge: 'High Conversion',
     metric: 'Responsive • Conversion Focused',
-    image: '/figma_LandingPage.png',
+    image: '/figma_LandingPage.webp',
     desc: 'Modern SaaS marketing landing page engineered for maximum conversion velocity and crisp brand typography.',
     tags: ['SaaS', 'Marketing', 'Figma'],
     link: 'https://www.figma.com/design/WfUzGPYsE7UFYS9YaQp5v6/home-page?node-id=0-1&p=f&t=cA3tERTu8AuInovg-0'
@@ -97,7 +97,7 @@ const ALL_PROJECTS = [
     category: 'SaaS / Web',
     badge: 'Enterprise UI',
     metric: 'Multi-tenant • Telemetry',
-    image: '/figma_SaasDashboard.png',
+    image: '/figma_SaasDashboard.webp',
     desc: 'Complex data visualization telemetry suite with role-based access, dark mode analytics, and filtering.',
     tags: ['Dashboard', 'Analytics', 'Enterprise'],
     link: 'https://www.figma.com/design/PbO4QNnkgAyrPtkuyduZFE/sas?node-id=0-1&t=yHd7NxOZzn7AZUuw-0'
@@ -108,7 +108,7 @@ const ALL_PROJECTS = [
     category: 'SaaS / Web',
     badge: '40+ Components',
     metric: '40+ Components • Real-time Scoring',
-    image: '/figma_AI_Interview.png',
+    image: '/figma_AI_Interview.webp',
     desc: 'Automated technical & behavioral mock interview platform with real-time AI scoring, candidate evaluation, and grading matrix.',
     tags: ['Figma', 'SaaS', 'AI UX', 'Dark Mode'],
     link: 'https://www.figma.com/design/ezDh2NmBto6iv7xaQNs3Ha/AI-Interview?node-id=11-1842&t=siyh0b32g2XWrRNe-1'
@@ -119,7 +119,7 @@ const ALL_PROJECTS = [
     category: 'Mobile App',
     badge: '12+ User Flows',
     metric: '3-Step Checkout • 12+ Flows',
-    image: '/figma_Movie_Tickets.png',
+    image: '/figma_Movie_Tickets.webp',
     desc: 'Cinema booking mobile UX prototype streamlining seat selection, theater schedules, and payment completion.',
     tags: ['Mobile UX', 'Seat Map', 'Micro-interactions'],
     link: 'https://www.figma.com/design/0cJQWX8qYssPfK4hmPtdVj/Movie-Ticket-Booking-App-Design?node-id=31-86&t=Jd933TVzkrlBb4MQ-1'
@@ -130,7 +130,7 @@ const ALL_PROJECTS = [
     category: 'Mobile App',
     badge: '17+ Screens',
     metric: 'Sub-5s Logging • 17+ Screens',
-    image: '/figma_Expensify.png',
+    image: '/figma_Expensify.webp',
     desc: 'Personal finance analytics app bringing average "Add Expense" transaction logging time below 5 seconds.',
     tags: ['FinTech', 'Analytics', 'Dashboard', 'Figma'],
     link: 'https://www.figma.com/design/3mw8XBHEZ3b8HKNNqcs6U2/Expensify---Budget-Tracker-App?node-id=135-318&t=gUJEMUlyDc8ERNeR-1'
@@ -2304,7 +2304,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                               onError={(e) => {
                                 if (!e.currentTarget.dataset.fallbackApplied) {
                                   e.currentTarget.dataset.fallbackApplied = 'true';
-                                  e.currentTarget.src = '/figma_LandingPage.png';
+                                  e.currentTarget.src = '/figma_LandingPage.webp';
                                 }
                               }}
                             />
@@ -2454,7 +2454,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                               alt={proj.name}
                               className="bento-img"
                               onError={(e) => {
-                                e.currentTarget.src = '/figma_LandingPage.png';
+                                e.currentTarget.src = '/figma_LandingPage.webp';
                               }}
                             />
                             <span className="bento-badge">{proj.badge}</span>

@@ -3,8 +3,8 @@ import { Folder } from 'lucide-react';
 import './Window.css';
 import React, { useState, useEffect, useRef, Suspense, lazy } from 'react';
 import { createPortal } from 'react-dom';
+import FinderApp from './FinderApp';
 // Code split secondary apps to keep main chunk ultra-lean
-const FinderApp = lazy(() => import('./FinderApp'));
 const ResumeApp = lazy(() => import('./ResumeApp'));
 const FigmaApp = lazy(() => import('./FigmaApp'));
 const VsCodeApp = lazy(() => import('./VsCodeApp'));
@@ -451,7 +451,7 @@ const Window = ({
   const renderContent = () => {
     switch (app.id) {
       case 'finder':
-        return <Suspense fallback={<div className="window-app-loading" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>Loading Workspace...</div>}><FinderApp onOpenApp={onOpenApp} isRebuilding={isRebuilding} /></Suspense>;
+        return <FinderApp onOpenApp={onOpenApp} isRebuilding={isRebuilding} />;
       case 'figma':
         return <Suspense fallback={<div className="window-app-loading" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>Loading Figma Workspace...</div>}><FigmaApp isInteracting={isInteracting} userName={userName} onOpenApp={onOpenApp} deviceMode={deviceMode} /></Suspense>;
       case 'terminal':
