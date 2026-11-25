@@ -251,21 +251,19 @@ const TrashApp = ({ onClose, onOpenApp }) => {
   const [bannerNotice, setBannerNotice] = useState(null);
 
   // Clippy Assistant & Auto-Close States
-  const [aiCountdown, setAiCountdown] = useState(6);
-  const [isAICountdownCancelled, setIsAICountdownCancelled] = useState(false);
+  const [aiCountdown, setAiCountdown] = useState(null);
+  const [isAICountdownActive, setIsAICountdownActive] = useState(false);
   const countdownTimerRef = useRef(null);
 
-  // 1. Initial Mount: Clippy welcomes user & auto-close countdown is initiated
+  // 1. Initial Mount: Friendly welcome with NO auto-close countdown. Users can browse Trash freely!
   useEffect(() => {
-    playAIChime();
-    const msg = "It looks like you opened the Trash! 📎 You are not here to see my trash! 👀 You're here to explore my portfolio and hire me! Auto-closing in 6s...";
     window.dispatchEvent(new CustomEvent('varunos-clippy-speak', {
       detail: {
-        text: msg,
-        animation: "GetAttention",
-        highlightDuration: 6000,
+        text: "Welcome to Trash! 📎 Feel free to browse, or double-click any file to inspect it!",
+        animation: "Wave",
+        highlightDuration: 4000,
         hold: false,
-        force: true,
+        force: false,
         actions: [
           { label: "View Portfolio (Figma) →", primary: true, appId: "figma" },
           { label: "View Resume", appId: "resume" }
@@ -278,27 +276,28 @@ const TrashApp = ({ onClose, onOpenApp }) => {
     };
   }, []);
 
-  // 2. Auto-close countdown effect: ticks down from 6s to 0s, then redirects to portfolio
+  // 2. Auto-close countdown effect: ticks down ONLY when active and a file in Trash is opened
   useEffect(() => {
-    if (isAICountdownCancelled) {
+    if (!isAICountdownActive || aiCountdown === null) {
       if (countdownTimerRef.current) clearTimeout(countdownTimerRef.current);
       return;
     }
 
     if (aiCountdown <= 0) {
       if (countdownTimerRef.current) clearTimeout(countdownTimerRef.current);
+      setIsAICountdownActive(false);
       handleAutoClose();
       return;
     }
 
     countdownTimerRef.current = setTimeout(() => {
-      setAiCountdown(prev => (prev > 0 ? prev - 1 : 0));
+      setAiCountdown(prev => (prev !== null && prev > 0 ? prev - 1 : 0));
     }, 1000);
 
     return () => {
       if (countdownTimerRef.current) clearTimeout(countdownTimerRef.current);
     };
-  }, [aiCountdown, isAICountdownCancelled]);
+  }, [aiCountdown, isAICountdownActive]);
 
   const handleAutoClose = () => {
     playAIChime();
@@ -321,14 +320,20 @@ const TrashApp = ({ onClose, onOpenApp }) => {
     }, 300);
   };
 
-  const cancelAICountdown = () => {
+  const handleClosePreview = () => {
     if (countdownTimerRef.current) clearTimeout(countdownTimerRef.current);
-    setIsAICountdownCancelled(true);
-  };
-
-  const resumeAICountdown = () => {
-    setIsAICountdownCancelled(false);
-    setAiCountdown(6);
+    setIsAICountdownActive(false);
+    setAiCountdown(null);
+    setActivePreviewItem(null);
+    window.dispatchEvent(new CustomEvent('varunos-clippy-speak', {
+      detail: {
+        text: "Preview closed! Keep exploring Trash or head over to Figma! 📎",
+        animation: "Explain",
+        highlightDuration: 3000,
+        hold: false,
+        force: true
+      }
+    }));
   };
 
   const filteredItems = items.filter(item => 
@@ -422,7 +427,7 @@ const TrashApp = ({ onClose, onOpenApp }) => {
     }));
     // Reset auto-close timer to 6s so user gets the full countdown and redirection
     setAiCountdown(6);
-    setIsAICountdownCancelled(false);
+    setIsAICountdownActive(true);
   };
 
   // Clippy close sequence
@@ -683,7 +688,7 @@ const TrashApp = ({ onClose, onOpenApp }) => {
               <button 
                 type="button" 
                 className="trash-modal-close"
-                onClick={() => setActivePreviewItem(null)}
+                onClick={handleClosePreview}
                 title="Close Preview"
               >
                 <X size={14} />
@@ -716,9 +721,7 @@ const TrashApp = ({ onClose, onOpenApp }) => {
                 <button 
                   type="button" 
                   className="modal-done-btn"
-                  onClick={() => {
-                    setActivePreviewItem(null);
-                  }}
+                  onClick={handleClosePreview}
                 >
                   Done
                 </button>

@@ -113,6 +113,15 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
     };
   }, [hasOpenWindows]);
 
+  // Sync device mode class to body so Clippy and responsive helpers style properly
+  useEffect(() => {
+    document.body.classList.remove('device-desktop', 'device-tablet', 'device-mobile');
+    document.body.classList.add(`device-${effectiveDeviceMode}`);
+    return () => {
+      document.body.classList.remove('device-desktop', 'device-tablet', 'device-mobile');
+    };
+  }, [effectiveDeviceMode]);
+
   // Apps that should open in full screen by default
   const FULLSCREEN_APPS = ['figma', 'vscode'];
   const [bouncingApp, setBouncingApp] = useState(null);

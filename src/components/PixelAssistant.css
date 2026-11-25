@@ -747,6 +747,32 @@ div[style*="background: rgb(255, 255, 204)"] > div:first-child {
   }
 }
 
+/* Explicit iPad & Tablet Device Mode Overrides */
+body.device-tablet .pixel-clippy {
+  right: 20px !important;
+  bottom: 84px !important;
+  z-index: 995 !important;
+  display: block !important;
+  visibility: visible !important;
+}
+
+body.device-tablet .clippy-balloon,
+body.device-tablet div[style*="background: #ffc"],
+body.device-tablet div[style*="background: rgb(255, 255, 204)"] {
+  right: 96px !important;
+  bottom: 92px !important;
+  max-width: 280px !important;
+  z-index: 996 !important;
+}
+
+body.device-tablet .clippy-dialog-container {
+  right: 20px;
+  bottom: 156px;
+  width: 360px;
+  max-width: calc(100vw - 40px);
+  z-index: 1000 !important;
+}
+
 /* Mobile iOS Clippy Positioning */
 @media (max-width: 640px) {
   .pixel-clippy {
@@ -777,6 +803,54 @@ div[style*="background: rgb(255, 255, 204)"] > div:first-child {
     max-width: calc(100vw - 28px);
     z-index: 1000 !important;
   }
+}
+
+/* Explicit Mobile Device Mode Overrides */
+body.device-mobile .pixel-clippy {
+  right: 14px !important;
+  bottom: 78px !important;
+  transform: scale(0.88);
+  z-index: 995 !important;
+  display: block !important;
+  visibility: visible !important;
+}
+
+body.device-mobile .clippy-balloon,
+body.device-mobile div[style*="background: #ffc"],
+body.device-mobile div[style*="background: rgb(255, 255, 204)"] {
+  right: 14px !important;
+  bottom: 150px !important;
+  max-width: calc(100vw - 28px) !important;
+  z-index: 996 !important;
+}
+
+body.device-mobile .clippy-dialog-container {
+  right: 14px;
+  bottom: 148px;
+  width: calc(100vw - 28px);
+  max-width: calc(100vw - 28px);
+  z-index: 1000 !important;
+}
+
+/* Force-speaking priority on Mobile & iPad */
+body.clippy-force-speaking.device-mobile .pixel-clippy,
+body.clippy-force-speaking.device-tablet .pixel-clippy,
+body.clippy-force-speaking .pixel-clippy {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 99999999 !important;
+}
+
+body.clippy-force-speaking.device-mobile .clippy-balloon,
+body.clippy-force-speaking.device-tablet .clippy-balloon,
+body.clippy-force-speaking .clippy-balloon,
+body.clippy-force-speaking div[style*="background: #ffc"],
+body.clippy-force-speaking div[style*="background: rgb(255, 255, 204)"] {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 99999999 !important;
 }
 
 /* Gemini 2.5 Flash Live AI Badges */
