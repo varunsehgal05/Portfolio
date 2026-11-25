@@ -658,12 +658,6 @@ const ScreenSaver = ({ isIdle, onWake }) => {
           </button>
         </div>
 
-        <div className="dock-center-shortcuts hide-on-mobile hide-on-tablet">
-          <span className="shortcut-item"><kbd>Space</kbd> Pan canvas</span>
-          <span className="shortcut-item"><kbd>⌘ K</kbd> Command Palette</span>
-          <span className="shortcut-item"><kbd>Option</kbd> Measure distances</span>
-        </div>
-
         <div className="dock-right-status">
           <span className="runtime-dot"></span>
           <span className="runtime-label">VibeCoder Runtime: Active | v2.4.0-screensaver</span>
