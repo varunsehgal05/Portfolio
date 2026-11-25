@@ -459,7 +459,7 @@ const Window = ({
       case 'settings':
         return <Suspense fallback={<div className="window-app-loading" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>Loading Settings...</div>}><SettingsApp userName={userName} onReplaySwarm={onReplaySwarm} /></Suspense>;
       case 'vscode':
-        return <Suspense fallback={<div className="window-app-loading" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>Loading VS Code...</div>}><VsCodeApp /></Suspense>;
+        return <Suspense fallback={<div className="window-app-loading" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>Loading VS Code...</div>}><VsCodeApp onClose={handleClose} onMinimize={handleMinimizeClick} onMaximize={handleMaximize} isMaximized={isMaximized} /></Suspense>;
       case 'resume':
         return <Suspense fallback={<div className="window-app-loading" style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>Loading Resume...</div>}><ResumeApp /></Suspense>;
       case 'contact':

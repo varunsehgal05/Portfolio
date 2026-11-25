@@ -1,4 +1,4 @@
-// Visual Studio Code / Antigravity IDE Emulation Engine
+// Visual Studio Code Authentic Web Emulation Engine
 import React, { useState, useRef, useEffect } from 'react';
 import {
   Files,
@@ -39,10 +39,78 @@ import {
   Layers,
   Eye,
   BookOpen,
-  Compass
+  Compass,
+  Minus,
+  Square,
+  Bell,
+  Smile
 } from 'lucide-react';
 import './VsCodeApp.css';
 import VsCodeLoadingScreen from './VsCodeLoadingScreen';
+
+// Official Visual Studio Code Blue Ribbon Brand Mark (3D Gradient)
+const VsCodeLogo = ({ size = 18, className = '' }) => (
+  <svg
+    viewBox="0 0 100 100"
+    width={size}
+    height={size}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+  >
+    <defs>
+      <linearGradient id="vsBlueBase" x1="12%" y1="18%" x2="88%" y2="82%">
+        <stop offset="0%" stopColor="#0065A9" />
+        <stop offset="100%" stopColor="#004D80" />
+      </linearGradient>
+      <linearGradient id="vsBlueMid" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#1F8AD2" />
+        <stop offset="100%" stopColor="#007ACC" />
+      </linearGradient>
+      <linearGradient id="vsBlueHighlight" x1="0%" y1="30%" x2="100%" y2="70%">
+        <stop offset="0%" stopColor="#38BDF8" />
+        <stop offset="50%" stopColor="#0098FF" />
+        <stop offset="100%" stopColor="#007ACC" />
+      </linearGradient>
+    </defs>
+    <path
+      d="M71 96L95 83.5C97.5 82.2 99 79.6 99 76.8V23.2C99 20.4 97.5 17.8 95 16.5L71 4C68.6 2.7 65.7 3 63.6 4.7L28.5 33.8L13.8 22.5C12 21.1 9.5 21 7.6 22.2L2.5 25.5C1.5 26.2.9 27.3 1 28.5C1.1 29.7 1.9 30.7 3 31.1L20.5 38.8L3 46.5C1.9 46.9 1.1 47.9 1 49.1C.9 50.3 1.5 51.4 2.5 52.1L7.6 55.4C9.5 56.6 12 56.5 13.8 55.1L28.5 43.8L63.6 72.9C65.7 74.6 68.6 74.9 71 73.6Z"
+      fill="url(#vsBlueBase)"
+    />
+    <path
+      d="M71 96C69.6 96 68.2 95.6 67 94.7L28.5 63.2L38.2 55.6L71 82.5V17.5L38.2 44.4L28.5 36.8L67 5.3C69.1 3.6 72 3.3 74.4 4.6L95 15.5C97.5 16.8 99 19.4 99 22.2V77.8C99 80.6 97.5 83.2 95 84.5L74.4 95.4C73.3 95.8 72.1 96 71 96Z"
+      fill="url(#vsBlueMid)"
+    />
+    <path
+      d="M71 96L95 83.5C97.5 82.2 99 79.6 99 76.8V23.2C99 20.4 97.5 17.8 95 16.5L71 4V96Z"
+      fill="url(#vsBlueHighlight)"
+    />
+  </svg>
+);
+
+// Large Monochrome VS Code Watermark Glyph for Empty Editor
+const VsCodeWatermark = ({ size = 150 }) => (
+  <svg
+    viewBox="0 0 100 100"
+    width={size}
+    height={size}
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M71 96L95 83.5C97.5 82.2 99 79.6 99 76.8V23.2C99 20.4 97.5 17.8 95 16.5L71 4C68.6 2.7 65.7 3 63.6 4.7L28.5 33.8L13.8 22.5C12 21.1 9.5 21 7.6 22.2L2.5 25.5C1.5 26.2.9 27.3 1 28.5C1.1 29.7 1.9 30.7 3 31.1L20.5 38.8L3 46.5C1.9 46.9 1.1 47.9 1 49.1C.9 50.3 1.5 51.4 2.5 52.1L7.6 55.4C9.5 56.6 12 56.5 13.8 55.1L28.5 43.8L63.6 72.9C65.7 74.6 68.6 74.9 71 73.6Z"
+      opacity="0.3"
+    />
+    <path
+      d="M71 96C69.6 96 68.2 95.6 67 94.7L28.5 63.2L38.2 55.6L71 82.5V17.5L38.2 44.4L28.5 36.8L67 5.3C69.1 3.6 72 3.3 74.4 4.6L95 15.5C97.5 16.8 99 19.4 99 22.2V77.8C99 80.6 97.5 83.2 95 84.5L74.4 95.4C73.3 95.8 72.1 96 71 96Z"
+      opacity="0.5"
+    />
+    <path
+      d="M71 96L95 83.5C97.5 82.2 99 79.6 99 76.8V23.2C99 20.4 97.5 17.8 95 16.5L71 4V96Z"
+      opacity="0.8"
+    />
+  </svg>
+);
 
 // Runnable starter script for instant execution
 const DEFAULT_APP_JS = `// VarunOS Antigravity IDE — Live JavaScript Execution Engine
@@ -905,7 +973,12 @@ const INITIAL_EXTENSIONS = [
   { id: 'tokyo', name: 'Tokyo Night', author: 'enkia', version: 'v1.0.8', installs: '1.4M', rating: '4.9', desc: 'A clean Visual Studio Code theme that celebrates dark aesthetics.', installed: false }
 ];
 
-export const VsCodeApp = () => {
+export const VsCodeApp = ({
+  onClose,
+  onMinimize,
+  onMaximize,
+  isMaximized
+}) => {
   // App Startup Loading Screen State
   const [isAppLoading, setIsAppLoading] = useState(true);
 
@@ -917,16 +990,37 @@ export const VsCodeApp = () => {
     return () => clearTimeout(safetyTimer);
   }, []);
 
-  // File System State
+  // File System State: Starts with "No Folder Opened" matching official screenshot
   const [projectFiles, setProjectFiles] = useState(INITIAL_PROJECT_FILES);
-  const [activeFile, setActiveFile] = useState('README.md');
-  const [openTabs, setOpenTabs] = useState([
-    'README.md',
-    'AboutMe.tsx',
-    'Live Preview: CodeSrijan'
-  ]);
-  const [editorViewMode, setEditorViewMode] = useState('preview'); // 'preview' | 'code'
+  const [isFolderOpened, setIsFolderOpened] = useState(false);
+  const [noFolderExpanded, setNoFolderExpanded] = useState(true);
+  const [outlineExpanded, setOutlineExpanded] = useState(false);
+  const [timelineExpanded, setTimelineExpanded] = useState(false);
+  const [activeFile, setActiveFile] = useState(null);
+  const [openTabs, setOpenTabs] = useState([]);
+  const [editorViewMode, setEditorViewMode] = useState('code'); // 'preview' | 'code'
   const [copiedToast, setCopiedToast] = useState(false);
+
+  const handleOpenFolder = () => {
+    setIsFolderOpened(true);
+    setOpenTabs(['AboutMe.tsx', 'portfolio.config.ts']);
+    setActiveFile('AboutMe.tsx');
+  };
+
+  const handleCloseFolder = () => {
+    setIsFolderOpened(false);
+    setOpenTabs([]);
+    setActiveFile(null);
+  };
+
+  const handleCloneRepo = () => {
+    window.open('https://github.com/varunsehgal05/destop-portflio', '_blank');
+  };
+
+  const handleOpenChat = () => {
+    setActiveActivity('agent');
+    setSidebarOpen(true);
+  };
 
   const handleCopyCurrentCode = () => {
     if (!currentCode) return;
@@ -1026,11 +1120,8 @@ export const VsCodeApp = () => {
   const [isRunning, setIsRunning] = useState(false);
   const editorTextareaRef = useRef(null);
 
-  // Terminal & Output Dock State: collapsed by default on mobile phones
-  const [terminalOpen, setTerminalOpen] = useState(() => {
-    if (typeof window !== 'undefined' && window.innerWidth <= 768) return false;
-    return true;
-  });
+  // Terminal & Output Dock State: collapsed by default matching reference screenshot
+  const [terminalOpen, setTerminalOpen] = useState(false);
   const [terminalTab, setTerminalTab] = useState('terminal'); // 'problems' | 'output' | 'debug' | 'terminal' | 'ports' | 'comments'
   const [terminalHeight, setTerminalHeight] = useState(180);
   const [terminalInput, setTerminalInput] = useState('');
@@ -1355,7 +1446,7 @@ export const VsCodeApp = () => {
     });
   };
 
-  // Keyboard shortcut: Ctrl+Enter or F5 to Run Code
+  // Keyboard shortcut: Ctrl+Enter, F5, Ctrl+`, Ctrl+B, and VS Code Watermark Shortcuts
   useEffect(() => {
     const handleKeyDown = (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
@@ -1370,6 +1461,15 @@ export const VsCodeApp = () => {
       } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') {
         e.preventDefault();
         setSidebarOpen(prev => !prev);
+      } else if ((e.ctrlKey || e.metaKey) && e.altKey && e.key.toLowerCase() === 'i') {
+        e.preventDefault();
+        handleOpenChat();
+      } else if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'p') {
+        e.preventDefault();
+        setCommandPaletteOpen(true);
+      } else if ((e.ctrlKey || e.metaKey) && (e.key.toLowerCase() === 'p' || e.key.toLowerCase() === 'o' || e.key.toLowerCase() === 'r')) {
+        e.preventDefault();
+        setCommandPaletteOpen(true);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -1524,227 +1624,157 @@ export const VsCodeApp = () => {
         />
       )}
 
-      {/* 1. Top Menu Titlebar (Antigravity IDE - Reference Match) */}
-      <header className="vscode-titlebar">
+      {/* 1. Top Titlebar — Authentic Modern VS Code Layout Match */}
+      <header className="vscode-titlebar rnd-drag-handle">
         <div className="titlebar-left">
-          <div className="titlebar-app-icon" title="Antigravity IDE">
-            <span className="antigravity-brand-a">A</span>
+          {/* Official Blue VS Code Ribbon Logo */}
+          <div
+            className="titlebar-vs-logo"
+            onClick={() => setActiveTopMenu(activeTopMenu ? null : 'main')}
+            title="Visual Studio Code (Click for Menu)"
+          >
+            <VsCodeLogo size={18} />
           </div>
 
-          <nav className="titlebar-menu-items">
-            {/* File Menu */}
-            <div className="menu-dropdown-wrapper">
-              <button
-                className={`menu-text-btn ${activeTopMenu === 'file' ? 'active' : ''}`}
-                onClick={() => setActiveTopMenu(activeTopMenu === 'file' ? null : 'file')}
-              >
-                File
-              </button>
-              {activeTopMenu === 'file' && (
-                <div className="vscode-dropdown-panel">
-                  <div className="vscode-menu-item" onClick={() => { handleCreateNewFile(); setActiveTopMenu(null); }}>
-                    <span>New File...</span> <span className="menu-shortcut">Ctrl+N</span>
-                  </div>
-                  <div className="vscode-menu-item" onClick={() => { handleCreateNewFile('app.js'); setActiveTopMenu(null); }}>
-                    <span>New Scratch Script (app.js)</span> <span className="menu-shortcut">Alt+N</span>
-                  </div>
-                  <div className="vscode-menu-divider" />
-                  <div className="vscode-menu-item" onClick={() => { setActiveTopMenu(null); }}>
-                    <span>Save</span> <span className="menu-shortcut">Ctrl+S</span>
-                  </div>
-                  <div className="vscode-menu-item" onClick={() => { if (activeFile) handleCloseTab(null, activeFile); setActiveTopMenu(null); }}>
-                    <span>Close Editor</span> <span className="menu-shortcut">Ctrl+W</span>
-                  </div>
-                  <div className="vscode-menu-item" onClick={() => { setOpenTabs([]); setActiveFile(null); setActiveTopMenu(null); }}>
-                    <span>Close All Editors</span> <span className="menu-shortcut">Ctrl+K W</span>
-                  </div>
-                </div>
-              )}
-            </div>
+          {/* Navigation Controls: Back & Forward */}
+          <div className="titlebar-nav-arrows">
+            <button type="button" className="titlebar-nav-arrow-btn" disabled title="Go Back (Alt+LeftArrow)">
+              <ArrowLeft size={13} />
+            </button>
+            <button type="button" className="titlebar-nav-arrow-btn" disabled title="Go Forward (Alt+RightArrow)">
+              <ArrowRight size={13} />
+            </button>
+          </div>
 
-            {/* Edit Menu */}
-            <div className="menu-dropdown-wrapper">
-              <button
-                className={`menu-text-btn ${activeTopMenu === 'edit' ? 'active' : ''}`}
-                onClick={() => setActiveTopMenu(activeTopMenu === 'edit' ? null : 'edit')}
-              >
-                Edit
-              </button>
-              {activeTopMenu === 'edit' && (
-                <div className="vscode-dropdown-panel">
-                  <div className="vscode-menu-item" onClick={() => setActiveTopMenu(null)}>
-                    <span>Undo</span> <span className="menu-shortcut">Ctrl+Z</span>
-                  </div>
-                  <div className="vscode-menu-item" onClick={() => setActiveTopMenu(null)}>
-                    <span>Redo</span> <span className="menu-shortcut">Ctrl+Y</span>
-                  </div>
-                  <div className="vscode-menu-divider" />
-                  <div className="vscode-menu-item" onClick={() => { setActiveActivity('search'); setSidebarOpen(true); setActiveTopMenu(null); }}>
-                    <span>Find & Replace in Files</span> <span className="menu-shortcut">Ctrl+Shift+F</span>
-                  </div>
-                </div>
-              )}
+          {/* VS Code Main Menu Dropdown */}
+          {activeTopMenu && (
+            <div className="vscode-dropdown-panel vs-main-menu-dropdown">
+              <div className="vscode-menu-item" onClick={() => { handleOpenFolder(); setActiveTopMenu(null); }}>
+                <span>Open Folder...</span> <span className="menu-shortcut">Ctrl+K Ctrl+O</span>
+              </div>
+              <div className="vscode-menu-item" onClick={() => { handleCreateNewFile(); setActiveTopMenu(null); }}>
+                <span>New File...</span> <span className="menu-shortcut">Ctrl+N</span>
+              </div>
+              <div className="vscode-menu-divider" />
+              <div className="vscode-menu-item" onClick={() => { setCommandPaletteOpen(true); setActiveTopMenu(null); }}>
+                <span>Command Palette...</span> <span className="menu-shortcut">Ctrl+Shift+P</span>
+              </div>
+              <div className="vscode-menu-item" onClick={() => { setSidebarOpen(!sidebarOpen); setActiveTopMenu(null); }}>
+                <span>Toggle Primary Side Bar</span> <span className="menu-shortcut">Ctrl+B</span>
+              </div>
+              <div className="vscode-menu-item" onClick={() => { setTerminalOpen(!terminalOpen); setActiveTopMenu(null); }}>
+                <span>Toggle Integrated Terminal</span> <span className="menu-shortcut">Ctrl+`</span>
+              </div>
+              <div className="vscode-menu-divider" />
+              <div className="vscode-menu-item" onClick={() => { handleCloseFolder(); setActiveTopMenu(null); }}>
+                <span>Close Folder</span>
+              </div>
             </div>
-
-            {/* Selection Menu */}
-            <div className="menu-dropdown-wrapper">
-              <button
-                className={`menu-text-btn ${activeTopMenu === 'selection' ? 'active' : ''}`}
-                onClick={() => setActiveTopMenu(activeTopMenu === 'selection' ? null : 'selection')}
-              >
-                Selection
-              </button>
-              {activeTopMenu === 'selection' && (
-                <div className="vscode-dropdown-panel">
-                  <div className="vscode-menu-item" onClick={() => { editorTextareaRef.current?.select(); setActiveTopMenu(null); }}>
-                    <span>Select All</span> <span className="menu-shortcut">Ctrl+A</span>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* View Menu */}
-            <div className="menu-dropdown-wrapper">
-              <button
-                className={`menu-text-btn ${activeTopMenu === 'view' ? 'active' : ''}`}
-                onClick={() => setActiveTopMenu(activeTopMenu === 'view' ? null : 'view')}
-              >
-                View
-              </button>
-              {activeTopMenu === 'view' && (
-                <div className="vscode-dropdown-panel">
-                  <div className="vscode-menu-item" onClick={() => { setActiveActivity('explorer'); setSidebarOpen(true); setActiveTopMenu(null); }}>
-                    <span>Explorer</span> <span className="menu-shortcut">Ctrl+Shift+E</span>
-                  </div>
-                  <div className="vscode-menu-item" onClick={() => { setActiveActivity('search'); setSidebarOpen(true); setActiveTopMenu(null); }}>
-                    <span>Search</span> <span className="menu-shortcut">Ctrl+Shift+F</span>
-                  </div>
-                  <div className="vscode-menu-item" onClick={() => { setActiveActivity('git'); setSidebarOpen(true); setActiveTopMenu(null); }}>
-                    <span>Source Control</span> <span className="menu-shortcut">Ctrl+Shift+G</span>
-                  </div>
-                  <div className="vscode-menu-item" onClick={() => { setActiveActivity('debug'); setSidebarOpen(true); setActiveTopMenu(null); }}>
-                    <span>Run and Debug</span> <span className="menu-shortcut">Ctrl+Shift+D</span>
-                  </div>
-                  <div className="vscode-menu-item" onClick={() => { setActiveActivity('extensions'); setSidebarOpen(true); setActiveTopMenu(null); }}>
-                    <span>Extensions</span> <span className="menu-shortcut">Ctrl+Shift+X</span>
-                  </div>
-                  <div className="vscode-menu-divider" />
-                  <div className="vscode-menu-item" onClick={() => { setTerminalOpen(!terminalOpen); setActiveTopMenu(null); }}>
-                    <span>Toggle Terminal</span> <span className="menu-shortcut">Ctrl+`</span>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Go Menu */}
-            <div className="menu-dropdown-wrapper">
-              <button
-                className={`menu-text-btn ${activeTopMenu === 'go' ? 'active' : ''}`}
-                onClick={() => setActiveTopMenu(activeTopMenu === 'go' ? null : 'go')}
-              >
-                Go
-              </button>
-              {activeTopMenu === 'go' && (
-                <div className="vscode-dropdown-panel">
-                  <div className="vscode-menu-item" onClick={() => { setActiveActivity('search'); setSidebarOpen(true); setActiveTopMenu(null); }}>
-                    <span>Go to File...</span> <span className="menu-shortcut">Ctrl+P</span>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Run Menu */}
-            <div className="menu-dropdown-wrapper">
-              <button
-                className={`menu-text-btn ${activeTopMenu === 'run' ? 'active' : ''}`}
-                onClick={() => setActiveTopMenu(activeTopMenu === 'run' ? null : 'run')}
-              >
-                Run
-              </button>
-              {activeTopMenu === 'run' && (
-                <div className="vscode-dropdown-panel">
-                  <div className="vscode-menu-item" onClick={() => { executeCode(); setActiveTopMenu(null); }}>
-                    <span>▶ Run Without Debugging</span> <span className="menu-shortcut">Ctrl+Enter</span>
-                  </div>
-                  <div className="vscode-menu-item" onClick={() => { executeCode(); setActiveTopMenu(null); }}>
-                    <span>Start Debugging</span> <span className="menu-shortcut">F5</span>
-                  </div>
-                  <div className="vscode-menu-divider" />
-                  <div className="vscode-menu-item" onClick={() => { setOutputLogs(''); setActiveTopMenu(null); }}>
-                    <span>Clear Output</span>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Terminal Menu */}
-            <div className="menu-dropdown-wrapper">
-              <button
-                className={`menu-text-btn ${activeTopMenu === 'terminal' ? 'active' : ''}`}
-                onClick={() => setActiveTopMenu(activeTopMenu === 'terminal' ? null : 'terminal')}
-              >
-                Terminal
-              </button>
-              {activeTopMenu === 'terminal' && (
-                <div className="vscode-dropdown-panel">
-                  <div className="vscode-menu-item" onClick={() => { setTerminalOpen(true); setTerminalTab('terminal'); setActiveTopMenu(null); }}>
-                    <span>New Terminal</span> <span className="menu-shortcut">Ctrl+Shift+`</span>
-                  </div>
-                  <div className="vscode-menu-item" onClick={() => { setTerminalHistory([]); setActiveTopMenu(null); }}>
-                    <span>Clear Terminal</span>
-                  </div>
-                  <div className="vscode-menu-item" onClick={() => { executeCode(); setActiveTopMenu(null); }}>
-                    <span>Run Active File</span>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Help Menu */}
-            <div className="menu-dropdown-wrapper">
-              <button
-                className={`menu-text-btn ${activeTopMenu === 'help' ? 'active' : ''}`}
-                onClick={() => setActiveTopMenu(activeTopMenu === 'help' ? null : 'help')}
-              >
-                Help
-              </button>
-              {activeTopMenu === 'help' && (
-                <div className="vscode-dropdown-panel">
-                  <div className="vscode-menu-item" onClick={() => { alert('Visual Studio Code — Antigravity IDE Emulation\nBuilt by Varun Sehgal\nVersion: 1.95.3 (Universal)\nOS: VarunOS Sequoia M3 Max'); setActiveTopMenu(null); }}>
-                    <span>About Antigravity IDE</span>
-                  </div>
-                  <div className="vscode-menu-item" onClick={() => { window.open('https://github.com/varunsehgal05', '_blank'); setActiveTopMenu(null); }}>
-                    <span>Varun Sehgal GitHub ↗</span>
-                  </div>
-                </div>
-              )}
-            </div>
-          </nav>
+          )}
         </div>
 
+        {/* Center: Search & Command Palette Pill */}
         <div className="titlebar-center">
-          <span className="titlebar-file-label">
-            destop-portflio · Antigravity IDE{hasActiveFile && activeFile ? ` · ${activeFile}` : ''}
-          </span>
+          <div
+            className="titlebar-search-pill"
+            onClick={() => setCommandPaletteOpen(true)}
+            title="Search and Run Commands (Ctrl+P / Ctrl+Shift+P)"
+          >
+            <div className="search-pill-content">
+              <Search size={12} className="search-icon" />
+              <span>{isFolderOpened ? 'destop-portflio' : 'Search'}</span>
+            </div>
+            <div className="search-pill-trailing-icons">
+              <button
+                type="button"
+                className="pill-icon-btn"
+                title="Open Copilot Chat (Ctrl+Alt+I)"
+                onClick={(e) => { e.stopPropagation(); handleOpenChat(); }}
+              >
+                <Sparkles size={12} />
+              </button>
+              <button
+                type="button"
+                className="pill-icon-btn"
+                title="Toggle Primary Side Bar"
+                onClick={(e) => { e.stopPropagation(); setSidebarOpen(!sidebarOpen); }}
+              >
+                <Split size={12} />
+              </button>
+            </div>
+          </div>
         </div>
 
-        <div className="titlebar-right-controls">
-          <button
-            className="titlebar-tool-btn"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            title="Toggle Primary Side Bar (Ctrl+B)"
-          >
-            <Layout size={13} />
-          </button>
-          <button className="titlebar-tool-btn" title="Navigate Back">
-            <ArrowLeft size={13} />
-          </button>
-          <button className="titlebar-tool-btn" title="Navigate Forward">
-            <ArrowRight size={13} />
-          </button>
-          <button className="titlebar-tool-btn" title="More Actions">
-            <MoreHorizontal size={13} />
-          </button>
+        {/* Right: Modern VS Code Layout Controls & Window Buttons */}
+        <div className="titlebar-right">
+          <div className="titlebar-layout-group">
+            {/* Primary Side Bar Toggle [ | ] */}
+            <button
+              type="button"
+              className={`titlebar-icon-btn ${sidebarOpen ? 'active' : ''}`}
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              title="Toggle Primary Side Bar (Ctrl+B)"
+            >
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor">
+                <rect x="1.5" y="1.5" width="13" height="13" rx="1.5" strokeWidth="1.2" />
+                <line x1="10.5" y1="1.5" x2="10.5" y2="14.5" strokeWidth="1.2" />
+              </svg>
+            </button>
+
+            {/* Bottom Panel Toggle [ _ ] */}
+            <button
+              type="button"
+              className={`titlebar-icon-btn ${terminalOpen ? 'active' : ''}`}
+              onClick={() => setTerminalOpen(!terminalOpen)}
+              title="Toggle Panel (Ctrl+`)"
+            >
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor">
+                <rect x="1.5" y="1.5" width="13" height="13" rx="1.5" strokeWidth="1.2" />
+                <line x1="1.5" y1="10.5" x2="14.5" y2="10.5" strokeWidth="1.2" />
+              </svg>
+            </button>
+
+            {/* Secondary Side Bar Toggle [ | ] */}
+            <button
+              type="button"
+              className="titlebar-icon-btn"
+              onClick={handleOpenChat}
+              title="Toggle Secondary Side Bar (Copilot Chat)"
+            >
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor">
+                <rect x="1.5" y="1.5" width="13" height="13" rx="1.5" strokeWidth="1.2" />
+                <line x1="5.5" y1="1.5" x2="5.5" y2="14.5" strokeWidth="1.2" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Window Control Buttons */}
+          <div className="titlebar-window-controls" data-no-drag>
+            <button
+              type="button"
+              className="window-ctrl-btn"
+              onClick={onMinimize}
+              title="Minimize"
+            >
+              <Minus size={13} />
+            </button>
+            <button
+              type="button"
+              className="window-ctrl-btn"
+              onClick={onMaximize}
+              title={isMaximized ? "Restore" : "Maximize"}
+            >
+              <Square size={11} />
+            </button>
+            <button
+              type="button"
+              className="window-ctrl-btn close"
+              onClick={onClose}
+              title="Close"
+            >
+              <X size={13} />
+            </button>
+          </div>
         </div>
       </header>
 
@@ -1839,41 +1869,135 @@ export const VsCodeApp = () => {
           <aside className="vscode-primary-sidebar">
             {/* 1. EXPLORER SIDEBAR */}
             {activeActivity === 'explorer' && (
-              <>
-                <div className="sidebar-header-row">
-                  <span className="sidebar-title">EXPLORER</span>
-                  <div className="sidebar-header-actions">
+              !isFolderOpened ? (
+                <div className="explorer-no-folder-wrapper">
+                  <div className="sidebar-header-row">
+                    <span className="sidebar-title">Explorer</span>
                     <button
-                      className={`sidebar-icon-btn ${isCreatingFile ? 'active' : ''}`}
-                      onClick={() => {
-                        setIsCreatingFile(prev => !prev);
-                        setIsCreatingFolder(false);
-                        setTimeout(() => newFileInputRef.current?.focus(), 60);
-                      }}
-                      title="New File"
+                      type="button"
+                      className="sidebar-action-icon-btn"
+                      title="More Actions..."
+                      onClick={handleOpenFolder}
                     >
-                      <FilePlus size={13} />
-                    </button>
-                    <button
-                      className={`sidebar-icon-btn ${isCreatingFolder ? 'active' : ''}`}
-                      onClick={() => {
-                        setIsCreatingFolder(prev => !prev);
-                        setIsCreatingFile(false);
-                        setTimeout(() => newFolderInputRef.current?.focus(), 60);
-                      }}
-                      title="New Folder / Scratch Script"
-                    >
-                      <Plus size={13} />
-                    </button>
-                    <button
-                      className={`sidebar-icon-btn ${isRefreshing ? 'is-spinning' : ''}`}
-                      onClick={handleRefreshExplorer}
-                      title="Refresh Explorer"
-                    >
-                      <RotateCw size={13} className={isRefreshing ? 'animate-spin text-sky-400' : ''} />
+                      <MoreHorizontal size={14} />
                     </button>
                   </div>
+
+                  <div className="explorer-no-folder-body">
+                    <div
+                      className="section-accordion-header"
+                      onClick={() => setNoFolderExpanded(!noFolderExpanded)}
+                    >
+                      {noFolderExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                      <span>NO FOLDER OPENED</span>
+                    </div>
+
+                    {noFolderExpanded && (
+                      <div className="no-folder-content">
+                        <p className="no-folder-desc">You have not yet opened a folder.</p>
+                        <button
+                          type="button"
+                          className="vs-btn-blue"
+                          onClick={handleOpenFolder}
+                          title="Open Workspace Folder (destop-portflio)"
+                        >
+                          Open Folder
+                        </button>
+
+                        <p className="no-folder-desc" style={{ marginTop: '16px' }}>
+                          You can clone a repository locally.
+                        </p>
+                        <button
+                          type="button"
+                          className="vs-btn-blue"
+                          onClick={handleCloneRepo}
+                          title="Clone Varun's GitHub Repository"
+                        >
+                          Clone Repository
+                        </button>
+
+                        <p className="no-folder-docs">
+                          To learn more about how to use Git and source control in VS Code{' '}
+                          <a
+                            href="https://code.visualstudio.com/docs/sourcecontrol/overview"
+                            target="_blank"
+                            rel="noreferrer"
+                            className="vs-docs-link"
+                          >
+                            read our docs.
+                          </a>
+                        </p>
+                      </div>
+                    )}
+
+                    <div className="explorer-bottom-accordions">
+                      <div
+                        className="section-accordion-header outline-header"
+                        onClick={() => setOutlineExpanded(!outlineExpanded)}
+                      >
+                        {outlineExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                        <span>Outline</span>
+                      </div>
+                      {outlineExpanded && (
+                        <div className="accordion-empty-hint">No symbols found in current document.</div>
+                      )}
+
+                      <div
+                        className="section-accordion-header timeline-header"
+                        onClick={() => setTimelineExpanded(!timelineExpanded)}
+                      >
+                        {timelineExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                        <span>Timeline</span>
+                      </div>
+                      {timelineExpanded && (
+                        <div className="accordion-empty-hint">The active editor cannot provide timeline information.</div>
+                      )}
+                    </div>
+                  </div>
                 </div>
+              ) : (
+                <>
+                  <div className="sidebar-header-row">
+                    <span className="sidebar-title">Explorer</span>
+                    <div className="sidebar-header-actions">
+                      <button
+                        className={`sidebar-icon-btn ${isCreatingFile ? 'active' : ''}`}
+                        onClick={() => {
+                          setIsCreatingFile(prev => !prev);
+                          setIsCreatingFolder(false);
+                          setTimeout(() => newFileInputRef.current?.focus(), 60);
+                        }}
+                        title="New File"
+                      >
+                        <FilePlus size={13} />
+                      </button>
+                      <button
+                        className={`sidebar-icon-btn ${isCreatingFolder ? 'active' : ''}`}
+                        onClick={() => {
+                          setIsCreatingFolder(prev => !prev);
+                          setIsCreatingFile(false);
+                          setTimeout(() => newFolderInputRef.current?.focus(), 60);
+                        }}
+                        title="New Folder / Scratch Script"
+                      >
+                        <Plus size={13} />
+                      </button>
+                      <button
+                        className={`sidebar-icon-btn ${isRefreshing ? 'is-spinning' : ''}`}
+                        onClick={handleRefreshExplorer}
+                        title="Refresh Explorer"
+                      >
+                        <RotateCw size={13} className={isRefreshing ? 'animate-spin text-sky-400' : ''} />
+                      </button>
+                      <button
+                        className="sidebar-icon-btn"
+                        onClick={handleCloseFolder}
+                        title="Close Folder"
+                      >
+                        <X size={13} />
+                      </button>
+                    </div>
+                  </div>
 
                 {refreshToast && (
                   <div className="explorer-refresh-toast">
@@ -2098,6 +2222,7 @@ export const VsCodeApp = () => {
                   )}
                 </div>
               </>
+              )
             )}
 
             {/* 2. SEARCH SIDEBAR */}
@@ -3121,89 +3246,49 @@ export const VsCodeApp = () => {
           )
           ) : (
             <div className="vscode-empty-viewport">
-              <div className="empty-watermark-icon-wrap">
-                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" className="text-[#38bdf8]">
-                  <polyline points="16 18 22 12 16 6" />
-                  <polyline points="8 6 2 12 8 18" />
-                </svg>
-              </div>
-
-              <div className="empty-watermark-title">Antigravity IDE · No Editors Open</div>
-
-              <div className="empty-shortcuts-list">
-                <div className="empty-shortcut-row">
-                  <span className="empty-shortcut-label">Show All Commands</span>
-                  <div className="empty-shortcut-keys">
-                    <kbd className="empty-key-badge">Ctrl</kbd>
-                    <kbd className="empty-key-badge">Shift</kbd>
-                    <kbd className="empty-key-badge">P</kbd>
-                  </div>
+              <div className="vscode-watermark-container">
+                <div className="vscode-watermark-logo" title="Visual Studio Code">
+                  <VsCodeWatermark size={150} />
                 </div>
 
-                <div className="empty-shortcut-row">
-                  <span className="empty-shortcut-label">Go to File / Explorer</span>
-                  <div className="empty-shortcut-keys">
-                    <kbd className="empty-key-badge">Ctrl</kbd>
-                    <kbd className="empty-key-badge">P</kbd>
+                <div className="vscode-watermark-shortcuts">
+                  <div className="watermark-shortcut-row" onClick={handleOpenChat} title="Open Chat (Ctrl+Alt+I)">
+                    <span className="shortcut-label">Open Chat</span>
+                    <div className="shortcut-keys">
+                      <kbd>Ctrl</kbd> <span className="key-plus">+</span> <kbd>Alt</kbd> <span className="key-plus">+</span> <kbd>I</kbd>
+                    </div>
+                  </div>
+
+                  <div className="watermark-shortcut-row" onClick={() => setCommandPaletteOpen(true)} title="Show All Commands (Ctrl+Shift+P)">
+                    <span className="shortcut-label">Show All Commands</span>
+                    <div className="shortcut-keys">
+                      <kbd>Ctrl</kbd> <span className="key-plus">+</span> <kbd>Shift</kbd> <span className="key-plus">+</span> <kbd>P</kbd>
+                    </div>
+                  </div>
+
+                  <div className="watermark-shortcut-row" onClick={() => setCommandPaletteOpen(true)} title="Open Recent (Ctrl+R)">
+                    <span className="shortcut-label">Open Recent</span>
+                    <div className="shortcut-keys">
+                      <kbd>Ctrl</kbd> <span className="key-plus">+</span> <kbd>R</kbd>
+                    </div>
+                  </div>
+
+                  <div className="watermark-shortcut-row" onClick={() => setCommandPaletteOpen(true)} title="Open File (Ctrl+O)">
+                    <span className="shortcut-label">Open File</span>
+                    <div className="shortcut-keys">
+                      <kbd>Ctrl</kbd> <span className="key-plus">+</span> <kbd>O</kbd>
+                    </div>
+                  </div>
+
+                  <div className="watermark-shortcut-row" onClick={handleOpenFolder} title="Open Folder (Ctrl+K Ctrl+O)">
+                    <span className="shortcut-label">Open Folder</span>
+                    <div className="shortcut-keys">
+                      <kbd>Ctrl</kbd> <span className="key-plus">+</span> <kbd>K</kbd>
+                      <span className="key-sep" />
+                      <kbd>Ctrl</kbd> <span className="key-plus">+</span> <kbd>O</kbd>
+                    </div>
                   </div>
                 </div>
-
-                <div className="empty-shortcut-row">
-                  <span className="empty-shortcut-label">Find in Files</span>
-                  <div className="empty-shortcut-keys">
-                    <kbd className="empty-key-badge">Ctrl</kbd>
-                    <kbd className="empty-key-badge">Shift</kbd>
-                    <kbd className="empty-key-badge">F</kbd>
-                  </div>
-                </div>
-
-                <div className="empty-shortcut-row">
-                  <span className="empty-shortcut-label">Toggle Integrated Terminal</span>
-                  <div className="empty-shortcut-keys">
-                    <kbd className="empty-key-badge">Ctrl</kbd>
-                    <kbd className="empty-key-badge">`</kbd>
-                  </div>
-                </div>
-
-                <div className="empty-shortcut-row">
-                  <span className="empty-shortcut-label">Toggle Primary Side Bar</span>
-                  <div className="empty-shortcut-keys">
-                    <kbd className="empty-key-badge">Ctrl</kbd>
-                    <kbd className="empty-key-badge">B</kbd>
-                  </div>
-                </div>
-              </div>
-
-              <div className="empty-actions-row">
-                <button
-                  className="empty-action-btn"
-                  onClick={() => {
-                    if (!openTabs.includes('portfolio.config.ts')) setOpenTabs(prev => [...prev, 'portfolio.config.ts']);
-                    setActiveFile('portfolio.config.ts');
-                  }}
-                >
-                  <Code size={13} />
-                  <span>Open portfolio.config.ts</span>
-                </button>
-
-                <button
-                  className="empty-action-btn"
-                  onClick={() => {
-                    if (!openTabs.includes('FinderApp.css')) setOpenTabs(prev => [...prev, 'FinderApp.css']);
-                    setActiveFile('FinderApp.css');
-                  }}
-                >
-                  <Code size={13} />
-                  <span>Open FinderApp.css</span>
-                </button>
-
-                <button
-                  className="empty-action-btn"
-                  onClick={() => handleCreateNewFile('app.js')}
-                >
-                  <Plus size={13} />
-                  <span>New Scratch Script (app.js)</span>
-                </button>
               </div>
             </div>
           )}
@@ -3425,37 +3510,62 @@ export const VsCodeApp = () => {
               )}
             </div>
           )}
+        </main>
+      </div>
 
-          {/* 4. Bottom Status Bar */}
-          <footer className="vscode-statusbar">
-            <div className="statusbar-left">
-              <span className="status-badge remote" title="WSL / Remote Window">
-                &gt;&lt;
-              </span>
+      {/* 4. Bottom Status Bar (Spans full window width) */}
+      <footer className="vscode-statusbar">
+        <div className="statusbar-left">
+          <span className="status-badge remote" title="Remote Codespace Connection">
+            <svg width="14" height="10" viewBox="0 0 14 10" fill="currentColor">
+              <path d="M4 1L1 5L4 9M10 1L13 5L10 9" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+            </svg>
+          </span>
+          {isFolderOpened && (
+            <>
               <span className="status-item git-branch">
                 <GitBranch size={11} />
                 <span>main*</span>
               </span>
-              <span className="status-item sync">
+              <span className="status-item sync" title="Synchronize Changes">
                 <span>⟳</span>
               </span>
-              <span className="status-item diagnostics">
-                <span>⨂ {problems.length}</span>
-                <span>⚠ 0</span>
-              </span>
-            </div>
+            </>
+          )}
+          <span className="status-item diagnostics" title="Problems (0 errors, 0 warnings)">
+            <span>⨂ {problems.length}</span>
+            <span>⚠ 0</span>
+          </span>
+        </div>
 
-            <div className="statusbar-right">
+        <div className="statusbar-right">
+          {openTabs.length > 0 && activeFile && (
+            <>
               <span className="status-item">Ln {cursorLine}, Col {cursorCol}</span>
               <span className="status-item">Spaces: 2</span>
               <span className="status-item">UTF-8</span>
-              <span className="status-item">{currentFile.lang || 'TypeScript React'}</span>
-              <span className="status-item prettier">Prettier: ✓</span>
-              <span className="status-item notification">🔔</span>
-            </div>
-          </footer>
-        </main>
-      </div>
+              <span className="status-item">{currentFile?.lang || 'TypeScript React'}</span>
+            </>
+          )}
+          <span className="statusbar-codespaces-badge" title="GitHub Codespaces Development Environment">
+            Codespaces (dev)
+          </span>
+          <span
+            className="status-item copilot-icon"
+            onClick={handleOpenChat}
+            title="GitHub Copilot"
+            style={{ color: '#eab308' }}
+          >
+            <Sparkles size={12} />
+          </span>
+          <span className="status-item feedback-icon" title="Tweet Feedback">
+            <Smile size={12} />
+          </span>
+          <span className="status-item notification-icon" title="Notifications">
+            <Bell size={12} />
+          </span>
+        </div>
+      </footer>
     </div>
   );
 };
