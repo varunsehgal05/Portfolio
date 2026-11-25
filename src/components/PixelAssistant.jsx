@@ -156,7 +156,7 @@ const getAIResponse = (query) => {
   if (/wallpaper|theme|shortcut|background|alt|how to use|desktop|terminal|vscode|finder/.test(q)) {
     return {
       topic: "VarunOS Desktop Navigation & Shortcuts",
-      answer: "Here are some awesome tips for navigating VarunOS:\n• **Alt + 1 / 2 / 3**: Switch between Sequoia Midnight, Monterey, and Deep Cosmic wallpapers.\n• **Double-Click Titlebars**: Toggle full screen with fluid zoom animations (inspired by macOS).\n• **Dock Click**: Bounces the app icon into view with smooth physics (inspired by macOS).\n• **Apps:** VS Code, Figma, Terminal, Resume, Contact, and Settings.",
+      answer: "Here are some awesome tips for navigating VarunOS:\n• **Alt + 1 / 2 / 3**: Switch between macOS Sequoia, Sonoma, and Ventura wallpapers.\n• **Double-Click Titlebars**: Toggle full screen with fluid zoom animations (inspired by macOS).\n• **Dock Click**: Bounces the app icon into view with smooth physics (inspired by macOS).\n• **Apps:** VS Code, Figma, Terminal, Resume, Contact, and Settings.",
       path: "VarunOS > System Settings",
       appId: "settings",
       appName: "Settings App",

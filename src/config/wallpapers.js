@@ -1,11 +1,11 @@
 export const ipadDefaultWallpaper = {
-  id: 'ipad-dune',
-  name: 'iPadOS Dark Dunes',
-  tag: 'iPadOS Contour',
-  thumbnail: '/wallpapers/ipad-dune-dark.jpg',
+  id: 'sonoma',
+  name: 'macOS Sonoma',
+  tag: 'macOS 14',
+  thumbnail: '/wallpapers/macos-sonoma.jpg',
   style: {
-    backgroundColor: '#090b10',
-    backgroundImage: 'radial-gradient(circle at 50% 40%, #151a24 0%, #090b10 80%), url(/wallpapers/ipad-dune-dark.jpg)',
+    backgroundColor: '#0a0d14',
+    backgroundImage: 'url(/wallpapers/macos-sonoma.jpg)',
     backgroundSize: 'cover',
     backgroundPosition: 'center center',
     backgroundRepeat: 'no-repeat'
@@ -13,13 +13,13 @@ export const ipadDefaultWallpaper = {
 };
 
 export const mobileDefaultWallpaper = {
-  id: 'ios-aurora',
-  name: 'iOS Titanium Aurora',
-  tag: 'iOS OLED',
-  thumbnail: '/wallpapers/ios-aurora-dark.jpg',
+  id: 'ventura',
+  name: 'macOS Ventura',
+  tag: 'macOS 13',
+  thumbnail: '/wallpapers/macos-ventura.jpg',
   style: {
-    backgroundColor: '#000000',
-    backgroundImage: 'radial-gradient(ellipse at 50% 20%, #171b26 0%, #08090d 60%, #000000 100%), url(/wallpapers/ios-aurora-dark.jpg)',
+    backgroundColor: '#070a14',
+    backgroundImage: 'url(/wallpapers/macos-ventura.jpg)',
     backgroundSize: 'cover',
     backgroundPosition: 'center center',
     backgroundRepeat: 'no-repeat'
@@ -30,12 +30,18 @@ export function getDeviceWallpaper(wallpaperId = 'default', mode = 'desktop') {
   if (wallpaperId === 'default') {
     if (mode === 'tablet') return ipadDefaultWallpaper;
     if (mode === 'mobile') return mobileDefaultWallpaper;
-    return desktopWallpapers[0]; // Sequoia Midnight
+    return desktopWallpapers[0]; // macOS Sequoia
   }
   const found = desktopWallpapers.find(w => w.id === wallpaperId);
   if (found) {
     return found;
   }
+  // Aliases for legacy saved IDs
+  if (wallpaperId === 'ipad-dune') return desktopWallpapers.find(w => w.id === 'sonoma') || desktopWallpapers[1];
+  if (wallpaperId === 'ios-aurora') return desktopWallpapers.find(w => w.id === 'ventura') || desktopWallpapers[2];
+  if (wallpaperId === 'cosmic') return desktopWallpapers.find(w => w.id === 'bigsur') || desktopWallpapers[0];
+  if (wallpaperId === 'aurora' || wallpaperId === 'minimal') return desktopWallpapers.find(w => w.id === 'mojave') || desktopWallpapers[0];
+
   if (mode === 'tablet') return ipadDefaultWallpaper;
   if (mode === 'mobile') return mobileDefaultWallpaper;
   return desktopWallpapers[0];
@@ -44,15 +50,15 @@ export function getDeviceWallpaper(wallpaperId = 'default', mode = 'desktop') {
 export const desktopWallpapers = [
   {
     id: 'default',
-    name: 'Sequoia Midnight',
-    tag: 'macOS Grid',
-    thumbnail: null,
+    name: 'macOS Sequoia',
+    tag: 'macOS 15',
+    thumbnail: '/wallpapers/macos-sequoia.jpg',
     style: {
-      backgroundColor: '#0c0c10',
-      backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px), radial-gradient(circle at 50% 45%, #181820 0%, #0e0e14 60%, #07070a 100%)',
-      backgroundSize: '24px 24px, 100% 100%',
+      backgroundColor: '#090c10',
+      backgroundImage: 'url(/wallpapers/macos-sequoia.jpg)',
+      backgroundSize: 'cover',
       backgroundPosition: 'center',
-      backgroundRepeat: 'repeat, no-repeat'
+      backgroundRepeat: 'no-repeat'
     }
   },
   ipadDefaultWallpaper,
@@ -124,52 +130,39 @@ export const desktopWallpapers = [
   },
   {
     id: 'monterey',
-    name: 'Monterey (inspired by macOS)',
-    tag: 'macOS-inspired',
-    thumbnail: '/monterey.jpg',
+    name: 'macOS Monterey',
+    tag: 'macOS 12',
+    thumbnail: '/wallpapers/macos-monterey.jpg',
     style: {
-      backgroundColor: '#1e1b4b',
-      backgroundImage: 'url(/monterey.jpg)',
+      backgroundColor: '#130e26',
+      backgroundImage: 'url(/wallpapers/macos-monterey.jpg)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat'
     }
   },
   {
-    id: 'cosmic',
-    name: 'Deep Cosmic Purple',
-    tag: 'Nebula Glow',
-    thumbnail: null,
+    id: 'bigsur',
+    name: 'macOS Big Sur',
+    tag: 'macOS 11',
+    thumbnail: '/wallpapers/macos-bigsur.jpg',
     style: {
-      backgroundColor: '#0a0614',
-      backgroundImage: 'radial-gradient(rgba(168, 85, 247, 0.12) 1px, transparent 1px), radial-gradient(circle at 60% 40%, #2e1065 0%, #17082e 60%, #080312 100%)',
-      backgroundSize: '28px 28px, 100% 100%',
+      backgroundColor: '#080d1a',
+      backgroundImage: 'url(/wallpapers/macos-bigsur.jpg)',
+      backgroundSize: 'cover',
       backgroundPosition: 'center',
-      backgroundRepeat: 'repeat, no-repeat'
+      backgroundRepeat: 'no-repeat'
     }
   },
   {
-    id: 'aurora',
-    name: 'Cyan Aurora Glow',
-    tag: 'Borealis',
-    thumbnail: null,
+    id: 'mojave',
+    name: 'macOS Mojave (Night Dunes)',
+    tag: 'macOS 10.14',
+    thumbnail: '/wallpapers/macos-mojave.jpg',
     style: {
-      backgroundColor: '#03131e',
-      backgroundImage: 'radial-gradient(rgba(56, 189, 248, 0.12) 1px, transparent 1px), radial-gradient(circle at 40% 60%, #0c4a6e 0%, #082f49 60%, #02111c 100%)',
-      backgroundSize: '24px 24px, 100% 100%',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'repeat, no-repeat'
-    }
-  },
-  {
-    id: 'minimal',
-    name: 'Minimal Slate',
-    tag: 'Minimalist',
-    thumbnail: null,
-    style: {
-      backgroundColor: '#0f172a',
-      backgroundImage: 'radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%)',
-      backgroundSize: '100% 100%',
+      backgroundColor: '#05070f',
+      backgroundImage: 'url(/wallpapers/macos-mojave.jpg)',
+      backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat'
     }
@@ -258,12 +251,12 @@ export const terminalWallpapers = [
   },
   {
     id: 'monterey',
-    name: 'Monterey (inspired by macOS)',
-    tag: 'macOS-inspired',
-    image: '/monterey.jpg',
+    name: 'macOS Monterey',
+    tag: 'macOS 12',
+    image: '/wallpapers/macos-monterey.jpg',
     overlayColor: 'rgba(13, 17, 23, 0.45)',
     bgStyle: {
-      backgroundImage: 'linear-gradient(rgba(13, 17, 23, 0.45), rgba(13, 17, 23, 0.55)), url(/monterey.jpg)',
+      backgroundImage: 'linear-gradient(rgba(13, 17, 23, 0.45), rgba(13, 17, 23, 0.55)), url(/wallpapers/macos-monterey.jpg)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
@@ -271,25 +264,31 @@ export const terminalWallpapers = [
     }
   },
   {
-    id: 'cosmic',
-    name: 'Deep Cosmic Purple',
-    tag: 'Nebula Glow',
-    image: null,
+    id: 'sequoia',
+    name: 'macOS Sequoia',
+    tag: 'macOS 15',
+    image: '/wallpapers/macos-sequoia.jpg',
+    overlayColor: 'rgba(9, 12, 16, 0.45)',
     bgStyle: {
-      backgroundColor: '#0a0614',
-      backgroundImage: 'radial-gradient(circle at 60% 40%, #1c0b38 0%, #0f051e 60%, #080312 100%)',
-      backgroundSize: '100% 100%'
+      backgroundImage: 'linear-gradient(rgba(9, 12, 16, 0.45), rgba(9, 12, 16, 0.55)), url(/wallpapers/macos-sequoia.jpg)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      imageRendering: 'auto'
     }
   },
   {
-    id: 'aurora',
-    name: 'Cyan Aurora Glow',
-    tag: 'Borealis',
-    image: null,
+    id: 'sonoma',
+    name: 'macOS Sonoma',
+    tag: 'macOS 14',
+    image: '/wallpapers/macos-sonoma.jpg',
+    overlayColor: 'rgba(10, 13, 20, 0.45)',
     bgStyle: {
-      backgroundColor: '#03131e',
-      backgroundImage: 'radial-gradient(circle at 40% 60%, #083344 0%, #05202e 60%, #02111c 100%)',
-      backgroundSize: '100% 100%'
+      backgroundImage: 'linear-gradient(rgba(10, 13, 20, 0.45), rgba(10, 13, 20, 0.55)), url(/wallpapers/macos-sonoma.jpg)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      imageRendering: 'auto'
     }
   }
 ];
