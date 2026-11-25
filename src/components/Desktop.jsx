@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, Suspense, lazy } from 'react';
+import React, { useState, useEffect, useRef, useCallback, Suspense, lazy } from 'react';
 import MenuBar from './MenuBar';
 import DesktopIcon from './DesktopIcon';
 import Window from './Window';
@@ -138,9 +138,14 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
       return 'default';
     }
   });
+  const activeWallpaperIdRef = useRef(activeWallpaperId);
+  activeWallpaperIdRef.current = activeWallpaperId;
   const [prevWallpaper, setPrevWallpaper] = useState(null);
   const [isWpTransitioning, setIsWpTransitioning] = useState(false);
+  const isWpTransitioningRef = useRef(isWpTransitioning);
+  isWpTransitioningRef.current = isWpTransitioning;
   const wpTransitionTimerRef = useRef(null);
+  const wpToastTimerRef = useRef(null);
   const [wallpaperToast, setWallpaperToast] = useState(null);
 
   // Live Califa Swarm Mouse Flocking State (defaults to false until user clicks Swarm Follow)
@@ -209,11 +214,15 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
     }
   }, [isRebuilding, swarmStage]);
 
-  const applyDesktopWallpaper = (id, showToast = false) => {
-    const found = desktopWallpapers.find(w => w.id === id) || desktopWallpapers[0];
-    if (found.id === activeWallpaperId && !isWpTransitioning) return;
+  const effectiveDeviceModeRef = useRef(effectiveDeviceMode);
+  effectiveDeviceModeRef.current = effectiveDeviceMode;
 
-    const currentWp = getDeviceWallpaper(activeWallpaperId, effectiveDeviceMode);
+  const applyDesktopWallpaper = useCallback((id, showToast = false) => {
+    const currentId = activeWallpaperIdRef.current;
+    const found = desktopWallpapers.find(w => w.id === id) || desktopWallpapers[0];
+    if (found.id === currentId && !isWpTransitioningRef.current) return;
+
+    const currentWp = getDeviceWallpaper(currentId, effectiveDeviceModeRef.current);
 
     if (wpTransitionTimerRef.current) {
       clearTimeout(wpTransitionTimerRef.current);
@@ -221,44 +230,72 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
 
     setPrevWallpaper(currentWp);
     setActiveWallpaperId(found.id);
+    activeWallpaperIdRef.current = found.id;
     setIsWpTransitioning(true);
+    isWpTransitioningRef.current = true;
 
     try {
       localStorage.setItem('varunos_desktop_wallpaper', found.id);
     } catch { }
 
     if (showToast) {
+      if (wpToastTimerRef.current) {
+        clearTimeout(wpToastTimerRef.current);
+      }
       setWallpaperToast(`Wallpaper: ${found.name}`);
-      setTimeout(() => {
-        setWallpaperToast(curr => (curr === `Wallpaper: ${found.name}` ? null : curr));
+      wpToastTimerRef.current = setTimeout(() => {
+        setWallpaperToast(null);
+        wpToastTimerRef.current = null;
       }, 2200);
     }
 
     wpTransitionTimerRef.current = setTimeout(() => {
       setPrevWallpaper(null);
       setIsWpTransitioning(false);
+      isWpTransitioningRef.current = false;
       wpTransitionTimerRef.current = null;
     }, 750);
-  };
+  }, []);
 
   useEffect(() => {
     return () => {
       if (wpTransitionTimerRef.current) {
         clearTimeout(wpTransitionTimerRef.current);
       }
+      if (wpToastTimerRef.current) {
+        clearTimeout(wpToastTimerRef.current);
+      }
     };
   }, []);
 
-  // Keyboard shortcut: Alt + 1, 2, 3, 4, 5 to quickly switch wallpapers
+  // Dedicated Wallpaper Keyboard Shortcut Engine: Alt + 1, 2, 3, 4, 5... 9, 0
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.altKey && !e.ctrlKey && !e.metaKey) {
-        const keyNum = parseInt(e.key, 10);
-        if (keyNum >= 1 && keyNum <= desktopWallpapers.length) {
-          e.preventDefault();
-          const targetWp = desktopWallpapers[keyNum - 1];
-          if (targetWp) {
-            applyDesktopWallpaper(targetWp.id, true);
+        // Do not intercept if user is typing inside an input or textarea
+        if (['INPUT', 'TEXTAREA'].includes(e.target?.tagName) || e.target?.isContentEditable) {
+          return;
+        }
+
+        let keyNum = null;
+        if (e.code && /^Digit[0-9]$/.test(e.code)) {
+          keyNum = parseInt(e.code.replace('Digit', ''), 10);
+        } else if (e.code && /^Numpad[0-9]$/.test(e.code)) {
+          keyNum = parseInt(e.code.replace('Numpad', ''), 10);
+        } else if (/^[0-9]$/.test(e.key)) {
+          keyNum = parseInt(e.key, 10);
+        }
+
+        if (keyNum !== null) {
+          // Alt+1..9 maps to indices 0..8. Alt+0 maps to index 9 (10th wallpaper)
+          const index = keyNum === 0 ? 9 : keyNum - 1;
+          if (index >= 0 && index < desktopWallpapers.length) {
+            e.preventDefault();
+            e.stopPropagation();
+            const targetWp = desktopWallpapers[index];
+            if (targetWp) {
+              applyDesktopWallpaper(targetWp.id, true);
+            }
           }
         }
       }
@@ -270,6 +307,16 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
       }
     };
 
+    window.addEventListener('keydown', handleKeyDown, true);
+    window.addEventListener('varunos-set-desktop-wallpaper', handleCustomWallpaperChange);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown, true);
+      window.removeEventListener('varunos-set-desktop-wallpaper', handleCustomWallpaperChange);
+    };
+  }, [applyDesktopWallpaper]);
+
+  // Global window management custom events
+  useEffect(() => {
     const handleGlobalOpenApp = (e) => {
       if (e.detail && e.detail.appId) {
         openApp(e.detail.appId);
@@ -281,8 +328,6 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
     const handleCloseAllEvent = () => closeAll();
     const handleMinimizeActiveEvent = () => minimizeActive();
 
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('varunos-set-desktop-wallpaper', handleCustomWallpaperChange);
     window.addEventListener('varunos-open-app', handleGlobalOpenApp);
     window.addEventListener('varunos:minimize-all', handleMinimizeAllEvent);
     window.addEventListener('varunos-minimize-all', handleMinimizeAllEvent);
@@ -293,8 +338,6 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
     window.addEventListener('varunos:minimize-active', handleMinimizeActiveEvent);
     window.addEventListener('varunos-minimize-active', handleMinimizeActiveEvent);
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('varunos-set-desktop-wallpaper', handleCustomWallpaperChange);
       window.removeEventListener('varunos-open-app', handleGlobalOpenApp);
       window.removeEventListener('varunos:minimize-all', handleMinimizeAllEvent);
       window.removeEventListener('varunos-minimize-all', handleMinimizeAllEvent);
