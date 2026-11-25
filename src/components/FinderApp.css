@@ -58,6 +58,14 @@
   flex-direction: column;
   gap: 16px;
   overflow-y: auto;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.finder-sidebar-content::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 .finder-sidebar-section {
@@ -694,11 +702,13 @@
   .finder-sidebar {
     width: 100% !important;
     height: auto !important;
-    max-height: 80px;
     border-right: none !important;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 6px 8px;
+    padding: 7px 10px;
     flex-shrink: 0;
+    background: rgba(18, 20, 26, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
 
   .finder-sidebar-content {
@@ -706,14 +716,23 @@
     overflow-x: auto;
     overflow-y: hidden;
     gap: 6px;
-    padding-bottom: 2px;
+    padding: 2px 2px;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .finder-sidebar-content::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
   }
 
   .finder-sidebar-section {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
     flex-shrink: 0;
   }
 
@@ -724,15 +743,44 @@
   }
 
   .finder-nav-item {
-    padding: 4px 8px;
-    font-size: 11px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    font-size: 11.5px;
+    font-weight: 500;
     white-space: nowrap;
-    border-radius: 8px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #cbd5e1;
+    transition: all 0.15s ease;
+  }
+
+  .finder-nav-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+  }
+
+  .finder-nav-item.active {
+    background: rgba(56, 189, 248, 0.18) !important;
+    border-color: rgba(56, 189, 248, 0.45) !important;
+    color: #38bdf8 !important;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(56, 189, 248, 0.2);
   }
 
   .finder-toolbar {
     padding: 6px 10px;
     gap: 8px;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+
+  .finder-toolbar::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
   }
 
   .finder-toolbar-history {
@@ -758,7 +806,20 @@
   }
 }
 
-/* Tablet / iPad responsive rules (769px to 1024px) */
+/* Tablet / iPad responsive rules (769px to 1024px) & Window Tablet/Mobile Modes */
+.mode-tablet .finder-sidebar-content,
+.mode-mobile .finder-sidebar-content {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.mode-tablet .finder-sidebar-content::-webkit-scrollbar,
+.mode-mobile .finder-sidebar-content::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
 @media (min-width: 769px) and (max-width: 1024px) {
   .finder-projects-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
