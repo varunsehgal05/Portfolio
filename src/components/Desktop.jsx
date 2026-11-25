@@ -588,14 +588,12 @@ const Desktop = ({ isIdle, userName = 'Guest', onReplaySwarm, swarmStage = 5, is
           })}
         </div>
 
-        {/* PixelAssistant / Real Animated Clippy Agent - Desktop mode only */}
-        {effectiveDeviceMode === 'desktop' && (
-          <div className={`desktop-bot-wrap ${swarmStage < 5 ? (swarmStage >= 5 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
-            <Suspense fallback={null}>
-              <PixelAssistant isIdle={isIdle} onOpenApp={openApp} hasOpenWindows={hasOpenWindows} />
-            </Suspense>
-          </div>
-        )}
+        {/* PixelAssistant / Real Animated Clippy Agent - Available on Desktop, iPad, and Mobile */}
+        <div className={`desktop-bot-wrap ${effectiveDeviceMode !== 'desktop' ? `device-${effectiveDeviceMode}` : ''} ${swarmStage < 5 ? (swarmStage >= 5 ? 'stage-revealed' : 'stage-hidden') : ''}`}>
+          <Suspense fallback={null}>
+            <PixelAssistant isIdle={isIdle} onOpenApp={openApp} hasOpenWindows={hasOpenWindows} deviceMode={effectiveDeviceMode} />
+          </Suspense>
+        </div>
 
         {/* Bottom macOS Dock (Desktop macOS mode only, revealed in Stage 4) */}
         {effectiveDeviceMode === 'desktop' && (

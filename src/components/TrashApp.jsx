@@ -265,6 +265,7 @@ const TrashApp = ({ onClose, onOpenApp }) => {
         animation: "GetAttention",
         highlightDuration: 6000,
         hold: false,
+        force: true,
         actions: [
           { label: "View Portfolio (Figma) →", primary: true, appId: "figma" },
           { label: "View Resume", appId: "resume" }
@@ -306,7 +307,8 @@ const TrashApp = ({ onClose, onOpenApp }) => {
         text: "Closing Trash! Let's explore Varun's real work in Figma and Projects! 📎",
         animation: "Explain",
         highlightDuration: 4000,
-        hold: false
+        hold: false,
+        force: true
       }
     }));
     if (onClose) {
@@ -394,24 +396,33 @@ const TrashApp = ({ onClose, onOpenApp }) => {
 
   const handleItemClick = (item) => {
     setSelectedItemId(item.id);
+    const isTouch = typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0 || window.innerWidth <= 1024);
+    if (isTouch) {
+      handleItemDoubleClick(item);
+    }
   };
 
   // Opening File: View Item Modal
   const handleItemDoubleClick = (item) => {
     setActivePreviewItem(item);
     playAIChime();
+    const msg = `It looks like you opened ${item.name} in the Trash! 📎 You are not here to see my trash! 👀 You're here to explore my portfolio and hire me! Auto-closing in 6s...`;
     window.dispatchEvent(new CustomEvent('varunos-clippy-speak', {
       detail: {
-        text: `Inspecting ${item.name}! 📎 You're here to explore my portfolio and hire me!`,
-        animation: "Explain",
+        text: msg,
+        animation: "GetAttention",
         highlightDuration: 6000,
         hold: false,
+        force: true,
         actions: [
-          { label: "Open Portfolio (Figma) →", primary: true, appId: "figma" },
-          { label: "Open Resume", appId: "resume" }
+          { label: "View Portfolio (Figma) →", primary: true, appId: "figma" },
+          { label: "View Resume", appId: "resume" }
         ]
       }
     }));
+    // Reset auto-close timer to 6s so user gets the full countdown and redirection
+    setAiCountdown(6);
+    setIsAICountdownCancelled(false);
   };
 
   // Clippy close sequence
@@ -532,49 +543,6 @@ const TrashApp = ({ onClose, onOpenApp }) => {
           )}
         </div>
       </header>
-
-      {/* Clippy Takeover Auto-Close Countdown Bar */}
-      <div className="clippy-takeover-bar">
-        <div className="clippy-takeover-info">
-          <Paperclip size={13} className={!isAICountdownCancelled ? "text-amber-400 animate-bounce" : "text-zinc-500"} />
-          {!isAICountdownCancelled ? (
-            <span>
-              Clippy auto-closing Trash in <strong>{aiCountdown}s</strong> to redirect to portfolio...
-            </span>
-          ) : (
-            <span className="text-zinc-400">Auto-close paused. Take your time browsing!</span>
-          )}
-        </div>
-        <div className="clippy-takeover-btns">
-          {!isAICountdownCancelled ? (
-            <button
-              type="button"
-              className="clippy-pause-btn"
-              onClick={cancelAICountdown}
-              title="Pause auto-close countdown"
-            >
-              Keep Browsing
-            </button>
-          ) : (
-            <button
-              type="button"
-              className="clippy-pause-btn"
-              onClick={resumeAICountdown}
-              title="Resume auto-close countdown"
-            >
-              Resume Auto-Close
-            </button>
-          )}
-          <button
-            type="button"
-            className="clippy-close-now-btn"
-            onClick={handleAutoClose}
-            title="Close Trash now and open Portfolio"
-          >
-            📎 Close Now
-          </button>
-        </div>
-      </div>
 
       {/* Temporary Notice Banner */}
       {bannerNotice && (
@@ -742,54 +710,13 @@ const TrashApp = ({ onClose, onOpenApp }) => {
                 <span className="modal-tag-pill" style={{ borderColor: activePreviewItem.tagColor, color: activePreviewItem.tagColor }}>
                   {activePreviewItem.tag}
                 </span>
-
-                {/* Sleek Auto-Close Countdown Pill */}
-                <div className="modal-autoclose-pill">
-                  <Paperclip size={12} className={!isAICountdownCancelled ? "text-amber-400 animate-bounce" : "text-zinc-500"} />
-                  {!isAICountdownCancelled ? (
-                    <span className="autoclose-text">
-                      Auto-closing in <strong>{aiCountdown}s</strong>
-                    </span>
-                  ) : (
-                    <span className="autoclose-text paused">Auto-close paused</span>
-                  )}
-                  {!isAICountdownCancelled ? (
-                    <button
-                      type="button"
-                      className="modal-autoclose-toggle"
-                      onClick={cancelAICountdown}
-                      title="Pause auto-close countdown"
-                    >
-                      Keep Open
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      className="modal-autoclose-toggle resume"
-                      onClick={resumeAICountdown}
-                      title="Resume auto-close countdown"
-                    >
-                      Resume
-                    </button>
-                  )}
-                </div>
               </div>
 
               <div className="modal-footer-right">
-                <button
-                  type="button"
-                  className="modal-clippy-now-btn"
-                  onClick={handleAutoClose}
-                  title="Close Trash with Clippy"
-                >
-                  <Paperclip size={12} />
-                  <span>Close Now</span>
-                </button>
                 <button 
                   type="button" 
                   className="modal-done-btn"
                   onClick={() => {
-                    cancelAICountdown();
                     setActivePreviewItem(null);
                   }}
                 >

@@ -315,12 +315,14 @@ const fetchGeminiAssistantResponse = async (userPrompt, chatHistory = []) => {
   }
 };
 
-const PixelAssistant = ({ isIdle, onOpenApp, hasOpenWindows }) => {
+const PixelAssistant = ({ isIdle, onOpenApp, hasOpenWindows, deviceMode = 'desktop' }) => {
   const agentRef = useRef(null);
   const isFirstMount = useRef(true);
   const bodyRef = useRef(null);
   const dialogRef = useRef(null);
   const isChatOpenRef = useRef(false);
+  const isForceVisibleRef = useRef(false);
+  const forceClearTimerRef = useRef(null);
 
   // Sound State (Muted by default)
   const [isMuted, setIsMuted] = useState(true);
@@ -336,9 +338,9 @@ const PixelAssistant = ({ isIdle, onOpenApp, hasOpenWindows }) => {
   const highlightTimerRef = useRef(null);
   const actionsTimerRef = useRef(null);
 
-  // When an app opens or is open, immediately hide any active recommendations, highlights, and speech balloons
+  // When an app opens or is open, immediately hide any active recommendations, highlights, and speech balloons UNLESS force speaking
   useEffect(() => {
-    if (hasOpenWindows) {
+    if (hasOpenWindows && !isForceVisibleRef.current) {
       if (actionsTimerRef.current) clearTimeout(actionsTimerRef.current);
       setClippyActions(null);
       setIsHighlighted(false);
@@ -354,13 +356,23 @@ const PixelAssistant = ({ isIdle, onOpenApp, hasOpenWindows }) => {
   // Listen for speech requests from TrashApp or other system events
   useEffect(() => {
     const handleClippySpeak = (e) => {
-      // Do not show speech balloons or action bars if an app is open or fullscreen
-      if (document.body.classList.contains('has-open-window') || document.body.classList.contains('has-fullscreen-window')) {
+      const { text, animation = "GetAttention", highlightDuration = 3000, hold = false, actions = null, force = false } = e.detail || {};
+      if (!text) return;
+
+      // Do not show speech balloons or action bars if an app is open or fullscreen, UNLESS force is true (e.g. TrashApp)
+      if (!force && (document.body.classList.contains('has-open-window') || document.body.classList.contains('has-fullscreen-window'))) {
         return;
       }
 
-      const { text, animation = "GetAttention", highlightDuration = 3000, hold = false, actions = null } = e.detail || {};
-      if (!text) return;
+      if (force) {
+        isForceVisibleRef.current = true;
+        document.body.classList.add('clippy-force-speaking');
+        if (forceClearTimerRef.current) clearTimeout(forceClearTimerRef.current);
+        forceClearTimerRef.current = setTimeout(() => {
+          isForceVisibleRef.current = false;
+          document.body.classList.remove('clippy-force-speaking');
+        }, (highlightDuration || 6000) + 500);
+      }
 
       setIsHighlighted(true);
       if (highlightTimerRef.current) clearTimeout(highlightTimerRef.current);
@@ -408,6 +420,9 @@ const PixelAssistant = ({ isIdle, onOpenApp, hasOpenWindows }) => {
     };
 
     const handleClippyHide = () => {
+      if (forceClearTimerRef.current) clearTimeout(forceClearTimerRef.current);
+      isForceVisibleRef.current = false;
+      document.body.classList.remove('clippy-force-speaking');
       try {
         if (agentRef.current?._balloon) {
           agentRef.current._balloon.hide(true);
@@ -426,6 +441,8 @@ const PixelAssistant = ({ isIdle, onOpenApp, hasOpenWindows }) => {
       window.removeEventListener('varunos-clippy-hide', handleClippyHide);
       if (highlightTimerRef.current) clearTimeout(highlightTimerRef.current);
       if (actionsTimerRef.current) clearTimeout(actionsTimerRef.current);
+      if (forceClearTimerRef.current) clearTimeout(forceClearTimerRef.current);
+      document.body.classList.remove('clippy-force-speaking');
     };
   }, []);
 

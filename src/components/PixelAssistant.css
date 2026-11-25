@@ -14,11 +14,11 @@
 }
 
 /* Hide Clippy speech balloon and floating action recommendations when any window is open */
-body.has-open-window .clippy-balloon,
-body.has-open-window div[style*="background: #ffc"],
-body.has-open-window div[style*="background: rgb(255, 255, 204)"],
-body.has-open-window .clippy-floating-actions-bar,
-body.has-open-window .clippy-highlight-ring {
+body.has-open-window:not(.clippy-force-speaking) .clippy-balloon,
+body.has-open-window:not(.clippy-force-speaking) div[style*="background: #ffc"],
+body.has-open-window:not(.clippy-force-speaking) div[style*="background: rgb(255, 255, 204)"],
+body.has-open-window:not(.clippy-force-speaking) .clippy-floating-actions-bar,
+body.has-open-window:not(.clippy-force-speaking) .clippy-highlight-ring {
   display: none !important;
   opacity: 0 !important;
   pointer-events: none !important;
@@ -26,19 +26,34 @@ body.has-open-window .clippy-highlight-ring {
 }
 
 /* Hide the assistant bot and its balloons when an app is in full screen */
-body.has-fullscreen-window .clippy,
-body.has-fullscreen-window .pixel-clippy,
-body.has-fullscreen-window .clippy-balloon,
-body.has-fullscreen-window div[style*="background: #ffc"],
-body.has-fullscreen-window div[style*="background: rgb(255, 255, 204)"],
-body.has-fullscreen-window .clippy-dialog-container,
-body.has-fullscreen-window .clippy-quick-sound-pill,
-body.has-fullscreen-window .clippy-floating-actions-bar,
-body.has-fullscreen-window .clippy-highlight-ring {
+body.has-fullscreen-window:not(.clippy-force-speaking) .clippy,
+body.has-fullscreen-window:not(.clippy-force-speaking) .pixel-clippy,
+body.has-fullscreen-window:not(.clippy-force-speaking) .clippy-balloon,
+body.has-fullscreen-window:not(.clippy-force-speaking) div[style*="background: #ffc"],
+body.has-fullscreen-window:not(.clippy-force-speaking) div[style*="background: rgb(255, 255, 204)"],
+body.has-fullscreen-window:not(.clippy-force-speaking) .clippy-dialog-container,
+body.has-fullscreen-window:not(.clippy-force-speaking) .clippy-quick-sound-pill,
+body.has-fullscreen-window:not(.clippy-force-speaking) .clippy-floating-actions-bar,
+body.has-fullscreen-window:not(.clippy-force-speaking) .clippy-highlight-ring {
   display: none !important;
   opacity: 0 !important;
   pointer-events: none !important;
   visibility: hidden !important;
+}
+
+/* When Clippy is force speaking (e.g. in TrashApp or opening a file in Trash), override hiding rules */
+body.clippy-force-speaking .clippy,
+body.clippy-force-speaking .pixel-clippy,
+body.clippy-force-speaking .clippy-balloon,
+body.clippy-force-speaking div[style*="background: #ffc"],
+body.clippy-force-speaking div[style*="background: rgb(255, 255, 204)"],
+body.clippy-force-speaking .clippy-floating-actions-bar,
+body.clippy-force-speaking .clippy-highlight-ring {
+  display: block !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  visibility: visible !important;
+  z-index: 99999999 !important;
 }
 
 .pixel-clippy:hover {
@@ -701,22 +716,66 @@ div[style*="background: rgb(255, 255, 204)"] > div:first-child {
   color: #64748b;
 }
 
-@media (max-width: 640px) {
+/* Tablet & iPadOS Clippy Positioning */
+@media (min-width: 641px) and (max-width: 1024px) {
   .pixel-clippy {
-    right: 16px !important;
-    bottom: 20px !important;
+    right: 20px !important;
+    bottom: 84px !important;
+    z-index: 995 !important;
   }
 
-  .clippy-quick-sound-pill {
-    right: 16px;
-    bottom: 120px;
+  .clippy-balloon,
+  div[style*="background: #ffc"],
+  div[style*="background: rgb(255, 255, 204)"] {
+    right: 96px !important;
+    bottom: 92px !important;
+    max-width: 280px !important;
+    z-index: 996 !important;
   }
 
   .clippy-dialog-container {
-    right: 16px;
-    bottom: 124px;
-    width: calc(100vw - 32px);
-    max-width: calc(100vw - 32px);
+    right: 20px;
+    bottom: 156px;
+    width: 360px;
+    max-width: calc(100vw - 40px);
+    z-index: 1000 !important;
+  }
+
+  .clippy-quick-sound-pill {
+    right: 20px;
+    bottom: 152px;
+  }
+}
+
+/* Mobile iOS Clippy Positioning */
+@media (max-width: 640px) {
+  .pixel-clippy {
+    right: 14px !important;
+    bottom: 78px !important;
+    transform: scale(0.88);
+    z-index: 995 !important;
+  }
+
+  .clippy-balloon,
+  div[style*="background: #ffc"],
+  div[style*="background: rgb(255, 255, 204)"] {
+    right: 14px !important;
+    bottom: 150px !important;
+    max-width: calc(100vw - 28px) !important;
+    z-index: 996 !important;
+  }
+
+  .clippy-quick-sound-pill {
+    right: 14px;
+    bottom: 144px;
+  }
+
+  .clippy-dialog-container {
+    right: 14px;
+    bottom: 148px;
+    width: calc(100vw - 28px);
+    max-width: calc(100vw - 28px);
+    z-index: 1000 !important;
   }
 }
 
