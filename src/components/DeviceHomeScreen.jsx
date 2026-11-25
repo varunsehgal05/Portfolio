@@ -8,7 +8,6 @@ import {
   Tablet,
   Laptop,
   Compass,
-  Search,
   ChevronDown,
   Sparkles,
   ExternalLink,
@@ -507,12 +506,6 @@ const DeviceHomeScreen = ({
                 <span>Hackathon 1st Runner-Up (2nd Place)</span>
               </div>
               <div className="ios-hackathon-sub">National UX & AI Prototyping Win by Unstop</div>
-            </div>
-
-            {/* iOS Search Pill */}
-            <div className="ios-search-pill" onClick={() => handleAppClick('finder')} role="button" tabIndex={0}>
-              <Search size={13} />
-              <span>Search Portfolio</span>
             </div>
           </>
         )}
