@@ -3155,7 +3155,8 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
 
                       const stageW = containerRef.current.clientWidth || 900;
                       const targetX = Math.round((stageW - 1080 * zoom) / 2);
-                      const targetY = Math.round(Math.min(36, Math.max(-5000, panRef.current.y + shiftY)));
+                      const maxBottomY = Math.round(stageRect.height - 2750 * zoom);
+                      const targetY = Math.round(Math.min(36, Math.max(Math.min(-500, maxBottomY), panRef.current.y + shiftY)));
                       const startX = panRef.current.x;
                       const startY = panRef.current.y;
                       const startTime = performance.now();
@@ -3178,19 +3179,20 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                       };
                       panRafRef.current = requestAnimationFrame(animateFollow);
                     }}
-                    onScrollToTop={() => {
+                    onScrollToTop={(opts = {}) => {
                       resumeAutoScrollPauseUntilRef.current = 0;
                       if (panRafRef.current) cancelAnimationFrame(panRafRef.current);
-                      // Smoothly glide canvas pan back to top so user is dragged up to TOP-MID of notebook
+                      // Smoothly glide canvas pan back to top so user is dropped cleanly at TOP-MID of notebook
                       const stageW = containerRef.current?.clientWidth || 900;
+                      const dim = getTabDimensions('resume');
                       const fitZoom = calculateFitZoom('resume', stageW);
                       setZoom(fitZoom);
-                      const targetX = Math.round((stageW - 1080 * fitZoom) / 2);
+                      const targetX = Math.max(16, Math.round((stageW - dim.width * fitZoom) / 2));
                       const targetY = 36;
                       const startX = panRef.current.x;
                       const startY = panRef.current.y;
                       const startTime = performance.now();
-                      const duration = 280;
+                      const duration = typeof opts === 'number' ? opts : (opts?.duration || 480);
                       const animateScroll = (now) => {
                         const elapsed = now - startTime;
                         const progress = Math.min(1, elapsed / duration);

@@ -166,10 +166,15 @@ const KittuResumeApp = ({
   const buildRafRef = useRef(null);
   const buildRunIdRef = useRef(0);
   const onFollowElementRef = useRef(onFollowElement);
+  const onScrollToTopRef = useRef(onScrollToTop);
 
   useEffect(() => {
     onFollowElementRef.current = onFollowElement;
   }, [onFollowElement]);
+
+  useEffect(() => {
+    onScrollToTopRef.current = onScrollToTop;
+  }, [onScrollToTop]);
 
   const copyEmail = () => {
     navigator.clipboard?.writeText(CONTACT_EMAIL_TEXT);
@@ -789,7 +794,7 @@ const KittuResumeApp = ({
     if (!(await wait(280, runId))) return;
 
     // 59. Footer & Calm Swarm Dismissal
-    if (!(await followSelector('.cv-footer', { alignRatio: 0.72, duration: 640, settleMs: 240 }, runId))) return;
+    if (!(await followSelector('.cv-footer', { alignRatio: 0.38, duration: 280, settleMs: 120 }, runId))) return;
     setBuildStage(59);
     const footerBox = getBox('.cv-footer', { x: 28, y: 2700, w: 980, h: 64 });
     set4Swarm({
@@ -800,7 +805,7 @@ const KittuResumeApp = ({
     });
     setActiveSelection(null);
     setActiveGuides([]);
-    if (!(await wait(520, runId))) return;
+    if (!(await wait(320, runId))) return;
 
     // Smoothly glide & fade cursors out
     set4Swarm({
@@ -809,13 +814,20 @@ const KittuResumeApp = ({
       sarah: { x: footerBox.x + 400, y: footerBox.y + 42, role: 'Done ✓', opacity: 0 },
       varun: { x: footerBox.x + 540, y: footerBox.y + 42, role: 'Done ✓', opacity: 0 }
     });
-    if (!(await wait(420, runId))) return;
+    if (!(await wait(240, runId))) return;
 
     setBuildStage(99);
     setIsBuilding(false);
     setActiveCursors([]);
     setActiveSelection(null);
     setActiveGuides([]);
+
+    // When build completes: smoothly drop user back at top-mid of the notebook
+    if (onScrollToTopRef.current) {
+      onScrollToTopRef.current({ duration: 520 });
+    } else if (onScrollToTop) {
+      onScrollToTop({ duration: 520 });
+    }
   };
 
   const replayBuild = () => {
@@ -832,11 +844,13 @@ const KittuResumeApp = ({
 
     buildRunIdRef.current += 1;
     clearTimeouts();
-    if (onScrollToTop) {
+    if (onScrollToTopRef.current) {
+      onScrollToTopRef.current({ duration: 300 });
+    } else if (onScrollToTop) {
       onScrollToTop();
     }
     // Wait until viewport finishes panning back to top before starting
-    buildTopSection(onScrollToTop ? 200 : 40);
+    buildTopSection(onScrollToTop ? 220 : 40);
   };
 
   const skipBuild = () => {
@@ -898,6 +912,13 @@ const KittuResumeApp = ({
     setActiveCursors([]);
     setActiveSelection(null);
     setActiveGuides([]);
+
+    // Drop user at top mid
+    if (onScrollToTopRef.current) {
+      onScrollToTopRef.current({ duration: 200 });
+    } else if (onScrollToTop) {
+      onScrollToTop({ duration: 200 });
+    }
   };
 
   useEffect(() => {
