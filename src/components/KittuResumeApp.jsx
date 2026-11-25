@@ -188,9 +188,11 @@ const KittuResumeApp = ({
 
   const wait = (ms, runId) =>
     new Promise((resolve) => {
+      // High-velocity swarm build: ~3.5x faster so users don't wait 35+ seconds
+      const scaledMs = Math.max(16, Math.round(ms * 0.28));
       const id = setTimeout(() => {
         resolve(runId === buildRunIdRef.current);
-      }, ms);
+      }, scaledMs);
       buildTimeoutRef.current.push(id);
     });
 
@@ -218,9 +220,14 @@ const KittuResumeApp = ({
     const container = containerRef.current.querySelector('.cv-container') || containerRef.current;
     const el = container.querySelector(selector);
     if (el && onFollowElementRef.current) {
-      onFollowElementRef.current(el, opts);
+      const fastOpts = {
+        ...opts,
+        duration: Math.min(opts.duration || 260, 260),
+        settleMs: Math.min(opts.settleMs || 70, 70)
+      };
+      onFollowElementRef.current(el, fastOpts);
       // Let viewport camera settle gently before typing/pasting begins
-      const ok = await wait(opts.settleMs ?? 280, runId);
+      const ok = await wait(fastOpts.settleMs, runId);
       return ok;
     }
     return true;
@@ -237,21 +244,21 @@ const KittuResumeApp = ({
 
   const set4Swarm = ({ varun = {}, elena = {}, sarah = {}, alex = {} }) => {
     setActiveCursors([
-      normalizeCursor({ id: 'varun', name: 'Varun Sehgal', color: '#A259FF', role: 'Typing', transitionMs: 560, x: 0, y: 0 }, varun),
-      normalizeCursor({ id: 'elena', name: 'Elena Rostova', color: '#F59E0B', role: 'Framing', transitionMs: 580, x: 0, y: 0 }, elena),
-      normalizeCursor({ id: 'sarah', name: 'Sarah Lin', color: '#0ACF83', role: 'Pasting', transitionMs: 580, x: 0, y: 0 }, sarah),
-      normalizeCursor({ id: 'alex', name: 'Alex Chen', color: '#1ABCFE', role: 'Layout', transitionMs: 580, x: 0, y: 0 }, alex)
+      normalizeCursor({ id: 'varun', name: 'Varun Sehgal', color: '#A259FF', role: 'Typing', transitionMs: 180, x: 0, y: 0 }, varun),
+      normalizeCursor({ id: 'elena', name: 'Elena Rostova', color: '#F59E0B', role: 'Framing', transitionMs: 180, x: 0, y: 0 }, elena),
+      normalizeCursor({ id: 'sarah', name: 'Sarah Lin', color: '#0ACF83', role: 'Pasting', transitionMs: 180, x: 0, y: 0 }, sarah),
+      normalizeCursor({ id: 'alex', name: 'Alex Chen', color: '#1ABCFE', role: 'Layout', transitionMs: 180, x: 0, y: 0 }, alex)
     ]);
   };
 
   const set2Swarm = ({ elena = {}, varun = {}, sarah = null }) => {
     const list = [
-      normalizeCursor({ id: 'elena', name: 'Elena Rostova', color: '#F59E0B', role: 'Framing', transitionMs: 560, x: 0, y: 0 }, elena),
-      normalizeCursor({ id: 'varun', name: 'Varun Sehgal', color: '#A259FF', role: 'Typing', transitionMs: 540, x: 0, y: 0 }, varun)
+      normalizeCursor({ id: 'elena', name: 'Elena Rostova', color: '#F59E0B', role: 'Framing', transitionMs: 180, x: 0, y: 0 }, elena),
+      normalizeCursor({ id: 'varun', name: 'Varun Sehgal', color: '#A259FF', role: 'Typing', transitionMs: 160, x: 0, y: 0 }, varun)
     ];
     if (sarah) {
       list.push(
-        normalizeCursor({ id: 'sarah', name: 'Sarah Lin', color: '#0ACF83', role: 'Pasting', transitionMs: 560, x: 0, y: 0 }, sarah)
+        normalizeCursor({ id: 'sarah', name: 'Sarah Lin', color: '#0ACF83', role: 'Pasting', transitionMs: 180, x: 0, y: 0 }, sarah)
       );
     }
     setActiveCursors(list);
@@ -262,11 +269,11 @@ const KittuResumeApp = ({
     str,
     setter,
     {
-      charMs = 14,
+      charMs = 6,
       cursorId = 'varun',
       cursorBaseX = null,
       maxCursorOffset = 340,
-      maxDurationMs = 1300,
+      maxDurationMs = 340,
       runId
     }
   ) =>
@@ -276,7 +283,10 @@ const KittuResumeApp = ({
         return;
       }
 
-      const duration = Math.min(maxDurationMs, Math.max(200, str.length * charMs));
+      // Fast, snappy keystroke pacing (~3.5x faster than before)
+      const effectiveCharMs = Math.min(charMs || 5, 5);
+      const effectiveMaxDuration = Math.min(maxDurationMs || 340, 340);
+      const duration = Math.min(effectiveMaxDuration, Math.max(40, str.length * effectiveCharMs));
       const startTime = performance.now();
       let lastCharCount = 0;
       let lastCursorTick = 0;
@@ -298,13 +308,13 @@ const KittuResumeApp = ({
           setter(str.slice(0, charCount));
         }
 
-        if (cursorId && cursorBaseX !== null && (now - lastCursorTick >= 70 || progress >= 1)) {
+        if (cursorId && cursorBaseX !== null && (now - lastCursorTick >= 35 || progress >= 1)) {
           lastCursorTick = now;
           const offset = Math.round(Math.min(charCount * 9.5, maxCursorOffset) * (0.35 + 0.65 * progress));
           setActiveCursors((prev) =>
             prev.map((c) =>
               c.id === cursorId
-                ? { ...c, x: cursorBaseX + offset, transitionMs: 130 }
+                ? { ...c, x: cursorBaseX + offset, transitionMs: 60 }
                 : c
             )
           );
@@ -826,7 +836,7 @@ const KittuResumeApp = ({
       onScrollToTop();
     }
     // Wait until viewport finishes panning back to top before starting
-    buildTopSection(onScrollToTop ? 520 : 120);
+    buildTopSection(onScrollToTop ? 200 : 40);
   };
 
   const skipBuild = () => {

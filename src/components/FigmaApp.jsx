@@ -3159,7 +3159,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                       const startX = panRef.current.x;
                       const startY = panRef.current.y;
                       const startTime = performance.now();
-                      const duration = opts.duration || 760;
+                      const duration = Math.min(opts.duration || 260, 280);
 
                       const animateFollow = (now) => {
                         const t = Math.min(1, (now - startTime) / duration);
@@ -3190,7 +3190,7 @@ box-shadow: ${shadowVisible ? '0 30px 100px -20px rgba(0, 0, 0, 0.9)' : 'none'};
                       const startX = panRef.current.x;
                       const startY = panRef.current.y;
                       const startTime = performance.now();
-                      const duration = 680;
+                      const duration = 280;
                       const animateScroll = (now) => {
                         const elapsed = now - startTime;
                         const progress = Math.min(1, elapsed / duration);
