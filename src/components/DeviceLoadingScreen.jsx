@@ -2,9 +2,10 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './DeviceLoadingScreen.css';
 
 /**
- * Authentic Apple iPadOS / iOS Boot & Loading Screen
- * Shown exclusively on Mobile & iPad when loading or refreshing the site.
- * Replaces the desktop swarm rebuild with a sleek, native device boot experience.
+ * Signature Figma Canvas / ScreenSaver-Style Loading Screen
+ * Replaces the old Apple boot screen on Mobile & iPad.
+ * Renders the iconic #Frame_HeroClock bounding frame with Figma handles,
+ * VibeCoder spec pill, live digital clock, and glowing progress track.
  */
 const DeviceLoadingScreen = ({
   mode = 'tablet', // 'tablet' | 'mobile'
@@ -25,6 +26,24 @@ const DeviceLoadingScreen = ({
 
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [isUnmounted, setIsUnmounted] = useState(false);
+
+  // Live time for the Hero Clock
+  const [timeInfo] = useState(() => {
+    const now = new Date();
+    let hours = now.getHours();
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12 || 12;
+    return {
+      hours: `${hours}:${minutes}`,
+      ampm,
+      date: new Intl.DateTimeFormat('en-US', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric'
+      }).format(now)
+    };
+  });
 
   const onLoadedRef = useRef(onLoaded);
   useEffect(() => {
@@ -48,16 +67,16 @@ const DeviceLoadingScreen = ({
 
     const unmountTimer = setTimeout(() => {
       setIsUnmounted(true);
-    }, isAutomated ? 10 : 80);
+    }, isAutomated ? 10 : 70);
 
     return () => clearTimeout(unmountTimer);
   }, [isAutomated]);
 
   useEffect(() => {
     // Pure CSS hardware-accelerated bar animation - eliminates 60 re-renders/sec long tasks
-    const finishTimer = setTimeout(handleFinish, isAutomated ? 10 : 200);
+    const finishTimer = setTimeout(handleFinish, effectiveDuration);
     return () => clearTimeout(finishTimer);
-  }, [handleFinish, isAutomated]);
+  }, [handleFinish, effectiveDuration]);
 
   if (isUnmounted) return null;
 
@@ -71,39 +90,72 @@ const DeviceLoadingScreen = ({
       aria-live="polite"
       aria-label="Loading VarunOS"
     >
-      <div className="device-loading-content">
-        {/* Glowing Apple Silhouette Logo */}
-        <div className="device-logo-wrap">
-          <svg
-            className="device-apple-icon"
-            viewBox="0 0 170 170"
-            fill="currentColor"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true"
-          >
-            <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.7-3.04-7.58-7.7-11.64-13.98-6.19-9.57-11.04-20.47-14.56-32.69-3.52-12.23-5.28-23.75-5.28-34.56 0-14.13 3.48-26.04 10.45-35.73 6.96-9.69 15.75-14.65 26.36-14.88 5.11 0 10.74 1.34 16.89 4.02 6.15 2.68 10.15 4.08 12.01 4.2 2.05-.12 6.13-1.57 12.24-4.35 6.11-2.77 11.65-4.04 16.63-3.8 12.56.63 22.92 5.57 31.08 14.82-10.96 6.64-16.32 15.82-16.08 27.53.25 9.17 3.86 16.92 10.83 23.24 6.97 6.33 15.11 10.02 24.42 11.07-2.29 6.98-4.87 13.78-7.74 20.41zM119.22 31.84c0-7.72 2.76-14.89 8.28-21.51 5.53-6.62 12.39-10.33 20.58-11.13.11 1.01.17 1.95.17 2.82 0 7.6-2.88 14.89-8.65 21.87-5.77 6.97-12.71 10.77-20.82 11.4-0.12-1.02-.17-1.95-.17-2.82z" />
-          </svg>
-          <div className="device-logo-glow" />
+      {/* Background Ambient Glow & Dot Grid */}
+      <div className="boot-ambient-radial" />
+
+      {/* Central Figma Selection Frame (#Frame_HeroClock) */}
+      <div className="device-boot-frame">
+        {/* 8 Figma Bounding Box Selection Handle Dots */}
+        <span className="handle-dot top-left" />
+        <span className="handle-dot top-mid" />
+        <span className="handle-dot top-right" />
+        <span className="handle-dot right-mid" />
+        <span className="handle-dot bottom-right" />
+        <span className="handle-dot bottom-mid" />
+        <span className="handle-dot bottom-left" />
+        <span className="handle-dot left-mid" />
+
+        {/* Top-Left Frame Tag */}
+        <div className="frame-meta-tag top-left-label">
+          #Frame_HeroClock · {isIpad ? '480 × 300' : '360 × 260'}
         </div>
 
-        {/* Apple Style Smooth Progress Pill */}
-        <div className="device-progress-track">
-          <div className="device-progress-fill" />
+        {/* Top-Right AutoLayout Tag */}
+        <div className="frame-meta-tag top-right-label">
+          AutoLayout: Col · Gap: 14
         </div>
 
-        {/* System Meta and Step Status */}
-        <div className="device-loading-meta">
-          <div className="device-os-tag">
-            {isIpad ? 'iPadOS 18' : 'iOS 18'} <span className="os-bullet">•</span> VarunOS
-          </div>
-          <div className="device-status-step">
-            Starting VarunOS engine...
-          </div>
+        {/* VibeCoder Code Spec Pill */}
+        <div className="hero-code-spec">
+          <span className="code-bracket">&lt; </span>
+          <span className="code-component">VarunSehgal </span>
+          <span className="code-prop">role</span>
+          <span className="code-equal">=</span>
+          <span className="code-string">&quot;VibeCoder&quot; </span>
+          <span className="code-prop">spec</span>
+          <span className="code-equal">=</span>
+          <span className="code-string-accent">&quot;Design × Code&quot; </span>
+          <span className="code-bracket">/&gt;</span>
         </div>
 
-        {/* Subtle skip hint on touch */}
-        <div className="device-skip-hint">
-          Tap anywhere to continue
+        {/* Digital Clock Display */}
+        <div className="boot-digital-clock">
+          <span className="clock-digits">{timeInfo.hours}</span>
+          <span className="clock-ampm">{timeInfo.ampm}</span>
+        </div>
+
+        {/* Figma Canvas Engine Status */}
+        <div className="boot-tick-rate">
+          <span className="tick-line" />
+          <span className="tick-text">FIGMA CANVAS ENGINE // INITIALIZING...</span>
+          <span className="tick-line" />
+        </div>
+
+        {/* Glowing Progress Track */}
+        <div className="boot-progress-track">
+          <div className="boot-progress-fill" />
+        </div>
+
+        {/* Date & Mode Meta */}
+        <div className="boot-date-row">
+          <span className="boot-date">{timeInfo.date}</span>
+          <span className="boot-sprint-badge">{isIpad ? 'iPadOS VarunOS' : 'Mobile VarunOS'} // v2.4</span>
+        </div>
+
+        {/* Subtle Tap Skip Hint */}
+        <div className="boot-skip-hint">
+          <span className="skip-dot" />
+          <span>Tap anywhere to enter</span>
         </div>
       </div>
     </div>
