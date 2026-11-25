@@ -5064,9 +5064,9 @@
 /* Floating Canvas Zoom & Viewport HUD */
 .figma-floating-zoom-hud {
   position: absolute;
-  bottom: 24px;
-  right: 24px;
-  z-index: 999;
+  bottom: 80px; /* Elevated cleanly above .lovable-workspace-bottom-nav (bottom: 20px) to prevent any overlap */
+  right: 20px;
+  z-index: 105;
   display: flex;
   align-items: center;
   gap: 2px;
@@ -5078,6 +5078,7 @@
   padding: 4px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.2);
   user-select: none;
+  transition: bottom 0.2s ease, right 0.2s ease;
 }
 
 .hud-zoom-btn {
@@ -9581,7 +9582,7 @@
 
   /* Position floating zoom HUD above the bottom nav on mobile so it NEVER overlays */
   .figma-floating-zoom-hud {
-    bottom: 64px !important;
+    bottom: 68px !important;
     right: 12px !important;
     padding: 3px 6px !important;
     gap: 3px !important;
@@ -9744,6 +9745,11 @@
 @media (max-width: 1024px) {
   .lovable-properties-sidebar {
     width: 220px !important;
+  }
+
+  .figma-floating-zoom-hud {
+    bottom: 76px !important;
+    right: 16px !important;
   }
 
   .lovable-workspace-bottom-nav {
